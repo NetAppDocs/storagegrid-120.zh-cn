@@ -1,0 +1,76 @@
+---
+permalink: admin/manage-platform-services-for-tenants.html 
+sidebar: sidebar 
+keywords: platform service, cloudmirror replication, event notification, search integration service 
+summary: 平台服务包括 CloudMirror 复制、事件通知和搜索集成服务。 
+---
+= 了解 StorageGRID 平台服务
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+平台服务包括 CloudMirror 复制、事件通知和搜索集成服务。
+
+${post_edited_translations.segment}
+
+平台服务不支持 link:../tenant/what-is-branch-bucket.html["${post_edited_translations.segment}"]。
+
+
+
+[[cloudmirror-replication]]
+== CloudMirror 复制
+
+StorageGRID CloudMirror 复制服务用于将特定对象从 StorageGRID 存储桶镜像到指定的外部目标。
+
+例如，您可以使用 CloudMirror 复制将特定客户记录镜像到 Amazon S3，然后利用 AWS 服务对您的数据执行分析。
+
+CloudMirror 复制与跨网格复制功能有一些重要的异同。要了解更多信息，请参见 link:../admin/grid-federation-compare-cgr-to-cloudmirror.html["比较跨网格复制和 CloudMirror 复制"]。
+
+
+NOTE: 如果源存储桶启用了 S3 Object Lock，则不支持 CloudMirror 复制。
+
+
+
+[[notifications]]
+== 通知
+
+${post_edited_translations.segment}
+
+例如，您可以配置向管理员发送有关添加到存储桶的每个对象的警报，其中对象表示与关键系统事件关联的日志文件。
+
+
+NOTE: ${post_edited_translations.segment}
+
+
+
+[[search-integration-service]]
+== ${post_edited_translations.segment}
+
+搜索集成服务用于将 S3 对象元数据发送到指定的 Elasticsearch 索引，其中可以使用外部服务搜索或分析元数据。
+
+例如，您可以将存储桶配置为将 S3 对象元数据发送到远程 Elasticsearch 服务。然后，您可以使用 Elasticsearch 对存储桶执行搜索，并对对象元数据中存在的模式进行复杂的分析。
+
+
+NOTE: 虽然可以在启用 S3 Object Lock 的存储桶上配置 Elasticsearch 集成，但通知消息中不会包含对象的 S3 Object Lock 元数据（包括 Retain Until Date 和 Legal Hold 状态）。
+
+平台服务使租户能够使用外部存储资源、通知服务以及搜索或分析服务来处理其数据。由于平台服务的目标位置通常位于 StorageGRID 部署的外部，因此必须决定是否要允许租户使用这些服务。如果是这样，则必须在创建或编辑租户帐户时启用平台服务的使用。您还必须配置网络，以便租户生成的平台服务消息可以到达其目的地。
+
+
+
+[[recommendations-for-using-platform-services]]
+== 使用平台服务的建议
+
+在使用平台服务之前，请注意以下建议：
+
+* 如果 StorageGRID 系统中的 S3 存储桶同时启用了版本控制和 CloudMirror 复制，则还应为目标端点启用 S3 存储桶版本控制。这样，CloudMirror 复制便可在端点上生成类似的对象版本。
+* 对于需要 CloudMirror 复制、通知和搜索集成的 S3 请求，不应使用超过 100 个活动租户。拥有 100 个以上的活动租户可能会导致 S3 客户端性能降低。
+* 无法完成的端点请求将排队，最多可排队 500,000 个请求。此限制在活跃租户之间平均分配。新租户可以暂时超过此 500,000 的限制，以避免对新创建的租户造成不公平的影响。
+
+
+.相关信息
+* link:../tenant/what-platform-services-are.html["管理平台服务"]
+* link:configuring-storage-proxy-settings.html["配置存储代理服务器设置"]
+* link:../monitor/index.html["监控 StorageGRID"]
+

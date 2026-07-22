@@ -1,0 +1,57 @@
+---
+permalink: maintain/convert-to-data-only-node.html 
+sidebar: sidebar 
+keywords: storagegrid, convert node, data-only node 
+summary: 为了提高性能，您可以将较慢的非 ADC 存储节点转换为仅数据存储节点。 
+---
+= 将 StorageGRID 存储节点转换为仅数据节点
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+为了提高性能，您可以将较慢的非 ADC 存储节点转换为仅数据存储节点。
+
+如果您的存储节点具有不同的性能特征，则将存储节点专用于数据是合理的。例如，为了提高性能，您可以配置仅用于数据的高容量旋转磁盘存储节点，以及仅用于元数据的高性能存储节点。
+
+此外，您可以通过从 Cassandra 中删除低 RAM 节点来获得更多元数据容量，这会增加每个节点的元数据容量限制。请参阅 link:../admin/managing-object-metadata-storage.html["管理对象元数据存储"]。
+
+在转换仅数据节点时，网格必须为每个站点包含至少三个组合存储节点或仅元数据存储节点。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["维护或 root 访问权限"]。
+* 要转换的存储节点不包含 ADC 服务，或者您已将 link:../maintain/move-adc-service.html["移动了 ADC 服务"] 转移到其他节点。
+* 存储节点不是仅元数据节点或仅数据节点。
+* 要转换的存储节点不包含 ADC 服务，或者您已将 link:../maintain/move-adc-service.html["移动了 ADC 服务"] 转移到其他节点。
+* 站点上的其他节点（或您已link:../expand/index.html["扩展了网格"]）有足够的元数据空间，可容纳将从您要转换的存储节点迁移的元数据。
++
+[CAUTION]
+====
+** 如果迁移到同一站点上其他节点的元数据超过 link:../admin/managing-object-metadata-storage.html["元数据保留空间"] 的大小，网格将变得不稳定。
+** 开始转换后，您将无法扩展网格。
+
+
+====
+
+
+.关于此任务
+使用此过程可将不包含 ADC 服务的一个或多个组合存储节点转换为纯数据节点。
+
+除了转换存储节点外，此过程还会从节点中停用 Cassandra。所有元数据将迁移到组合或仅元数据存储节点。根据需要迁移的元数据量，此过程每个节点可能需要数天才能完成。
+
+
+TIP: 通常，如果每个节点的元数据使用量小于 1 TB，一次最多可以转换 10 个节点。如果每个节点的元数据使用量超过 1 TB，则每次操作最多转换 5 个节点。
+
+.步骤
+. 记录要转换的非 ADC 存储节点的节点 ID。
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
+. 选择 `POST /private/convert-to-data-only-node/start`操作。有关详细信息，请参见link:../admin/using-grid-management-api.html#issue-api-requests["发出 API 请求"]。
++
+每个节点将在过程中重新启动。
+
+. 您可以使用 `GET /private/convert-to-data-only-node`监控该程序。如果出现错误，请选择 `POST /private/convert-to-data-only-node/retry`以重试该程序。
+. link:../maintain/downloading-recovery-package.html["下载恢复包"] 完成此过程后。
+

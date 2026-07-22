@@ -1,0 +1,62 @@
+---
+permalink: troubleshoot/troubleshooting-metadata-issues.html 
+sidebar: sidebar 
+keywords: how to troubleshoot metadata issues 
+summary: 如果出现元数据问题，警报将告知您问题的根源和建议采取的措施。特别是，如果触发了 Low metadata storage 警报，则必须添加新的存储节点。 
+---
+= 对 StorageGRID 中的元数据问题进行故障排除
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果出现元数据问题，警报将告知您问题的根源和建议采取的措施。特别是，如果触发了 Low metadata storage 警报，则必须添加新的存储节点。
+
+.开始之前
+您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+
+.关于此任务
+针对触发的每个与元数据相关的警报，遵循建议的操作。如果触发了*低元数据存储*警报，则必须添加新的存储节点。
+
+StorageGRID 在每个存储节点的卷 0 上为对象元数据保留一定量的空间。该空间称为_实际保留空间_，细分为对象元数据所允许的空间（允许的元数据空间）和基本数据库操作（如压缩和修复）所需的空间。允许的元数据空间控制整体对象容量。
+
+image:metadata_allowed_space_volume_0.png["元数据允许空间卷 0"]
+
+如果对象元数据占用的空间超过元数据允许空间的 100%，则数据库操作无法高效运行，并且将发生错误。
+
+您可以 link:../monitor/monitoring-storage-capacity.html#monitor-object-metadata-capacity-for-each-storage-node["监控每个存储节点的对象元数据容量"] 帮助您预测错误并在错误发生前进行纠正。
+
+StorageGRID 使用以下 Prometheus 指标来衡量允许的元数据空间的满度：
+
+[listing]
+----
+storagegrid_storage_utilization_metadata_bytes/storagegrid_storage_utilization_metadata_allowed_bytes
+----
+当此 Prometheus 表达式达到特定阈值时，将触发*低元数据存储*警报。
+
+* *Minor*：对象元数据使用了 70% 或更多允许的元数据空间。您应尽快添加新的 Storage Nodes。
+* *Major*：对象元数据使用了 90% 或更多允许的元数据空间。您必须立即添加新的存储节点。
++
+
+CAUTION: 当对象元数据使用 90% 或更多允许的元数据空间时，仪表板上将显示警告。如果出现此警告，则必须立即添加新的存储节点。切勿允许对象元数据使用超过允许空间的 100%。
+
+* *Critical*：对象元数据正在使用 100% 或更多允许的元数据空间，并开始占用基本数据库操作所需的空间。您必须停止摄取新对象，并且必须立即添加新的存储节点。
+
+
+
+CAUTION: 如果卷 0 的大小小于元数据保留空间存储选项（例如，在非生产环境中），则*低元数据存储*警报的计算可能不准确。
+
+.步骤
+. 选择*Alerts* > *Current*。
+. 如果需要，从警报表中展开*低元数据存储*警报组，然后选择要查看的特定警报。
+. 查看警报对话框中的详细信息。
+. 如果已触发重大或关键的*低元数据存储*警报，请执行扩展以立即添加存储节点。
++
+
+NOTE: 由于 StorageGRID 保留所有对象元数据的完整副本，因此整个网格的元数据容量受到最小站点的元数据容量的限制。如果需要向某个站点添加元数据容量，还应该link:../expand/adding-grid-nodes-to-existing-site-or-adding-new-site.html["展开任何其他站点"]添加相同数量的存储节点。
+
++
+执行扩展后，StorageGRID 会将现有对象元数据重新分配到新节点，从而增加网格的整体元数据容量。无需用户操作。*低元数据存储*警报已清除。
+
+

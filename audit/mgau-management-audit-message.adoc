@@ -1,0 +1,134 @@
+---
+permalink: audit/mgau-management-audit-message.html 
+sidebar: sidebar 
+keywords: storagegrid, audit, message, MGAU, Management audit message 
+summary: Management 类别将用户对 Management API 的请求记录下来。每个非 GET 或 HEAD 请求都会将用户名、IP 和请求类型记录到 API 的响应中。 
+---
+= StorageGRID 中管理 API 请求的 MGAU 审核消息
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+管理类别将用户请求记录到 Management API。每个向有效 API URI 发出的非 GET 或 HEAD 的 HTTP 请求都会记录包含用户名、IP 和 API 请求类型的响应。无效的 API URI（如 /api/v3-authorize）以及向有效 API URI 发出的无效请求不会被记录。
+
+[cols="1a,1a,4a"]
+|===
+| 代码 | 字段 | 问题描述 
+
+
+ a| 
+MDIP
+ a| 
+目标 IP 地址
+ a| 
+服务器（目标）IP 地址。
+
+
+
+ a| 
+MDNA
+ a| 
+域名
+ a| 
+主机域名。
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+请求路径
+ a| 
+请求路径。
+
+
+
+ a| 
+MPQP
+ a| 
+请求查询参数
+ a| 
+请求的查询参数。
+
+
+
+ a| 
+MRBD
+ a| 
+请求正文
+ a| 
+请求正文的内容。默认情况下会记录响应正文，但在某些情况下，当响应正文为空时，会记录请求正文。由于响应正文中没有以下信息，因此它是从以下 POST 方法的请求正文中获取的：
+
+* *POST authorize* 中的用户名和帐户 ID
+* *POST /grid/grid-networks/update* 中的新子网配置
+* *POST /grid/ntp-servers/update* 中的新 NTP 服务器
+* *POST /grid/servers/decommission* 中已停用的服务器 ID
+
+
+*注意：* 敏感信息将被删除（例如 S3 访问密钥）或用星号掩盖（例如密码）。
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+请求方法
+ a| 
+${post_edited_translations.segment}
+
+* POST
+* PUT
+* DELETE
+* PATCH
+
+
+
+
+ a| 
+MRSC
+ a| 
+响应代码
+ a| 
+${post_edited_translations.segment}
+
+
+
+ a| 
+MRSP
+ a| 
+响应正文
+ a| 
+默认情况下会记录响应的内容（响应正文）。
+
+*注意：* 敏感信息将被删除（例如 S3 访问密钥）或用星号掩盖（例如密码）。
+
+
+
+ a| 
+MSIP
+ a| 
+${post_edited_translations.segment}
+ a| 
+客户端（源） IP 地址。
+
+
+
+ a| 
+MUUN
+ a| 
+用户 URN
+ a| 
+发送请求的用户的 URN（统一资源名称）。
+
+
+
+ a| 
+RSLT
+ a| 
+结果
+ a| 
+返回成功(SUCS)或后端报告的错误。
+
+|===

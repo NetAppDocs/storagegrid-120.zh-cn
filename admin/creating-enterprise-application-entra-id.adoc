@@ -1,0 +1,106 @@
+---
+permalink: admin/creating-enterprise-application-entra-id.html 
+sidebar: sidebar 
+keywords: enterprise application, entra id, single sign on, sso 
+summary: 您可以使用 Entra ID 为系统中的每个管理节点创建企业应用程序。 
+---
+= 在 Entra ID 中为 StorageGRID 创建企业应用程序
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 Entra ID 为系统中的每个管理节点创建企业应用程序。
+
+.开始之前
+* 您已开始为 StorageGRID 配置单点登录，并选择 *Entra ID* 作为 SSO 类型。
+* 您在 Grid Manager 中拥有 link:../admin/configure-sso.html#enter-sandbox-mode["已进入沙盒模式"]。
+* 您拥有系统中每个管理节点的 *Enterprise application name*。您可以从配置 SSO 页面上的管理节点详细信息表中复制这些值。
++
+
+NOTE: 您必须为 StorageGRID 系统中的每个管理节点创建一个企业应用程序。为每个管理节点提供企业应用程序可确保用户可以安全地登录和退出任何管理节点。
+
+* 您有在 Entra ID 中创建企业应用程序的经验。
+* 您拥有一个具有有效订阅的 Entra ID 帐户。
+* 您在 Entra ID 帐户中具有以下角色之一：Global Administrator、Cloud Application Administrator、Application Administrator 或服务主体的所有者。
+
+
+
+
+[[access-entra-id]]
+== 访问 Entra ID
+
+.步骤
+. 登录到 https://portal.azure.com["Azure Portal"^]。
+. 导航到 https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade["Entra ID"^]。
+. 选择 https://portal.azure.com/#blade/Microsoft_AAD_IAM/StartboardApplicationsMenuBlade/Overview/menuId/["企业应用程序"^]。
+
+
+
+
+[[create-enterprise-applications-and-save-storagegrid-sso-configuration]]
+== 创建企业应用程序并保存 StorageGRID SSO 配置
+
+要将 Entra ID 的 SSO 配置保存在 StorageGRID 中，您必须使用 Entra ID 为每个管理节点创建企业应用程序。您将从 Entra ID 复制联合元数据 URL，并将其粘贴到配置 SSO 页面上相应的*联合元数据 URL* 字段中。
+
+.步骤
+. 对每个管理节点重复以下步骤。
++
+.. 在 Entra ID Enterprise 应用程序窗格中，选择 *New application*。
+.. 选择*创建自己的应用程序*。
+.. 对于名称，请输入您从"配置 SSO"页面上的"管理节点详细信息"表中复制的*企业应用程序名称*。
+.. 保持选中*集成库中未找到的任何其他应用程序（非库）*单选按钮。
+.. 选择 *Create*。
+.. 选择 *2. 中的*开始*链接设置单点登录*框，或选择左边距中的*单点登录*链接。
+.. 选择 *SAML* 框。
+.. 复制*应用联合元数据网址*，您可以在*步骤 3 SAML 签名证书*下找到该网址。
+.. 转到"配置 SSO"页面，然后将 URL 粘贴到与您使用的*企业应用程序名称*对应的*联合元数据 URL* 字段中。
+
+
+. 为每个管理节点粘贴联合元数据 URL 并对 SSO 配置进行所有其他必要更改后，请在配置 SSO 页面上选择*保存*。
+
+
+
+
+[[download-saml-metadata-for-every-admin-node]]
+== 为每个管理节点下载 SAML 元数据
+
+保存 SSO 配置后，您可以为 StorageGRID 系统中的每个管理节点下载 SAML 元数据文件。
+
+.步骤
+. 对每个管理节点重复这些步骤。
++
+.. 从管理节点登录到 StorageGRID。
+.. 选择*配置* > *访问控制* > *单点登录*。
+.. 选择该按钮以下载该管理节点的 SAML 元数据。
+.. 保存文件，并将其上传到 Entra ID。
+
+
+
+
+
+
+[[upload-saml-metadata-to-each-enterprise-application]]
+== 将 SAML 元数据上传到每个企业应用程序
+
+为每个 StorageGRID 管理节点下载 SAML 元数据文件后，在 Entra ID 中执行以下步骤：
+
+.步骤
+. 返回 Azure 门户。
+. 对每个企业应用程序重复以下步骤：
++
+
+NOTE: 您可能需要刷新"企业应用程序"页面才能查看以前在列表中添加的应用程序。
+
++
+.. 转到企业应用程序的"属性"页面。
+.. 将*需要分配*设置为*否*（除非您想单独配置分配）。
+.. 转到"单一登录"页面。
+.. 完成 SAML 配置。
+.. 选择*上传元数据文件*按钮，然后选择您为相应管理节点下载的 SAML 元数据文件。
+.. 文件加载后，选择 *Save*，然后选择 *X* 关闭窗格。您将返回到"使用 SAML 设置单点登录"页面。
+
+
+. link:../admin/configure-sso.html#test-sso["测试每个应用程序"]。
+

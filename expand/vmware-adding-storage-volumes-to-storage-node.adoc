@@ -1,0 +1,102 @@
+---
+permalink: expand/vmware-adding-storage-volumes-to-storage-node.html 
+sidebar: sidebar 
+keywords: expand, expansion, storage node, add storage volumes, VMware, StorageGRID 
+summary: 如果存储节点包含的存储卷少于 16 个，则可以通过使用 VMware vSphere 添加卷来增加其容量。 
+---
+= ${post_edited_translations.segment}
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果存储节点包含的存储卷少于 16 个，则可以通过使用 VMware vSphere 添加卷来增加其容量。
+
+.开始之前
+* 您可以访问 link:../swnodes/index.html["${post_edited_translations.segment}"]。
+* 您拥有  `Passwords.txt` 文件。
+* 您有 link:../admin/admin-group-permissions.html["特定访问权限"]。
+
+
+
+CAUTION: 在软件升级、恢复过程或其他扩展过程处于活动状态时，请勿尝试将存储卷添加到存储节点。
+
+.关于此任务
+添加存储卷时，存储节点暂时不可用。您应该一次在一个存储节点上执行此过程，以避免影响面向客户端的网格服务。
+
+.步骤
+. 如有必要，请安装新的存储硬件并创建新的 VMware 数据存储库。
+. 向虚拟机添加一个或多个硬盘以用作存储（对象存储）。
++
+.. 打开 VMware vSphere Client。
+.. 编辑虚拟机设置以添加一个或多个其他硬盘。
+
+
++
+硬盘通常配置为虚拟机磁盘 (VMDK)。VMDK 更常用且更易于管理，而 RDM 可能会为使用较大对象大小（例如，大于 100 MB）的工作负载提供更好的性能。有关向虚拟机添加硬盘的详细信息，请参见 VMware vSphere 文档。
+
+. 通过使用 VMware vSphere Client 中的 *Restart Guest OS* 选项，或在指向虚拟机的 ssh 会话中输入以下命令，重新启动虚拟机：``sudo reboot``
++
+
+NOTE: ${post_edited_translations.segment}
+
+. 配置新存储以供存储节点使用：
++
+.. ${post_edited_translations.segment}
++
+... 输入以下命令： `ssh admin@_grid_node_IP_`
+... 输入 `Passwords.txt`文件中列出的密码。
+... 输入以下命令切换到 root： `su -`
+... 输入  `Passwords.txt` 文件中列出的密码。以 root 身份登录后，提示符将从  `$` 变为  `#`。
+
+
+.. 配置新的存储卷：
++
+`sudo add_rangedbs.rb`
+
++
+此脚本会查找任何新的存储卷，并提示您对其进行格式化。
+
+.. 输入 *y* 接受格式。
+.. 如果任何卷以前已格式化，请决定是否要重新格式化它们。
++
+*** 输入 *y* 以重新格式化。
+*** 输入 *n* 跳过重新格式化。
+
+
+
+
++
+ `setup_rangedbs.sh` 脚本会自动运行。
+
+. 请检查服务是否正确启动：
++
+.. 查看服务器上所有服务的状态列表：
++
+`sudo storagegrid-status`
+
++
+状态将自动更新。
+
+.. 请等待所有服务处于运行或已验证状态。
+.. 退出状态屏幕：
++
+`Ctrl+C`
+
+
+
+. 验证存储节点是否联机：
++
+.. 使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+.. 选择*节点* > *_存储节点_* > *任务*。
+.. 如果*存储状态*下拉列表设置为只读或脱机，请选择*在线*。
+.. 选择 *Save*。
+
+
+. 要查看新的对象存储，请选择*Storage*。
+. 查看 *Volumes* 表中的详细信息。
+
+
+.结果
+您可以使用存储节点的扩展容量来保存对象数据。

@@ -1,0 +1,107 @@
+---
+permalink: maintain/step-1-select-site.html 
+sidebar: sidebar 
+keywords: storagegrid, recover, select site 
+summary: 要确定是否可以停用站点，请先访问停用站点向导。 
+---
+= 在 StorageGRID 中选择要停用的站点
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要确定是否可以停用站点，请先访问停用站点向导。
+
+.开始之前
+* 您已获得所有必需的材料。
+* 您已查看删除站点的注意事项。
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["根访问权限或维护和 ILM 权限"]。
+
+
+.步骤
+. 选择*维护* > *任务* > *停用*。
+. 选择*停用站点*。
++
+此时将显示停用站点向导的步骤 1（选择站点）。此步骤包括 StorageGRID 系统中站点的字母列表。
+
++
+image:decommission_site_step_select_site.png["停用站点步骤 1 选择站点"]
+
+. 查看*已用存储容量*列中的值，以确定每个站点当前用于对象数据的存储量。
++
+已用存储容量为估算值。如果节点处于脱机状态，则已用存储容量为站点的最后已知值。
+
++
+** 对于已连接站点的停用，此值表示在安全停用此站点之前，需要将多少对象数据移动到其他站点或由 ILM 删除。
+** 对于断开连接的站点停用，此值表示停用此站点后，系统中有多少数据存储将变得无法访问。
++
+
+NOTE: 如果您的 ILM 策略旨在防止单个站点丢失，则对象数据的副本仍应保留在其余站点上。
+
+
+
+. 查看 *Decommission Possible* 列中的原因，以确定哪些站点当前可以退役。
++
+
+NOTE: 如果站点无法停用的原因不止一个，则显示最关键的原因。
+
++
+[cols="1a,1a,1a"]
+|===
+| 停用可能的原因 | 问题描述 | 下一步 
+
+
+ a| 
+绿色复选标记（image:icon_alert_green_checkmark.png["图标警报绿色复选标记"]）
+ a| 
+您可以停用此站点。
+ a| 
+转到 <<decommission_possible,下一步>>。
+
+
+
+ a| 
+否。此站点包含主管理节点。
+ a| 
+无法停用包含主管理节点的站点。
+ a| 
+无。您不能执行此过程。
+
+
+
+ a| 
+否。此站点包含一个或多个存档节点。
+ a| 
+您无法停用包含归档节点的站点。
+ a| 
+无。您不能执行此过程。
+
+
+
+ a| 
+否。此站点上的所有节点均已断开连接。请联系您的 NetApp 客户代表。
+ a| 
+除非站点中的每个节点都已连接（image:icon_alert_green_checkmark.png["图标警报绿色复选标记"]），否则无法执行连接的站点停用。
+ a| 
+如果要执行断开连接的站点停用，则必须联系您的 NetApp 客户代表，他们将检查您的要求并启用停用站点向导的其余部分。
+
+*重要提示*：切勿使在线节点脱机以删除站点。您将丢失数据。
+
+|===
++
+示例显示了具有三个站点的 StorageGRID 系统。Raleigh 和 Sunnyvale 站点的绿色复选标记（image:icon_alert_green_checkmark.png["图标警报绿色复选标记"]）表示您可以停用这些站点。但是，您无法停用 Vancouver 站点，因为它包含主管理节点。
+
+
+
+[[decommission_possible]]
+. 如果可以停用，请选择站点的单选按钮。
++
+*下一步*按钮已启用。
+
+. 选择 *Next*。
++
+此时将显示步骤 2（查看详细信息）。
+
+

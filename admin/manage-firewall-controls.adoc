@@ -1,0 +1,138 @@
+---
+permalink: admin/manage-firewall-controls.html 
+sidebar: sidebar 
+keywords: firewall controls, untrusted client network, privileged address, manage external access 
+summary: StorageGRID 在每个节点上包含一个内部防火墙，使您可以自定义对网格网络、管理网络和客户端网络的访问，从而增强网格的安全性。 
+---
+= 管理 StorageGRID 中的内部防火墙控制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+StorageGRID 在每个节点上包含一个内部防火墙，通过控制对节点的网络访问来增强网格的安全性。使用防火墙可阻止所有端口上的网络访问，特定网格部署所必需的端口除外。在防火墙控制页面上所做的配置更改将部署到每个节点。
+
+使用防火墙控制页面上的三个选项卡可自定义网格所需的访问权限。
+
+* *特权地址列表*：使用此选项卡可允许选定访问已关闭的端口。您可以添加 CIDR 表示法的 IP 地址或子网，这些地址或子网可以访问使用"管理外部访问"选项卡关闭的端口。
+* *管理外部访问*：使用此选项卡可关闭默认打开的端口，或重新打开先前已关闭的端口。
+* *不受信任的客户端网络*：使用此选项卡可指定节点是否信任来自客户端网络的入站流量。
++
+此选项卡上的设置将覆盖"管理外部访问"选项卡中的设置。
+
++
+** 具有不受信任客户端网络的节点将仅接受在该节点上配置的负载均衡器端点端口上的连接（全局、节点接口和节点类型绑定端点）。
+** 无论 Manage external networks 选项卡上的设置如何，在不受信任的客户端网络上，负载均衡器端点端口_是唯一开放的端口_。
+** 受信任时，可以访问在"管理外部访问"选项卡下打开的所有端口，以及在客户端网络上打开的任何负载平衡器端点。
+
+
+
+
+
+NOTE: 您在一个选项卡上进行的设置可能会影响您在另一个选项卡上进行的访问更改。请务必检查所有选项卡上的设置，以确保您的网络按预期运行。
+
+要配置内部防火墙控制，请参见 link:../admin/configure-firewall-controls.html["配置防火墙控件"]。
+
+有关外部防火墙和网络安全的详细信息，请参见 link:../admin/controlling-access-through-firewalls.html["控制外部防火墙的访问"]。
+
+
+
+[[privileged-address-list-and-manage-external-access-tabs]]
+== ${post_edited_translations.segment}
+
+“特权地址列表”选项卡使您能够注册一个或多个被授予访问已关闭网格端口权限的 IP 地址。“管理外部访问”选项卡使您能够关闭对选定外部端口或所有打开的外部端口的外部访问（外部端口是默认情况下非网格节点可访问的端口）。这两个选项卡通常可以结合使用，以自定义允许网格访问的精确网络访问权限。
+
+
+NOTE: ${post_edited_translations.segment}
+
+
+
+[[example-1-use-a-jump-host-for-maintenance-tasks]]
+=== 示例 1：使用跳板机执行维护任务
+
+假设您要使用跳板机（经过安全加固的主机）进行网络管理。您可以使用以下常规步骤：
+
+. ${post_edited_translations.segment}
+. 使用"管理外部访问"选项卡可阻止所有端口。
+
+
+
+CAUTION: 在阻止端口 443 和 8443 之前，请先添加特权 IP 地址。当前连接到被阻止端口的任何用户（包括您）都将失去对 Grid Manager 的访问权限，除非其 IP 地址已添加到特权地址列表中。
+
+保存配置后，网格中管理节点上的所有外部端口将对除跳转主机之外的所有主机被阻止。然后，您可以使用跳转主机更安全地对网格执行维护任务。
+
+
+
+[[example-2-lock-down-sensitive-ports]]
+=== 示例 2：锁定敏感端口
+
+假设您要锁定敏感端口以及该端口上的服务。您可以使用以下常规步骤：
+
+. 使用"特权地址列表"选项卡，仅向需要访问该服务的主机授予访问权限。
+. 使用"管理外部访问"选项卡可阻止所有端口。
+
+
+
+CAUTION: 在阻止访问分配给 Grid Manager 和 Tenant Manager 的任何端口（预设端口为 443 和 8443）之前，请先添加特权 IP 地址。当前连接到被阻止端口的任何用户（包括您）都将失去对 Grid Manager 的访问权限，除非其 IP 地址已添加到特权地址列表中。
+
+保存配置后，特权地址列表中的主机可以使用该敏感端口及其上的服务。无论请求来自哪个接口，所有其他主机均被拒绝访问该服务。
+
+
+
+[[example-3-disable-access-to-unused-services]]
+=== 示例 3：禁用对未使用服务的访问
+
+在网络级别，您可以禁用某些不打算使用的服务。例如，要阻止 HTTP S3 客户端流量，您可以使用"管理外部访问"选项卡上的切换来阻止端口 18084。
+
+
+
+[[untrusted-client-networks-tab]]
+== 不受信任的客户端网络选项卡
+
+如果使用客户端网络，则可以通过仅接受显式配置的端点上的入站客户端流量来帮助保护 StorageGRID 免受恶意攻击。
+
+默认情况下，每个网格节点上的客户端网络为_trusted_。也就是说，默认情况下，StorageGRID 信任所有 link:../network/external-communications.html["可用外部端口"] 上每个网格节点的入站连接。
+
+您可以通过指定每个节点上的客户端网络_不可信_来减少对 StorageGRID 系统的恶意攻击威胁。如果节点的客户端网络不受信任，则该节点仅接受明确配置为负载平衡器端点的端口上的入站连接。请参阅link:../admin/configuring-load-balancer-endpoints.html["配置负载平衡器端点"]和link:../admin/configure-firewall-controls.html["配置防火墙控件"]。
+
+
+
+[[example-1-gateway-node-only-accepts-https-s3-requests]]
+=== 示例 1：网关节点仅接受 HTTPS S3 请求
+
+假设您希望网关节点拒绝客户端网络上除 HTTPS S3 请求之外的所有入站流量。您将执行以下一般步骤：
+
+. 在link:../admin/configuring-load-balancer-endpoints.html["负载平衡器端点"]页面中，通过端口 443 上的 HTTPS 为 S3 配置负载平衡器端点。
+. 在防火墙控制页面中，选择"不受信任"以指定网关节点上的客户端网络不受信任。
+
+
+保存配置后，除端口 443 上的 HTTPS S3 请求和 ICMP echo (ping) 请求外，网关节点客户端网络上的所有入站流量都将被丢弃。
+
+
+
+[[example-2-storage-node-sends-s3-platform-services-requests]]
+=== 示例 2：存储节点发送 S3 平台服务请求
+
+假设您要启用来自存储节点的出站 S3 平台服务流量，但要阻止客户端网络上该存储节点的任何入站连接。您将执行以下常规步骤：
+
+* 在防火墙控制页面的"不受信任的客户端网络"选项卡中，指示存储节点上的客户端网络不受信任。
+
+
+保存配置后，存储节点不再接受客户端网络上的任何传入流量，但它继续允许向已配置的平台服务目标发出出站请求。
+
+
+
+[[example-3-limiting-access-to-grid-manager-to-a-subnet]]
+=== 示例 3：将对 Grid Manager 的访问限制为子网
+
+假设您只想允许 Grid Manager 访问特定子网。您将执行以下步骤：
+
+. 将管理节点的客户端网络附加到子网。
+. 使用"不受信任的客户端网络"选项卡将客户端网络配置为不受信任。
+. 在创建管理接口负载均衡器端点时，输入端口并选择该端口将访问的管理接口。
+. 对于不受信任的客户端网络，选择*是*。
+. 使用管理外部访问选项卡可阻止所有外部端口（为该子网外的主机设置或不设置特权 IP 地址）。
+
+
+保存配置后，只有您指定的子网上的主机才能访问 Grid Manager。所有其他主机均被屏蔽。

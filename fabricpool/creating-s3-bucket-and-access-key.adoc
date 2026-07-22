@@ -1,0 +1,72 @@
+---
+permalink: fabricpool/creating-s3-bucket-and-access-key.html 
+sidebar: sidebar 
+keywords: fabricPool, StorageGRID, S3 bucket, bucket, access key, secret access key 
+summary: 在将 StorageGRID 用于 FabricPool 工作负载之前，您必须为 FabricPool 数据创建一个 S3 存储桶。您还需要获取将用于 FabricPool 的租户帐户的访问密钥和机密访问密钥。 
+---
+= 在 StorageGRID 中为 FabricPool 创建 S3 存储桶并获取访问密钥
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在将 StorageGRID 用于 FabricPool 工作负载之前，您必须为 FabricPool 数据创建一个 S3 存储桶。您还需要获取将用于 FabricPool 的租户帐户的访问密钥和机密访问密钥。
+
+有关此任务的详细信息，请参阅link:../tenant/creating-s3-bucket.html["创建 S3 存储桶"]和link:../tenant/creating-your-own-s3-access-keys.html["创建自己的 S3 访问密钥"]。要使用 FabricPool 设置向导完成此任务，请转到link:use-fabricpool-setup-wizard-steps.html["访问并完成 FabricPool 设置向导"]。
+
+.开始之前
+* 您已创建供 FabricPool 使用的租户帐户。
+* 您对租户帐户具有 root 访问权限。
+
+
+.步骤
+. 登录到租户管理器。
++
+您可以执行以下操作之一：
+
++
+** 从网格管理器中的租户帐户页面，为租户选择*登录*链接，然后输入您的凭据。
+** 在 Web 浏览器中输入租户帐户的 URL，然后输入您的凭据。
+
+
+. 为 FabricPool 数据创建 S3 存储桶。
++
+您必须为计划使用的每个 ONTAP 集群创建一个唯一的存储桶。
+
++
+.. 从控制面板中选择*查看存储桶*，或选择*存储（S3）* > *存储桶*。
+.. 选择*创建存储桶*。
+.. 输入要与 FabricPool 一起使用的 StorageGRID 存储桶的名称。例如， `fabricpool-bucket`。
++
+
+TIP: 创建存储桶后，您无法更改存储桶名称。
+
+.. 选择此存储桶的区域。
++
+默认情况下，将在 `us-east-1`区域中创建所有存储桶。如果将默认区域配置为 `us-east-1`以外的区域，则最初会在下拉列表中选择此其他区域。
+
+.. 选择 *Continue*。
+.. 选择*创建存储桶*。
++
+
+NOTE: 不要为 FabricPool 存储桶选择*启用对象版本控制*。同样，请勿编辑 FabricPool 存储桶以使用*可用*或非默认一致性。FabricPool 存储桶的推荐存储桶一致性为*新写后读*，这是新存储桶的默认一致性。
+
+
+
+. 创建访问密钥和秘密访问密钥。
++
+.. 选择 *STORAGE (S3)* > *My access keys*。
+.. 选择*创建密钥*。
+.. 选择*创建访问密钥*。
+.. ${post_edited_translations.segment}
++
+在将 StorageGRID 配置为 FabricPool 云分层时，您将在 ONTAP 中输入这些值。
+
++
+
+TIP: 如果您将来在 StorageGRID 中生成新的访问密钥和机密访问密钥，请先将新密钥输入 ONTAP，然后再从 StorageGRID 中删除旧值。否则，ONTAP 可能会暂时失去对 StorageGRID 的访问权限。
+
+
+
+

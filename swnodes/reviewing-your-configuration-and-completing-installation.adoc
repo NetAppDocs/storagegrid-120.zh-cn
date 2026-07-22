@@ -1,0 +1,47 @@
+---
+permalink: swnodes/reviewing-your-configuration-and-completing-installation.html 
+sidebar: sidebar 
+keywords: how to review your configuration and complete installation 
+summary: 您必须仔细检查您输入的配置信息，以确保成功完成安装。 
+---
+= 查看 StorageGRID 配置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须仔细检查您输入的配置信息，以确保成功完成安装。
+
+.步骤
+. 查看*摘要*页面。
++
+image:11_gmi_installer_summary_page.gif["网格管理器安装程序摘要页面"]
+
+. 确认所有网格配置信息正确无误。使用"摘要"页面上的"修改"链接返回并更正所有错误。
+. 单击*安装*。
++
+
+NOTE: 如果节点被配置为使用客户端网络，则当您单击*安装*时，该节点的默认网关将从网格网络切换到客户端网络。如果您失去连接，则必须确保您通过可访问的子网访问主管理节点。有关详细信息，请参阅 link:../network/index.html["网络连接准则"]。
+
+. 单击*下载恢复包*。
++
+当安装进行到定义网格拓扑的点时，系统会提示您下载恢复包文件(`.zip`），并确认您可以成功访问此文件的内容。您必须下载恢复包文件，以便在一个或多个网格节点发生故障时恢复 StorageGRID 系统。安装在后台继续进行，但在下载并验证此文件之前，您无法完成安装并访问 StorageGRID 系统。
+
+. 验证是否可以提取 `.zip`文件的内容，然后将其保存在两个安全、可靠且分开的位置。
++
+
+CAUTION: 必须保护恢复包文件，因为它包含可用于从 StorageGRID 系统获取数据的加密密钥和密码。
+
+. 选中*我已成功下载并验证恢复包文件*复选框，然后单击*下一步*。
++
+如果安装仍在进行中，则会显示状态页面。此页面显示每个网格节点的安装进度。
+
++
+image:12_gmi_installer_status_page.gif["本图四周的文字提供了相关说明。"]
+
++
+当所有网格节点达到完成阶段时，将显示 Grid Manager 的登录页面。
+
+. 使用"root"用户和安装过程中指定的密码登录到网格管理器。
+

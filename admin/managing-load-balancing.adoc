@@ -1,0 +1,256 @@
+---
+permalink: admin/managing-load-balancing.html 
+sidebar: sidebar 
+keywords: manage load balancing, balance workload, client ingest, client retrieval, distribute connection 
+summary: 您可以使用负载均衡来处理来自 S3 客户端的接收和检索工作负载。 
+---
+= 了解 StorageGRID 负载平衡
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用负载均衡来处理来自 S3 客户端的接收和检索工作负载。
+
+
+
+[[what-is-load-balancing]]
+== 什么是负载平衡？
+
+当客户端应用程序从 StorageGRID 系统保存或检索数据时，StorageGRID 使用负载均衡器来管理摄取和检索工作负载。负载均衡通过将工作负载分布在多个存储节点上，最大限度地提高速度和连接容量。
+
+StorageGRID 负载平衡器服务安装在所有管理节点和所有网关节点上，并提供第 7 层负载平衡。它执行客户端请求的传输层安全性 (TLS) 终止，检查请求，并建立到存储节点的新安全连接。
+
+在将客户端流量转发到存储节点时，每个节点上的负载平衡器服务独立运行。通过加权过程，负载平衡器服务将更多请求路由到 CPU 可用性更高的存储节点。
+
+
+NOTE: 虽然 StorageGRID 负载均衡器服务是推荐的负载均衡机制，但您可能需要集成第三方负载均衡器。有关信息，请联系您的 NetApp 客户代表或参阅 https://docs.netapp.com/us-en/storagegrid-enable/technical-reports/load-balancer-index.html["将第三方负载均衡器与 StorageGRID 结合使用"^]。
+
+
+
+[[how-many-load-balancing-nodes-do-i-need]]
+== 我需要多少个负载平衡节点？
+
+作为一般最佳做法，StorageGRID 系统中的每个站点都应包含具有负载平衡器服务的两个或多个节点。例如，站点可能包括两个网关节点，或者同时包括管理节点和网关节点。确保每个负载平衡节点都有足够的网络、硬件或虚拟化基础架构，无论您是使用服务设备、裸机节点还是基于虚拟机 (VM) 的节点。
+
+
+
+[[what-is-a-load-balancer-endpoint]]
+== 什么是负载平衡器端点？
+
+负载平衡器端点定义传入和传出客户端应用程序请求将用于访问包含负载平衡器服务的那些节点的端口和网络协议（HTTPS 或 HTTP）。端点还定义了客户端类型（S3）、绑定模式，以及可选的允许或阻止的租户列表。
+
+要创建负载平衡器端点，请使用 Grid Manager 或完成 S3 设置和 FabricPool 向导：
+
+* link:configuring-load-balancer-endpoints.html["配置负载平衡器端点"]
+* link:use-s3-setup-wizard-steps.html["使用 S3 设置向导"]
+* link:../fabricpool/use-fabricpool-setup-wizard-steps.html["使用 FabricPool 设置向导"]
+
+
+
+
+[[considerations-for-load-balancer-caching]]
+=== 负载平衡器缓存的注意事项
+
+当工作负载对数据子集进行操作并多次访问对象时，缓存会显著提高性能。此外，缓存提供对对象存储的远程访问，而无需完整的网格部署。负载平衡器缓存仅适用于网关节点。
+
+创建负载平衡器端点时：
+
+* 仅对可缓存的工作负载启用缓存。与未缓存数据相比，访问缓存数据频率更低的工作负载，其性能将比未使用缓存服务时更差。在某些情况下，覆盖率和逐出率较高的工作负载也可能超过保修的驱动器写入耐久性。
+* 考虑添加额外的端点或节点，以缓存适合缓存的各个工作负载。
+* 对可缓存和不可缓存的工作负载使用不同的端点。这种分离可确保适当应用缓存机制，并且不会干扰不可缓存的数据处理。
+* 通过将其定向到启用缓存的端点来评估潜在的可缓存工作负载。监控并验证缓存命中率，以确定工作负载是否适合缓存。此评估有助于优化性能并确保高效使用缓存资源。
+* link:../audit/index.html["查看审核日志"] 以确定现有工作负载是否适合缓存。在给定的时间段内，确定唯一对象的 GET 百分比。要适合缓存，此值应低于 50%。
+
+
+
+
+==== 可能适合缓存的工作负载示例
+
+* 数据湖
+* 高性能计算（HPC）
+* AI/ML 训练
+* 内容分发网络 (CDN)
+* 媒体资产管理
+* 视频制作
+
+
+[NOTE]
+====
+* 可以缓存多个对象版本。
+* 支持范围读取操作。
+
+
+====
+
+
+==== 不适合缓存的工作负载示例
+
+* Fabric Pool
+* 备份应用程序
+* 存储分层
+
+
+
+CAUTION: 如果要由缓存提供的任何内容需要静态加密， https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/optional-enabling-node-encryption.html["启用节点或驱动器加密"^]在缓存节点上。
+
+
+
+==== 不会缓存的对象和请求的类型
+
+* The `response-content-encoding` 查询参数
+* The `partNumber` 查询参数
+* 条件标头
++
+** `If-Match`
+** `If-Modified-Since`
+** `If-None-Match`
+** `If-Unmodified-Since`
+
+
+* 使用以下任何内容进行静态加密的请求：
++
+** SSE（使用 StorageGRID 管理的密钥的服务器端加密）
+** SSE-C（使用客户提供的密钥的服务器端加密）
+** 存储对象加密
+
+
+
+
+未缓存的任何请求都将转发到上游 LDR，就像未启用缓存一样。
+
+.相关信息
+* link:../troubleshoot/troubleshooting-load-balancer-caching.html["对负载平衡器缓存进行故障排除"]
+* 有关负载平衡器缓存的详细信息，请与技术支持联系。
+
+
+
+
+[[considerations-for-the-port]]
+=== 端口注意事项
+
+对于您创建的第一个端点，负载平衡器端点的端口默认为 10433，但您可以指定介于 1 到 65535 之间的任何未使用的外部端口。如果您使用端口 80 或 443，则端点将仅在网关节点上使用负载平衡器服务。这些端口在管理节点上保留。如果您对多个端点使用相同的端口，则必须为每个端点指定不同的绑定模式。
+
+不允许使用其他网格服务所用的端口。请参阅link:../network/internal-grid-node-communications.html#storagegrid-internal-ports["StorageGRID 内部端口"]。
+
+
+
+[[considerations-for-the-network-protocol]]
+=== 网络协议的注意事项
+
+在大多数情况下，客户端应用程序与 StorageGRID 之间的连接应使用传输层安全性 (TLS) 加密。支持在不使用 TLS 加密的情况下连接到 StorageGRID，但不建议这样做，尤其是在生产环境中。为 StorageGRID 负载均衡器端点选择网络协议时，应选择 *HTTPS*。
+
+
+
+[[considerations-for-load-balancer-endpoint-certificates]]
+=== 负载平衡器端点证书的注意事项
+
+如果选择 *HTTPS* 作为负载均衡器端点的网络协议，则必须提供安全证书。创建负载均衡器端点时，可以使用以下三个选项中的任何一个：
+
+* *上传已签名的证书（推荐）*。此证书可以由公用信任的证书颁发机构或专用证书颁发机构 (CA) 签名。使用公开可信的 CA 服务器证书来保护连接是最佳做法。与生成的证书不同，由 CA 签名的证书可以无中断地轮换，这有助于避免过期问题。
++
+在创建负载平衡器端点之前，必须获取以下文件：
+
++
+** 自定义服务器证书文件。
+** 自定义服务器证书私钥文件。
+** 可选，来自每个中间颁发证书颁发机构的证书的 CA 捆绑包。
+
+
+* *生成自签名证书*。
+* *使用全局 StorageGRID S3 证书*。必须上传或生成此证书的自定义版本，然后才能将其选择用于负载平衡器端点。请参阅 link:../admin/configuring-custom-server-certificate-for-storage-node.html["配置 S3 API 证书"]。
+
+
+
+
+==== 我需要哪些值？
+
+要创建证书，您必须知道 S3 客户端应用程序将用于访问端点的所有域名和 IP 地址。
+
+证书的 *使用者 DN*（可分辨名称）条目必须包含客户端应用程序将用于 StorageGRID 的完全限定域名。例如：
+
+[listing]
+----
+Subject DN: /C=Country/ST=State/O=Company,Inc./CN=s3.storagegrid.example.com
+----
+根据需要，证书可以使用通配符来表示运行负载平衡器服务的所有管理节点和网关节点的完全限定域名。例如， `*.storagegrid._example_.com` 使用 * 通配符表示  `adm1.storagegrid._example_.com` 和  `gn1.storagegrid._example_.com`。
+
+如果您计划使用 S3 虚拟托管样式请求，则证书还必须为您配置的每个 link:../admin/configuring-s3-api-endpoint-domain-names.html["S3端点域名"] 包含*备用名称*条目，包括任何通配符名称。例如：
+
+[listing]
+----
+Alternative Name: DNS:*.s3.storagegrid.example.com
+----
+
+NOTE: 如果对域名使用通配符，请查看 link:../harden/hardening-guideline-for-server-certificates.html["服务器证书的强化准则"]。
+
+您还必须为安全证书中的每个名称定义 DNS 条目。
+
+
+
+==== 如何管理过期的证书？
+
+
+CAUTION: 如果用于保护 S3 应用程序和 StorageGRID 之间连接的证书过期，则应用程序可能会暂时失去对 StorageGRID 的访问权限。
+
+要避免证书过期问题，请遵循以下最佳实践：
+
+* 仔细监控任何警告证书过期日期即将到来的警报，例如*负载平衡器端点证书过期*和*S3 API 全局服务器证书过期*警报。
+* 始终保持 StorageGRID 和 S3 应用程序的证书版本同步。如果替换或续订用于负载平衡器端点的证书，则必须替换或续订 S3 应用程序使用的等效证书。
+* 使用公开签名的 CA 证书。如果使用由 CA 签名的证书，则可以无中断地替换即将过期的证书。
+* 如果您已生成自签名 StorageGRID 证书，并且该证书即将过期，则必须在现有证书过期之前手动替换 StorageGRID 和 S3 应用程序中的证书。
+
+
+
+
+[[considerations-for-the-binding-mode]]
+=== 绑定模式的注意事项
+
+绑定模式可让您控制哪些 IP 地址可用于访问负载平衡器端点。如果端点使用绑定模式，则客户端应用程序只有在使用允许的 IP 地址或其相应的完全限定域名 (FQDN) 时才能访问端点。使用任何其他 IP 地址或 FQDN 的客户端应用程序无法访问端点。
+
+可以指定以下任意绑定模式：
+
+* *全局*（默认）：客户端应用程序可以使用任何网关节点或管理节点的 IP 地址、任何网络上的任何 HA 组的虚拟 IP (VIP) 地址或相应的 FQDN 来访问端点。除非需要限制端点的可访问性，否则请使用此设置。
+* *HA 组的虚拟 IP*。客户端应用程序必须使用 HA 组的虚拟 IP 地址（或相应的 FQDN）。
+* *节点接口*。客户端必须使用所选节点接口的 IP 地址（或相应的 FQDN）。
+* *节点类型*。根据您选择的节点类型，客户端必须使用任意管理节点的 IP 地址（或相应的 FQDN）或任意网关节点的 IP 地址（或相应的 FQDN）。
+
+
+
+
+[[considerations-for-tenant-access]]
+=== 租户访问的注意事项
+
+租户访问是一项可选安全功能，允许您控制哪些 StorageGRID 租户帐户可以使用负载平衡器端点来访问其存储桶。您可以允许所有租户访问端点（默认），也可以为每个端点指定允许或阻止的租户列表。
+
+您可以使用此功能在租户及其端点之间提供更好的安全隔离。例如，您可以使用此功能来确保一个租户拥有的绝密或高度机密的材料对其他租户完全不可访问。
+
+
+NOTE: 出于访问控制的目的，租户是根据客户端请求中使用的访问密钥确定的，如果请求中未提供访问密钥（例如匿名访问），则使用存储桶所有者来确定租户。
+
+
+
+==== 租户访问示例
+
+要了解此安全功能的工作原理，请考虑以下示例：
+
+. 您已创建两个负载平衡器端点，如下所示：
++
+** *公共*端点：使用端口 10443，并允许访问所有租户。
+** *Top secret* 端点：使用端口 10444，仅允许访问 *Top secret* 租户。所有其他租户均无法访问此端点。
+
+
+. The `top-secret.pdf` 位于*绝密*租户拥有的存储桶中。
+
+
+要访问 `top-secret.pdf`，*绝密*租户中的用户可以向 `\https://w.x.y.z:10444/top-secret.pdf`发出 GET 请求。由于允许此租户使用 10444 端点，因此用户可以访问该对象。但是，如果属于任何其他租户的用户向相同的 URL 发出相同的请求，则会立即收到"拒绝访问"消息。即使凭据和签名有效，也会拒绝访问。
+
+
+
+[[cpu-availability]]
+== CPU可用性
+
+每个管理节点和网关节点上的负载平衡器服务在将 S3 流量转发到存储节点时独立运行。通过加权过程，负载平衡器服务将更多请求路由到具有更高 CPU 可用性的存储节点。节点 CPU 负载信息每隔几分钟更新一次，但权重可能会更频繁地更新。即使节点报告 100% 的利用率或未能报告其利用率，也会为所有存储节点分配最小基本权重值。
+
+在某些情况下，有关 CPU 可用性的信息仅限于负载均衡器服务所在的站点。

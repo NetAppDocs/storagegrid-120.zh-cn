@@ -1,0 +1,93 @@
+---
+permalink: s3/operations-for-multipart-uploads.html 
+sidebar: sidebar 
+keywords: operations, multipart uploads, uploads, rest API 
+summary: 本节介绍 StorageGRID 如何支持分段上传操作。 
+---
+= StorageGRID 中支持的分段上传操作
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+本节介绍 StorageGRID 如何支持分段上传操作。
+
+以下条件和注意事项适用于所有多部分上传操作：
+
+* 不应超过 1,000 个并发多部分上传到单个存储桶，因为该存储桶的 ListMultipartUploads 查询结果可能会返回不完整的结果。
+* StorageGRID 强制执行适用于分段上传各部分的 AWS 大小限制。S3 客户端必须遵循以下准则：
++
+** 多部分上传中的每个部分必须介于 5 MiB（5,242,880 字节）和 5 GiB（5,368,709,120 字节）之间。
+** 最后一部分可以小于 5 MiB（5,242,880 字节）。
+** 一般来说，分段大小应尽可能大。例如，对于 100 GiB 对象，使用 5 GiB 的分段大小。由于每个分段都被视为唯一的对象，因此使用较大的分段大小可减少 StorageGRID 元数据开销。
+** 对于小于 5 GiB 的对象，请考虑改用非多部分上传。
+
+
+* 在多部分对象被载入时，ILM 会对其每个部分进行评估；如果 ILM 规则使用 Balanced 或 Strict link:../ilm/data-protection-options-for-ingest.html["载入选项"]，则在多部分上传完成时还会对整个对象进行评估。您应该了解这会如何影响对象和部件的放置：
++
+** 如果在 S3 多部分上传过程中更改了 ILM，则当多部分上传完成时，对象的某些部分可能不符合当前的 ILM 要求。任何未正确放置的部分都会排队等待 ILM 重新评估，并在稍后移至正确的位置。
+** 在评估某个部件的 ILM 时，StorageGRID 会根据部件的大小而非对象的大小进行筛选。这意味着对象的某些部件可以存储在不符合整个对象 ILM 要求的位置。例如，如果规则指定所有 10 GB 或更大的对象存储在 DC1，而所有较小的对象存储在 DC2，则 10 部分分段上传中的每个 1 GB 部件在写入时均存储在 DC2。但是，当对整个对象评估 ILM 时，对象的所有部件都将移动到 DC1。
+
+
+* 所有多部分上传操作都支持 StorageGRID link:consistency.html["一致性值"]。
+* 当使用分段上传方式载入对象时，link:../admin/what-object-segmentation-is.html["对象分割阈值（1 GiB）"]不适用。
+* 您可以根据需要将 link:using-server-side-encryption.html["服务器端加密"] 与分段上传结合使用。要使用 SSE（使用 StorageGRID 管理的密钥进行服务器端加密），请仅在 CreateMultipartUpload 请求中包含  `x-amz-server-side-encryption` 请求标头。要使用 SSE-C（使用客户提供的密钥进行服务器端加密），请在 CreateMultipartUpload 请求以及每个后续 UploadPart 请求中指定相同的三个加密密钥请求标头。
+* 如果提取在基本存储桶的 Before 时间戳之前启动，则多部分上传的对象将包含在 link:../tenant/what-is-branch-bucket.html["分支存储桶"] 中，而不管上传何时完成。
+
+
+[cols="2a,3a"]
+|===
+| 操作 | 实施 
+
+
+ a| 
+AbortMultipartUpload
+ a| 
+已使用所有 Amazon S3 REST API 行为实施。如有更改，恕不另行通知。
+
+
+
+ a| 
+CompleteMultipartUpload
+ a| 
+请参阅 link:complete-multipart-upload.html["CompleteMultipartUpload"]
+
+
+
+ a| 
+CreateMultipartUpload
+
+（先前命名为 Initiate Multipart Upload）
+ a| 
+请参阅 link:initiate-multipart-upload.html["CreateMultipartUpload"]
+
+
+
+ a| 
+ListMultipartUploads
+ a| 
+请参阅 link:list-multipart-uploads.html["ListMultipartUploads"]
+
+
+
+ a| 
+ListParts
+ a| 
+已使用所有 Amazon S3 REST API 行为实施。如有更改，恕不另行通知。
+
+
+
+ a| 
+UploadPart
+ a| 
+请参阅 link:upload-part.html["UploadPart"]
+
+
+
+ a| 
+UploadPartCopy
+ a| 
+请参阅 link:upload-part-copy.html["UploadPartCopy"]
+
+|===

@@ -1,0 +1,233 @@
+---
+permalink: admin/grid-federation-troubleshoot.html 
+sidebar: sidebar 
+keywords: troubleshoot, grid federation connection, account clone, cross-grid replication, alerts, errors 
+summary: 您可能需要排除与网格联合连接、帐户克隆和跨网格复制相关的警报和错误。 
+---
+= 对 StorageGRID 中的网格联合错误进行故障排除
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可能需要排除与网格联合连接、帐户克隆和跨网格复制相关的警报和错误。
+
+
+
+[[grid-federation-errorsgrid-federation-connection-alerts-and-errors]]
+== [[grid-federation-errors]]网格联盟连接警报和错误
+
+您可能会收到网格联盟连接的警报或遇到错误。
+
+进行任何更改以解决连接问题后，请测试连接，以确保连接状态返回到 *Connected*。有关说明，请参见link:grid-federation-manage-connection.html["管理网格联盟连接"]。
+
+
+
+[[grid-federation-connection-failure-alert]]
+=== 网格联合连接失败警报
+
+.问题描述
+${post_edited_translations.segment}
+
+.详细信息
+${post_edited_translations.segment}
+
+.建议的操作
+. 检查两个网格的“网格联盟”页面上的设置。确认所有值均正确。参见 link:grid-federation-manage-connection.html["管理网格联盟连接"]。
+. 检查用于连接的证书。确保没有关于网格联盟证书过期的警报，且每个证书的详细信息均有效。请参见 link:grid-federation-manage-connection.html["管理网格联盟连接"] 中关于轮换连接证书的说明。
+. 确认两个网格中的所有管理节点和网关节点均在线且可用。解决可能影响这些节点的任何警报，然后重试。
+. 如果您为本地或远程 grid 提供了完全限定域名 (FQDN)，请确认 DNS 服务器已联机且可用。有关网络、IP 地址和 DNS 要求，请参见 link:grid-federation-overview.html["什么是网格联盟？"]。
+
+
+
+
+[[expiration-of-grid-federation-certificate-alert]]
+=== ${post_edited_translations.segment}
+
+.问题描述
+已触发*网格联合证书到期*警报。
+
+.详细信息
+此警报表示一个或多个网格联合证书即将过期。
+
+.建议的操作
+请参见 link:grid-federation-manage-connection.html["管理网格联盟连接"] 中关于轮换连接证书的说明。
+
+
+
+[[error-editing-a-grid-federation-connection]]
+=== 编辑网格联盟连接时出错
+
+.问题描述
+在编辑网格联合连接时，您在选择*保存并测试*时会看到以下警告消息："无法在一个或多个节点上创建候选配置文件。"
+
+.详细信息
+编辑网格联合连接时，StorageGRID 尝试在第一个网格的所有管理节点上保存"候选配置"文件。如果无法将此文件保存到所有管理节点（例如，因为管理节点处于脱机状态），则会显示警告消息。
+
+.建议的操作
+. 从用于编辑连接的网格中，选择*Nodes*。
+. 确认该网格的所有管理节点都处于联机状态。
+. 如果任何节点处于脱机状态，请将其重新联机并尝试再次编辑连接。
+
+
+
+
+[[account-clone-errors]]
+== 帐户克隆错误
+
+
+
+[[cant-sign-in-to-a-cloned-tenant-account]]
+=== 无法登录到克隆的租户帐户
+
+.问题描述
+无法登录克隆的租户帐户。租户管理器登录页面上的错误消息是"此帐户的凭据无效。请重试。"
+
+.详细信息
+出于安全原因，将租户帐户从租户的源网格克隆到租户的目标网格时，不会克隆您为租户的本地 root 用户设置的密码。同样，当租户在其源网格上创建本地用户时，本地用户密码不会克隆到目标网格。
+
+.建议的操作
+在 root 用户登录到租户的目标网格之前，网格管理员必须先在目标网格上link:changing-password-for-tenant-local-root-user.html["更改本地 root 用户的密码"]。
+
+在克隆的本地用户登录到租户的目标网格之前，克隆租户的 root 用户必须在目标网格上为该用户添加密码。有关说明，请参阅使用 Tenant Manager 的说明中的 link:../tenant/manage-users.html["管理用户"]。
+
+
+
+[[tenant-created-without-a-clone]]
+=== 在没有克隆的情况下创建的租户
+
+.问题描述
+在创建具有*使用网格联合连接*权限的新租户后，您会看到"Tenant created without a clone"消息。
+
+.详细信息
+如果连接状态的更新出现延迟，则可能会发生此问题，这可能导致不正常的连接被列为*已连接*。
+
+.建议的操作
+. 查看错误消息中列出的原因，并解决可能导致连接无法工作的任何网络或其他问题。请参阅 <<grid-federation-errors,网格联合连接警报和错误>>。
+. 按照link:grid-federation-manage-connection.html["管理网格联盟连接"]中的说明测试网格联合连接，以确认此问题已修复。
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
+. 选择*重试帐户克隆*。
++
+image:grid-federation-retry-account-clone.png["${post_edited_translations.segment}"] 如果已解决此错误，租户帐户现在将克隆到另一个网格。
+
+
+
+
+
+[[cross-grid-replication-alerts-and-errors]]
+== ${post_edited_translations.segment}
+
+
+
+[[last-error-shown-for-connection-or-tenant]]
+=== ${post_edited_translations.segment}
+
+.问题描述
+当 link:../monitor/grid-federation-monitor-connections.html["查看网格联合连接"]（或当 link:grid-federation-manage-tenants.html["${post_edited_translations.segment}"] 进行连接时），您会在连接详细信息页面的*上一个错误*列中发现错误。例如：
+
+image:grid-federation-last-error.png["显示网格联合连接的\"最后一个错误\"列中消息的屏幕截图"]
+
+.详细信息
+对于每个网格联盟连接，“*上一次错误*”列会显示在将租户数据复制到另一个网格时发生的最新的错误（如果有）。此列仅显示上一次发生的跨网格复制错误；可能发生的先前错误不会显示。此列中出现错误可能是由于以下原因之一：
+
+* 未找到源对象版本。
+* ${post_edited_translations.segment}
+* ${post_edited_translations.segment}
+* ${post_edited_translations.segment}
+* ${post_edited_translations.segment}
+* ${post_edited_translations.segment}
+* ${post_edited_translations.segment}
+* ${post_edited_translations.segment}
+
+
+.建议的操作
+${post_edited_translations.segment}
+
+. ${post_edited_translations.segment}
+. 执行任何推荐的操作。例如，如果针对跨网格复制暂停了目标存储桶的版本控制，请重新启用该存储桶的版本控制。
+. ${post_edited_translations.segment}
+. 选择*清除错误*。
+. ${post_edited_translations.segment}
+. 等待 5-6 分钟，然后向存储桶中摄入一个新对象。确认未再次出现该错误消息。
++
+
+NOTE: 为确保清除错误消息，请在消息中的时间戳后至少等待 5 分钟，然后再摄取新对象。
+
++
+
+TIP: ${post_edited_translations.segment}
+
+. 要确定是否因存储区错误而无法复制任何对象，请参阅 link:../admin/grid-federation-retry-failed-replication.html["${post_edited_translations.segment}"]。
+
+
+
+
+[[cross-grid-replication-permanent-failure-alert]]
+=== 跨网格复制永久故障警报
+
+.问题描述
+${post_edited_translations.segment}
+
+.详细信息
+此警报表示，由于需要用户干预才能解决的原因，无法在两个网格的存储桶之间复制租户对象。此警报通常是由于源存储桶或目标存储桶发生更改而引起的。
+
+.建议的操作
+. ${post_edited_translations.segment}
+. 转到*配置* > *系统* > *网格联合*，然后找到警报中列出的连接名称。
+. 在允许的租户选项卡上，查看*上一个错误*列，以确定哪些租户帐户出错。
+. 要了解有关故障的详细信息，请参见 link:../monitor/grid-federation-monitor-connections.html["${post_edited_translations.segment}"] 中的说明，以查看跨网格复制指标。
+. ${post_edited_translations.segment}
++
+.. 请参见 link:../monitor/monitoring-tenant-activity.html["监控租户活动"] 中的说明，以确认租户在目标网格上未超出其跨网格复制配额。
+.. 根据需要，增加租户在目标网格上的配额，以允许保存新对象。
+
+
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
++
+** 另一个网格上有相同租户的相应存储桶（必须使用确切的名称）。
+** 两个存储桶都启用了对象版本控制（不能在任何网格上暂停版本控制）。
+** ${post_edited_translations.segment}
+
+
+. 要确认问题已解决，请参见 link:../monitor/grid-federation-monitor-connections.html["${post_edited_translations.segment}"] 中的说明以查看跨网格复制指标，或执行以下步骤：
++
+.. ${post_edited_translations.segment}
+.. ${post_edited_translations.segment}
+.. ${post_edited_translations.segment}
+.. 等待 5-6 分钟，然后向存储桶中摄入一个新对象。确认未再次出现该错误消息。
++
+
+NOTE: 为确保清除错误消息，请在消息中的时间戳后至少等待 5 分钟，然后再摄取新对象。
+
++
+
+NOTE: ${post_edited_translations.segment}
+
+.. 转到 link:grid-federation-retry-failed-replication.html["${post_edited_translations.segment}"] 以识别任何未能复制到另一个网格的对象或删除标记，并根据需要重试复制。
+
+
+
+
+
+
+[[cross-grid-replication-resource-unavailable-alert]]
+=== 跨网格复制资源不可用警报
+
+.问题描述
+已触发*跨网格复制资源不可用*警报。
+
+.详细信息
+此警报表示跨网格复制请求处于挂起状态，因为资源不可用。例如，可能存在网络错误。
+
+.建议的操作
+. 监控警报，查看问题是否自行解决。
+. 如果问题仍然存在，请确定任一网格是否针对同一连接显示 *Grid federation connection failure*（网格联合连接失败）警报，或者针对某个节点显示 *Unable to communicate with node*（无法与节点通信）警报。当您解决这些警报时，此警报可能会随之解决。
+. 要了解有关故障的详细信息，请参见 link:../monitor/grid-federation-monitor-connections.html["${post_edited_translations.segment}"] 中的说明，以查看跨网格复制指标。
+. ${post_edited_translations.segment}
+
+
+${post_edited_translations.segment}

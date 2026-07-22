@@ -1,0 +1,127 @@
+---
+permalink: ilm/example-3-ilm-rules-and-policy-for-better-protection-for-image-files.html 
+sidebar: sidebar 
+keywords: example ILM rule, information lifecycle rule examples 
+summary: 您可以使用以下示例规则和策略，以确保对大于 1 MB 的映像进行纠删码编码，并对较小的映像制作两个副本。 
+---
+= 用于在 StorageGRID 中保护映像文件的 ILM 规则和策略
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用以下示例规则和策略，以确保对大于 1 MB 的映像进行纠删码编码，并对较小的映像制作两个副本。
+
+
+CAUTION: 以下 ILM 规则和策略只是示例。配置 ILM 规则的方法有很多。在激活新策略之前，请对其进行模拟，以确认其将按预期工作，以防止内容丢失。
+
+
+
+[[ilm-rule-1-for-example-3-use-ec-for-image-files-greater-than-1-mb]]
+== ILM 规则 1（示例 3）：对大于 1 MB 的图像文件使用 EC
+
+此示例 ILM 规则使用高级筛选对大于 1 MB 的所有图像文件进行纠删码处理。
+
+
+NOTE: 纠删码最适合大于 1 MB 的对象。不要对小于 200 KB 的对象使用纠删码，以避免管理极小纠删码片段所带来的开销。
+
+[cols="1a,2a"]
+|===
+| 规则定义 | 示例值 
+
+
+ a| 
+规则名称
+ a| 
+EC 图像文件 > 1 MB
+
+
+
+ a| 
+参考时间
+ a| 
+采集时间
+
+
+
+ a| 
+对象大小的高级筛选器
+ a| 
+对象大小大于 1 MB
+
+
+
+ a| 
+密钥的高级筛选器
+ a| 
+* 以 .jpg 结尾
+* 以 .png 结尾
+
+
+
+
+ a| 
+展示位置
+ a| 
+使用三个站点创建 2+1 纠删码副本
+
+|===
+image:policy_3_rule_1_ec_images_adv_filtering.png["ILM 规则 1（示例 3）：对大于 1 MB 的图像文件使用 EC"]
+
+由于此规则配置为策略中的第一个规则，纠删编码放置指令仅适用于大于 1 MB 的 .jpg 和 .png 文件。
+
+
+
+[[ilm-rule-2-for-example-3-create-2-replicated-copies-for-all-remaining-image-files]]
+== ILM 规则 2（示例 3）：为所有剩余映像文件创建 2 个复制副本
+
+此示例 ILM 规则使用高级筛选来指定复制较小的映像文件。由于策略中的第一个规则已匹配大于 1 MB 的图像文件，因此此规则适用于 1 MB 或更小的图像文件。
+
+[cols="1a,2a"]
+|===
+| 规则定义 | 示例值 
+
+
+ a| 
+规则名称
+ a| 
+2 份图像文件副本
+
+
+
+ a| 
+参考时间
+ a| 
+采集时间
+
+
+
+ a| 
+密钥的高级筛选器
+ a| 
+* 以 .jpg 结尾
+* 以 .png 结尾
+
+
+
+
+ a| 
+展示位置
+ a| 
+在两个存储池中创建 2 个复制副本
+
+|===
+
+
+[[ilm-policy-for-example-3-better-protection-for-image-files]]
+== ILM 策略示例 3：更好地保护映像文件
+
+此示例 ILM 策略包括三条规则：
+
+* 第一条规则对大于 1 MB 的所有图像文件进行擦除编码。
+* 第二个规则为所有剩余图像文件（即 1 MB 或更小的图像）创建两个副本。
+* 默认规则适用于所有剩余对象（即任何非图像文件）。
+
+
+image:policy_3_configured_policy.png["ILM 策略示例 3：更好地保护映像文件"]

@@ -1,0 +1,114 @@
+---
+permalink: audit/gtsu-grid-task-submitted.html 
+sidebar: sidebar 
+keywords: storagegrid, audit, message, GTSU, Grid Task Submitted 
+summary: 此审核消息表示已将网格任务提交到 CMN 服务。 
+---
+= StorageGRID 中已提交网格任务的 GTSU 审核消息
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+此审核消息表示已将网格任务提交到 CMN 服务。
+
+[cols="1a,1a,4a"]
+|===
+| 代码 | 字段 | 问题描述 
+
+
+ a| 
+TSID
+ a| 
+任务 ID
+ a| 
+唯一标识生成的网格任务，并允许在其生命周期内管理任务。
+
+*注意：* 任务 ID 在生成网格任务时分配，而不是在提交网格任务时分配。给定的网格任务可以多次提交，在这种情况下，"任务 ID"字段不足以唯一链接"已提交"、"已开始"和"已结束"审核消息。
+
+
+
+ a| 
+TTYP
+ a| 
+任务类型
+ a| 
+网格任务的类型。
+
+
+
+ a| 
+TVER
+ a| 
+任务版本
+ a| 
+表示网格任务版本的数字。
+
+
+
+ a| 
+TDSC
+ a| 
+任务说明
+ a| 
+网格任务的人工可读说明。
+
+
+
+ a| 
+VATS
+ a| 
+在时间戳之后有效
+ a| 
+网格任务有效的最早时间（从 1970 年 1 月 1 日起的 UINT64 微秒 - UNIX 时间）。
+
+
+
+ a| 
+VBTS
+ a| 
+有效期截止时间戳
+ a| 
+网格任务有效的最新时间（从 1970 年 1 月 1 日起的 UINT64 微秒 - UNIX 时间）。
+
+
+
+ a| 
+TSRC
+ a| 
+源
+ a| 
+任务的源：
+
+* TXTB：网格任务通过 StorageGRID 系统作为签名文本块提交。
+* 网格：网格任务已通过内部网格任务提交服务提交。
+
+
+
+
+ a| 
+ACTV
+ a| 
+激活类型
+ a| 
+激活类型：
+
+* AUTO: 网格任务已提交以进行自动激活。
+* PEND：网格任务已提交到挂起表中。这是 TXTB 源唯一的可能性。
+
+
+
+
+ a| 
+RSLT
+ a| 
+结果
+ a| 
+提交结果：
+
+* SUCS：网格任务已成功提交。
+* 失败：此任务已直接移至历史记录表。
+
+
+|===

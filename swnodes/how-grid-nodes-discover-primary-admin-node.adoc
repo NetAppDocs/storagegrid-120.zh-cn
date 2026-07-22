@@ -1,0 +1,32 @@
+---
+permalink: swnodes/how-grid-nodes-discover-primary-admin-node.html 
+sidebar: sidebar 
+keywords: how grid nodes discover the primary Admin Node 
+summary: 网格节点与主管理节点进行通信以进行配置和管理。每个网格节点必须知道网格网络上主管理节点的 IP 地址。 
+---
+= 网格节点如何发现 StorageGRID 中的主管理节点
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+网格节点与主管理节点进行通信以进行配置和管理。每个网格节点必须知道网格网络上主管理节点的 IP 地址。
+
+为确保网格节点可以访问主管理节点，可以在部署节点时执行以下操作之一：
+
+* 您可以使用 ADMIN_IP 参数手动输入主管理节点的 IP 地址。
+* 您可以省略 ADMIN_IP 参数，让网格节点自动发现该值。当网格网络使用 DHCP 将 IP 地址分配给主管理节点时，自动发现特别有用。
+
+
+主管理节点的自动发现使用组播域名系统 (mDNS) 完成。当主管理节点首次启动时，它会使用 mDNS 发布其 IP 地址。同一子网上的其他节点可以查询该 IP 地址并自动获取它。但是，由于组播 IP 流量通常无法跨子网路由，因此其他子网上的节点无法直接获取主管理节点的 IP 地址。
+
+[NOTE]
+====
+如果使用自动发现：
+
+* 对于主管理节点未直接连接到的任何子网，必须至少包含一个网格节点的 ADMIN_IP 设置。此网格节点将为子网上的其他节点发布主管理节点的 IP 地址，以便使用 mDNS 进行发现。
+* 请确保您的网络基础设施支持在子网内传递多播IP流量。
+
+
+====

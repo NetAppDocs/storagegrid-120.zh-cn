@@ -1,0 +1,140 @@
+---
+permalink: network/linux-deployments.html 
+sidebar: sidebar 
+keywords: linux network, container engine, red hat enterprise linux network, rhel network, ubuntu network 
+summary: 为了提高效率、可靠性和安全性，StorageGRID 系统在 Linux 上作为容器引擎的集合运行。StorageGRID 系统中不需要与容器引擎相关的网络配置。 
+---
+= StorageGRID Linux 部署的网络配置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+为了提高效率、可靠性和安全性，StorageGRID 系统在 Linux 上作为容器引擎的集合运行。StorageGRID 系统中不需要与容器引擎相关的网络配置。
+
+为容器网络接口使用非绑定设备，例如 VLAN 或虚拟以太网 (veth) 对。在节点配置文件中将此设备指定为网络接口。
+
+
+CAUTION: 不要直接使用绑定或桥接设备作为容器网络接口。这样做可能会阻止节点启动，因为在容器命名空间中使用带有绑定和桥接设备的 macvlan 存在内核问题。
+
+请参阅link:../swnodes/index.html["安装说明"]。
+
+
+
+[[host-network-configuration-for-container-engine-deployments]]
+== 用于容器引擎部署的主机网络配置
+
+在容器引擎平台上启动 StorageGRID 部署之前，请确定每个节点将使用哪些网络（网格、管理、客户端）。您必须确保每个节点的网络接口配置在正确的虚拟或物理主机接口上，并且每个网络都有足够的带宽。
+
+
+
+[[physical-hosts]]
+=== 物理主机
+
+如果使用物理主机支持网格节点：
+
+* 确保所有主机对每个节点接口使用相同的主机接口。此策略简化了主机配置，并为未来的节点迁移提供了便利。
+* 获取物理主机本身的 IP 地址。
++
+
+NOTE: 主机上的物理接口可以由主机本身和主机上运行的一个或多个节点使用。使用此接口分配给主机或节点的任何 IP 地址必须是唯一的。主机和节点无法共享 IP 地址。
+
+* 打开到主机的所需端口。
+* 如果您打算在 StorageGRID 中使用 VLAN 接口，则主机必须具有一个或多个中继接口，以提供对所需 VLAN 的访问。这些接口可以作为 eth0、eth2 或附加接口传入节点容器。要添加中继或接入接口，请参见以下内容：
++
+** *Linux（安装节点之前）*：link:../swnodes/creating-node-configuration-files.html["创建节点配置文件"]
+** *Linux（安装节点后）*：link:../maintain/linux-adding-trunk-or-access-interfaces-to-node.html["将中继或接入接口添加到节点"]
+
+
+
+
+
+NOTE: "Linux"是指 RHEL、Ubuntu 或 Debian 部署。有关受支持版本的列表，请参见 https://imt.netapp.com/matrix/#welcome["NetApp 互操作性矩阵工具 (IMT)"^]。
+
+
+
+[[minimum-bandwidth-recommendations]]
+=== 最小带宽建议
+
+下表提供了每种 StorageGRID 节点类型和每种网络类型的最低 LAN 带宽建议。您必须为每个物理或虚拟主机配置足够的网络带宽，以满足您计划在该主机上运行的 StorageGRID 节点总数和类型的最低带宽要求。
+
+[cols="1a,1a,1a,1a"]
+|===
+| 节点类型 3+| 网络类型 
+
+
+ a| 
+ a| 
+Grid
+ a| 
+管理员
+ a| 
+客户端
+
+
+
+ a| 
+ a| 
+*最小局域网带宽*
+
+
+
+ a| 
+管理员
+ a| 
+10 Gbps
+ a| 
+1 Gbps
+ a| 
+1 Gbps
+
+
+
+ a| 
+网关
+ a| 
+10 Gbps
+ a| 
+1 Gbps
+ a| 
+10 Gbps
+
+
+
+ a| 
+存储
+ a| 
+10 Gbps
+ a| 
+1 Gbps
+ a| 
+10 Gbps
+
+
+
+ a| 
+归档
+ a| 
+10 Gbps
+ a| 
+1 Gbps
+ a| 
+10 Gbps
+
+|===
+
+NOTE: 此表不包括访问共享存储所需的 SAN 带宽。如果使用通过以太网访问的共享存储（iSCSI 或 FCoE），则应在每台主机上配置单独的物理接口，以提供足够的 SAN 带宽。为了避免引入瓶颈，给定主机的 SAN 带宽应与该主机上运行的所有存储节点的总存储节点网络带宽大致匹配。
+
+根据计划在每台主机上运行的 StorageGRID 节点的数量和类型，使用该表确定要在该主机上设置的最小网络接口数量。
+
+例如，要在单个主机上运行一个管理节点、一个网关节点和一个存储节点：
+
+* 连接管理节点上的网格和管理网络（需要 10 + 1 = 11 Gbps）
+* 连接网关节点上的网格和客户端网络（需要 10 + 10 = 20 Gbps）
+* 连接存储节点上的网格网络（需要 10 Gbps）
+
+
+在这种情况下，您应提供至少 11 + 20 + 10 = 41 Gbps 的网络带宽，这可以通过两个 40 Gbps 接口或五个 10 Gbps 接口来满足，这些接口可能会聚合到中继，然后由三个或更多承载 Grid、Admin 和 Client 子网的 VLAN 共享，这些子网位于包含主机的物理数据中心本地。
+
+有关在 StorageGRID 集群中的主机上配置物理和网络资源以准备 StorageGRID 部署的一些推荐方法，请参见 link:../swnodes/configuring-host-network.html["配置主机网络"]。

@@ -1,0 +1,47 @@
+---
+permalink: swnodes/specifying-network-time-protocol-server-information.html 
+sidebar: sidebar 
+keywords: how to specify Network Time Protocol server information 
+summary: '必须为 StorageGRID 系统指定网络时间协议 (NTP) 配置信息，以便在不同服务器上执行的操作保持同步。' 
+---
+= 为 StorageGRID 指定网络时间协议服务器信息
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+必须为 StorageGRID 系统指定网络时间协议 (NTP) 配置信息，以便在不同服务器上执行的操作保持同步。
+
+.关于此任务
+必须为 NTP 服务器指定 IPv4 地址。
+
+必须指定外部 NTP 服务器。指定的 NTP 服务器必须使用 NTP 协议。
+
+您必须指定四个 Stratum 3 或更高级别的 NTP 服务器引用，以防止时间漂移问题。
+
+[NOTE]
+====
+为生产级 StorageGRID 安装指定外部 NTP 源时，请勿在 Windows Server 2016 之前的 Windows 版本上使用 Windows Time (W32Time) 服务。早期版本的 Windows 上的时间服务不够准确，Microsoft 不支持在高精度环境中使用，例如 StorageGRID。
+
+https://support.microsoft.com/en-us/help/939322/support-boundary-to-configure-the-windows-time-service-for-high-accura["支持为高精度环境配置 Windows 时间服务的边界"^]
+
+====
+外部 NTP 服务器由之前分配了主 NTP 角色的节点使用。
+
+
+CAUTION: 确保每个站点至少有两个节点可以访问至少四个外部 NTP 源。如果站点上只有一个节点可以访问 NTP 源，则该节点出现故障时会出现计时问题。此外，如果站点与其余网格隔离，则将每个站点的两个节点指定为主要 NTP 源可确保计时准确。
+
+（仅限 VMware）对 VMware 执行其他检查，例如确保虚拟机监控程序使用与虚拟机相同的 NTP 源，并使用 VMTools 禁用虚拟机监控程序与 StorageGRID 虚拟机之间的时间同步。
+
+.步骤
+. 在 *Server 1* 到 *Server 4* 文本框中指定至少四个 NTP 服务器的 IPv4 地址。
+. 如有必要，请选择最后一个条目旁边的加号以添加其他服务器条目。
++
+image:8_gmi_installer_ntp_page.gif["本图四周的文字提供了相关说明。"]
+
+. 选择 *Next*。
+
+
+.相关信息
+link:../network/index.html["网络连接准则"]

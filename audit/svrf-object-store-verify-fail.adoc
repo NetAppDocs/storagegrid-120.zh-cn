@@ -1,0 +1,57 @@
+---
+permalink: audit/svrf-object-store-verify-fail.html 
+sidebar: sidebar 
+keywords: storagegrid, audit, message, SVRF, Object Store Verify Fail 
+summary: 每当内容块未通过验证过程时，都会显示此消息。每次从磁盘读取或写入复制对象数据时，都会执行多次验证和完整性检查，以确保发送给请求用户的数据与最初摄入系统的数据相同。如果任何这些检查失败，系统会自动隔离损坏的复制对象数据，以防止再次检索。 
+---
+= StorageGRID 中对象存储验证失败的 SVRF 审核消息
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+每当内容块未通过验证过程时，都会显示此消息。每次从磁盘读取或写入复制对象数据时，都会执行多次验证和完整性检查，以确保发送给请求用户的数据与最初摄入系统的数据相同。如果任何这些检查失败，系统会自动隔离损坏的复制对象数据，以防止再次检索。
+
+[cols="1a,1a,4a"]
+|===
+| 代码 | 字段 | 问题描述 
+
+
+ a| 
+CBID
+ a| 
+内容块标识符
+ a| 
+验证失败的内容块的唯一标识符。
+
+
+
+ a| 
+RSLT
+ a| 
+结果代码
+ a| 
+验证失败类型：
+
+CRCF：Cyclic redundancy check (CRC) 失败。
+
+HMAC：基于哈希的消息验证码 (HMAC) 检查失败。
+
+EHSH：意外的加密内容哈希。
+
+PHSH：意外的原始内容哈希。
+
+SEQC：磁盘上的数据序列不正确。
+
+PERR：磁盘文件的结构无效。
+
+DERR：磁盘错误。
+
+FNAM：文件名错误。
+
+|===
+
+NOTE: 应密切监控此消息。内容验证失败可能表明即将发生硬件故障。
+
+要确定触发消息的操作，请参阅 AMID（模块 ID）字段的值。例如，SVFY 值表示消息是由存储验证器模块生成的，即后台验证，而 STOR 表示消息是由内容检索触发的。

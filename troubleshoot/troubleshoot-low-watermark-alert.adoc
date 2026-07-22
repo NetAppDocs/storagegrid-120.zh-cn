@@ -1,0 +1,167 @@
+---
+permalink: troubleshoot/troubleshoot-low-watermark-alert.html 
+sidebar: sidebar 
+keywords: troubleshoot low soft read-only watermark override alert, optimized watermarks 
+summary: '如果对存储卷水印使用自定义值，则可能需要解决"低只读水印覆盖"警报。如果可能，您应该更新系统，开始使用优化后的值。' 
+---
+= 解决 StorageGRID 中的水印覆盖警报
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果对存储卷水印使用自定义值，则可能需要解决*低只读水印覆盖*警报。如果可能，您应该更新系统，开始使用优化后的值。
+
+在以前的版本中，这三个link:../admin/what-storage-volume-watermarks-are.html["存储卷水印"]是全局设置 — 应用于每个存储节点上每个存储卷的值相同。从 StorageGRID 11.6 开始，软件可以根据存储节点的大小和卷的相对容量为每个存储卷优化这些水印。
+
+升级到 StorageGRID 11.6 或更高版本时，优化的只读和读写水印将自动应用于所有存储卷，除非满足以下条件之一：
+
+* 您的系统已接近容量，如果应用了优化的水印，将无法接受新数据。在这种情况下，StorageGRID 不会更改水印设置。
+* 您之前已将任何存储卷水印设置为自定义值。StorageGRID 不会使用优化值覆盖自定义水印设置。但是，如果存储卷软只读水印的自定义值太小，StorageGRID 可能会触发 *低只读水印覆盖* 警报。
+
+
+
+
+[[understand-the-alert]]
+== 了解此警报
+
+如果对存储卷水印使用自定义值，则可能会为一个或多个存储节点触发*低只读水印覆盖*警报。
+
+警报的每个实例都指示存储卷软只读水印的自定义值小于该存储节点的最小优化值。如果继续使用自定义设置，存储节点的空间可能会严重不足，从而无法安全地转换为只读状态。当节点达到容量时，某些存储卷可能无法访问（自动卸载）。
+
+例如，假设您之前将存储卷软只读水印设置为 5 GB。现在假设 StorageGRID 已为存储节点 A 中的四个存储卷计算出以下优化值：
+
+[cols="2a,2a"]
+|===
+
+
+ a| 
+卷 0
+ a| 
+12 GB
+
+
+
+ a| 
+卷 1
+ a| 
+12 GB
+
+
+
+ a| 
+卷 2
+ a| 
+11 GB
+
+
+
+ a| 
+卷 3
+ a| 
+15 GB
+
+|===
+由于您的自定义水印（5 GB）小于该节点中所有卷的最小优化值（11 GB），因此会为存储节点 A 触发*低只读水印覆盖*警报。如果继续使用自定义设置，节点的空间可能会严重不足，从而无法安全地转换为只读状态。
+
+
+
+[[resolve-the-alert]]
+== 解决警报
+
+如果触发了一个或多个*低只读水印覆盖*警报，请按照以下步骤操作。如果您当前使用自定义水印设置，并且希望开始使用优化设置，即使没有触发任何警报，您也可以使用这些说明。
+
+.开始之前
+* 您已完成升级到 StorageGRID 11.6 或更高版本。
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["root 访问权限"]。
+
+
+.关于此任务
+您可以通过将自定义水印设置更新为新的水印覆盖来解决*低只读水印覆盖*警报。但是，如果一个或多个存储节点接近满，或者您有特殊的 ILM 要求，则应首先查看优化的存储水印并确定使用它们是否安全。
+
+
+
+[[assess-object-data-usage-for-entire-grid]]
+=== 评估整个网格的对象数据使用情况
+
+.步骤
+. 选择 *Nodes*。
+. 对于网格中的每个站点，展开节点列表。
+. 查看每个站点上每个存储节点的*使用的对象数据*列中显示的百分比值。
++
+image:nodes_page_object_data_used_with_alert.png["显示用于 3 个 SN 的对象数据的节点页面"]
+
+. 按照相应的步骤进行操作：
++
+.. 如果没有存储节点接近满（例如，所有*使用的对象数据*值均小于 80%），则可以开始使用覆盖设置。转到 <<use-optimized-watermarks,使用优化的水印>>。
+.. 如果 ILM 规则使用严格接收行为或特定存储池接近满，请执行 <<view-optimized-watermarks,查看优化的存储水印>> 和 <<determine-optimized-watermarks,确定是否可以使用优化的水印>> 中的步骤。
+
+
+
+
+
+
+[[view-optimized-watermarksview-optimized-storage-watermarks]]
+=== [[view-optimized-watermarks]]查看优化的存储水印
+
+StorageGRID 使用两个 Prometheus 指标来显示它为存储卷软只读水印计算的优化值。您可以查看网格中每个存储节点的最小和最大优化值。
+
+.步骤
+. ${post_edited_translations.segment}
+. 在 Prometheus 部分，选择链接以访问 Prometheus 用户界面。
+. 要查看推荐的最小软只读水印，请输入以下 Prometheus 指标，然后选择 *Execute*：
++
+`storagegrid_storage_volume_minimum_optimized_soft_readonly_watermark`
+
++
+最后一列显示每个存储节点上所有存储卷的软只读水印的最小优化值。如果此值大于存储卷软只读水印的自定义设置，则会为存储节点触发 *Low read-only watermark override* 警报。
+
+. 要查看建议的最大软只读水印，请输入以下 Prometheus 指标，然后选择*执行*：
++
+`storagegrid_storage_volume_maximum_optimized_soft_readonly_watermark`
+
++
+最后一列显示每个存储节点上所有存储卷的软只读水印的最大优化值。
+
+. [[maximum_optimized_value]]注意每个存储节点的最大优化值。
+
+
+
+
+[[determine-optimized-watermarksdetermine-if-you-can-use-optimized-watermarks]]
+=== [[determine-optimized-watermarks]]确定是否可以使用优化的水印
+
+.步骤
+. 选择 *Nodes*。
+. 对每个联机存储节点重复以下步骤：
++
+.. 选择 *_Storage Node_* > *Storage*。
+.. 向下滚动到 Object Stores 表。
+.. 将每个对象存储（卷）的*可用*值与您为该存储节点记录的最大优化水印进行比较。
+
+
+. 如果每个在线存储节点上至少有一个卷的可用空间大于该节点的最大优化水印，请转至<<use-optimized-watermarks,使用优化的水印>>以开始使用优化水印。
++
+否则，请尽快扩展网格。可以 link:../expand/adding-storage-volumes-to-storage-nodes.html["添加存储卷"] 到现有节点，也可以 link:../expand/adding-grid-nodes-to-existing-site-or-adding-new-site.html["添加新的存储节点"]。然后，转到 <<use-optimized-watermarks,使用优化的水印>> 以更新水印设置。
+
+. 如果需要继续对存储卷水印使用自定义值，请link:../monitor/silencing-alert-notifications.html["沉默"]或link:../monitor/disabling-alert-rules.html["禁用"] *低只读水印覆盖*警报。
++
+
+NOTE: 相同的自定义水印值应用于每个存储节点上的每个存储卷。使用小于建议值的存储卷水印值可能会导致某些存储卷在节点达到容量时无法访问（自动卸载）。
+
+
+
+
+
+[[use-optimized-watermarksuse-optimized-watermarks]]
+=== [[use-optimized-watermarks]]使用优化的水印
+
+.步骤
+. 转到*支持* > *其他* > *存储水印*。
+. 选中*使用优化值*复选框。
+. 选择 *Save*。
+
+
+根据存储节点的大小和卷的相对容量，优化的存储卷水印设置现在对每个存储卷生效。

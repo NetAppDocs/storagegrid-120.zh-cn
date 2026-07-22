@@ -1,0 +1,55 @@
+---
+permalink: maintain/storagegrid-hotfix-procedure.html 
+sidebar: sidebar 
+keywords: apply hotfix, install hotfix, replace primary admin node 
+summary: 如果在功能版本之间检测到并解决了软件问题，则可能需要对 StorageGRID 系统应用修补程序。 
+---
+= StorageGRID 修补程序过程
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果在功能版本之间检测到并解决了软件问题，则可能需要对 StorageGRID 系统应用修补程序。
+
+StorageGRID 修补程序包含在功能或修补程序版本之外提供的软件更改。相同的更改将包含在未来版本中。此外，每个修补程序版本都包含功能或修补程序版本中所有先前修补程序的汇总。
+
+
+
+[[considerations-for-applying-a-hotfix]]
+== 应用修补程序的注意事项
+
+当另一个维护过程正在运行时，您无法应用 StorageGRID 修补程序。例如，您无法在停用、扩展或恢复过程运行时应用修补程序。
+
+
+NOTE: 如果节点或站点停用过程暂停，则可以安全地应用修补程序。此外，您可以在 StorageGRID 升级过程的最后阶段应用修补程序。有关详细信息，请参阅升级 StorageGRID 软件的说明。
+
+在 Grid Manager 中上传修补程序后，该修补程序将自动应用于主管理节点。然后，您可以批准将修补程序应用于 StorageGRID 系统中的其余节点。
+
+如果修补程序未能应用于一个或多个节点，则故障原因将显示在修补程序进度表的"详细信息"列中。您必须解决导致失败的任何问题，然后重试整个过程。先前已成功应用修补程序的节点将在后续应用中跳过。您可以根据需要多次安全地重试修补程序过程，直到所有节点都已更新。必须在所有网格节点上成功安装修补程序，才能完成应用。
+
+虽然网格节点使用新的修补程序版本进行更新，但修补程序中的实际更改可能只会影响特定类型节点上的特定服务。例如，修补程序可能仅影响存储节点上的 LDR 服务。
+
+
+
+[[how-hotfixes-are-applied-for-recovery-and-expansion]]
+== 如何应用修补程序进行恢复和扩展
+
+将修补程序应用于网格后，主管理节点会自动将相同的修补程序版本安装到通过恢复操作恢复或在扩展中添加的任何节点。
+
+但是，如果您需要恢复主管理节点，则必须手动安装正确的 StorageGRID 版本，然后应用修补程序。主管理节点的最终 StorageGRID 版本必须与网格中其他节点的版本相匹配。
+
+以下示例说明了如何在恢复主管理节点时应用修补程序：
+
+. 假设网格运行的是具有最新修补程序的 StorageGRID 11._A.B_ 版本。"网格版本"为 11._A.B.y_。
+. 主管理节点发生故障。
+. 使用 StorageGRID 11._A.B_ 重新部署主管理节点，然后执行恢复过程。
++
+
+NOTE: 根据需要匹配网格版本，您可以在部署节点时使用次要版本；您不需要首先部署主要版本。
+
+. 然后，将修补程序 11._A.B.y_ 应用于主管理节点。
+
+
+有关详细信息，请参见 link:configuring-replacement-primary-admin-node.html["配置替换主管理节点"]。

@@ -1,0 +1,59 @@
+---
+permalink: maintain/checking-data-repair-jobs.html 
+sidebar: sidebar 
+keywords: storagegrid, data repair 
+summary: 在停用网格节点之前，您必须确认没有数据修复作业处于活动状态。如果任何修复失败，您必须重新启动这些修复作业，并在执行停用操作步骤之前等待其完成。 
+---
+= 检查 StorageGRID 中的数据修复作业
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在停用或扩展网格节点之前，您必须确认没有数据修复作业处于活动状态。如果任何修复失败，您必须重新启动这些修复作业，并在执行停用操作之前等待其完成。
+
+有关如何扩展网格节点的详细信息，请参阅 link:../expand/index.html["扩展类型"]。
+
+.关于此任务
+如果需要停用已断开连接的存储节点，请在停用过程完成后完成这些步骤，以确保数据修复作业已完成。必须确保已删除节点上的所有纠删码片段都已还原。
+
+这些步骤仅适用于具有擦除编码对象的系统。
+
+.步骤
+. ${post_edited_translations.segment}
++
+.. 输入以下命令： `ssh admin@_grid_node_IP_`
+.. 输入 `Passwords.txt`文件中列出的密码。
+.. 输入以下命令切换到 root： `su -`
+.. 输入 `Passwords.txt`文件中列出的密码。
++
+以 root 身份登录时，提示符将从 `$`更改为 `#`。
+
+
+
+. 检查是否正在进行维修： `repair-data show-ec-repair-status`
++
+** 如果您从未运行过数据修复作业，则输出为 `No job found`。您无需重新启动任何修复作业。
+** 如果数据修复作业以前运行过或当前正在运行，则输出将列出修复的信息。每次修复都有一个唯一的修复 ID。
++
+image:repair-data-status.png["修复数据状态"]
+
+
+
++
+
+TIP: 您也可以使用 Grid Manager 监控正在进行的还原过程并显示还原历史记录。请参阅 link:../maintain/restoring-volume.html["使用 Grid Manager 还原对象数据"]。
+
+. 如果所有维修的状态为 `Completed`，则无需重新启动任何维修作业。
+. 如果任何维修的状态为 `Stopped`，则必须重新启动该维修。
++
+.. 从输出中获取失败修复的修复 ID。
+.. 运行  `repair-data start-ec-node-repair` 命令。
++
+使用 `--repair-id`选项指定修复 ID。例如，如果要重试修复 ID 为 949292 的修复，请运行此命令： `repair-data start-ec-node-repair --repair-id 949292`
+
+.. 继续跟踪EC数据修复的状态，直到所有修复的状态为 `Completed`。
+
+
+

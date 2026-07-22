@@ -1,0 +1,100 @@
+---
+permalink: ilm/lifecycle-of-cloud-storage-pool-object.html 
+sidebar: sidebar 
+keywords: lifecycle of cloud storage pool object 
+summary: 在实施云存储池之前，请查看每种类型的云存储池中存储的对象的生命周期。 
+---
+= StorageGRID 中云存储池对象的生命周期
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在实施云存储池之前，请查看每种类型的云存储池中存储的对象的生命周期。
+
+
+
+[[s3-lifecycle-of-a-cloud-storage-pool-object]]
+== S3：云存储池对象的生命周期
+
+这些步骤描述了存储在 S3 云存储池中的对象的生命周期阶段。
+
+
+NOTE: "Glacier"同时指 Glacier 存储类和 Glacier Deep Archive 存储类，但有一个例外：Glacier Deep Archive 存储类不支持加速还原层。仅支持批量或标准检索。
+
+
+NOTE: Google Cloud Platform (GCP) 支持从长期存储中检索对象，而无需执行 POST Restore 操作。
+
+. *存储在 StorageGRID 中的对象*
++
+要启动生命周期，客户端应用程序会将对象存储在 StorageGRID 中。
+
+. *对象已移动到 S3 云存储池*
++
+** 当此对象与使用 S3 云存储池作为其放置位置的 ILM 规则匹配时，StorageGRID 会将此对象移动到由云存储池指定的外部 S3 存储桶。
+** 将对象移动到 S3 云存储池后，客户端应用程序可以使用来自 StorageGRID 的 S3 GetObject 请求检索该对象，除非该对象已转换到 Glacier 存储。
+
+
+. *对象已转换为 Glacier（不可恢复状态）*
++
+** 可选地，可以将对象转换为 Glacier 存储。例如，外部 S3 存储桶可以使用生命周期配置，立即或在若干天后将对象转换为 Glacier 存储。
++
+
+NOTE: 如果要转换对象，则必须为外部 S3 存储桶创建生命周期配置，并且必须使用实现 Glacier 存储类并支持 S3 RestoreObject API 的存储解决方案。
+
+** 在过渡期间，客户端应用程序可以使用 S3 HeadObject 请求来监控对象的状态。
+
+
+. *从Glacier存储中恢复的对象*
++
+如果对象已转换到 Glacier 存储，则客户端应用程序可以发出 S3 RestoreObject 请求，将可检索副本还原到 S3 Cloud Storage Pool。该请求指定该副本在 Cloud Storage Pool 中可用的天数以及用于还原操作（加急、标准或批量）的数据访问层。当到达可检索副本的到期日期时，副本将自动返回到不可检索的状态。
+
++
+
+NOTE: 如果对象的一个或多个副本也存在于 StorageGRID 中的存储节点上，则无需通过发出 RestoreObject 请求从 Glacier 恢复对象。相反，可以使用 GetObject 请求直接检索本地副本。
+
+. *已检索对象*
++
+对象恢复后，客户端应用程序可以发出 GetObject 请求以检索已恢复的对象。
+
+
+
+
+
+[[azure-lifecycle-of-a-cloud-storage-pool-object]]
+== Azure：云存储池对象的生命周期
+
+这些步骤描述了存储在 Azure Cloud Storage Pool 中的对象的生命周期阶段。
+
+. *存储在 StorageGRID 中的对象*
++
+要启动生命周期，客户端应用程序会将对象存储在 StorageGRID 中。
+
+. *对象已移动到Azure Cloud Storage Pool*
++
+当此对象与使用 Azure 云存储池作为其放置位置的 ILM 规则匹配时，StorageGRID 会将此对象移动到由云存储池指定的外部 Azure Blob 存储容器。
+
+. *对象已转换为存档层（不可检索状态）*
++
+将此对象移动到 Azure 云存储池后，StorageGRID 会立即自动将此对象转换到 Azure Blob 存储存档层。
+
+. *从存档层还原的对象*
++
+如果对象已转换到存档层，则客户端应用程序可以发出 S3 RestoreObject 请求，将可检索副本还原到 Azure 云存储池。
+
++
+当 StorageGRID 收到 RestoreObject 时，它会暂时将此对象转换到 Azure Blob 存储 Cool 层。一旦到达 RestoreObject 请求中的到期日期，StorageGRID 会将此对象转换回存档层。
+
++
+
+NOTE: 如果对象的一个或多个副本也存在于 StorageGRID 中的存储节点上，则无需通过发出 RestoreObject 请求从存档访问层还原对象。相反，可以使用 GetObject 请求直接检索本地副本。
+
+. *已检索对象*
++
+将对象还原到 Azure 云存储池后，客户端应用程序可以发出 GetObject 请求以检索已还原的对象。
+
+
+
+.相关信息
+link:../s3/index.html["使用 S3 REST API"]

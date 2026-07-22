@@ -1,0 +1,82 @@
+---
+permalink: maintain/considerations-for-decommissioning-storage-nodes.html 
+sidebar: sidebar 
+keywords: storage node decommission, considerations, appliance node clone 
+summary: 在停用存储节点之前，请考虑是否可以克隆该节点。然后，如果您决定停用节点，请查看 StorageGRID 在停用过程中如何管理对象和元数据。 
+---
+= StorageGRID 中的存储节点停用注意事项
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在停用存储节点之前，请考虑是否可以克隆该节点。然后，如果您决定停用节点，请查看 StorageGRID 在停用过程中如何管理对象和元数据。
+
+
+
+[[when-to-clone-a-node-instead-of-decommissioning-it]]
+== 何时克隆节点而不是停用它
+
+如果要用更新或更大的设备替换旧的设备存储节点，请考虑克隆设备节点，而不是在扩展中添加新设备，然后停用旧设备。
+
+设备节点克隆使您可以轻松地将现有设备节点替换为同一 StorageGRID 站点上的兼容设备。克隆过程会将所有数据传输到新设备，使新设备处于服务状态，并使旧设备处于预安装状态。
+
+如果需要，可以克隆设备节点：
+
+* 更换使用寿命即将结束的设备。
+* 升级现有节点以利用改进的设备技术。
+* 在不更改 StorageGRID 系统中存储节点数量的情况下，增加网格存储容量。
+* 提高存储效率，例如通过更改 RAID 模式。
+
+
+有关详细信息，请参见 https://docs.netapp.com/us-en/storagegrid-appliances/commonhardware/how-appliance-node-cloning-works.html["设备节点克隆"^]。
+
+
+
+[[considerations-for-connected-storage-nodes]]
+== 连接存储节点的注意事项
+
+查看停用连接的存储节点的注意事项。
+
+* 在一个停用节点过程中，不应停用超过 10 个存储节点。
+* 系统必须始终包含足够的存储节点以满足操作要求，包括link:understanding-adc-service-quorum.html["${post_edited_translations.segment}"]和活动的link:reviewing-ilm-policy-and-storage-configuration.html["ILM 策略"]。要满足此限制，您可能需要在扩展操作中添加新的存储节点，然后才能停用现有存储节点。
++
+在包含基于软件的仅元数据节点的网格中停用存储节点时，请谨慎操作。如果取消配置为同时存储对象和元数据的所有节点，则存储对象的功能将从网格中删除。有关仅元数据存储节点的详细信息，请参见 link:../primer/what-storage-node-is.html#types-of-storage-nodes["存储节点类型"]。
+
+* 删除存储节点时，会通过网络传输大量对象数据。虽然这些传输不应影响正常的系统运行，但会影响 StorageGRID 系统消耗的总网络带宽。
+* 与存储节点停用相关联的任务的优先级低于与正常系统操作相关联的任务。这意味着停用不会干扰正常的 StorageGRID 系统操作，也无需安排在系统非活动期间进行。由于停用是在后台执行的，因此很难估计该过程需要多长时间才能完成。通常，当系统负载较低时，或者一次仅移除一个存储节点时，停用完成得更快。
+* 停用存储节点可能需要数天或数周的时间。请相应地规划此操作步骤。虽然停用过程旨在不影响系统运行，但可能会限制其他操作步骤。通常，在删除网格节点之前，应先执行任何计划的系统升级或扩展。
+* 如果在删除存储节点时需要执行其他维护过程，可以link:pausing-and-resuming-decommission-process-for-storage-nodes.html["暂停停用过程"]并在其他过程完成后恢复此过程。
++
+
+NOTE: 仅当达到 ILM 评估或纠删编码数据停用阶段时，才会启用*暂停*按钮；但是，ILM 评估（数据迁移）将继续在后台运行。
+
+* 停用任务运行时，无法在任何网格节点上运行数据修复操作。
+* 在停用存储节点时，不应对 ILM 策略进行任何更改。
+* 要永久安全地删除数据，您必须在停用过程完成后擦除存储节点的驱动器。
+
+
+
+
+[[considerations-for-disconnected-storage-nodes]]
+[[considerations-disconnected-storage-nodes]]
+== 断开连接的存储节点的注意事项
+
+查看停用断开连接的存储节点的注意事项。
+
+* 切勿停用断开连接的节点，除非您确定它无法联机或恢复。
++
+
+CAUTION: 如果您认为可以从节点中恢复对象数据，请不要执行此过程。请联系技术支持以确定是否可以进行节点恢复。
+
+* 停用已断开连接的存储节点时，StorageGRID 使用来自其他存储节点的数据来重建已断开连接的节点上的对象数据和元数据。
+* 如果停用多个断开连接的 Storage Node，可能会发生数据丢失。如果没有足够的对象副本、擦除编码片段或对象元数据可用，系统可能无法重建数据。在具有基于软件的仅元数据节点的网格中停用 Storage Nodes 时，停用配置为同时存储对象和元数据的所有节点将从网格中删除所有对象存储。有关仅元数据 Storage Nodes 的详细信息，请参阅 link:../primer/what-storage-node-is.html#types-of-storage-nodes["存储节点类型"]。
++
+
+CAUTION: 如果有多个断开的存储节点无法恢复，请与技术支持联系以确定最佳操作方案。
+
+* 当您停用已断开连接的存储节点时，StorageGRID 会在停用过程结束时启动数据修复作业。这些作业尝试重建存储在断开连接的节点上的对象数据和元数据。
+* 停用已断开连接的存储节点时，停用过程会相对较快地完成。但是，数据修复作业可能需要数天或数周才能运行，并且不受停用过程的监控。您必须手动监控这些作业，并根据需要重新启动它们。请参阅link:checking-data-repair-jobs.html["检查数据修复作业"]。
+* 如果停用包含对象唯一副本的已断开连接的存储节点，则该对象将丢失。只有当前连接的存储节点上存在至少一个复制副本或足够的纠删码片段时，数据修复作业才能重建和恢复对象。
+

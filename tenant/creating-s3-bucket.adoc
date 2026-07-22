@@ -1,0 +1,178 @@
+---
+permalink: tenant/creating-s3-bucket.html 
+sidebar: sidebar 
+keywords: how to create S3 bucket 
+summary: 您可以使用 Tenant Manager 为对象数据创建 S3 存储桶。 
+---
+= 创建 StorageGRID S3 存储桶
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 Tenant Manager 为对象数据创建 S3 存储桶。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到租户管理器。
+* 您属于具有根访问权限或管理所有存储桶 link:tenant-management-permissions.html["权限"] 的用户组。这些权限将覆盖组或存储桶策略中的权限设置。
++
+
+NOTE: 可以通过 link:../s3/use-access-policies.html["存储区策略或组策略"] 授予设置或修改存储桶或对象的 S3 Object Lock 属性的权限。
+
+* 如果您计划为存储区启用 S3 对象锁定，则网格管理员已为 StorageGRID 系统启用了全局 S3 对象锁定设置，并且您已查看了 S3 对象锁定存储区和对象的要求。
+* 如果每个租户有 5,000 个存储桶，则网格中的每个 Storage Node 至少有 64 GB 的 RAM。
++
+
+NOTE: 每个网格最多可包含 100,000 个存储桶，包括 link:../tenant/what-is-branch-bucket.html["${post_edited_translations.segment}"]。
+
+
+
+
+
+[[access-the-wizard]]
+== 访问此向导
+
+.步骤
+. 从控制面板中选择*查看存储桶*，或选择*存储（S3）* > *存储桶*。
+. 选择*创建存储桶*。
+
+
+
+
+[[enter-details]]
+== 输入详细信息
+
+.步骤
+. 输入存储桶的详细信息。
++
+[cols="1a,3a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+存储桶名称
+ a| 
+符合这些规则的存储桶的名称：
+
+** 必须在每个 StorageGRID 系统中保持唯一性（不仅仅是在租户帐户中唯一）。
+** 必须符合 DNS 要求。
+** 必须至少包含 3 个且不超过 63 个字符。
+** 每个标签必须以小写字母或数字开头和结尾，并且只能使用小写字母、数字和连字符。
+** 不得在虚拟托管样式请求中包含句点。句点将导致服务器通配符证书验证出现问题。
+
+
+有关详细信息，请参见 https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html["有关存储桶命名规则的 Amazon Web Services (AWS) 文档"^]。
+
+*注意*：您无法在创建存储桶后更改存储桶名称。
+
+
+
+ a| 
+地区
+ a| 
+Bucket 的区域。
+
+您的 StorageGRID 管理员管理可用区域。存储桶的区域可能会影响应用于对象的数据保护策略。默认情况下，所有存储桶均在  `us-east-1` 区域中创建。如果默认区域配置为  `us-east-1` 以外的区域，则下拉列表中最初会选择此其他区域。
+
+*注意*：您无法在创建存储桶后更改区域。
+
+|===
+. 选择 *Continue*。
+
+
+
+
+[[manage-settings]]
+== 管理设置
+
+.步骤
+. （可选）为存储区启用对象版本控制。
++
+如果要在此存储桶中存储每个对象的每个版本，请启用对象版本控制。然后，您可以根据需要检索对象的早期版本。
+
++
+如果出现以下情况，则必须启用对象版本控制：
+
++
+** 该存储桶将用于跨网格复制。
+** 您要从此存储桶创建link:../tenant/what-is-branch-bucket.html["分支存储桶"]。
+
+
+. 如果启用了全局 S3 Object Lock 设置，则可选择为存储桶启用 S3 Object Lock，以使用一次写入多次读取 (WORM) 模型存储对象。
++
+仅当需要将对象保留固定的时间时（例如，为了满足某些监管要求），才为存储桶启用 S3 Object Lock。S3 Object Lock 是一个永久设置，可帮助您防止对象在固定的时间内或无限期内被删除或覆盖。
+
++
+
+CAUTION: 为存储桶启用 S3 Object Lock 设置后，将无法禁用该设置。任何具有正确权限的用户都可以将无法更改的对象添加到此存储桶。您可能无法删除这些对象或存储桶本身。
+
++
+如果为存储桶启用 S3 Object Lock，则会自动启用存储桶版本控制。
+
+. 如果选择 *启用 S3 对象锁定*，则可选择为此存储桶启用 *默认保留*。
++
+
+NOTE: 您的网格管理员必须授予您权限以 link:../tenant/using-s3-object-lock.html["使用 S3 Object Lock 的特定功能"]。
+
++
+启用*默认保留*后，添加到存储桶的新对象将自动受到保护，不会被删除或覆盖。*默认保留*设置不适用于具有自己保留期的对象。
+
++
+.. 如果启用了*默认保留*，请为存储桶指定*默认保留模式*。
++
+[cols="1a,2a"]
+|===
+| 默认保留模式 | 问题描述 
+
+
+ a| 
+治理
+ a| 
+*** 具有 `s3:BypassGovernanceRetention`权限的用户可以使用 `x-amz-bypass-governance-retention: true`请求标头绕过保留设置。
+*** 这些用户可以在达到保留截止日期之前删除对象版本。
+*** 这些用户可以增加、减少或删除对象的保留截止日期。
+
+
+
+
+ a| 
+Compliance
+ a| 
+*** 在达到其保留截止日期之前，无法删除此对象。
+*** 对象的保留截止日期可以延长，但不能缩短。
+*** 在达到该日期之前，无法删除对象的 retain-until-date。
+
+
+*注意*：您的网格管理员必须允许您使用合规模式。
+
+|===
+.. 如果启用了*默认保留*，请指定存储桶的*默认保留期*。
++
+*默认保留期*表示从摄入时间开始，添加到此存储桶的新对象应保留多长时间。指定小于或等于网格管理员设置的租户最大保留期限的值。
+
++
+当网格管理员创建租户时，会设置_最大_保留期限，该期限的值可以是 1 天到 100 年。设置_默认_保留期限时，该期限不能超过为最大保留期限设置的值。如果需要，请让您的网格管理员增加或减少最大保留期限。
+
+
+
+. [[capacity-limit]]（可选）选择*启用容量限制*，输入一个值，然后选择容量单位。
++
+容量限制是此存储桶对象可用的最大容量。此值表示逻辑量（对象大小），而不是物理量（磁盘上的大小）。
+
++
+如果没有设置限制，则此存储桶的容量是无限的。有关详细信息，请参见 link:../tenant/understanding-tenant-manager-dashboard.html#bucket-capacity-usage["容量限制使用"]。
+
+. [[object-count-limit]]或者，选择*启用对象计数限制*。
++
+Object count limit是此存储桶可以包含的最大对象数。此值表示逻辑量（对象计数）。如果未设置限制，则对象计数无限制。
+
+. 选择*创建存储桶*。
++
+已创建存储桶并将其添加到"存储桶"页面上的表中。
+
+. （可选）选择 *Go to bucket details page* 以 link:viewing-s3-bucket-details.html["查看存储桶详细信息"] 并执行其他配置。
+
+
+您也可以根据需要link:../tenant/manage-branch-buckets.html["创建分支存储桶"]。

@@ -1,0 +1,40 @@
+---
+permalink: audit/scmt-object-store-commit.html 
+sidebar: sidebar 
+keywords: storagegrid, audit, message, SCMT, Object Store Commit 
+summary: 在提交之前（即持久存储之前），网格内容不会被提供或识别为已存储。持久存储的内容已完全写入磁盘，并通过了相关的完整性检查。当内容块提交到存储时，将发出此消息。 
+---
+= StorageGRID 中对象存储提交的 SCMT 审核消息
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在提交之前（即持久存储之前），网格内容不会被提供或识别为已存储。持久存储的内容已完全写入磁盘，并通过了相关的完整性检查。当内容块提交到存储时，将发出此消息。
+
+[cols="1a,1a,4a"]
+|===
+| 代码 | 字段 | 问题描述 
+
+
+ a| 
+CBID
+ a| 
+内容块标识符
+ a| 
+提交给永久存储的内容块的唯一标识符。
+
+
+
+ a| 
+RSLT
+ a| 
+结果代码
+ a| 
+对象存储到磁盘时的状态：
+
+SUCS: 对象已成功存储。
+
+|===
+此消息表示给定的内容块已完全存储和验证，现在可以请求。它可用于跟踪系统内的数据流。

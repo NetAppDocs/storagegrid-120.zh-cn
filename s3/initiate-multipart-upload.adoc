@@ -1,0 +1,158 @@
+---
+permalink: s3/initiate-multipart-upload.html 
+sidebar: sidebar 
+keywords: initiate multipart upload, CreateMultipartUpload, upload ID 
+summary: CreateMultipartUpload 操作为对象启动分段上传，并返回上传 ID。 
+---
+= StorageGRID 中的 S3 CreateMultipartUpload 请求标头和选项
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+CreateMultipartUpload（以前称为 Initiate Multipart Upload）操作为对象启动多部分上传，并返回上传 ID。
+
+支持 `x-amz-storage-class`请求标头。为 `x-amz-storage-class`提交的值会影响 StorageGRID 保护对象数据的方式，而不会影响存储在 StorageGRID 系统中的对象的永久副本数量（由 ILM 确定）。
+
+如果与接收对象匹配的 ILM 规则使用 Strict link:../ilm/data-protection-options-for-ingest.html["载入选项"]，则 `x-amz-storage-class`标头无效。
+
+以下值可用于 `x-amz-storage-class`：
+
+* `STANDARD` （默认）
++
+** *双重提交*：如果 ILM 规则指定双重提交接收选项，则一旦接收对象，就会创建该对象的第二个副本，并将其分发到其他存储节点（双重提交）。评估 ILM 时，StorageGRID 确定这些初始临时副本是否满足规则中的放置说明。如果不满足，则可能需要在不同位置创建新的对象副本，并且可能需要删除初始临时副本。
+** *平衡*：如果 ILM 规则指定平衡选项，并且 StorageGRID 无法立即生成规则中指定的所有副本，StorageGRID 会在不同的 Storage Node 上生成两个临时副本。
++
+如果 StorageGRID 可以立即创建 ILM 规则（同步放置）中指定的所有对象副本，则 `x-amz-storage-class`标头无效。
+
+
+
+* `REDUCED_REDUNDANCY`
++
+** *双提交*：如果 ILM 规则指定双提交选项，StorageGRID 会在接收对象时创建单个临时副本（单提交）。
+** *平衡*：如果 ILM 规则指定平衡选项，只有在系统无法立即生成规则中指定的所有副本时，StorageGRID 才会创建单个临时副本。如果 StorageGRID 可以执行同步放置，则此标头无效。当与对象匹配的 ILM 规则创建单个复制副本时，最好使用 `REDUCED_REDUNDANCY`选项。在这种情况下，使用 `REDUCED_REDUNDANCY`可避免为每次摄取操作不必要地创建和删除额外的对象副本。
+
+
++
+不建议在其他情况下使用 `REDUCED_REDUNDANCY`选项。 `REDUCED_REDUNDANCY`会增加摄取过程中对象数据丢失的风险。例如，如果单个副本最初存储在 ILM 评估发生之前发生故障的存储节点上，则可能会丢失数据。
+
+
+
+
+CAUTION: 在任何时间段内只有一个复制副本会使数据面临永久丢失的风险。如果某个对象只有一个复制副本，则当存储节点发生故障或出现重大错误时，该对象将丢失。在升级等维护过程中，您还会暂时失去对该对象的访问权限。
+
+指定 `REDUCED_REDUNDANCY`仅影响首次接收对象时创建的副本数。当对象由活动 ILM 策略评估时，它不会影响对象的副本数，也不会导致数据以较低的冗余级别存储在 StorageGRID 系统中。
+
+
+NOTE: 如果要将对象接收到启用了 S3 对象锁定的存储桶中，则该 `REDUCED_REDUNDANCY`选项将被忽略。如果要将对象摄入旧版合规存储桶，则该 `REDUCED_REDUNDANCY`选项将返回错误。StorageGRID 将始终执行双提交摄取，以确保满足合规性要求。
+
+
+
+[[supported-request-headers]]
+== 支持的请求标头
+
+支持以下请求标头：
+
+* `Content-Type`
+* `x-amz-checksum-algorithm`
++
+目前，仅支持 `x-amz-checksum-algorithm`的 SHA256 值。
+
+* `x-amz-meta-`，后跟包含用户定义元数据的名称-值对
++
+为用户定义的元数据指定名称-值对时，请使用以下常规格式：
+
++
+[listing]
+----
+x-amz-meta-_name_: `value`
+----
++
+如果要将*用户定义的创建时间*选项用作 ILM 规则的参考时间，则必须使用 `creation-time`作为记录对象创建时间的元数据的名称。例如：
+
++
+[listing]
+----
+x-amz-meta-creation-time: 1443399726
+----
++
+ `creation-time` 的值计算为自 1970 年 1 月 1 日以来的秒数。
+
++
+
+NOTE: 如果要将对象添加到启用了旧版合规性的存储桶，则不允许将 `creation-time`添加为用户定义的元数据。将返回错误。
+
+* S3 Object Lock 请求标头：
++
+** `x-amz-object-lock-mode`
+** `x-amz-object-lock-retain-until-date`
+** `x-amz-object-lock-legal-hold`
++
+如果在没有这些标头的情况下发出请求，则使用存储桶默认保留设置来计算对象版本 retain-until-date。
+
++
+link:../s3/use-s3-api-for-s3-object-lock.html["使用 S3 REST API 配置 S3 对象锁定"]
+
+
+
+* SSE 请求标头：
++
+** `x-amz-server-side-encryption`
+** `x-amz-server-side-encryption-customer-key-MD5`
+** `x-amz-server-side-encryption-customer-key`
+** `x-amz-server-side-encryption-customer-algorithm`
++
+<<服务器端加密的请求标头>>
+
+
+
++
+
+NOTE: 有关 StorageGRID 处理 UTF-8 字符的信息，请参见 link:put-object.html["放置对象"]。
+
+
+
+
+
+[[request-headers-for-server-side-encryption]]
+== 服务器端加密的请求标头
+
+您可以使用以下请求标头通过服务器端加密对分段对象进行加密。SSE 和 SSE-C 选项互斥。
+
+* *SSE*：如果要使用由 StorageGRID 管理的唯一密钥对对象进行加密，请在 CreateMultipartUpload 请求中使用以下标头。不要在任何 UploadPart 请求中指定此标头。
++
+** `x-amz-server-side-encryption`
+
+
+* *SSE-C*：如果您想使用您提供和管理的唯一密钥加密对象，请在 CreateMultipartUpload 请求中（以及在每个后续 UploadPart 请求中）使用所有这三个标头。
++
+** `x-amz-server-side-encryption-customer-algorithm`：指定 `AES256`。
+** `x-amz-server-side-encryption-customer-key`：指定新对象的加密密钥。
+** `x-amz-server-side-encryption-customer-key-MD5`：指定新对象加密密钥的 MD5 摘要。
+
+
+
+
+
+CAUTION: 您提供的加密密钥绝不会被存储。如果丢失加密密钥，则会丢失相应的对象。在使用客户提供的密钥保护对象数据之前，请查看 link:using-server-side-encryption.html["使用服务器端加密"] 的注意事项。
+
+
+
+[[unsupported-request-headers]]
+== 不支持的请求标头
+
+不支持以下请求标头：
+
+* `x-amz-website-redirect-location`
++
+The `x-amz-website-redirect-location` 标头返回 `XNotImplemented`。
+
+
+
+
+
+[[versioning]]
+== 版本控制
+
+多部分上传由单独的操作组成，用于启动上传、列出上传、上传部分、组装上传的部分和完成上传。执行 CompleteMultipartUpload 操作时将创建对象（如果适用，还会进行版本控制）。

@@ -1,0 +1,237 @@
+---
+permalink: s3/example-bucket-policies.html 
+sidebar: sidebar 
+keywords: bucket policy examples 
+summary: 使用本节中的示例为存储桶构建 StorageGRID 访问策略。 
+---
+= StorageGRID S3 REST API 存储桶策略示例
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用本节中的示例为存储桶构建 StorageGRID 访问策略。
+
+存储区策略指定策略附加到的存储区的访问权限。您可以通过以下工具之一使用 S3 PutBucketPolicy API 配置存储区策略：
+
+* link:../tenant/manage-bucket-policy.html["租户管理器"]。
+* 使用此命令的 AWS CLI（请参阅link:operations-on-buckets.html["${post_edited_translations.segment}"]）：
++
+[listing, subs="specialcharacters,quotes"]
+----
+> aws s3api put-bucket-policy --bucket examplebucket --policy _file://policy.json_
+----
+
+
+
+
+[[example-allow-everyone-read-only-access-to-a-bucket]]
+== 示例：允许每个人对存储区进行只读访问
+
+在此示例中，允许每个人（包括匿名者）列出存储桶中的对象，并对存储桶中的所有对象执行 GetObject 操作。所有其他操作将被拒绝。请注意，此策略可能不是特别有用，因为除帐户根目录外，没有人有权写入存储桶。
+
+[listing]
+----
+{
+  "Statement": [
+    {
+      "Sid": "AllowEveryoneReadOnlyAccess",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": [ "s3:GetObject", "s3:ListBucket" ],
+      "Resource": ["arn:aws:s3:::examplebucket","arn:aws:s3:::examplebucket/*"]
+    }
+  ]
+}
+----
+
+
+[[example-allow-everyone-in-one-account-full-access-and-everyone-in-another-account-read-only-access-to-a-bucket]]
+== 示例：允许一个帐户中的所有人完全访问，允许另一个帐户中的所有人只读访问存储桶
+
+在此示例中，一个指定帐户中的每个人都被允许完全访问存储桶，而另一个指定帐户中的每个人只允许列出存储桶并对存储桶中以 `shared/`对象键前缀开头的对象执行 GetObject 操作。
+
+
+NOTE: 在 StorageGRID 中，由非所有者帐户（包括匿名帐户）创建的对象归存储桶所有者帐户所有。存储桶策略适用于这些对象。
+
+[listing]
+----
+{
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "95390887230002558202"
+      },
+      "Action": "s3:*",
+      "Resource": [
+        "arn:aws:s3:::examplebucket",
+        "arn:aws:s3:::examplebucket/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "31181711887329436680"
+      },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::examplebucket/shared/*"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "31181711887329436680"
+      },
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::examplebucket",
+      "Condition": {
+        "StringLike": {
+          "s3:prefix": "shared/*"
+        }
+      }
+    }
+  ]
+}
+----
+
+
+[[example-allow-everyone-read-only-access-to-a-bucket-and-full-access-by-specified-group]]
+== 示例：允许每个人对存储区进行只读访问，并允许指定组进行完全访问
+
+在此示例中，允许每个人（包括匿名用户）列出存储桶并对存储桶中的所有对象执行 GetObject 操作，而仅允许指定帐户中属于该组 `Marketing`的用户具有完全访问权限。
+
+[listing]
+----
+{
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::95390887230002558202:federated-group/Marketing"
+      },
+      "Action": "s3:*",
+      "Resource": [
+        "arn:aws:s3:::examplebucket",
+        "arn:aws:s3:::examplebucket/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": ["s3:ListBucket","s3:GetObject"],
+      "Resource": [
+        "arn:aws:s3:::examplebucket",
+        "arn:aws:s3:::examplebucket/*"
+      ]
+    }
+  ]
+}
+----
+
+
+[[example-allow-everyone-read-and-write-access-to-a-bucket-if-client-in-ip-range]]
+== 示例：如果客户端在 IP 范围内，则允许每个人对存储桶进行读取和写入访问
+
+在此示例中，包括匿名在内的所有人都可以列出存储桶，并对存储桶中的所有对象执行任何对象操作，前提是这些请求来自指定的 IP 范围（54.240.143.0 至 54.240.143.255，54.240.143.188 除外）。所有其他操作将被拒绝，IP 范围之外的所有请求也将被拒绝。
+
+[listing]
+----
+{
+  "Statement": [
+    {
+      "Sid": "AllowEveryoneReadWriteAccessIfInSourceIpRange",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": [ "s3:*Object", "s3:ListBucket" ],
+      "Resource": ["arn:aws:s3:::examplebucket","arn:aws:s3:::examplebucket/*"],
+      "Condition": {
+        "IpAddress": {"aws:SourceIp": "54.240.143.0/24"},
+        "NotIpAddress": {"aws:SourceIp": "54.240.143.188"}
+      }
+    }
+  ]
+}
+----
+
+
+[[example-allow-full-access-to-a-bucket-exclusively-by-a-specified-federated-user]]
+== 示例：允许指定的联合用户独占访问存储区
+
+在此示例中，允许联合用户 Alex 完全访问 `examplebucket`存储桶及其对象。所有其他用户，包括'`root`'，都会被明确拒绝所有操作。但请注意，'`root`'从未被拒绝对 Put/Get/DeleteBucketPolicy 的权限。
+
+[listing]
+----
+{
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::95390887230002558202:federated-user/Alex"
+      },
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "arn:aws:s3:::examplebucket",
+        "arn:aws:s3:::examplebucket/*"
+      ]
+    },
+    {
+      "Effect": "Deny",
+      "NotPrincipal": {
+        "AWS": "arn:aws:iam::95390887230002558202:federated-user/Alex"
+      },
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "arn:aws:s3:::examplebucket",
+        "arn:aws:s3:::examplebucket/*"
+      ]
+    }
+  ]
+}
+----
+
+
+[[example-putoverwriteobject-permission]]
+== 示例：PutOverwriteObject 权限
+
+在此示例中， `Deny` PutOverwriteObject 和 DeleteObject 的 Effect 确保没有人可以覆盖或删除对象的数据、用户定义的元数据和 S3 对象标记。
+
+[listing]
+----
+{
+  "Statement": [
+    {
+      "Effect": "Deny",
+      "Principal": "*",
+      "Action": [
+        "s3:PutOverwriteObject",
+        "s3:DeleteObject",
+        "s3:DeleteObjectVersion"
+      ],
+      "Resource": "arn:aws:s3:::wormbucket/*"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::95390887230002558202:federated-group/SomeGroup"
+
+},
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::wormbucket"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::95390887230002558202:federated-group/SomeGroup"
+
+},
+      "Action": "s3:*",
+      "Resource": "arn:aws:s3:::wormbucket/*"
+    }
+  ]
+}
+----

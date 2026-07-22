@@ -1,0 +1,26 @@
+---
+permalink: admin/supported-ciphers-for-outgoing-tls-connections.html 
+sidebar: sidebar 
+keywords: tls cipher suites, transport layer security connections 
+summary: ${post_edited_translations.segment} 
+---
+= StorageGRID 中传出 TLS 连接支持的密码
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+${post_edited_translations.segment}
+
+
+
+[[supported-versions-of-tls]]
+== 支持的 TLS 版本
+
+${post_edited_translations.segment}
+
+已选择支持与外部系统配合使用的 TLS 密码，以确保与各种外部系统的兼容性。该列表大于支持与 S3 客户端应用程序配合使用的密码列表。要配置密码，请转至 *Configuration* > *Security* > *Security settings*，然后选择 *TLS and SSH policies*。
+
+
+NOTE: 在 StorageGRID 中，TLS 配置选项（例如协议版本、密码、密钥交换算法和 MAC 算法）是不可配置的。如果您对这些设置有特定要求，请联系您的 NetApp 客户代表。

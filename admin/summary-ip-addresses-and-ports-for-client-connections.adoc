@@ -1,0 +1,131 @@
+---
+permalink: admin/summary-ip-addresses-and-ports-for-client-connections.html 
+sidebar: sidebar 
+keywords: ip addresses for client, how to connect to storagegrid, ports, vip 
+summary: ${post_edited_translations.segment} 
+---
+= StorageGRID 客户端连接的 IP 地址和端口
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+${post_edited_translations.segment}
+
+客户端应用程序可以使用网格节点的 IP 地址和该节点上的服务端口号连接到 StorageGRID。也可以创建负载平衡节点的高可用性 (HA) 组，以提供使用虚拟 IP (VIP) 地址的高可用性连接。如果要使用完全限定域名 (FQDN) 而不是 IP 或 VIP 地址连接到 StorageGRID，可以配置 DNS 条目。
+
+下表总结了客户端连接到 StorageGRID 的不同方式，以及每种连接类型所使用的 IP 地址和端口。如果您已创建负载均衡器端点和高可用性 (HA) 组，请参见 <<${post_edited_translations.segment}>> 以在 Grid Manager 中找到这些值。
+
+[cols="1a,1a,1a,1a"]
+|===
+| 在何处进行连接 | ${post_edited_translations.segment} | IP 地址 | 端口 
+
+
+ a| 
+HA 组
+ a| 
+负载平衡器
+ a| 
+HA 组的虚拟 IP 地址
+ a| 
+${post_edited_translations.segment}
+
+
+
+ a| 
+管理节点
+ a| 
+负载平衡器
+ a| 
+管理节点的 IP 地址
+ a| 
+${post_edited_translations.segment}
+
+
+
+ a| 
+网关节点
+ a| 
+负载平衡器
+ a| 
+网关节点的 IP 地址
+ a| 
+${post_edited_translations.segment}
+
+
+
+ a| 
+存储节点
+ a| 
+LDR
+ a| 
+${post_edited_translations.segment}
+ a| 
+${post_edited_translations.segment}
+
+* HTTPS：18082
+* HTTP：18084
+
+
+|===
+
+
+[[example-urls]]
+== 示例 URL
+
+要将客户端应用程序连接到网关节点的 HA 组的负载均衡器端点，请使用如下所示的 URL 结构：
+
+`https://_VIP-of-HA-group:LB-endpoint-port_`
+
+${post_edited_translations.segment}
+
+`\https://192.0.2.5:10443`
+
+
+
+[[where-to-find-ip-addresses]]
+== ${post_edited_translations.segment}
+
+. 使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+. 要查找网格节点的 IP 地址：
++
+.. 选择 *Nodes*。
+.. ${post_edited_translations.segment}
+.. 选择 *Overview* 选项卡。
+.. 在节点信息部分，记下节点的 IP 地址。
+.. ${post_edited_translations.segment}
++
+${post_edited_translations.segment}
+
++
+*** ${post_edited_translations.segment}
+*** *eth1:* 管理网络（可选）
+*** *eth2:* 客户端网络（可选）
++
+
+NOTE: ${post_edited_translations.segment}
+
+
+
+
+
+. 要查找高可用性组的虚拟 IP 地址，请执行以下操作：
++
+.. 选择*配置* > *网络* > *高可用性组*。
+.. ${post_edited_translations.segment}
+
+
+. ${post_edited_translations.segment}
++
+.. 选择*配置* > *网络* > *负载均衡器端点*。
+.. 请记下要使用的端点的端口号。
++
+
+NOTE: 如果端口号为 80 或 443，则仅在网关节点上配置端点，因为这些端口在管理节点上保留。所有其他端口都配置在网关节点和管理节点上。
+
+.. ${post_edited_translations.segment}
+.. ${post_edited_translations.segment}
+
+
+

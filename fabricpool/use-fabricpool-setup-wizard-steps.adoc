@@ -1,0 +1,629 @@
+---
+permalink: fabricpool/use-fabricpool-setup-wizard-steps.html 
+sidebar: sidebar 
+keywords: fabricPool, StorageGRID, FabricPool setup wizard, ontap system manager 
+summary: 您可以使用 FabricPool 安装向导将 StorageGRID 配置为 FabricPool 云层的对象存储系统。 
+---
+= 访问并完成 StorageGRID FabricPool 设置向导
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 FabricPool 安装向导将 StorageGRID 配置为 FabricPool 云层的对象存储系统。
+
+.开始之前
+* 您已查阅link:../fabricpool/use-fabricpool-setup-wizard.html["注意事项和要求"]，了解如何使用 FabricPool 设置向导。
++
+
+NOTE: 如果要将 StorageGRID 配置为与任何其他 S3 客户端应用程序一起使用，请转到 link:../admin/use-s3-setup-wizard.html["${post_edited_translations.segment}"]。
+
+* 您有 link:../admin/admin-group-permissions.html["root 访问权限"]。
+
+
+
+
+[[access-the-wizard]]
+== 访问此向导
+
+您可以在开始使用 StorageGRID Grid Manager 时完成 FabricPool 设置向导，也可以在以后的任何时间访问并完成该向导。
+
+.步骤
+. 使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+. 如果仪表板上出现 *FabricPool and S3 setup wizard* 横幅，请选择横幅中的链接。如果横幅不再出现，请从 Grid Manager 中的标题栏中选择帮助图标，然后选择 *FabricPool and S3 setup wizard*。
++
+image:help_menu.png["帮助菜单"]
+
+. 在 FabricPool 和 S3 设置向导页面的 FabricPool 部分，选择*立即配置*。
++
+*第 1 步，共 9 步：配置 HA 组*出现。
+
+
+
+
+
+[[step-1-of-9-configure-ha-group]]
+== 步骤 1/9：配置 HA 组
+
+高可用性 (HA) 组是一组节点，每个节点都包含 StorageGRID 负载平衡器服务。HA 组可以包含网关节点、管理节点或两者。
+
+您可以使用 HA 组来帮助保持 FabricPool 数据连接可用。HA 组使用虚拟 IP 地址 (VIP) 来提供对负载平衡器服务的高可用性访问。如果 HA 组中的活动接口出现故障，备份接口可以管理工作负载，对 FabricPool 操作的影响很小
+
+有关此任务的详细信息，请参见 link:../admin/managing-high-availability-groups.html["管理高可用性组"] 和 link:best-practices-for-high-availability-groups.html["高可用性组的最佳实践"]。
+
+.步骤
+. 如果您计划使用外部负载均衡器，则无需创建 HA 组。选择 *跳过此步骤* 并转到 <<步骤 2/9：配置负载均衡器端点>>。
+. 要使用 StorageGRID 负载平衡器，请创建一个新的 HA 组或使用现有的 HA 组。
++
+[role="tabbed-block"]
+====
+.创建 HA 组
+--
+.. 要创建新的HA组，请选择*创建HA组*。
+.. 对于*输入详细信息*步骤，请填写以下字段。
++
+[cols="1a,3a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+HA 组名称
+ a| 
+此 HA 组的唯一显示名称。
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+此 HA 组的描述。
+
+|===
+.. 对于*添加接口*步骤，请选择要在此 HA 组中使用的节点接口。
++
+${post_edited_translations.segment}
+
++
+您可以选择一个或多个节点，但每个节点只能选择一个接口。
+
+.. 对于*Prioritize interfaces*步骤，请确定此 HA 组的主接口和任何备份接口。
++
+拖动行以更改*优先级顺序*列中的值。
+
++
+列表中的第一个接口是 Primary 接口。除非发生故障，否则 Primary 接口为活动接口。
+
++
+如果 HA 组包含多个接口，并且活动接口发生故障，则虚拟 IP （VIP）地址按优先级顺序移动到第一个备份接口。如果该接口出现故障，VIP 地址将移动到下一个备份接口，依此类推。故障解决后，VIP 地址将移回可用的最高优先级接口。
+
+.. 对于*输入 IP 地址*步骤，请填写以下字段。
++
+[cols="1a,3a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+子网 CIDR
+ a| 
+CIDR 表示法中 VIP 子网的地址——IPv4 地址后跟斜杠和子网长度（0-32）。
+
+网络地址不得设置任何主机位。例如， `192.16.0.0/22`。
+
+
+
+ a| 
+网关 IP 地址（可选）
+ a| 
+可选。如果用于访问 StorageGRID 的 ONTAP IP 地址与 StorageGRID VIP 地址不在同一子网中，请输入 StorageGRID VIP 本地网关 IP 地址。本地网关 IP 地址必须在 VIP 子网内。
+
+
+
+ a| 
+虚拟 IP 地址
+ a| 
+为 HA 组中的活动接口输入至少一个且不超过十个 VIP 地址。所有 VIP 地址必须位于 VIP 子网内，并且所有地址都将在活动接口上同时处于活动状态。
+
+必须至少有一个地址为 IPv4。或者，您可以指定其他 IPv4 和 IPv6 地址。
+
+|===
+.. 选择*创建HA组*，然后选择*完成*返回 FabricPool 设置向导。
+.. 选择*继续*转到负载平衡器步骤。
+
+
+--
+.使用现有 HA 组
+--
+.. 要使用现有 HA 组，请从 *Select an HA group* 下拉列表中选择 HA 组名称。
+.. 选择*继续*转到负载平衡器步骤。
+
+
+--
+====
+
+
+
+
+[[step-2-of-9-configure-load-balancer-endpoint]]
+== 步骤 2/9：配置负载均衡器端点
+
+StorageGRID 使用负载均衡器来管理来自客户端应用程序的工作负载，例如 FabricPool。负载平衡可最大限度地提高跨多个存储节点的速度和连接容量。
+
+您可以使用 StorageGRID 负载平衡器服务，该服务存在于所有网关和管理节点上，也可以连接到外部（第三方）负载平衡器。建议使用 StorageGRID 负载平衡器。
+
+有关此任务的详细信息，请参见常规link:../admin/managing-load-balancing.html["负载平衡的注意事项"]和link:best-practices-for-load-balancing.html["适用于 FabricPool 的负载均衡最佳实践"]。
+
+.步骤
+. 选择或创建 StorageGRID 负载平衡器端点或使用外部负载平衡器。
++
+[role="tabbed-block"]
+====
+.创建端点
+--
+.. 选择*创建端点*。
+.. 对于*输入端点详细信息*步骤，请填写以下字段。
++
+[cols="1a,3a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+名称
+ a| 
+终结点的描述性名称。
+
+
+
+ a| 
+端口
+ a| 
+要用于负载平衡的 StorageGRID 端口。对于您创建的第一个端点，此字段默认为 10433，但您可以输入任何未使用的外部端口。如果输入 80 或 443，则仅在网关节点上配置端点，因为这些端口在管理节点上保留。
+
+*注意：* 不允许使用其他网格服务使用的端口。请参见 link:../network/internal-grid-node-communications.html["网络端口参考"]。
+
+
+
+ a| 
+客户端类型
+ a| 
+必须是 *S3*。
+
+
+
+ a| 
+网络协议
+ a| 
+选择 *HTTPS*。
+
+*注意*：支持在不使用 TLS 加密的情况下与 StorageGRID 通信，但不建议这样做。
+
+|===
+.. 对于*选择绑定模式*步骤，指定绑定模式。绑定模式控制使用任何 IP 地址或使用特定 IP 地址和网络接口访问端点的方式。
++
+[cols="1a,3a"]
+|===
+| 模式 | 问题描述 
+
+
+ a| 
+全局(默认)
+ a| 
+客户端可以使用任何网关节点或管理节点的 IP 地址、任何网络上的任何 HA 组的虚拟 IP (VIP) 地址或相应的 FQDN 来访问端点。
+
+除非需要限制此端点的可访问性，否则请使用*全局*设置（默认）。
+
+
+
+ a| 
+HA 组的虚拟 IP
+ a| 
+客户端必须使用 HA 组的虚拟 IP 地址（或相应的 FQDN）来访问此端点。
+
+具有此绑定模式的端点都可以使用相同的端口号，只要您为端点选择的 HA 组不重叠即可。
+
+
+
+ a| 
+节点接口
+ a| 
+${post_edited_translations.segment}
+
+
+
+ a| 
+节点类型
+ a| 
+根据您选择的节点类型，客户端必须使用任何管理节点的 IP 地址（或相应的 FQDN）或任何网关节点的 IP 地址（或相应的 FQDN）来访问此端点。
+
+|===
+.. 对于*租户访问*步骤，请选择以下选项之一：
++
+[cols="1a,3a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+允许所有租户（默认）
+ a| 
+所有租户帐户都可以使用此端点来访问其存储区。
+
+*允许所有租户*几乎始终是用于 FabricPool 的负载均衡器端点的合适选项。
+
+如果要使用新 StorageGRID 系统的 FabricPool 设置向导，并且尚未创建任何租户帐户，则必须选择此选项。
+
+
+
+ a| 
+允许选定的租户
+ a| 
+只有选定租户帐户可以使用此端点访问其存储桶。
+
+
+
+ a| 
+阻止选定租户
+ a| 
+选定的租户帐户无法使用此端点来访问其存储桶。所有其他租户都可以使用此端点。
+
+|===
+.. 对于*附加证书*步骤，请选择以下选项之一：
++
+[cols="1a,3a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+上传证书（推荐）
+ a| 
+使用此选项可上传 CA 签名的服务器证书、证书私钥和可选的 CA 捆绑包。
+
+
+
+ a| 
+生成证书
+ a| 
+使用此选项可生成自签名证书。有关要输入内容的详细信息，请参见link:../admin/configuring-load-balancer-endpoints.html["配置负载平衡器端点"]。
+
+
+
+ a| 
+使用 StorageGRID S3 证书
+ a| 
+仅当您已上传或生成了 StorageGRID 全局证书的自定义版本时，此选项才可用。有关详细信息，请参见 link:../admin/configuring-custom-server-certificate-for-storage-node.html["配置 S3 API 证书"]。
+
+|===
+.. 选择*完成*返回 FabricPool 设置向导。
+.. 选择*继续*转到租户和存储桶步骤。
+
+
+
+NOTE: 对端点证书的更改可能需要长达 15 分钟才能应用于所有节点。
+
+--
+.使用现有负载平衡器端点
+--
+.. 从*选择负载平衡器端点*下拉列表中选择现有端点的名称。
+.. 选择*继续*转到租户和存储桶步骤。
+
+
+--
+.使用外部负载均衡器
+--
+.. 为外部负载均衡器填写以下字段。
++
+[cols="1a,3a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+FQDN
+ a| 
+外部负载平衡器的完全限定域名(FQDN)。
+
+
+
+ a| 
+端口
+ a| 
+FabricPool 将用于连接到外部负载平衡器的端口号。
+
+
+
+ a| 
+证书
+ a| 
+复制外部负载均衡器的服务器证书并将其粘贴到此字段中。
+
+|===
+.. 选择*继续*转到租户和存储桶步骤。
+
+
+--
+====
+
+
+
+
+[[step-3-of-9-tenant-and-bucket]]
+== 步骤 3/9：租户和存储桶
+
+租户是可以使用 S3 应用程序在 StorageGRID 中存储和检索对象的实体。每个租户都有自己的用户、访问密钥、存储桶、对象和一组特定的功能。必须先创建 StorageGRID 租户，然后才能创建 FabricPool 将使用的存储桶。
+
+存储桶是用于存储租户对象和对象元数据的容器。虽然某些租户可能有多个存储桶，但向导允许您一次仅创建或选择一个租户和一个存储桶。您可以稍后使用 Tenant Manager 添加所需的任何其他存储桶。
+
+您可以创建新的租户和存储桶以供 FabricPool 使用，也可以选择现有租户和存储桶。如果创建新租户，系统会自动为租户的 root 用户创建访问密钥 ID 和机密访问密钥。
+
+有关此任务的详细信息，请参见 link:creating-tenant-account-for-fabricpool.html["为 FabricPool 创建租户帐户"] 和 link:creating-s3-bucket-and-access-key.html["创建 S3 存储桶并获取访问密钥"]。
+
+.步骤
+创建新租户和存储区或选择现有租户。
+
+[role="tabbed-block"]
+====
+.新租户和存储区
+--
+. 要创建新租户和存储区，请输入*租户名称*。例如， `FabricPool tenant`。
+. 根据您的 StorageGRID 系统使用 link:../admin/using-identity-federation.html["身份联合"]、link:../admin/how-sso-works.html["单点登录 (SSO)"] 还是同时使用两者，定义租户帐户的 root 访问权限。
++
+[cols="1a,3a"]
+|===
+| 选项 | 执行此操作 
+
+
+ a| 
+如果未启用身份联合
+ a| 
+指定以本地 root 用户身份登录租户时使用的密码。
+
+
+
+ a| 
+如果启用了身份联合
+ a| 
+.. 选择现有联合组以获得租户的 root 访问权限。
+.. （可选）指定以本地 root 用户身份登录租户时使用的密码。
+
+
+
+
+ a| 
+如果已启用身份联合和单一登录(SSO)
+ a| 
+选择现有联合组以具有租户的 Root 访问权限。没有本地用户可以登录。
+
+|===
+. 对于*存储桶名称*，输入 FabricPool 将用于存储 ONTAP 数据的存储桶的名称。例如， `fabricpool-bucket`。
++
+
+TIP: 创建存储桶后，您无法更改存储桶名称。
+
+. 选择此存储桶的*区域*。
++
+使用默认区域(`us-east-1`），除非您希望将来使用 ILM 根据存储桶的区域筛选对象。
+
+. 选择*创建并继续*以创建租户和存储桶并转到下载数据步骤
+
+
+--
+.选择租户和存储桶
+--
+现有租户帐户必须至少有一个未启用版本控制的存储桶。如果该租户不存在存储桶，则无法选择现有租户帐户。
+
+. 从*租户名称*下拉列表中选择现有租户。
+. 从*存储桶名称*下拉列表中选择现有存储桶。
++
+FabricPool 不支持对象版本控制，因此不显示已启用版本控制的存储区。
+
++
+
+NOTE: 请勿选择已启用 S3 Object Lock 的存储桶用于 FabricPool。
+
+. 选择*继续*以转到下载数据步骤。
+
+
+--
+====
+
+
+[[step-4-of-9-download-ontap-settings]]
+== 步骤 4/9：下载 ONTAP 设置
+
+在此步骤中，您可以下载一个文件，用于在 ONTAP System Manager 中输入值。
+
+.步骤
+. （可选）选择复制图标（image:icon_tenant_copy_url.png["复制图标"]），将访问密钥 ID 和秘密访问密钥复制到剪贴板。
++
+这些值包含在下载文件中，但您可能需要单独保存。
+
+. 选择 *Download ONTAP settings* 以下载一个文本文件，其中包含您到目前为止输入的值。
++
+该 `ONTAP_FabricPool_settings___bucketname__.txt`文件包括将 StorageGRID 配置为 FabricPool 云层的对象存储系统所需的信息，包括：
+
++
+** 负载平衡器连接详细信息，包括服务器名称 (FQDN)、端口和证书
+** 存储桶名称
+** 租户帐户的 root 用户的访问密钥 ID 和秘密访问密钥
+
+
+. 将复制的密钥和下载的文件保存到安全位置。
++
+
+CAUTION: 在复制两个访问密钥、下载 ONTAP 设置或同时执行这两项操作之前，请勿关闭此页面。关闭此页面后，密钥将不可用。请务必将此信息保存在安全的位置，因为它可用于从 StorageGRID 系统获取数据。
+
+. 选中复选框以确认您已下载或复制了访问密钥 ID 和私有访问密钥。
+. 选择 *Continue* 转到 ILM 存储池步骤。
+
+
+
+
+[[step-5-of-9-select-a-storage-pool]]
+== 第5步，共9步：选择存储池
+
+存储池是一组存储节点。当您选择存储池时，您将确定 StorageGRID 将使用哪些节点来存储从 ONTAP 分层的数据。
+
+有关此步骤的详细信息，请参见 link:../ilm/creating-storage-pool.html["创建存储池"]。
+
+.步骤
+. 从*站点*下拉列表中，选择要用于从 ONTAP 分层的数据的 StorageGRID 站点。
+. 从*存储池*下拉列表中，为该站点选择存储池。
++
+站点的存储池包括该站点上的所有存储节点。
+
+. 选择*继续*转到 ILM 规则步骤。
+
+
+
+
+[[step-6-of-9-review-ilm-rule-for-fabricpool]]
+== 第 6 步，共 9 步：查看 FabricPool 的 ILM 规则
+
+信息生命周期管理 (ILM) 规则控制 StorageGRID 系统中所有对象的放置、持续时间和接收行为。
+
+FabricPool 设置向导会自动创建推荐的 ILM 规则以供 FabricPool 使用。此规则仅适用于您指定的存储桶。它在单个站点上使用 2+1 纠删码来存储从 ONTAP 分层的数据。
+
+有关此步骤的详细信息，请参见 link:../ilm/access-create-ilm-rule-wizard.html["创建 ILM 规则"] 和 link:best-practices-ilm.html["将 ILM 与 FabricPool 数据结合使用的最佳实践"]。
+
+.步骤
+. 查看规则详细信息。
++
+[cols="1a,3a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+规则名称
+ a| 
+自动生成，无法更改
+
+
+
+ a| 
+问题描述
+ a| 
+自动生成，无法更改
+
+
+
+ a| 
+筛选器
+ a| 
+存储桶名称
+
+此规则仅适用于保存在指定存储桶中的对象。
+
+
+
+ a| 
+参考时间
+ a| 
+采集时间
+
+放置指令在对象最初保存到存储桶时开始生效。
+
+
+
+ a| 
+放置说明
+ a| 
+使用 2+1 纠删码
+
+|===
+. 按*时间段*和*存储池*对保留图进行排序，以确认放置说明。
++
+** 该规则的*时间段*为*第 0 天 - 永远*。*第 0 天*意味着当数据从 ONTAP 分层时应用该规则。*永远*意味着 StorageGRID ILM 不会删除已从 ONTAP 分层的数据。
+** 规则的*存储池*是您选择的存储池。*EC 2+1* 表示将使用 2+1 纠删码存储数据。每个对象将保存为两个数据片段和一个奇偶校验片段。每个对象的三个片段将保存到单个站点的不同存储节点。
+
+
+. 选择 *Create and Continue* 以创建此规则并转到 ILM 策略步骤。
+
+
+
+
+[[step-7-of-9-review-and-activate-ilm-policy]]
+== 第 7 步，共 9 步：查看并激活 ILM 策略
+
+在 FabricPool 设置向导为 FabricPool 使用创建 ILM 规则后，它将创建一个 ILM 策略。在激活此策略之前，您必须仔细模拟并查看此策略。
+
+有关此步骤的详细信息，请参见 link:../ilm/creating-ilm-policy.html["创建 ILM 策略"] 和 link:best-practices-ilm.html["将 ILM 与 FabricPool 数据结合使用的最佳实践"]。
+
+
+CAUTION: 激活新的 ILM 策略时，StorageGRID 使用该策略来管理网格中所有对象（包括现有对象和新接收的对象）的放置、持续时间和数据保护。在某些情况下，激活新策略可能会导致现有对象被移动到新位置。
+
+
+CAUTION: 为避免数据丢失，请不要使用将过期或删除 FabricPool 云层数据的 ILM 规则。将保留期设置为*永久*，以确保 FabricPool 对象不会被 StorageGRID ILM 删除。
+
+.步骤
+. （可选）更新系统生成的*策略名称*。默认情况下，系统将"+ FabricPool"附加到活动或非活动策略的名称，但您可以提供自己的名称。
+. 查看非活动策略中的规则列表。
++
+** 如果网格没有非活动 ILM 策略，则向导会通过克隆活动策略并将新规则添加到顶部来创建非活动策略。
+** 如果网格已具有非活动 ILM 策略，并且该策略使用与活动 ILM 策略相同的规则和顺序，则向导会将新规则添加到非活动策略的顶端。
+** 如果您的非活动策略包含与活动策略不同的规则或顺序，则向导将通过克隆活动策略并将新规则添加到顶部来创建新的非活动策略。
+
+
+. 查看新非活动策略中规则的顺序。
++
+由于 FabricPool 规则是第一个规则，因此 FabricPool 存储桶中的任何对象都将在评估策略中的其他规则之前放置。任何其他存储桶中的对象都由策略中的后续规则放置。
+
+. 查看保留图以了解如何保留不同的对象。
++
+.. 选择*展开全部*以查看非活动策略中每个规则的保留图。
+.. 选择*时间段*和*存储池*以查看保留图。确认适用于 FabricPool 存储区或租户的任何规则都会*永久*保留对象。
+
+
+. 查看非活动策略后，选择 *Activate and continue* 以激活该策略，然后转到流量分类步骤。
+
+
+
+CAUTION: ILM 策略中的错误可能会导致无法弥补的数据丢失。激活前请仔细审阅该策略。
+
+
+
+[[step-8-of-9-create-traffic-classification-policy]]
+[[traffic-classification]]
+== 第8步，共9步：创建流量分类策略
+
+作为一个选项，FabricPool 设置向导可以创建可用于监控 FabricPool 工作负载的流量分类策略。系统创建的策略使用匹配规则来识别与您创建的存储区相关的所有网络流量。此策略仅监控流量；它不限制 FabricPool 或任何其他客户端的流量。
+
+有关此步骤的详细信息，请参见 link:creating-traffic-classification-policy-for-fabricpool.html["为 FabricPool 创建流量分类策略"]。
+
+.步骤
+. 查看此策略。
+. 如果要创建此流量分类策略，请选择*创建并继续*。
++
+一旦 FabricPool 开始将数据分层到 StorageGRID，您就可以转到"流量分类策略"页面，查看此策略的网络流量指标。稍后，您还可以添加规则来限制其他工作负载，并确保 FabricPool 工作负载具有大部分带宽。
+
+. 否则，请选择*跳过此步骤*。
+
+
+
+
+[[step-9-of-9-review-summary]]
+== 第9步（共9步）：查看摘要
+
+摘要提供了有关您配置的项目的详细信息，包括负载均衡器的名称、租户和存储桶、流量分类策略以及活动的 ILM 策略，
+
+.步骤
+. 查看摘要。
+. 选择 *Finish*。
+
+
+
+
+[[next-steps]]
+== 后续步骤
+
+完成 FabricPool 向导后，请执行以下附加步骤。
+
+.步骤
+. 转到 link:configure-ontap.html["配置 ONTAP System Manager"] 以输入保存的值并完成连接的 ONTAP 端。您必须将 StorageGRID 添加为云层，将云层附加到本地层以创建 FabricPool，并设置卷分层策略。
+. 转到link:configure-dns-server.html["配置 DNS 服务器"]并确保 DNS 包含一条记录，将 StorageGRID 服务器名称（完全限定域名）关联到您将使用的每个 StorageGRID IP 地址。
+. 请转至 link:other-best-practices-for-storagegrid-and-fabricpool.html["StorageGRID 和 FabricPool 的其他最佳实践"] 以了解 StorageGRID 审计日志和其他全局配置选项的最佳实践。
+

@@ -1,0 +1,26 @@
+---
+permalink: release-notes/changes-to-tenant-management-api.html 
+sidebar: sidebar 
+keywords: tenant management api, api, api version, swagger, rest api 
+summary: StorageGRID 12.0 使用租户管理 API 的版本 4。版本 4 弃用版本 3。但是，仍支持版本 1、2 和 3。 
+---
+= StorageGRID 中租户管理 API 的更改
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+StorageGRID 12.0 使用租户管理 API 的版本 4。版本 4 弃用版本 3；但是，仍支持版本 1、2 和 3。
+
+
+NOTE: 您可以继续在 StorageGRID 12.0 中使用已弃用的租户管理 API 版本；但是，对这些 API 版本的支持将在未来的 StorageGRID 版本中移除。升级到 StorageGRID 12.0 后，您可以使用 `PUT /grid/config/management` API 停用已弃用的 API。
+
+要了解更多信息，请转到 link:../tenant/understanding-tenant-management-api.html["了解租户管理 API"]。
+
+
+
+[[new-api-for-object-replication]]
+== 用于对象复制的新 API
+
+您可以使用 `/org/cross-grid-replication/{versionId}/replicate` API 在新配置了跨网格复制的现有存储桶上手动复制对象。

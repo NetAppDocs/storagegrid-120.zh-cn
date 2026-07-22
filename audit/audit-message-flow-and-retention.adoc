@@ -1,0 +1,80 @@
+---
+permalink: audit/audit-message-flow-and-retention.html 
+sidebar: sidebar 
+keywords: storagegrid, audit, message, flow, retention 
+summary: 所有 StorageGRID 服务在正常系统运行期间生成审核消息。您应该了解这些审核消息如何通过 StorageGRID 系统移动到 audit.log 文件。 
+---
+= 审核消息如何通过 StorageGRID 系统移动到 audit.log 文件以进行保留
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+所有 StorageGRID 服务在正常系统操作期间生成审核消息。您应该了解这些审核消息如何通过 StorageGRID 系统移动到 `audit.log`文件。
+
+以下审核消息和审核消息保留的工作流程仅适用于为 *Admin Nodes/local nodes* 或 *Admin Node and external syslog server* 配置的 StorageGRID。如果 StorageGRID 配置为"Local nodes only"（默认）或"External syslog server"，则审核消息将本地保存在每个节点的 `/var/local/log/localaudit.log`文件中，且无法由 Admin Nodes 或 Storage Nodes 处理。
+
+
+
+[[audit-message-flow]]
+== 审核消息流
+
+当 StorageGRID 配置为*管理节点/本地节点*或*管理节点和外部 syslog 服务器*时，审核消息由管理节点以及具有管理域控制器 (ADC) 服务的存储节点处理。
+
+如审核消息流程图所示，每个 StorageGRID 节点都会将其审核消息发送到数据中心站点的 ADC 服务之一。ADC 服务将自动为每个站点上安装的前三个存储节点启用。
+
+反过来，每个ADC服务都充当中继，并将其审计消息集合发送到StorageGRID系统中的每个管理节点，从而为每个管理节点提供系统活动的完整记录。
+
+每个管理节点将审核消息存储在文本日志文件中；活动日志文件名为 `audit.log`。
+
+image:audit_message_flow.gif["总结通过中继的审核消息流的图表"]
+
+
+
+[[audit-message-retention]]
+=== 审核消息保留
+
+StorageGRID 使用复制和删除流程，以确保审核消息在写入审核日志之前不会丢失。
+
+当节点生成或中继审核消息时，该消息存储在网格节点系统磁盘上的审核消息队列中。消息的副本始终保存在审核消息队列中，直到消息被写入管理节点 `/var/local/audit/export`目录中的审核日志文件。这有助于防止在传输过程中丢失审核消息。
+
+image:audit_message_retention.gif["汇总 AMS 审核消息接收的图表"]
+
+由于网络连接问题或审核容量不足，审核消息队列可能会暂时增加。随着队列的增加，它们会占用每个节点的 `/var/local/`目录中更多的可用空间。如果问题仍然存在，且节点的审核消息目录已过满，则各个节点将优先处理其积压工作，并暂时无法接收新消息。
+
+具体而言，您可能会看到以下行为：
+
+* 如果管理节点使用 `/var/local/audit/export`的目录已满，则管理节点将被标记为不可用于新审核消息，直到目录不再满为止。S3 客户端请求不受影响。当审核存储库无法访问时，会触发 XAMS（无法访问的审核存储库）警报。
+* 如果具有 ADC 服务的存储节点使用的 `/var/local/`目录已满 92%，则该节点将被标记为不可用于审核消息，直到目录仅满 87%。S3 客户端对其他节点的请求不受影响。当无法访问审核中继时，会触发 NRLY（可用审核中继）警报。
++
+
+NOTE: 如果没有带有 ADC 服务的可用存储节点，则存储节点将审计消息本地存储在 `/var/local/log/localaudit.log`文件中。
+
+* 如果 Storage Node 使用的 `/var/local/`目录已满 85%，则该节点将开始拒绝 S3 客户端请求，并返回 `503 Service Unavailable`。
+
+
+以下类型的问题可能导致审核消息队列增长非常大：
+
+* 使用 ADC 服务的管理节点或存储节点的中断。如果系统的某个节点出现故障，则其余节点可能会出现积压。
+* ${post_edited_translations.segment}
+* ADC 存储节点上的  `/var/local/` 空间因与审计消息无关的原因而变满。发生这种情况时，该节点将停止接受新的审计消息，并优先处理其当前的积压工作，这可能会导致其他节点上出现积压。
+
+
+
+
+[[large-audit-queue-alert-and-audit-messages-queued-amqs-alarm]]
+=== ${post_edited_translations.segment}
+
+为了帮助您随时间监控审核消息队列的大小，当存储节点队列或管理节点队列中的消息数量达到特定阈值时，会触发 *Large audit queue* 警报和旧版 AMQS 警报。
+
+${post_edited_translations.segment}
+
+如果警报或警示持续存在且严重程度增加，请查看队列大小图表。如果该数值在数小时或数天内持续增加，则审计负载可能已超过系统的审计容量。通过将“Client Writes”（客户端写入）和“Client Reads”（客户端读取）的审计级别更改为“Error”（错误）或“Off”（关闭），可以降低客户端操作速率或减少记录的审计消息数量。请参见 link:../monitor/configure-log-management.html["配置日志管理和外部 syslog 服务器"]。
+
+
+
+[[duplicate-messages]]
+=== 重复消息
+
+如果发生网络或节点故障，StorageGRID 系统会采取保守的方法。因此，审核日志中可能会存在重复的消息。

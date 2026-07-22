@@ -1,0 +1,238 @@
+---
+permalink: admin/what-is-autosupport.html 
+sidebar: sidebar 
+keywords: autosupport, technical support, storagegrid health, system status, Active IQ 
+summary: AutoSupport 功能使 StorageGRID 能够将运行状况和状态包发送给 NetApp 技术支持。 
+---
+= 了解 StorageGRID 中的 AutoSupport
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AutoSupport 功能使 StorageGRID 能够将运行状况和状态包发送给 NetApp 技术支持。
+
+使用 AutoSupport 有助于更快地解决问题。技术支持可以监控系统的存储需求，并帮助确定是否需要添加新节点或站点。（可选）AutoSupport 可以将软件包发送到一个额外的目标位置。
+
+StorageGRID 有两种类型的 AutoSupport：
+
+* *StorageGRID AutoSupport* 报告 StorageGRID 软件问题。首次安装 StorageGRID 时默认启用。如有需要，您可以 link:configure-autosupport-grid-manager.html["更改默认 AutoSupport 配置"]。
++
+
+NOTE: 如果未启用 StorageGRID AutoSupport，Grid Manager 仪表板上将显示一条消息。该消息包含指向 AutoSupport 配置页面的链接。如果关闭此消息，则在浏览器缓存被清除之前，它不会再次显示，即使 AutoSupport 仍处于禁用状态。
+
+* *设备硬件 AutoSupport* 报告 StorageGRID 设备问题。您必须 link:configure-autosupport-grid-manager.html#autosupport-for-appliances["在每台设备上配置硬件 AutoSupport"]。
+
+
+
+
+[[what-is-active-iq]]
+== 什么是 Active IQ？
+
+Active IQ 是一款基于云的数字顾问，利用来自 NetApp 安装基础的预测分析和社区智慧。其持续的风险评估、预测性警报、规范性指导和自动化操作可帮助您在问题发生之前预防问题，从而改善系统健康状况并提高系统可用性。
+
+如果要使用 NetApp 支持站点上的 Active IQ 仪表板和功能，则必须启用 AutoSupport。
+
+https://docs.netapp.com/us-en/active-iq/index.html["Active IQ Digital Advisor 文档"^]
+
+
+
+[[information-included-in-autosupport-package]]
+== AutoSupport 软件包中包含的信息
+
+AutoSupport 包中包含以下文件和详细信息。
+
+[cols="2a,2a,3a"]
+|===
+| 文件名 | 字段 | 问题描述 
+
+
+ a| 
+AUTOSUPPORT-HISTORY.XML
+ a| 
+AutoSupport 序列号 + 此 AutoSupport 的目的地 + 交付状态 + 交付尝试次数 + AutoSupport 主题 + 交付 URI + 上次错误 + AutoSupport PUT 文件名 + 生成时间 + Autosupport 压缩大小 + Autosupport 解密大小 + 总收集时间 (ms)
+ a| 
+AutoSupport 历史文件。
+
+
+
+ a| 
+AUTOSUPPORT.XML
+ a| 
+节点 + 联系支持所使用的协议 + HTTP/HTTPS 的支持 URL + 支持地址 + AutoSupport OnDemand 状态 + AutoSupport OnDemand 服务器 URL + AutoSupport OnDemand 轮询间隔
+ a| 
+AutoSupport 状态文件。提供所用协议、技术支持 URL 和地址、轮询间隔以及 OnDemand AutoSupport 是否启用或禁用的详细信息。
+
+
+
+ a| 
+BUCKETS.XML
+ a| 
+存储桶 ID + 帐户 ID + 生成版本 + 位置约束配置 + 合规性已启用 + 合规性配置 + S3 对象锁定已启用 + S3 对象锁定配置 + 一致性配置 + CORS 已启用 + CORS 配置 + 上次访问时间已启用 + 策略已启用 + 策略配置 + 通知已启用 + 通知配置 + 云镜像已启用 + 云镜像配置 + 搜索已启用 + 搜索配置 + 存储桶标记已启用 + 存储桶标记配置 + 版本控制配置
+ a| 
+提供存储桶级别的配置详细信息和统计信息。存储桶配置的示例包括平台服务、合规性和存储桶一致性。
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+${post_edited_translations.segment}
+ a| 
+网格范围的配置信息文件。包含有关网格证书、元数据保留空间、网格范围配置设置（合规性、S3 对象锁定、对象压缩、警报、系统日志和 ILM 配置）、擦除编码配置文件详细信息、DNS 名称和 link:../primer/nodes-and-services.html#storagegrid-services["NMS 名称"] 的信息。
+
+
+
+ a| 
+GRID-SPEC.XML
+ a| 
+网格规范，原始 XML
+ a| 
+用于配置和部署 StorageGRID。包含网格规格、NTP 服务器 IP、DNS 服务器 IP、网络拓扑和节点的硬件配置文件。
+
+
+
+ a| 
+GRID-TASKS.XML
+ a| 
+节点 + 服务路径 + 属性 ID + 属性名称 + 值 + 索引 + 表 ID + 表名称
+ a| 
+网格任务（维护程序）状态文件。提供网格的活动、终止、完成、失败和挂起任务的详细信息。
+
+
+
+ a| 
+GRID.JSON
+ a| 
+网格 + 修订版 + 软件版本 + 说明 + 许可证 + 密码 + DNS + NTP + 站点 + 节点
+ a| 
+网格信息。
+
+
+
+ a| 
+ILM-CONFIGURATION.XML
+ a| 
+${post_edited_translations.segment}
+ a| 
+ILM 配置的属性列表。
+
+
+
+ a| 
+ILM-STATUS.XML
+ a| 
+节点 + 服务路径 + 属性 ID + 属性名称 + 值 + 索引 + 表 ID + 表名称
+ a| 
+ILM 指标信息文件。包含每个节点的 ILM 评估率和网格范围的指标。
+
+
+
+ a| 
+ILM.XML
+ a| 
+ILM 原始 XML
+ a| 
+ILM 活动策略文件。包含有关活动 ILM 策略的详细信息，例如存储池 ID、接收行为、筛选器、规则和描述。
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+_不适用_
+ a| 
+可下载的日志文件。包含 `bycast-err.log`和 `servermanager.log`来自每个节点。
+
+
+
+ a| 
+MANIFEST.XML
+ a| 
+收集顺序 + 此数据的 AutoSupport 内容文件名 + 此数据项的描述 + 收集的字节数 + 收集时间 + 此数据项的状态 + 错误描述 + 此数据的 AutoSupport 内容类型 +
+ a| 
+包含 AutoSupport 元数据和所有 AutoSupport 文件的简要说明。
+
+
+
+ a| 
+NMS-ENTITIES.XML
+ a| 
+属性索引 + 实体 OID + 节点 ID + 设备型号 ID + 设备型号版本 + 实体名称
+ a| 
+对 link:../primer/nodes-and-services.html#storagegrid-services["NMS树"] 中的组和服务实体进行分组。提供网格拓扑详细信息。可以根据节点上运行的服务来确定节点。
+
+
+
+ a| 
+OBJECTS-STATUS.XML
+ a| 
+节点 + 服务路径 + 属性 ID + 属性名称 + 值 + 索引 + 表 ID + 表名称
+ a| 
+对象状态，包括后台扫描状态、活动传输、传输速率、总传输数、删除速率、损坏的片段、丢失的对象、缺失的对象、尝试修复、扫描速率、估计扫描周期和修复完成状态。
+
+
+
+ a| 
+SERVER-STATUS.XML
+ a| 
+节点 + 服务路径 + 属性 ID + 属性名称 + 值 + 索引 + 表 ID + 表名称
+ a| 
+服务器配置。包含每个节点的以下详细信息：平台类型、操作系统、安装的内存、可用内存、存储连接、存储设备机箱序列号、存储控制器故障驱动器计数、计算控制器机箱温度、计算硬件、计算控制器序列号、电源、驱动器大小和驱动器类型。
+
+
+
+ a| 
+SERVICE-STATUS.XML
+ a| 
+节点 + 服务路径 + 属性 ID + 属性名称 + 值 + 索引 + 表 ID + 表名称
+ a| 
+服务节点信息文件。包含已分配的表空间、可用表空间、数据库的 Reaper 指标、段修复持续时间、修复作业持续时间、自动作业重新启动和自动作业终止等详细信息。
+
+
+
+ a| 
+STORAGE-GRADES.XML
+ a| 
+存储等级 ID + 存储等级名称 + 存储节点 ID + 存储节点路径
+ a| 
+每个存储节点的存储等级定义文件。
+
+
+
+ a| 
+SUMMARY-ATTRIBUTES.XML
+ a| 
+组 OID + 组路径 + 摘要属性 ID + 摘要属性名称 + 值 + 索引 + 表 ID + 表名称
+ a| 
+汇总 StorageGRID 使用信息的高级系统状态数据。提供网格名称、站点名称、每个网格和每个站点的存储节点数量、许可证类型、许可证容量和使用情况、软件支持条款以及 S3 操作详细信息等详细信息。
+
+
+
+ a| 
+SYSTEM-ALERTS.XML
+ a| 
+名称 + 严重性 + 节点名称 + 警报状态 + 站点名称 + 警报触发时间 + 警报解决时间 + 规则 ID + 节点 ID + 站点 ID + 静默 + 其他注释 + 其他标签
+ a| 
+指示 StorageGRID 系统中潜在问题的当前系统警报。
+
+
+
+ a| 
+USERAGENTS.XML
+ a| 
+用户代理 + 天数 + HTTP 请求总数 + 摄取的总字节数 + 检索到的总字节数 + PUT 请求 + GET 请求 + DELETE 请求 + HEAD 请求 + POST 请求 + OPTIONS 请求 + 平均请求时间 (ms) + 平均 PUT 请求时间 (ms) + 平均 GET 请求时间 (ms) + 平均 DELETE 请求时间 (ms) + 平均 HEAD 请求时间 (ms) + 平均 POST 请求时间 (ms) + 平均 OPTIONS 请求时间 (ms)
+ a| 
+基于应用程序用户代理的统计信息。例如，每个用户代理的 PUT/GET/DELETE/HEAD 操作数和每个操作的总字节数。
+
+
+
+ a| 
+X-HEADER-DATA
+ a| 
+X-Netapp-asup-generated-on + X-Netapp-asup-hostname + X-Netapp-asup-os-version + X-Netapp-asup-serial-num + X-Netapp-asup-subject + X-Netapp-asup-system-id + X-Netapp-asup-model-name +
+ a| 
+AutoSupport 标头数据。
+
+|===

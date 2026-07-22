@@ -1,0 +1,65 @@
+---
+permalink: maintain/reviewing-ilm-policy-and-storage-configuration.html 
+sidebar: sidebar 
+keywords: storagegrid, restore, ilm policy, storage configuration 
+summary: 如果您计划停用存储节点，则应在开始停用过程之前查看 StorageGRID 系统的 ILM 策略。 
+---
+= 查看 StorageGRID ILM 策略和存储配置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您计划停用存储节点，则应在开始停用过程之前查看 StorageGRID 系统的 ILM 策略。
+
+在停用期间，所有对象数据将从停用的存储节点迁移到其他存储节点。
+
+
+NOTE: 在停用期间拥有的 ILM 策略将是停用之后使用的策略。您必须确保此策略在开始停用之前和停用完成之后均符合您的数据要求。
+
+您应查看每个 link:../ilm/creating-ilm-policy.html["活动 ILM 策略"] 中的规则，以确保 StorageGRID 系统将继续具有足够的正确类型和正确位置的容量，以适应存储节点的退役。
+
+请考虑下列情形：
+
+* ILM 评估服务是否可以复制对象数据，从而满足 ILM 规则？
+* 如果在退役过程中站点暂时不可用，会发生什么情况？是否可以在其他位置创建其他副本？
+* 退役流程将如何影响内容的最终分发？如link:consolidating-storage-nodes.html["整合存储节点"]中所述，您应在停用旧存储节点之前link:../expand/index.html["添加新的存储节点"]。如果在停用较小的存储节点后添加较大的替换存储节点，则旧存储节点可能接近容量上限，而新存储节点可能几乎没有内容。大多数新对象数据的写入操作将被定向到新存储节点，从而降低系统操作的整体效率。
+* 系统是否始终包含足够的存储节点以满足活动的 ILM 策略？
++
+
+NOTE: 无法满足的 ILM 策略将导致积压和警报，并可能停止 StorageGRID 系统的运行。
+
+
+
+通过评估表中列出的区域，验证由停用过程产生的建议拓扑是否满足 ILM 策略。
+
+[cols="1a,2a"]
+|===
+| 需要评估的领域 | 需要考虑的事项 
+
+
+ a| 
+可用容量
+ a| 
+存储容量是否足以容纳存储在 StorageGRID 系统中的所有对象数据，包括当前存储在要退役的存储节点上的对象数据的永久副本？
+
+在退役完成后的合理时间间隔内，是否有足够的容量来处理存储对象数据的预期增长？
+
+
+
+ a| 
+存储位置
+ a| 
+如果整个 StorageGRID 系统中仍有足够的容量，则正确位置的容量是否满足 StorageGRID 系统的业务规则？
+
+
+
+ a| 
+存储类型
+ a| 
+退役完成后，是否会有足够的适当类型的存储空间？
+
+例如，随着内容的老化，ILM 规则可能会将内容从一种类型的存储移动到另一种类型的存储。在这种情况下，您必须确保在 StorageGRID 系统的最终配置中有足够的适当类型的存储空间。
+
+|===

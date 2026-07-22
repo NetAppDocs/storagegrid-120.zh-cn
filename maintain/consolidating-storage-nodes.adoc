@@ -1,0 +1,23 @@
+---
+permalink: maintain/consolidating-storage-nodes.html 
+sidebar: sidebar 
+keywords: storagegrid, storage node, consolidate storage node, consolidating storage node 
+summary: 您可以整合存储节点以减少站点或部署的存储节点计数，同时增加存储容量。 
+---
+= 整合 StorageGRID 存储节点
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以整合存储节点以减少站点或部署的存储节点计数，同时增加存储容量。
+
+整合 Storage Nodes 时，您可link:../expand/index.html["扩展 StorageGRID 系统"]以通过添加新的大容量 Storage Nodes，然后停用旧的小容量 Storage Nodes。在停用过程中，对象将从旧 Storage Nodes 迁移到新 Storage Nodes。
+
+
+NOTE: 如果要使用新型号或更大容量的设备整合较旧和较小的设备，请考虑 https://docs.netapp.com/us-en/storagegrid-appliances/commonhardware/how-appliance-node-cloning-works.html["克隆设备节点"^]（或者如果不进行一对一更换，请使用设备节点克隆和停用过程）。
+
+例如，您可以添加两个新的、容量更大的存储节点来替换三个旧的存储节点。首先使用扩展过程来添加两个新的、容量更大的存储节点，然后使用停用过程来删除三个旧的、容量较小的存储节点。
+
+通过在删除现有存储节点之前添加新容量，您可以确保在整个 StorageGRID 系统中更均衡地分配数据。您还可以降低现有存储节点超出存储水印级别的可能性。

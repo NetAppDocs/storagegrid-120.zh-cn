@@ -1,0 +1,113 @@
+---
+permalink: ilm/requirements-for-s3-object-lock.html 
+sidebar: sidebar 
+keywords: requirements, s3 object lock, compliant ilm rule, compliant ilm policy 
+summary: 您必须查看启用全局 S3 Object Lock 设置的要求、创建合规 ILM 规则和 ILM 策略的要求，以及 StorageGRID 对使用 S3 Object Lock 的存储桶和对象施加的限制。 
+---
+= StorageGRID 中的 S3 对象锁定要求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须查看启用全局 S3 Object Lock 设置的要求、创建合规 ILM 规则和 ILM 策略的要求，以及 StorageGRID 对使用 S3 Object Lock 的存储桶和对象施加的限制。
+
+
+
+[[requirements-for-using-the-global-s3-object-lock-setting]]
+== 使用全局 S3 Object Lock 设置的要求
+
+* 必须使用 Grid Manager 或 Grid Management API 启用全局 S3 对象锁定设置，然后任何 S3 租户才能创建启用了 S3 对象锁定的存储桶。
+* 启用全局 S3 Object Lock 设置允许所有 S3 租户帐户在启用 S3 Object Lock 的情况下创建存储桶。
+* 启用全局 S3 Object Lock 设置后，无法禁用该设置。
+* 除非所有活动 ILM 策略中的默认规则都_符合_，否则无法启用全局 S3 Object Lock（即，默认规则必须符合启用了 S3 Object Lock 的存储桶的要求）。
+* 启用全局 S3 对象锁定设置后，除非策略中的默认规则符合要求，否则无法创建新的 ILM 策略或激活现有的 ILM 策略。启用全局 S3 对象锁定设置后，ILM 规则和 ILM 策略页面将指示哪些 ILM 规则是合规的。
+
+
+
+
+[[requirements-for-compliant-ilm-rules]]
+== 合规 ILM 规则的要求
+
+如果要启用全局 S3 Object Lock 设置，必须确保所有活动 ILM 策略中的默认规则均符合要求。合规规则满足已启用 S3 Object Lock 的存储桶以及已启用旧版合规性的任何现有存储桶的要求：
+
+* 必须至少创建两个复制对象副本或一个纠删编码副本。
+* 这些副本必须在放置说明中每行的整个持续时间内存在于 Storage Nodes 上。
+* 对象副本无法保存在云存储池中。
+* 至少有一行放置说明必须从第 0 天开始，使用 *Ingest time* 作为参考时间。
+* 放置说明中至少有一行必须为"永久"。
+
+
+
+
+[[requirements-for-ilm-policies]]
+== ILM 策略的要求
+
+启用全局 S3 对象锁定设置后，活动和非活动 ILM 策略可以包括合规和不合规规则。
+
+* 活动或非活动 ILM 策略中的默认规则必须符合合规要求。
+* 不符合规则仅适用于未启用 S3 Object Lock 或未启用旧版合规性功能的存储桶中的对象。
+* 合规规则可以应用于任何存储桶中的对象；不需要为存储桶启用 S3 Object Lock 或旧版合规性。
+
+
+link:example-7-compliant-ilm-policy-for-s3-object-lock.html["S3 对象锁定合规 ILM 策略示例"]
+
+
+
+[[requirements-for-buckets-with-s3-object-lock-enabled]]
+== ${post_edited_translations.segment}
+
+* ${post_edited_translations.segment}
+* 如果您计划使用 S3 Object Lock，则必须在创建存储桶时启用 S3 Object Lock。您无法为现有存储桶启用 S3 Object Lock。
+* 为存储桶启用 S3 Object Lock 时，StorageGRID 会自动为该存储桶启用版本控制。您无法禁用 S3 Object Lock，也无法暂停该存储桶的版本控制。
+* （可选）您可以使用 Tenant Manager、Tenant Management API 或 S3 REST API 为每个存储桶指定默认保留模式和保留期。存储桶的默认保留设置仅适用于添加到该存储桶且自身没有保留设置的新对象。您可以通过在上传每个对象版本时为其指定保留模式和保留截止日期来覆盖这些默认设置。
+* 已启用 S3 Object Lock 的存储桶支持存储桶生命周期配置。
+* CloudMirror 复制不支持启用了 S3 Object Lock 的存储桶。
+
+
+
+
+[[requirements-for-objects-in-buckets-with-s3-object-lock-enabled]]
+== ${post_edited_translations.segment}
+
+* 要保护对象版本，您可以为存储桶指定默认保留设置，也可以为每个对象版本指定保留设置。可以使用 S3 客户端应用程序或 S3 REST API 指定对象级保留设置。
+* 保留设置适用于单个对象版本。一个对象版本可以同时具有保留截止日期和法定保留设置，也可以仅具有其中之一，或者两者都不具有。为对象指定保留截止日期或法定保留设置仅会保护请求中指定的版本。您可以创建该对象的新版本，而该对象的上一个版本仍保持锁定状态。
+
+
+
+
+[[lifecycle-of-objects-in-buckets-with-s3-object-lock-enabled]]
+== ${post_edited_translations.segment}
+
+在启用了 S3 Object Lock 的存储桶中保存的每个对象都会经历以下阶段：
+
+. *对象载入*
++
+${post_edited_translations.segment}
+
++
+** 如果为对象指定了保留设置，则应用对象级别设置。任何默认存储桶设置都将被忽略。
+** ${post_edited_translations.segment}
+** ${post_edited_translations.segment}
+
+
++
+如果应用了保留设置，则对象和任何 S3 用户定义的元数据都将受到保护。
+
+. *对象保留和删除*
++
+StorageGRID 会在指定的保留期内存储每个受保护对象的多个副本。对象副本的确切数量和类型以及存储位置由活动 ILM 策略中的合规规则决定。受保护对象在达到其保留截止日期之前是否可以被删除，取决于其保留模式。
+
++
+** 如果对象处于合法冻结状态，则无论其保留模式如何，任何人都无法删除该对象。
+
+
+
+
+.相关信息
+* link:../tenant/creating-s3-bucket.html["${post_edited_translations.segment}"]
+* link:../tenant/update-default-retention-settings.html["更新 S3 对象锁定默认保留"]
+* link:../s3/use-s3-api-for-s3-object-lock.html["使用 S3 REST API 配置 S3 对象锁定"]
+* link:example-7-compliant-ilm-policy-for-s3-object-lock.html["示例 7：针对 S3 对象锁定的合规 ILM 策略"]
+

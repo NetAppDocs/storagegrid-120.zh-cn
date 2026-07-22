@@ -1,0 +1,93 @@
+---
+permalink: tenant/configuring-cross-origin-resource-sharing-for-buckets-and-objects.html 
+sidebar: sidebar 
+keywords: how to configure cross-origin resource sharing, cors 
+summary: '如果您希望其他域中的 Web 应用程序可以访问 S3 存储桶中的存储桶和对象，则可以为该存储桶配置跨源资源共享 (CORS)。' 
+---
+= 在 StorageGRID 中为 S3 存储桶配置 CORS
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您希望其他域中的 Web 应用程序可以访问 S3 存储桶中的存储桶和对象，则可以为该存储桶配置跨源资源共享 (CORS)。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到租户管理器。
+* 对于 GET CORS 配置请求，您属于具有 link:tenant-management-permissions.html["管理所有存储桶或查看所有存储桶权限"] 的用户组。这些权限将覆盖组或存储桶策略中的权限设置。
+* 对于 PUT CORS 配置请求，您属于具有 link:tenant-management-permissions.html["管理所有存储桶权限"] 的用户组。此权限将覆盖组或存储桶策略中的权限设置。
+* The link:tenant-management-permissions.html["root 访问权限"] 提供对所有 CORS 配置请求的访问。
+
+
+.关于此任务
+跨源资源共享 (CORS) 是一种安全机制，允许一个域中的客户端 Web 应用程序访问不同域中的资源。例如，假设您使用名为 `Images`的 S3 存储桶来存储图形。通过为 `Images`存储桶配置 CORS，您可以允许该存储桶中的图像显示在网站 `+http://www.example.com+`上。
+
+
+
+[[enable-cors-for-a-bucket]]
+== 为存储桶启用 CORS
+
+.步骤
+. 使用文本编辑器创建所需的 XML。此示例显示了用于为 S3 存储桶启用 CORS 的 XML。具体而言：
++
+** 允许任何域向存储桶发送 GET 请求
+** 仅允许 `+http://www.example.com+`域发送 GET、POST 和 DELETE 请求
+** 允许所有请求标头
++
+[listing]
+----
+<CORSConfiguration
+    xmlns="http://s3.amazonaws.com/doc/2020-10-22/">
+    <CORSRule>
+        <AllowedOrigin>*</AllowedOrigin>
+        <AllowedMethod>GET</AllowedMethod>
+        <AllowedHeader>*</AllowedHeader>
+    </CORSRule>
+    <CORSRule>
+        <AllowedOrigin>http://www.example.com</AllowedOrigin>
+        <AllowedMethod>GET</AllowedMethod>
+        <AllowedMethod>POST</AllowedMethod>
+        <AllowedMethod>DELETE</AllowedMethod>
+        <AllowedHeader>*</AllowedHeader>
+    </CORSRule>
+</CORSConfiguration>
+----
++
+有关 CORS 配置 XML 的详细信息，请参见 http://docs.aws.amazon.com/AmazonS3/latest/dev/Welcome.html["Amazon Web Services (AWS) 文档：Amazon Simple Storage Service 用户指南"^]。
+
+
+
+. 从仪表板中选择*查看存储桶*，或选择*存储（S3）* > *存储桶*。
+. 从表中选择存储桶名称。
++
+此时将显示存储区详细信息页面。
+
+. 在 *Bucket access* 选项卡中，选择 *Cross-Origin Resource Sharing (CORS)* 折叠面板。
+. 选中*启用 CORS* 复选框。
+. 将 CORS 配置 XML 粘贴到文本框中。
+. 选择 *Save changes*。
+
+
+
+
+[[modify-cors-setting]]
+== 修改 CORS 设置
+
+.步骤
+. 在文本框中更新 CORS 配置 XML，或选择*清除*重新开始。
+. 选择 *Save changes*。
+
+
+
+
+[[disable-cors-setting]]
+== 禁用 CORS 设置
+
+.步骤
+. 清除*启用 CORS* 复选框。
+. 选择 *Save changes*。
+
+
+.相关信息
+link:../admin/enable-cross-origin-resource-sharing-for-management-interface.html["为管理接口配置 StorageGRID CORS"]

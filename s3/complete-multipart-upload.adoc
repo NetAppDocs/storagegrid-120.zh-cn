@@ -1,0 +1,100 @@
+---
+permalink: s3/complete-multipart-upload.html 
+sidebar: sidebar 
+keywords: multipart upload, object, object size 
+summary: 该 CompleteMultipartUpload 操作通过组装先前上传的部件来完成对象的多部分上传。 
+---
+= StorageGRID S3 REST API 如何完成多部分上传
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+该 CompleteMultipartUpload 操作通过组装先前上传的部件来完成对象的多部分上传。
+
+
+NOTE: StorageGRID 支持 CompleteMultipartUpload 的 `partNumber`请求参数中按升序排列的非连续值。该参数可以从任何值开始。
+
+
+
+[[resolve-conflicts]]
+== 解决冲突
+
+冲突的客户端请求（例如两个客户端向同一密钥写入）将以"最新获胜"为原则进行解决。"最新获胜"评估的时间取决于 StorageGRID 系统何时完成给定请求，而不是 S3 客户端何时开始操作。
+
+
+
+[[supported-request-headers]]
+== 支持的请求标头
+
+支持以下请求标头：
+
+* `x-amz-checksum-sha256`
+* `x-amz-storage-class`
++
+如果匹配的 ILM 规则指定了 link:../ilm/data-protection-options-for-ingest.html["双提交或平衡摄取选项"]，则  `x-amz-storage-class` 标头会影响 StorageGRID 创建的对象副本数量。
+
+* `STANDARD`
++
+（默认值）当 ILM 规则使用双提交选项时，或当平衡选项回退到创建临时副本时，指定双提交接收操作。
+
+* `REDUCED_REDUNDANCY`
++
+当 ILM 规则使用双提交选项，或当平衡选项回退到创建临时副本时，指定单提交接收操作。
+
++
+
+NOTE: 如果要将对象接收到启用了 S3 对象锁定的存储桶中，则该 `REDUCED_REDUNDANCY`选项将被忽略。如果要将对象摄入旧版合规存储桶，则该 `REDUCED_REDUNDANCY`选项将返回错误。StorageGRID 将始终执行双提交摄取，以确保满足合规性要求。
+
+
+
+
+CAUTION: 如果多部分上传未在 15 天内完成，则该操作将被标记为非活动，并从系统中删除所有相关数据。
+
+
+NOTE: 返回的 `ETag`值不是数据的 MD5 和，而是遵循多部分对象的 `ETag`值的 Amazon S3 API 实现。
+
+
+
+[[unsupported-request-headers]]
+== 不支持的请求标头
+
+不支持以下请求标头：
+
+* `If-Match`
++
+ `If-Match header` 是可以接受的，但不起作用。
+
+* `If-None-Match`
++
+ `If-None-Match header` 是可以接受的，但不起作用。
+
+* `x-amz-sdk-checksum-algorithm`
+* `x-amz-trailer`
+
+
+
+
+[[versioning]]
+== 版本控制
+
+此操作完成多部分上传。如果为存储桶启用了版本控制，则在完成多部分上传后创建对象版本。
+
+如果为存储桶启用了版本控制，则会为要存储的对象版本自动生成唯一的 `versionId`。此 `versionId`也会通过 `x-amz-version-id`响应标头在响应中返回。
+
+如果版本控制被挂起，则对象版本将以 null `versionId` 存储，如果 null 版本已存在，则将被覆盖。
+
+
+NOTE: 当对存储桶启用版本控制时，完成多部分上传始终会创建新版本，即使在同一对象键上并发完成多部分上传也是如此。当未对存储桶启用版本控制时，可以启动多部分上传，然后在同一对象键上首先启动和完成另一个多部分上传。在非版本存储桶上，最后完成的多部分上传优先。
+
+
+
+[[failed-replication-notification-or-metadata-notification]]
+== 复制、通知或元数据通知失败
+
+如果为平台服务配置了发生多部分上传的存储桶，则即使关联的复制或通知操作失败，多部分上传也会成功。
+
+租户可以通过更新对象的元数据或标记来触发失败的复制或通知。租户可以重新提交现有值，以避免进行不必要的更改。
+
+请参阅 link:../admin/troubleshooting-platform-services.html["排查平台服务故障"]。

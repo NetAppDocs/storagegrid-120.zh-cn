@@ -1,0 +1,99 @@
+---
+permalink: tenant/understanding-tenant-manager-dashboard.html 
+sidebar: sidebar 
+keywords: how to understand tenant manager dashboard 
+summary: 租户管理器仪表板提供了租户帐户配置的概述以及租户 S3 存储桶中对象使用的空间量。如果租户有配额，仪表板将显示使用了多少配额以及剩余多少配额。如果存在与租户帐户相关的任何错误，则这些错误将显示在控制面板上。 
+---
+= StorageGRID 中的租户管理器信息板
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+租户管理器仪表板提供了租户帐户配置的概述以及租户 S3 存储桶中对象使用的空间量。如果租户有配额，仪表板将显示使用了多少配额以及剩余多少配额。如果存在与租户帐户相关的任何错误，则这些错误将显示在控制面板上。
+
+
+NOTE: 属于此租户的所有对象的逻辑大小包括不完整和正在进行的多部分上传。此大小不包括用于 ILM 策略的额外物理空间。空间使用值为估算值。这些估算值受摄取时间、网络连接和节点状态的影响。
+
+上传对象后，仪表板如下所示：
+
+image:tenant_dashboard_with_buckets.png["信息板 - Bucket List"]
+
+
+
+[[tenant-account-information]]
+== 租户帐户信息
+
+仪表板的顶部显示已配置的存储桶或容器、组和用户的数量。它还显示平台服务端点的数量（如果已配置）。选择链接以查看详细信息。
+
+根据您拥有的 link:tenant-management-permissions.html["租户管理权限"] 以及已配置的选项，仪表板的其余部分将显示准则、存储使用情况、对象信息和租户详细信息的各种组合。
+
+
+
+[[storage-and-quota-usage]]
+== 存储和配额使用
+
+"存储使用情况"面板中包含以下信息：
+
+* 租户的对象数据量。
++
+此值表示上传的对象数据总量，不表示用于存储这些对象及其元数据副本的空间。
+
+* 如果设置了配额，则为对象数据可用的总空间量以及剩余空间量和百分比。配额限制可以接收的对象数据量。
++
+
+CAUTION: 配额使用率基于内部估计，在某些情况下可能会超出配额。例如，StorageGRID 会在租户开始上传对象时检查配额，如果租户已超出配额，则拒绝新的接收请求。但是，StorageGRID 在确定是否超过配额时不会考虑当前上传的大小。如果删除对象，则在重新计算配额使用量之前，可能会暂时阻止租户上传新对象。配额使用量计算可能需要 10 分钟或更长时间。
+
+* 表示最大桶或容器的相对大小的条形图。
++
+您可以将光标放在任何图表段上，以查看该存储桶或容器消耗的总空间。
+
++
+image:tenant_dashboard_storage_usage_segment.png["条形图区段"]
+
+* 为了与条形图对应，最大桶或容器的列表，包括对象数据的总量和每个桶或容器的对象数。
++
+image:tenant_dashboard_buckets.png["租户信息板存储桶"]
+
++
+如果租户拥有超过九个存储桶或容器，则所有其他存储桶或容器将合并到此列表底部的单个条目中。
+
+
+
+
+NOTE: 要更改租户管理器中显示的存储值的单位，请选择租户管理器右上角的用户下拉菜单，然后选择*用户首选项*。
+
+
+
+[[quota-usage-alerts]]
+== 配额使用情况警报
+
+如果已在 Grid Manager 中启用配额使用率警报，则当配额较低或超过配额时，这些警报将显示在 Tenant Manager 中，如下所示：
+
+* 如果使用了租户配额的 90% 或更多，则会触发 *Tenant quota usage high* 警报。
++
+请考虑要求您的网格管理员增加配额。
+
+* 如果超出配额，系统会通知您无法上传新对象。
+
+
+
+
+[[bucket-capacity-usagecapacity-limit-usage]]
+== [[bucket-capacity-usage]]容量限制使用
+
+如果为存储区设置了容量限制，则租户管理器仪表板将按容量限制使用情况显示排名靠前的存储区列表。
+
+如果没有为存储桶设置限制，则其容量是无限的。但是，如果您的租户帐户具有总存储配额，并且已达到该配额，则无论存储桶上的剩余容量限制如何，您都无法接收更多对象。
+
+
+
+[[endpoint-errors]]
+== 终结点错误
+
+如果您使用 Grid Manager 配置一个或多个端点以用于平台服务，则如果在过去七天内发生任何端点错误，租户管理器仪表板将显示警报。
+
+image:tenant_dashboard_endpoint_error.png["显示端点消息的仪表板"]
+
+要查看有关 link:troubleshooting-platform-services-endpoint-errors.html["平台服务端点错误"] 的详细信息，请选择 *Endpoints* 以显示 Endpoints 页面。

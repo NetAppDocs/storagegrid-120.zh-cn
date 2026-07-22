@@ -1,0 +1,35 @@
+---
+permalink: fabricpool/configure-dns-server.html 
+sidebar: sidebar 
+keywords: fabricPool, StorageGRID, dns, vip, virtual ip, fqdn, server name 
+summary: 配置高可用性组、负载平衡器端点和 S3 域名后，必须确保 DNS 包含 StorageGRID 所需的条目。 
+---
+= 使用 FabricPool 为 StorageGRID 配置 DNS 服务器条目
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+配置高可用性组、负载平衡器端点和 S3 端点域名后，必须确保 DNS 包含 StorageGRID 所需的条目。您必须为安全证书中的每个名称以及您可能使用的每个 IP 地址包含一个 DNS 条目。
+
+请参阅 link:../admin/managing-load-balancing.html["负载平衡注意事项"]。
+
+
+
+[[dns-entries-for-storagegrid-server-name]]
+== StorageGRID 服务器名称的 DNS 条目
+
+添加 DNS 条目，将 StorageGRID 服务器名称（完全限定的域名）关联到您将使用的每个 StorageGRID IP 地址。您在 DNS 中输入的 IP 地址取决于您是否使用负载平衡节点的 HA 组：
+
+* 如果您已配置 HA 组，ONTAP 将连接到该 HA 组的虚拟 IP 地址。
+* 如果您未使用 HA 组，ONTAP 可以使用任何网关节点或管理节点的 IP 地址连接到 StorageGRID 负载平衡器服务。
+* 如果服务器名称解析为多个 IP 地址，ONTAP 将与所有 IP 地址建立客户端连接（最多 16 个 IP 地址）。建立连接时，以轮询方式获取 IP 地址。
+
+
+
+
+[[dns-entries-for-virtual-hosted-style-requests]]
+== 虚拟托管样式请求的 DNS 条目
+
+如果您已定义link:../admin/configuring-s3-api-endpoint-domain-names.html["S3端点域名"]并且将使用虚拟托管样式请求，请为所有必需的 S3 端点域名添加 DNS 条目，包括任何通配符名称。

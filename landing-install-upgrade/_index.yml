@@ -1,0 +1,41 @@
+---
+indexpage:
+  title: 安装、升级和热修补 StorageGRID
+  summary: StorageGRID 系统由单独的基于硬件和基于软件的节点组成。首先为每个设备节点安装硬件，然后配置每个 Linux 或 VMware 主机。然后，在每个设备或软件主机上安装
+    StorageGRID 软件，并将节点连接到网格中。
+  keywords: install, upgrade, hotfix
+  lead: StorageGRID 系统由单独的基于硬件和基于软件的节点组成。首先为每个设备节点安装硬件，然后配置每个 Linux 或 VMware 主机。然后，在每个设备或软件主机上安装
+    StorageGRID 软件，并将节点连接到网格中。
+  tiles:
+  - title: 快速入门
+    links:
+    - title: 设备硬件
+      url: https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/index.html
+    - title: 基于软件的节点
+      url: "../swnodes/index.html"
+  - title: 基于软件的节点
+    links:
+    - title: 准备材料
+      url: "../swnodes/required-materials.html"
+    - title: 自动化 Linux 安装
+      url: "../swnodes/automating-installation-linux.html"
+    - title: 自动化 VMware 安装
+      url: "../swnodes/automating-grid-node-deployment-in-vmware-vsphere.html"
+    - title: 部署 Linux
+      url: "../swnodes/creating-node-configuration-files.html"
+    - title: 部署 VMware
+      url: "../swnodes/collecting-information-about-your-deployment-environment.html"
+    - title: 完成基于软件的节点安装
+      url: "../swnodes/navigating-to-grid-manager.html"
+  - title: 升级或修补程序
+    links:
+    - title: 新增功能
+      url: "../release-notes/whats-new.html"
+    - title: 预计完成时间
+      url: "../upgrade/estimating-time-to-complete-upgrade.html"
+    - title: 升级过程中对系统的影响
+      url: "../upgrade/how-your-system-is-affected-during-upgrade.html"
+    - title: 升级快速入门
+      url: "../upgrade/upgrade-workflow.html"
+    - title: 应用修补程序
+      url: "../maintain/storagegrid-hotfix-procedure.html"

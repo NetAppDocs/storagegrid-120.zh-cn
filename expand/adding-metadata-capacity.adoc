@@ -1,0 +1,75 @@
+---
+permalink: expand/adding-metadata-capacity.html 
+sidebar: sidebar 
+keywords: metadata capacity, add, adding, expand, expansion, guidelines, Storage Nodes, metadata storage, StorageGRID 
+summary: ${post_edited_translations.segment} 
+---
+= 在 StorageGRID 中添加元数据容量的准则
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+${post_edited_translations.segment}
+
+StorageGRID 在每个存储节点的卷 0 上为对象元数据保留空间。每个站点维护所有对象元数据的三个副本，均匀分布在所有存储节点上。
+
+您可以使用 Grid Manager 监控存储节点的元数据容量，并估算元数据容量的消耗速度。此外，当已用的元数据空间达到特定阈值时，系统会针对存储节点触发 *Low metadata storage* 警报。
+
+请注意，网格的对象元数据容量可能会比其对象存储容量消耗得更快，具体取决于您如何使用网格。例如，如果通常要摄取大量小型对象或向对象添加大量用户元数据或标记，则可能需要添加存储节点以增加元数据容量，即使仍有足够的对象存储容量。
+
+有关详细信息，请参见以下内容：
+
+* link:../admin/managing-object-metadata-storage.html["管理对象元数据存储"]
+* link:../monitor/monitoring-storage-capacity.html#monitor-object-metadata-capacity-for-each-storage-node["${post_edited_translations.segment}"]
+
+
+
+
+[[guidelines-for-increasing-metadata-capacity]]
+== 增加元数据容量的指南
+
+在添加存储节点以增加元数据容量之前，请查看以下指南和限制：
+
+* 假设有足够的对象存储容量，为对象元数据提供更多可用空间会增加可以存储在 StorageGRID 系统中的对象数量。
+* 您可以通过向每个站点添加一个或多个存储节点来增加网格的元数据容量。
+* 在任何给定存储节点上为对象元数据保留的实际空间取决于元数据保留空间存储选项（系统范围设置）、分配给节点的 RAM 大小以及节点卷 0 的大小。
+* 无法通过向现有存储节点添加存储卷来增加元数据容量，因为元数据仅存储在卷 0 上。
+* ${post_edited_translations.segment}
+* StorageGRID 在每个站点保留所有对象元数据的三个副本。因此，您系统的元数据容量受您最小站点的元数据容量限制。
+* ${post_edited_translations.segment}
+
+
+${post_edited_translations.segment}
+
+* ${post_edited_translations.segment}
+* 使用基于软件的节点时，仅元数据的节点资源必须与现有的存储节点资源匹配。例如：
++
+** ${post_edited_translations.segment}
++
+*** 128 GB 内存
+*** ${post_edited_translations.segment}
+*** ${post_edited_translations.segment}
+
+
+** 如果现有的 StorageGRID 站点使用具有 24 GB RAM、8 核 CPU 和 3 TB 或 4 TB 元数据存储的虚拟存储节点，则基于软件的仅元数据节点应使用类似的资源（24 GB RAM、8 核 CPU 和 4 TB 元数据存储（rangedb/0））。
+
+
+* 添加新 StorageGRID 站点时，新站点的总元数据容量应至少与现有 StorageGRID 站点匹配，新站点资源应与现有 StorageGRID 站点上的存储节点匹配。
+
+
+请参阅link:../admin/managing-object-metadata-storage.html["关于什么是元数据保留空间的说明"]。
+
+
+
+[[how-metadata-is-redistributed-when-you-add-storage-nodes]]
+== ${post_edited_translations.segment}
+
+当您在扩容中添加 Storage Nodes 时，StorageGRID 会将现有的对象元数据重新分配到每个站点的新节点，从而增加网格的整体元数据容量。无需用户执行任何操作。
+
+下图显示了在扩容中添加 Storage Nodes 时，StorageGRID 如何重新分配对象元数据。该图左侧表示扩容前三个 Storage Nodes 的卷 0。元数据占用了每个节点可用元数据空间中相对较大的比例，并且已触发 *Low metadata storage* 警报。
+
+该图右侧显示了在向站点添加两个 Storage Nodes 后，如何重新分配现有元数据。每个节点上的元数据量已减少，*Low metadata storage* 警报不再触发，并且可用于元数据的空间已增加。
+
+image:metadata_space_after_expansion.png["${post_edited_translations.segment}"]

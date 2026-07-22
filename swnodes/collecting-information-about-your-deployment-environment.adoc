@@ -1,0 +1,113 @@
+---
+permalink: swnodes/collecting-information-about-your-deployment-environment.html 
+sidebar: sidebar 
+keywords: how to collect information about your vmware deployment environment 
+summary: 在部署网格节点之前，您必须收集有关网络配置和 VMware 环境的信息。 
+---
+= 为 StorageGRID 收集有关 VMware 环境的信息
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在部署网格节点之前，您必须收集有关网络配置和 VMware 环境的信息。
+
+
+NOTE: 一次性安装所有节点比分批安装更为高效。
+
+
+
+[[vmware-information]]
+== VMware 信息
+
+您必须访问部署环境并收集有关 VMware 环境的信息；为网格、管理和客户端网络创建的网络；以及计划用于存储节点的存储卷类型。
+
+您必须收集有关 VMware 环境的信息，其中包括：
+
+* 具有完成部署的相应权限的 VMware vSphere 帐户的用户名和密码。
+* 每个 StorageGRID 节点虚拟机的主机、数据存储区和网络配置信息。
+
+
+
+NOTE: VMware live vMotion 会导致虚拟机时钟时间跳跃，不支持任何类型的网格节点。虽然很少见，但时钟时间不正确可能会导致数据丢失或配置更新丢失。
+
+
+
+[[grid-network-information]]
+== 网格网络信息
+
+您必须收集有关为 StorageGRID 网格网络创建的 VMware 网络的信息（必填），包括：
+
+* 网络名称。
+* 用于分配 IP 地址（静态或 DHCP）的方法。
++
+** 如果使用静态 IP 地址，则每个网格节点所需的网络详细信息（IP 地址、网关、网络掩码）。
+** 如果使用 DHCP，则为网格网络上主管理节点的 IP 地址。有关详细信息，请参见 link:how-grid-nodes-discover-primary-admin-node.html["网格节点如何发现主管理节点"]。
+
+
+
+
+
+
+[[admin-network-information]]
+== 管理员网络信息
+
+对于要连接到可选 StorageGRID 管理网络的节点，您必须收集有关为此网络创建的 VMware 网络的信息，包括：
+
+* 网络名称。
+* 用于分配 IP 地址（静态或 DHCP）的方法。
++
+** 如果使用静态 IP 地址，则每个网格节点所需的网络详细信息（IP 地址、网关、网络掩码）。
+** 如果使用 DHCP，则为网格网络上主管理节点的 IP 地址。有关详细信息，请参见 link:how-grid-nodes-discover-primary-admin-node.html["网格节点如何发现主管理节点"]。
+
+
+* 管理网络的外部子网列表(ESL)。
+
+
+
+
+[[client-network-information]]
+== 客户端网络信息
+
+对于连接到可选 StorageGRID 客户端网络的节点，您必须收集有关为此网络创建的 VMware 网络的信息，包括：
+
+* 网络名称。
+* 用于分配 IP 地址（静态或 DHCP）的方法。
+* 如果使用静态 IP 地址，则每个网格节点所需的网络详细信息（IP 地址、网关、网络掩码）。
+
+
+
+
+[[information-about-additional-interfaces]]
+== 有关其他接口的信息
+
+您可以选择在安装节点后，在 vCenter 中将中继或访问接口添加到虚拟机。例如，您可能希望将中继接口添加到管理节点或网关节点，以便可以使用 VLAN 接口隔离属于不同应用程序或租户的流量。或者，您可能需要添加要在高可用性 (HA) 组中使用的访问接口。
+
+您添加的接口将显示在 Grid Manager 的 VLAN 接口页面和 HA 组页面上。
+
+* 如果添加中继接口，则为每个新的父接口配置一个或多个 VLAN 接口。请参阅 link:../admin/configure-vlan-interfaces.html["配置 VLAN 接口"]。
+* 如果添加访问接口，则必须将其直接添加到HA组。请参阅 link:../admin/configure-high-availability-group.html["配置高可用性组"]。
+
+
+
+
+[[storage-volumes-for-virtual-storage-nodes]]
+== 虚拟存储节点的存储卷
+
+您必须为基于虚拟机的存储节点收集下列信息：
+
+* 计划添加的存储卷（存储 LUN）的数量和大小。请参阅 link:storage-and-performance-requirements.html["存储和性能要求"]。
+
+
+
+
+[[grid-configuration-information]]
+== 网格配置信息
+
+您必须收集信息以配置网格：
+
+* 网格许可证
+* 网络时间协议 (NTP) 服务器 IP 地址
+* DNS 服务器 IP 地址
+

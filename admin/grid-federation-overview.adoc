@@ -1,0 +1,106 @@
+---
+permalink: admin/grid-federation-overview.html 
+sidebar: sidebar 
+keywords: grid federation, cross-grid replication, account clone, cgr, disaster recovery 
+summary: ${post_edited_translations.segment} 
+---
+= 了解 StorageGRID 网格联合
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+${post_edited_translations.segment}
+
+
+
+[[what-is-a-grid-federation-connection]]
+== 什么是网格联盟连接？
+
+${post_edited_translations.segment}
+
+
+
+[[workflow-for-grid-federation]]
+== ${post_edited_translations.segment}
+
+工作流程图总结了在两个网格之间配置网格联合连接的步骤。
+
+image:grid-federation-workflow.png["网格联盟连接工作流"]
+
+
+
+[[considerations-and-requirements-for-grid-federation-connections]]
+== 网格联合连接的注意事项和要求
+
+* 用于网格联合的网格必须运行相同或主要版本差异不超过一个的 StorageGRID 版本。
++
+有关版本要求的详细信息，请参见 https://library.netapp.com/ecm/ecm_download_file/ECMLP3351267["发行说明"^]。您必须使用您的 NetApp 帐户登录或创建帐户才能访问发行说明。
+
+* 网格可以有一个或多个与其他网格的网格联合连接。每个网格联合连接都独立于任何其他连接。例如，如果 Grid 1 与 Grid 2 有一个连接，与 Grid 3 有第二个连接，则 Grid 2 和 Grid 3 之间没有隐含的连接。
+* 网格联合连接是双向的。建立连接后，您可以从任一网格监控和管理连接。
+* 必须至少存在一个网格联盟连接，然后才能使用 link:grid-federation-what-is-account-clone.html["帐户克隆"] 或 link:grid-federation-what-is-cross-grid-replication.html["跨网格复制"]。
+
+
+
+
+[[networking-and-ip-address-requirements]]
+=== 网络和 IP 地址要求
+
+* 网格联合连接可以发生在网格网络、管理网络或客户端网络上。
+* 网格联盟连接可将一个网格连接到另一个网格。每个网格的配置都指定了另一个网格上的网格联盟端点，该端点由管理节点、网关节点或两者组成。
+* 最佳实践是连接每个网格上网关和 Admin Node 的 link:managing-high-availability-groups.html["${post_edited_translations.segment}"]。使用 HA 组有助于确保在节点不可用时，网格联合连接仍将保持在线状态。如果任一 HA 组中的活动接口发生故障，则连接可以使用备份接口。
+* 不建议创建使用单个管理节点或网关节点的 IP 地址的网格联合连接。如果节点不可用，网格联合连接也将不可用。
+* link:grid-federation-what-is-cross-grid-replication.html["跨网格复制"] 对象要求每个网格上的存储节点能够访问另一个网格上配置的管理节点和网关节点。对于每个网格，确认所有存储节点都具有通往用于连接的管理节点或网关节点的高带宽路由。
+
+
+
+
+[[use-fqdns-to-load-balance-the-connection]]
+=== 使用 FQDN 对连接进行负载平衡
+
+对于生产环境，使用完全限定域名 (FQDN) 来标识连接中的每个网格。然后，按如下所示创建相应的 DNS 条目：
+
+* ${post_edited_translations.segment}
+* 网格 2 的 FQDN 映射到网格 2 的一个或多个 VIP 地址，或网格 2 中的一个或多个管理节点或网关节点的 IP 地址。
+
+
+当您使用多个 DNS 条目时，使用连接的请求将进行负载平衡，如下所示：
+
+* ${post_edited_translations.segment}
+* ${post_edited_translations.segment}
+
+
+
+
+[[port-requirements]]
+=== 端口要求
+
+创建网格联合连接时，可以指定 23000 到 23999 之间的任何未使用的端口号。此连接中的两个网格将使用相同的端口。
+
+${post_edited_translations.segment}
+
+
+
+[[certificate-requirements]]
+=== 证书要求
+
+${post_edited_translations.segment}
+
+* ${post_edited_translations.segment}
+* 用于对从网格 2 发送到网格 1 的信息进行身份验证和加密的服务器和客户端证书
+
+
+image:grid-federation-certificates.png["${post_edited_translations.segment}"]
+
+默认情况下，证书的有效期为 730 天（2 年）。当这些证书接近其过期日期时，*网格联合证书过期*警报将提醒您轮换证书，您可以使用 Grid Manager 执行此操作。
+
+
+CAUTION: 如果连接任一端的证书过期，连接将停止工作。在更新证书之前，数据复制将处于挂起状态。
+
+.了解更多
+* link:grid-federation-create-connection.html["创建网格联盟连接"]
+* link:grid-federation-manage-connection.html["管理网格联盟连接"]
+* link:grid-federation-troubleshoot.html["对网格联合错误进行故障排除"]
+

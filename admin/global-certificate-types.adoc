@@ -1,0 +1,19 @@
+---
+permalink: admin/global-certificate-types.html 
+sidebar: sidebar 
+keywords: rsa, ecdsa, custom certificate encryption 
+summary: StorageGRID 系统支持使用 RSA 或 ECDSA（椭圆曲线数字签名算法）加密的服务器证书。 
+---
+= StorageGRID 中支持的服务器证书类型
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+StorageGRID 系统支持使用 RSA 或 ECDSA（椭圆曲线数字签名算法）加密的自定义证书。
+
+
+TIP: 安全策略的密码类型必须与服务器证书类型匹配。例如，RSA 密码需要 RSA 证书，而 ECDSA 密码需要 ECDSA 证书。请参阅link:using-storagegrid-security-certificates.html["管理安全证书"]。如果配置与服务器证书不兼容的自定义安全策略，则可以link:manage-tls-ssh-policy.html#temporarily-revert-to-default-security-policy["暂时还原为默认安全策略"]。
+
+有关 StorageGRID 保护客户端连接的详细信息，请参见 link:security-for-clients.html["S3 客户端的安全性"]。

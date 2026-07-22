@@ -1,0 +1,107 @@
+---
+permalink: primer/exploring-tenant-manager.html 
+sidebar: sidebar 
+keywords: StorageGRID, what is the tenant manager, tenant manager dashboard 
+summary: 租户管理器是基于浏览器的图形界面，租户用户可通过该界面配置、管理和监控其存储帐户。 
+---
+= 浏览 StorageGRID 租户管理器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+link:../tenant/index.html["租户管理器"] 是基于浏览器的图形界面，租户用户可以访问该界面来配置、管理和监视其存储帐户。
+
+
+NOTE: 租户管理器随每个版本更新，可能与此页面上的示例屏幕截图不匹配。
+
+当租户用户登录到 Tenant Manager 时，他们正在连接到管理节点。
+
+
+
+[[tenant-manager-dashboard]]
+== 租户管理器控制面板
+
+网格管理员使用 Grid Manager 或网格管理 API 创建租户帐户后，租户用户可以登录到 Tenant Manager。
+
+租户管理器仪表板允许租户用户一目了然地监控存储使用情况。存储使用情况面板包含租户最大 S3 存储桶的列表。已用空间值是存储桶或容器中对象数据的总量。条形图表示这些存储桶或容器的相对大小。
+
+条形图上方显示的值是用于所有租户存储桶或容器的空间的总和。如果在创建帐户时指定了租户可用的最大千兆字节、太字节或拍字节数，则还会显示已使用和剩余的配额量。
+
+image:tenant_dashboard_with_buckets.png["租户管理器控制面板"]
+
+
+
+[[storage-menu-s3]]
+== 存储菜单（S3）
+
+此菜单允许 S3 用户：
+
+* 管理访问密钥
+* 创建、管理和删除存储桶
+* 管理平台服务端点
+* 查看允许其使用的任何网格联盟连接
+
+
+
+
+[[my-access-keys]]
+=== 我的访问密钥
+
+S3 租户用户可以按以下方式管理访问密钥：
+
+* 具有"管理自己的 S3 凭据"权限的用户可以创建或删除自己的 S3 访问密钥。
+* 具有 Root 访问权限的用户可以管理 S3 根帐户、自己的帐户和所有其他用户的访问密钥。根访问密钥还提供对租户存储桶和对象的完全访问权限，除非存储桶策略明确禁用。
++
+
+NOTE: 从"访问管理"菜单管理其他用户的访问密钥。
+
+
+
+
+
+[[buckets]]
+=== 存储分段
+
+具有相应权限的 S3 租户用户可以为其存储桶执行以下任务：
+
+* 创建存储桶
+* 为新存储桶启用 S3 对象锁定（假设已为 StorageGRID 系统启用 S3 对象锁定）
+* 更新一致性值
+* 启用和禁用上次访问时间更新
+* 启用或挂起对象版本控制
+* 更新 S3 对象锁定默认保留
+* 配置跨源资源共享（CORS）
+* 删除存储桶中的所有对象
+* 删除空存储桶
+* 使用 link:../tenant/use-s3-console.html["S3 控制台"] 管理存储桶对象
+
+
+如果网格管理员已为租户帐户启用平台服务，则具有相应权限的 S3 租户用户也可以执行以下任务：
+
+* 配置 S3 事件通知，该通知可发送到支持 Amazon Simple Notification Service 的目标服务。
+* 配置 CloudMirror 复制，使租户能够自动将对象复制到外部 S3 存储桶。
+* 配置搜索集成，每当创建、删除对象或更新对象的元数据或标记时，它会将对象元数据发送到目标搜索索引。
+
+
+
+
+[[platform-services-endpoints]]
+=== 平台服务端点
+
+如果网格管理员已为租户帐户启用平台服务，则具有"管理端点"权限的 S3 租户用户可以为每个平台服务配置目标端点。
+
+
+
+[[grid-federation-connections]]
+=== 网格联盟连接
+
+如果网格管理员为租户帐户启用了网格联合连接的使用，则具有 Root 访问权限的 S3 租户用户可以查看连接名称，访问启用了跨网格复制的每个存储桶的存储桶详细信息页面，并查看将存储桶数据复制到连接中的其他网格时发生的最新错误。请参阅 link:../tenant/grid-federation-view-connections-tenant.html["查看网格联盟连接"]。
+
+
+
+[[access-management-menu]]
+== 访问管理菜单
+
+Access Management 菜单允许 StorageGRID 租户从联合身份源导入用户组并分配管理权限。租户还可以管理本地租户组和用户，除非单点登录 (SSO) 对整个 StorageGRID 系统有效。

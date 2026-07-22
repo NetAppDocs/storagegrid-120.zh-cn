@@ -1,0 +1,171 @@
+---
+permalink: ilm/troubleshooting-cloud-storage-pools.html 
+sidebar: sidebar 
+keywords: cloud storage pool, troubleshoot 
+summary: 使用这些故障排除步骤来帮助解决创建、编辑或删除云存储池时可能遇到的错误。 
+---
+= 对 StorageGRID 中的云存储池进行故障排除
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用这些故障排除步骤来帮助解决创建、编辑或删除云存储池时可能遇到的错误。
+
+
+
+[[determine-if-an-error-has-occurred]]
+== ${post_edited_translations.segment}
+
+StorageGRID 通过读取已知对象 `x-ntap-sgws-cloud-pool-uuid`对每个云存储池执行简单的运行状况检查，以确保可以访问云存储池并正常运行。当 StorageGRID 在端点上遇到错误时，它每分钟从每个存储节点执行一次运行状况检查。错误解决后，运行状况检查停止。如果运行状况检查检测到问题，则会在"存储池"页面上的"云存储池"表的"上一个错误"列中显示一条消息。
+
+该表显示了每个云存储池检测到的最新错误，并指出了错误发生的时间。
+
+此外，如果运行状况检查检测到在过去 5 分钟内发生了一个或多个新的云存储池错误，则会触发*云存储池连接错误*警报。如果您收到有关此警报的电子邮件通知，请转到存储池页面（选择 *ILM* > *存储池*），查看上一个错误列中的错误消息，并参考以下故障排除指南。
+
+
+
+[[check-if-an-error-has-been-resolved]]
+== 检查错误是否已解决
+
+解决任何潜在问题后，您可以确定错误是否已解决。在云存储池页面中，选择端点，然后选择*清除错误*。确认消息表示 StorageGRID 已清除云存储池的错误。
+
+如果潜在问题已解决，则不再显示错误消息。但是，如果根本问题尚未解决（或遇到其他错误），则错误消息将在几分钟内显示在"最后一个错误"列中。
+
+
+
+[[error-health-check-failed-error-from-endpoint]]
+== 错误：运行状况检查失败。来自端点的错误
+
+在开始将此存储桶用于云存储池后，为 Amazon S3 存储桶启用具有默认保留的 S3 Object Lock 时，您可能会遇到此错误。当 PUT 操作没有包含有效负载校验和值的 HTTP 标头（例如 `Content-MD5`）时，会出现此错误。AWS 要求在启用了 S3 Object Lock 的存储桶中执行 PUT 操作时提供此标头值。
+
+要解决此问题，请按照 link:editing-cloud-storage-pool.html["编辑云存储池"] 中的步骤操作，无需进行任何更改。此操作会触发对云存储池配置的验证，该配置会自动检测和更新云存储池端点配置上的 S3 对象锁定标志。
+
+
+
+[[error-this-cloud-storage-pool-contains-unexpected-content]]
+== 错误：此云存储池包含意外内容
+
+尝试创建、编辑或删除云存储池时，可能会遇到此错误。如果存储桶或容器包含 `x-ntap-sgws-cloud-pool-uuid`标记文件，但该文件没有具有预期 UUID 的元数据字段，则会出现此错误。
+
+通常，只有在您正在创建新的云存储池，而另一个 StorageGRID 实例已在使用同一云存储池时，才会看到此错误。
+
+尝试以下步骤之一来解决此问题：
+
+* 如果要配置新的云存储池，并且存储区包含 `x-ntap-sgws-cloud-pool-uuid`文件和其他对象密钥（类似于以下示例），请创建一个新存储区并改用此新存储区。
++
+附加对象键示例： `my-bucket.3E64CF2C-B74D-4B7D-AFE7-AD28BC18B2F6.1727326606730410`
+
+* 如果 `x-ntap-sgws-cloud-pool-uuid`文件是存储区中的唯一对象，请删除此文件。
+
+
+如果这些步骤不适用于您的场景，请联系支持人员。
+
+
+
+[[error-could-not-create-or-update-cloud-storage-pool-error-from-endpoint]]
+== 错误：无法创建或更新云存储池。来自端点的错误
+
+在以下情况下，您可能会遇到此错误：
+
+* 当您尝试创建或编辑云存储池时。
+* 在配置新云存储池期间选择不受支持的平台、身份验证或与 S3 Object Lock 的协议组合时。请参阅 link:../ilm/considerations-for-cloud-storage-pools.html["云存储池的注意事项"]。
+
+
+此错误表示连接或配置问题导致 StorageGRID 无法写入云存储池。
+
+要解决此问题，请查看来自端点的错误消息。
+
+* 如果错误消息包含 `Get _url_: EOF`，请检查用于云存储池的服务端点是否未将 HTTP 用于需要 HTTPS 的容器或存储桶。
+* 如果错误消息包含 `Get _url_: net/http: request canceled while waiting for connection`，请验证网络配置是否允许存储节点访问用于云存储池的服务端点。
+* 如果错误是由不支持的平台、身份验证或协议引起的，请使用 S3 Object Lock 更改为受支持的配置，然后再次尝试保存新的云存储池。
+* 对于所有其他端点错误消息，请尝试以下一个或多个操作：
++
+** 使用您为云存储池输入的名称创建外部容器或存储桶，然后再次尝试保存新的云存储池。
+** 请更正为 Cloud Storage Pool 指定的容器或存储桶名称，然后再次尝试保存新的 Cloud Storage Pool。
+
+
+
+
+
+
+[[error-failed-to-parse-ca-certificate]]
+== 错误：无法解析 CA 证书
+
+尝试创建或编辑云存储池时，可能会遇到此错误。如果 StorageGRID 无法解析配置云存储池时输入的证书，则会发生此错误。
+
+要解决此问题，请检查您提供的 CA 证书是否存在问题。
+
+
+
+[[error-a-cloud-storage-pool-with-this-id-was-not-found]]
+== 错误：未找到此 ID 的云存储池
+
+尝试编辑或删除云存储池时，可能会遇到此错误。如果端点返回 404 响应，则会出现此错误，这可能意味着以下任何一项：
+
+* 用于云存储池的凭据没有存储区的读取权限。
+* 用于云存储池的存储桶不包含 `x-ntap-sgws-cloud-pool-uuid`标记文件。
+
+
+尝试以下一个或多个步骤即可解决此问题：
+
+* 请检查与配置的访问密钥关联的用户是否具有必要的权限。
+* 使用具有必需权限的凭据编辑云存储池。
+* 如果权限正确，请联系支持人员。
+
+
+
+
+[[error-could-not-check-the-content-of-the-cloud-storage-pool-error-from-endpoint]]
+== 错误：无法检查云存储池的内容。来自端点的错误
+
+尝试删除云存储池时可能会遇到此错误。此错误表示某种连接或配置问题阻止 StorageGRID 读取云存储池存储分段的内容。
+
+要解决此问题，请查看来自端点的错误消息。
+
+
+
+[[error-objects-have-already-been-placed-in-this-bucket]]
+== 错误：对象已放置在此存储桶中
+
+尝试删除云存储池时，可能会遇到此错误。如果云存储池包含由 ILM 移动到那里的数据、在配置云存储池之前存储在存储桶中的数据或在创建云存储池之后由其他来源放入存储桶中的数据，则无法删除该云存储池。
+
+尝试以下一个或多个步骤即可解决此问题：
+
+* 按照"云存储池对象的生命周期"中的说明将对象移动回 StorageGRID。
+* 如果确定 ILM 未将剩余对象放置在云存储池中，请从存储区中手动删除这些对象。
++
+
+NOTE: 切勿从可能已由 ILM 放置对象的云存储池中手动删除对象。如果稍后尝试从 StorageGRID 访问手动删除的对象，则找不到该已删除的对象。
+
+
+
+
+
+[[error-proxy-encountered-an-external-error-while-trying-to-reach-the-cloud-storage-pool]]
+== 错误：代理在尝试访问云存储池时遇到外部错误
+
+如果在 Storage Nodes 和用于 Cloud Storage Pool 的外部 S3 端点之间配置了不透明的存储代理，则可能会遇到此错误。如果外部代理服务器无法访问 Cloud Storage Pool 端点，则会出现此错误。例如，DNS 服务器可能无法解析主机名，或者可能存在外部网络问题。
+
+尝试以下一个或多个步骤即可解决此问题：
+
+* 检查云存储池（*ILM* > *存储池*）的设置。
+* 检查存储代理服务器的网络配置。
+
+
+
+
+[[error-x-509-certificate-is-out-of-validity-period]]
+== 错误：X.509 证书超出有效期
+
+尝试删除云存储池时可能会遇到此错误。当身份验证需要 X.509 证书来确保在删除云存储池配置之前验证正确的外部云存储池且外部池为空时，会发生此错误。
+
+尝试以下步骤即可解决此问题：
+
+* 更新为云存储池身份验证配置的证书。
+* 确保已解决此云存储池上的任何证书过期警报。
+
+
+.相关信息
+link:lifecycle-of-cloud-storage-pool-object.html["云存储池对象的生命周期"]

@@ -1,0 +1,92 @@
+---
+permalink: tenant/signing-in-to-tenant-manager.html 
+sidebar: sidebar 
+keywords: how to sign in to tenant manager 
+summary: 您可以通过在受支持的 Web 浏览器的地址栏中输入租户的 URL 来访问租户管理器。 
+---
+= 登录到 StorageGRID 租户管理器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过在 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 的地址栏中输入租户的 URL 来访问租户管理器。
+
+.开始之前
+* 您拥有登录凭据。
+* 您有一个由网格管理员提供的用于访问租户管理器的 URL。URL 将类似于以下示例之一：
++
+`\https://FQDN_or_Admin_Node_IP/`
+
++
+`\https://FQDN_or_Admin_Node_IP:port/`
+
++
+`\https://FQDN_or_Admin_Node_IP/?accountId=20-digit-account-id`
+
++
+`\https://FQDN_or_Admin_Node_IP:port/?accountId=20-digit-account-id`
+
++
+URL 始终包括完全限定的域名 (FQDN)、管理节点的 IP 地址或管理节点的 HA 组的虚拟 IP 地址。它还可能包括端口号、20 位租户帐户 ID 或两者。
+
+* 如果 URL 不包括租户的 20 位帐户 ID，则您拥有此帐户 ID。
+* 您正在使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"]。
+* Cookie 已在您的 Web 浏览器中启用。
+* 您属于具有 link:tenant-management-permissions.html["特定访问权限"] 的用户组。
+
+
+.步骤
+. 启动一个 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"]。
+. 在浏览器的地址栏中，输入访问 Tenant Manager 的 URL。
+. 如果系统提示您收到安全警报，请使用浏览器的安装向导安装证书。
+. 登录到租户管理器。
++
+显示的登录屏幕取决于您输入的 URL 以及是否已为 StorageGRID 配置单点登录 (SSO)。
+
++
+[role="tabbed-block"]
+====
+.未使用SSO
+--
+如果 StorageGRID 未使用 SSO，则会显示以下屏幕之一：
+
+** 网格管理器登录页面。选择*租户登录*链接。
+** 租户管理器登录页面。*帐户*字段可能已完成。
++
+... 如果未显示租户的 20 位帐户 ID，请选择租户帐户的名称（如果它显示在最近的帐户列表中），或输入帐户 ID。
+... 请输入您的用户名和密码。
+... 选择*登录*。
++
+此时将显示租户管理器控制面板。
+
+... 如果您收到了其他人的初始密码，请选择 *_username_* > *Change password* 以保护您的帐户。
+
+
+
+
+--
+.${post_edited_translations.segment}
+--
+如果 StorageGRID 正在使用 SSO，则会出现以下屏幕之一：
+
+** 您组织的 SSO 页面。
++
+输入您的标准 SSO 凭据，然后选择*登录*。
+
+** 租户管理器 SSO 登录页面。
++
+... 如果未显示租户的 20 位帐户 ID，请选择租户帐户的名称（如果它显示在最近的帐户列表中），或输入帐户 ID。
+... 选择*登录*。
+... ${post_edited_translations.segment}
++
+此时将显示租户管理器控制面板。
+
+
+
+
+
+--
+====
+

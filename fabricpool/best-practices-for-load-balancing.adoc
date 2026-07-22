@@ -1,0 +1,65 @@
+---
+permalink: fabricpool/best-practices-for-load-balancing.html 
+sidebar: sidebar 
+keywords: fabricPool, StorageGRID, load balancer endpoint, load balancing, Layer 7, best practices, certificate, CA, certificate authority, tls, ssl 
+summary: 在将 StorageGRID 附加为 FabricPool 云层之前，请查看将负载平衡器与 FabricPool 结合使用的最佳实践。 
+---
+= StorageGRID 负载平衡与 FabricPool 的最佳实践
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在将 StorageGRID 附加为 FabricPool 云层之前，请查看将负载平衡器与 FabricPool 结合使用的最佳实践。
+
+要了解有关 StorageGRID 负载平衡器和负载平衡器证书的一般信息，请参见 link:../admin/managing-load-balancing.html["负载平衡注意事项"]。
+
+
+
+[[best-practices-for-tenant-access-to-the-load-balancer-endpoint-used-for-fabricpool]]
+== 租户访问用于 FabricPool 的负载均衡器端点的最佳实践
+
+您可以控制哪些租户可以使用特定的负载均衡器端点来访问其存储桶。您可以允许所有租户、允许某些租户或阻止某些租户。在创建供 FabricPool 使用的负载均衡端点时，请选择 *Allow all tenants*。ONTAP 会对放入 StorageGRID 存储桶中的数据进行加密，因此这一额外安全层几乎无法提供更多的安全性。
+
+
+
+[[best-practices-for-the-security-certificate]]
+== 安全证书的最佳实践
+
+当您创建供 FabricPool 使用的 StorageGRID 负载均衡器端点时，您需要提供允许 ONTAP 与 StorageGRID 进行身份验证的安全证书。
+
+在大多数情况下，ONTAP 与 StorageGRID 之间的连接应使用传输层安全 (TLS) 加密。支持在不使用 TLS 加密的情况下使用 FabricPool，但不建议这样做。为 StorageGRID 负载均衡器端点选择网络协议时，请选择 *HTTPS*。然后提供安全证书，以允许 ONTAP 向 StorageGRID 进行身份验证。
+
+${post_edited_translations.segment}
+
+* link:../admin/using-storagegrid-security-certificates.html["管理安全证书"]
+* link:../admin/managing-load-balancing.html["负载平衡注意事项"]
+* link:../harden/hardening-guideline-for-server-certificates.html["服务器证书的强化准则"]
+
+
+
+
+[[add-certificate-to-ontap]]
+=== 向 ONTAP 添加证书
+
+将 StorageGRID 添加为 FabricPool 云层时，必须在 ONTAP 集群上安装相同的证书，包括根证书和任何从属证书颁发机构 (CA) 证书。
+
+
+
+[[manage-certificate-expiration]]
+=== ${post_edited_translations.segment}
+
+
+CAUTION: 如果用于保护 ONTAP 和 StorageGRID 之间连接的证书过期，FabricPool 将暂时停止工作，ONTAP 将暂时失去对分层到 StorageGRID 的数据的访问权限。
+
+要避免证书过期问题，请遵循以下最佳实践：
+
+* 仔细监控任何警告证书过期日期即将到来的警报，例如*负载平衡器端点证书过期*和*S3 API 全局服务器证书过期*警报。
+* 请始终保持 StorageGRID 和 ONTAP 版本的证书同步。如果您替换或更新了用于负载均衡器端点的证书，则必须替换或更新 ONTAP 用于云分层的等效证书。
+* 使用公开签名的 CA 证书。如果使用由 CA 签名的证书，则可以使用 Grid Management API 自动执行证书轮换。这样，您可以无中断地更换即将过期的证书。
+* 如果您已生成自签名 StorageGRID 证书，并且该证书即将过期，则必须在现有证书过期之前手动替换 StorageGRID 和 ONTAP 中的证书。如果自签名证书已过期，请在 ONTAP 中关闭证书验证，以防止失去访问权限。
++
+请参见  https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/StorageGRID/How_to_configure_a_new_StorageGRID_self-signed_server_certificate_on_an_existing_ONTAP_FabricPool_deployment["NetApp 知识库：如何在现有 ONTAP FabricPool 部署中配置新的 StorageGRID 自签名服务器证书"^] 以了解说明。
+
+

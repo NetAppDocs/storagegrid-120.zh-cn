@@ -1,0 +1,23 @@
+---
+permalink: maintain/recovering-from-admin-node-failures.html 
+sidebar: sidebar 
+keywords: recover, admin node failure, workflow 
+summary: 管理节点的恢复过程取决于它是主管理节点还是非主管理节点。 
+---
+= StorageGRID 中的主管理节点或非主管理节点恢复
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+管理节点的恢复过程取决于它是主管理节点还是非主管理节点。
+
+恢复主管理节点或非主管理节点的高级步骤相同，但步骤的详细信息有所不同。
+
+对于要恢复的管理节点，请始终遵循正确的恢复程序。这些程序在高层次上看起来相同，但在细节上有所不同。
+
+.选项
+* link:recovering-from-primary-admin-node-failures.html["从主管理节点故障中恢复"]
+* link:recovering-from-non-primary-admin-node-failures.html["从非主管理节点故障恢复"]
+

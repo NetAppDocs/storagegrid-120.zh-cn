@@ -1,0 +1,69 @@
+---
+permalink: expand/guidelines-for-adding-object-capacity.html 
+sidebar: sidebar 
+keywords: adding storage capacity, guidelines, storage volumes, expansion, StorageGRID 
+summary: 您可以通过向现有存储节点添加存储卷或向现有站点添加新的存储节点来扩展 StorageGRID 系统的对象存储容量。您必须以满足信息生命周期管理（ILM）策略要求的方式添加存储容量。 
+---
+= 在 StorageGRID 中添加对象容量的准则
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过向现有存储节点添加存储卷或向现有站点添加新的存储节点来扩展 StorageGRID 系统的对象存储容量。您必须以满足信息生命周期管理（ILM）策略要求的方式添加存储容量。
+
+
+
+[[guidelines-for-adding-storage-volumes]]
+== 添加存储卷的指南
+
+在将存储卷添加到现有存储节点之前，请查看以下指南和限制：
+
+* 您必须检查当前的 ILM 规则，以确定在何处以及何时link:../expand/adding-storage-volumes-to-storage-nodes.html["添加存储卷"]增加可用于link:../ilm/what-replication-is.html["已复制对象"]或link:../ilm/what-erasure-coding-schemes-are.html["纠删码对象"]的存储空间。
+* 无法通过添加存储卷来增加系统的元数据容量，因为对象元数据仅存储在卷 0 上。
+* 每个基于软件的存储节点最多可以支持 48 个存储卷。如果需要添加超出此范围的容量，则必须添加新的存储节点。
+* 您可以向每个 SG6060 设备添加一个或两个扩展架。每个扩展架可增加 16 个存储卷。安装两个扩展架后，SG6060 最多可支持 48 个存储卷。
+* 您可以向每个 SG6160 设备添加一个或两个扩展架。每个扩展架可增加 60 个存储卷。安装两个扩展架后，SG6160 可支持总共 180 个存储卷。
+* 您无法将存储卷添加到任何其他存储设备。
+* 您不能增加现有存储卷的大小。
+* 不能在执行系统升级、恢复操作或其他扩展的同时向存储节点添加存储卷。
+
+
+在决定添加存储卷并确定必须扩展哪些存储节点以满足 ILM 策略后，请按照存储节点类型的说明进行操作：
+
+* 要向 SG6060 存储设备添加一个或两个扩展盘架，请转到 https://docs.netapp.com/us-en/storagegrid-appliances/sg6000/adding-expansion-shelf-to-deployed-sg6060.html["将扩展架添加到已部署的 SG6060"^]。
+* 要向 SG6160 存储设备添加一个或两个扩展磁盘架，请转到 https://docs.netapp.com/us-en/storagegrid-appliances/sg6100/adding-expansion-shelf-to-deployed-sg6160.html["将扩展架添加到已部署的 SG6160"^]
+* 对于基于软件的节点，请按照 link:adding-storage-volumes-to-storage-nodes.html["将存储卷添加到存储节点"] 的说明进行操作。
+
+
+
+
+[[guidelines-for-adding-storage-nodes]]
+== 添加存储节点的指南
+
+在将存储节点添加到现有站点之前，请查看以下指南和限制：
+
+* 您必须检查当前的 ILM 规则，以确定在何处以及何时添加存储节点，以增加可用于 link:../ilm/what-replication-is.html["已复制对象"] 或 link:../ilm/what-erasure-coding-schemes-are.html["纠删码对象"] 的存储。
+* 在一个扩展过程中，不应添加超过 10 个存储节点。
+* 您可以在单个扩展过程中将存储节点添加到多个站点。
+* 可以在单个扩展过程中添加存储节点和其他类型的节点。
+* 在开始扩展过程之前，必须确认在恢复过程中执行的所有数据修复操作均已完成。请参阅 link:../maintain/checking-data-repair-jobs.html["检查数据修复作业"]。
+* 如果需要在执行扩展之前或之后删除存储节点，则不应在一个 Decommission Node 过程中停用超过 10 个存储节点。
+* 添加足够的存储节点以保持底层存储 I/O 性能。写入操作将根据可用存储容量分布在存储节点之间。如果扩展的存储节点具有明显更多的可用存储容量，则这些节点将收到明显更多的写入。特别是，当现有存储节点几乎已满时，新的写入将仅依赖于扩展的存储节点。读取和删除操作将根据您的具体工作负载进行处理。
+
+
+
+
+[[guidelines-for-adc-service-on-storage-nodes]]
+== 存储节点上的 ADC 服务指南
+
+配置扩展时，您必须选择是否在每个新存储节点上包含管理域控制器 (ADC) 服务。ADC 服务跟踪网格服务的位置和可用性。
+
+* 您可以link:../maintain/move-adc-service.html["将 ADC 服务从同一站点的一个存储节点移动到另一个存储节点"]。
+* StorageGRID 系统要求每个站点在任何时候都必须有一个 link:../maintain/understanding-adc-service-quorum.html["ADC 服务的仲裁数"] 可用。
+* 每个站点至少有三个存储节点必须包含 ADC 服务。
+* 不建议将 ADC 服务添加到每个存储节点。包含过多的 ADC 服务可能会因节点间通信量增加而导致速度变慢。
+* 具有 ADC 服务的单个网格不应超过 48 个存储节点。这相当于每个站点具有三个 ADC 服务的 16 个站点。
+* 一般来说，当您为新节点选择 *ADC Service* 设置时，应选择 *Automatic*。仅当新节点将替换包含 ADC 服务的另一个存储节点时，才选择 *Yes*。由于如果保留的 ADC 服务太少，则无法停用存储节点，因此选择 *Yes* 可确保在删除旧服务之前新的 ADC 服务已可用。
+

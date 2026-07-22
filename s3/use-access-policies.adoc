@@ -1,0 +1,1429 @@
+---
+permalink: s3/use-access-policies.html 
+sidebar: sidebar 
+keywords: bucket access policies, group access policies, session policies 
+summary: 'StorageGRID 使用 Amazon Web Services (AWS) 策略语言，允许 S3 租户控制对这些存储桶中的存储桶和对象的访问。' 
+---
+= StorageGRID 如何使用 AWS 策略来控制对 S3 存储桶和对象的访问
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+StorageGRID 使用 Amazon Web Services (AWS) 策略语言，允许 S3 租户控制对这些存储桶中的存储桶和对象的访问。StorageGRID 系统实现了 S3 REST API 策略语言的子集。S3 API 的访问策略以 JSON 编写。
+
+
+
+[[access-policy-overview]]
+== 访问策略概述
+
+StorageGRID 支持三种访问策略：
+
+* *存储桶策略*，使用 GetBucketPolicy、PutBucketPolicy 和 DeleteBucketPolicy S3 API 操作或租户管理器或租户管理 API 进行管理。存储桶策略附加到存储桶，因此它们被配置为控制存储桶所有者帐户或其他帐户中的用户对存储桶及其中对象的访问。存储桶策略仅适用于一个存储桶，也可能适用于多个组。
+* *组策略*，使用租户管理器或租户管理 API 配置。组策略附加到帐户中的组，因此它们被配置为允许该组访问该帐户拥有的特定资源。组策略仅适用于一个组，也可能适用于多个存储桶。
+* *会话策略*，作为发出 AssumeRole 请求的一部分。会话策略仅适用于给定的会话，在组策略和存储桶策略所授予权限的基础上，进一步定义用户所拥有的权限。
+
+
+
+NOTE: 组、存储桶和会话策略之间的优先级没有差异。
+
+StorageGRID 存储桶和组策略遵循 Amazon 定义的特定语法。每个策略中都包含一系列策略语句，每个语句都包含以下元素：
+
+* 语句 ID (Sid)（可选）
+* 影响
+* 委托人/NotPrincipal
+* Resource/NotResource
+* 操作/NotAction
+* 条件（可选）
+
+
+策略声明使用以下结构构建以指定权限：授予 <Effect> 以允许/拒绝 <Principal> 在 <Condition> 适用时对 <Resource> 执行 <Action>。
+
+每个策略元素都用于特定的功能：
+
+[cols="1a,2a"]
+|===
+| Element | 问题描述 
+
+
+ a| 
+Sid
+ a| 
+Sid 元素是可选的。Sid 仅用作对用户的描述。它由 StorageGRID 系统存储，但不作解释。
+
+
+
+ a| 
+影响
+ a| 
+使用 Effect 元素确定是否允许或拒绝指定的操作。必须使用支持的 Action 元素关键字标识您允许（或拒绝）存储桶或对象上的操作。
+
+
+
+ a| 
+委托人/NotPrincipal
+ a| 
+您可以允许用户、组和帐户访问特定资源并执行特定操作。如果请求中不包含 S3 签名，则通过指定通配符（ * ）作为主体来允许匿名访问。默认情况下，只有帐户根才能访问该帐户拥有的资源。
+
+您只需要在存储桶策略中指定 Principal 元素。对于组策略，策略附加到的组是隐式 Principal 元素。
+
+
+
+ a| 
+Resource/NotResource
+ a| 
+Resource 元素标识存储桶和对象。您可以使用 Amazon 资源名称 (ARN) 来标识资源，以允许或拒绝对存储桶和对象的权限。
+
+
+
+ a| 
+操作/NotAction
+ a| 
+Action 和 Effect 元素是权限的两个组成部分。当组请求资源时，会被授予或拒绝对该资源的访问权限。除非您专门分配权限，否则访问将被拒绝，但您可以使用显式拒绝来覆盖其他策略授予的权限。
+
+
+
+ a| 
+条件
+ a| 
+Condition 元素是可选的。条件允许您构建表达式以确定何时应用策略。
+
+|===
+在 Action 元素中，您可以使用通配符 (*) 指定所有操作或操作的子集。例如，此 Action 与 s3:GetObject、s3:PutObject 和 s3:DeleteObject 等权限匹配。
+
+[listing]
+----
+s3:*Object
+----
+在资源元素中，您可以使用通配符（\*）和（?）。星号（*）匹配 0 个或更多字符，问号（?）匹配任意单个字符。
+
+在 Principal 元素中，除了设置匿名访问外，不支持通配符，匿名访问授予每个人访问权限。例如，将通配符（ * ）设置为 Principal 值。
+
+[listing]
+----
+"Principal":"*"
+----
+[listing]
+----
+"Principal":{"AWS":"*"}
+----
+在以下示例中，该语句使用的是 Effect、Principal、Action 和 Resource 元素。此示例显示了一个完整的存储桶策略语句，该语句使用 Effect "Allow" 授予 Principal（即 admin 组  `federated-group/admin` 和 finance 组  `federated-group/finance`）对名为  `mybucket` 的存储桶执行 Action  `s3:ListBucket` 的权限，以及对该存储桶内的所有对象执行 Action  `s3:GetObject` 的权限。
+
+[listing]
+----
+{
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": [
+          "arn:aws:iam::27233906934684427525:federated-group/admin",
+          "arn:aws:iam::27233906934684427525:federated-group/finance"
+        ]
+      },
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::mybucket",
+        "arn:aws:s3:::mybucket/*"
+      ]
+    }
+  ]
+}
+----
+存储区策略的大小限制为 20,480 字节，组策略的大小限制为 5,120 字节。
+
+
+
+[[consistency-for-policies]]
+== 策略的一致性
+
+默认情况下，您对组策略所做的任何更新最终都是一致的。当组策略变得一致时，由于策略缓存，更改可能需要额外 15 分钟才能生效。默认情况下，您对存储区策略所做的任何更新都是高度一致的。
+
+根据需要，您可以更改存储桶策略更新的一致性保证。例如，您可能希望在站点中断期间可以对存储桶策略进行更改。
+
+在这种情况下，您可以在 PutBucketPolicy 请求中设置 `Consistency-Control`标头，也可以使用 PUT Bucket 一致性请求。当存储桶策略变得一致时，由于策略缓存，更改可能需要额外 8 秒才能生效。
+
+
+NOTE: 如果将一致性设置为不同的值以解决临时情况，请务必在完成后将存储桶级别设置恢复为其原始值。否则，将来所有存储桶请求都将使用修改后的设置。
+
+
+
+[[what-is-session-policy]]
+== 什么是会话策略？
+
+会话策略是一种访问策略，它暂时限制特定会话期间可用的权限，例如当用户承担某个组时。会话策略只能允许权限的子集，并且无法授予其他权限。组本身可能具有更广泛的权限。
+
+
+
+[[use-arn-in-policy-statements]]
+== 在策略语句中使用 ARN
+
+在策略声明中，ARN 用于 Principal 和 Resource 元素。
+
+* 使用此语法指定 S3 资源 ARN：
++
+[listing]
+----
+arn:aws:s3:::bucket-name
+arn:aws:s3:::bucket-name/object_key
+----
+* 使用此语法指定标识资源 ARN（用户和组）：
++
+[listing]
+----
+arn:aws:iam::account_id:root
+arn:aws:iam::account_id:user/user_name
+arn:aws:iam::account_id:group/group_name
+arn:aws:iam::account_id:federated-user/user_name
+arn:aws:iam::account_id:federated-group/group_name
+----
+
+
+其他注意事项：
+
+* 您可以使用星号(*)作为通配符来匹配对象键内的零个或多个字符。
+* 可以在对象键中指定的国际字符应使用 JSON UTF-8 或使用 JSON \u 转义序列进行编码。不支持百分比编码。
++
+https://www.ietf.org/rfc/rfc2141.txt["RFC 2141 URN 语法"^]
+
++
+PutBucketPolicy 操作的 HTTP 请求正文必须使用 charset=UTF-8 编码。
+
+
+
+
+
+[[specify-resources-in-a-policy]]
+== 在策略中指定资源
+
+在策略语句中，您可以使用 Resource 元素指定允许或拒绝其权限的存储桶或对象。
+
+* 每个策略语句都需要一个 Resource 元素。在策略中，资源由元素 `Resource`表示，或者使用 `NotResource`进行排除。
+* 使用 S3 资源 ARN 指定资源。例如：
++
+[listing]
+----
+"Resource": "arn:aws:s3:::mybucket/*"
+----
+* 您还可以在对象键内使用策略变量。例如：
++
+[listing]
+----
+"Resource": "arn:aws:s3:::mybucket/home/${aws:username}/*"
+----
+* 资源值可以指定在创建组策略时尚不存在的存储桶。
+
+
+
+
+[[specify-principals-in-a-policy]]
+== 在策略中指定主体
+
+使用 Principal 元素标识策略语句允许/拒绝访问资源的用户、组或租户帐户。
+
+* 存储桶策略中的每个策略语句必须包含 Principal 元素。组策略中的策略语句不需要 Principal 元素，因为组被理解为主体。
+* 在策略中，主体由元素"Principal"表示，或者用"NotPrincipal"表示排除。
+* 必须使用 ID 或 ARN 指定基于帐户的身份：
++
+[listing]
+----
+"Principal": { "AWS": "account_id"}
+"Principal": { "AWS": "identity_arn" }
+----
+* 此示例使用租户帐户 ID 27233906934684427525，其中包括帐户根目录和帐户中的所有用户：
++
+[listing]
+----
+ "Principal": { "AWS": "27233906934684427525" }
+----
+* 您可以仅指定帐户根目录：
++
+[listing]
+----
+"Principal": { "AWS": "arn:aws:iam::27233906934684427525:root" }
+----
+* 您可以指定特定的联合用户（"Alex"）：
++
+[listing]
+----
+"Principal": { "AWS": "arn:aws:iam::27233906934684427525:federated-user/Alex" }
+----
+* 您可以指定特定的联合组（"Managers"）：
++
+[listing]
+----
+"Principal": { "AWS": "arn:aws:iam::27233906934684427525:federated-group/Managers"  }
+----
+* 您可以指定匿名主体：
++
+[listing]
+----
+"Principal": "*"
+----
+* 为避免模糊不清，您可以使用用户 UUID 而不是用户名：
++
+[listing]
+----
+arn:aws:iam::27233906934684427525:user-uuid/de305d54-75b4-431b-adb2-eb6b9e546013
+----
++
+例如，假设 Alex 离开组织，用户名 `Alex`被删除。如果新的 Alex 加入组织并被分配了相同 `Alex`的用户名，新用户可能会无意中继承授予原始用户的权限。
+
+* 主体值可以指定在创建存储桶策略时尚不存在的组/用户名。
+
+
+
+
+[[specify-permissions-in-a-policy]]
+== 在策略中指定权限
+
+在策略中，Action 元素用于允许/拒绝对资源的权限。您可以在策略中指定一组权限，这些权限由元素"Action"或"NotAction"（用于排除）表示。这些元素中的每一个都映射到特定的 S3 REST API 操作。
+
+这些表格列出了应用于存储区的权限以及应用于对象的权限。
+
+
+NOTE: Amazon S3 现在对 PutBucketReplication 和 DeleteBucketReplication 操作均使用 s3:PutReplicationConfiguration 权限。StorageGRID 对每个操作使用独立的权限，这与原始 Amazon S3 规范相符。
+
+
+NOTE: 当使用 PUT 覆盖现有值时，将执行删除。
+
+
+
+[[permissions-that-apply-to-buckets]]
+=== 适用于存储桶的权限
+
+[cols="2a,2a,1a"]
+|===
+| 权限 | S3 REST API 操作 | 自定义 StorageGRID 
+
+
+ a| 
+s3：CreateBucket
+ a| 
+CreateBucket
+ a| 
+是
+
+*注意*：仅在组策略中使用。
+
+
+
+ a| 
+s3:DeleteBucket
+ a| 
+DeleteBucket
+ a| 
+
+
+
+ a| 
+s3:DeleteBucketMetadataNotification
+ a| 
+删除存储桶元数据通知配置
+ a| 
+是
+
+
+
+ a| 
+s3:DeleteBucketPolicy
+ a| 
+DeleteBucketPolicy
+ a| 
+
+
+
+ a| 
+s3:DeleteReplicationConfiguration
+ a| 
+DeleteBucketReplication
+ a| 
+是，PUT 和 DELETE 的单独权限
+
+
+
+ a| 
+s3:GetBucketAcl
+ a| 
+GetBucketAcl
+ a| 
+
+
+
+ a| 
+s3:GetBucketCompliance
+ a| 
+GET Bucket compliance（已弃用）
+ a| 
+是
+
+
+
+ a| 
+s3:GetBucketConsistency
+ a| 
+获取 Bucket 一致性
+ a| 
+是
+
+
+
+ a| 
+s3:GetBucketCORS
+ a| 
+GetBucketCors
+ a| 
+
+
+
+ a| 
+s3:GetEncryptionConfiguration
+ a| 
+GetBucketEncryption
+ a| 
+
+
+
+ a| 
+s3:GetBucketLastAccessTime
+ a| 
+获取 Bucket 上次访问时间
+ a| 
+是
+
+
+
+ a| 
+s3:GetBucketLocation
+ a| 
+GetBucketLocation
+ a| 
+
+
+
+ a| 
+s3:GetBucketMetadataNotification
+ a| 
+获取 Bucket 元数据通知配置
+ a| 
+是
+
+
+
+ a| 
+s3:GetBucketNotification
+ a| 
+GetBucketNotificationConfiguration
+ a| 
+
+
+
+ a| 
+s3:GetBucketObjectLockConfiguration
+ a| 
+GetObjectLockConfiguration
+ a| 
+
+
+
+ a| 
+s3:GetBucketPolicy
+ a| 
+GetBucketPolicy
+ a| 
+
+
+
+ a| 
+s3:GetBucketTagging
+ a| 
+GetBucketTagging
+ a| 
+
+
+
+ a| 
+s3:GetBucketVersioning
+ a| 
+GetBucketVersioning
+ a| 
+
+
+
+ a| 
+s3:GetLifecycleConfiguration
+ a| 
+GetBucketLifecycleConfiguration
+ a| 
+
+
+
+ a| 
+s3:GetReplicationConfiguration
+ a| 
+GetBucketReplication
+ a| 
+
+
+
+ a| 
+s3:ListAllMyBuckets
+ a| 
+* ListBuckets
+* 获取存储使用情况
+
+ a| 
+是，用于 GET Storage Usage。
+
+*注意*：仅在组策略中使用。
+
+
+
+ a| 
+s3:ListBucket
+ a| 
+* ListObjects
+* HeadBucket
+* RestoreObject
+
+ a| 
+
+
+
+ a| 
+s3:ListBucketMultipartUploads
+ a| 
+* ListMultipartUploads
+* RestoreObject
+
+ a| 
+
+
+
+ a| 
+s3:ListBucketVersions
+ a| 
+GET 存储桶版本
+ a| 
+
+
+
+ a| 
+s3:PutBucketCompliance
+ a| 
+PUT Bucket compliance（已弃用）
+ a| 
+是
+
+
+
+ a| 
+s3:PutBucketConsistency
+ a| 
+PUT Bucket 一致性
+ a| 
+是
+
+
+
+ a| 
+s3:PutBucketCORS
+ a| 
+* DeleteBucketCors†
+* PutBucketCors
+
+ a| 
+
+
+
+ a| 
+s3:PutEncryptionConfiguration
+ a| 
+* DeleteBucketEncryption
+* PutBucketEncryption
+
+ a| 
+
+
+
+ a| 
+s3:PutBucketLastAccessTime
+ a| 
+PUT Bucket 上次访问时间
+ a| 
+是
+
+
+
+ a| 
+s3:PutBucketMetadataNotification
+ a| 
+PUT Bucket 元数据通知配置
+ a| 
+是
+
+
+
+ a| 
+s3:PutBucketNotification
+ a| 
+PutBucketNotificationConfiguration
+ a| 
+
+
+
+ a| 
+s3:PutBucketObjectLockConfiguration
+ a| 
+* CreateBucket 带有 `x-amz-bucket-object-lock-enabled: true`请求标头（也需要 s3:CreateBucket 权限）
+* PutObjectLockConfiguration
+
+ a| 
+
+
+
+ a| 
+s3：PutBucketPolicy
+ a| 
+PutBucketPolicy
+ a| 
+
+
+
+ a| 
+s3：PutBucketTagging
+ a| 
+* DeleteBucketTagging†
+* PutBucketTagging
+
+ a| 
+
+
+
+ a| 
+s3:PutBucketVersioning
+ a| 
+PutBucketVersioning
+ a| 
+
+
+
+ a| 
+s3:PutLifecycleConfiguration
+ a| 
+* DeleteBucketLifecycle†
+* PutBucketLifecycleConfiguration
+
+ a| 
+
+
+
+ a| 
+s3:PutReplicationConfiguration
+ a| 
+PutBucketReplication
+ a| 
+是，PUT 和 DELETE 的单独权限
+
+|===
+
+
+[[permissions-that-apply-to-objects]]
+=== 适用于对象的权限
+
+[cols="2a,2a,1a"]
+|===
+| 权限 | S3 REST API 操作 | 自定义 StorageGRID 
+
+
+ a| 
+s3:AbortMultipartUpload
+ a| 
+* AbortMultipartUpload
+* RestoreObject
+
+ a| 
+
+
+
+ a| 
+s3:BypassGovernanceRetention
+ a| 
+* 删除对象
+* DeleteObjects
+* PutObjectRetention
+
+ a| 
+
+
+
+ a| 
+s3:DeleteObject
+ a| 
+* 删除对象
+* DeleteObjects
+* RestoreObject
+
+ a| 
+
+
+
+ a| 
+s3:DeleteObjectTagging
+ a| 
+DeleteObjectTagging
+ a| 
+
+
+
+ a| 
+s3:DeleteObjectVersionTagging
+ a| 
+DeleteObjectTagging（对象的特定版本）
+ a| 
+
+
+
+ a| 
+s3:DeleteObjectVersion
+ a| 
+DeleteObject （对象的特定版本）
+ a| 
+
+
+
+ a| 
+s3:GetObject
+ a| 
+* 获取对象
+* HeadObject
+* RestoreObject
+* SelectObjectContent
+
+ a| 
+
+
+
+ a| 
+s3:GetObjectAcl
+ a| 
+GetObjectAcl
+ a| 
+
+
+
+ a| 
+s3:GetObjectLegalHold
+ a| 
+GetObjectLegalHold
+ a| 
+
+
+
+ a| 
+s3:GetObjectRetention
+ a| 
+GetObjectRetention
+ a| 
+
+
+
+ a| 
+s3:GetObjectTagging
+ a| 
+GetObjectTagging
+ a| 
+
+
+
+ a| 
+s3:GetObjectVersionTagging
+ a| 
+GetObjectTagging（对象的特定版本）
+ a| 
+
+
+
+ a| 
+s3:GetObjectVersion
+ a| 
+GetObject （对象的特定版本）
+ a| 
+
+
+
+ a| 
+s3:ListMultipartUploadParts
+ a| 
+ListParts, RestoreObject
+ a| 
+
+
+
+ a| 
+s3:PutObject
+ a| 
+* 放置对象
+* CopyObject
+* RestoreObject
+* CreateMultipartUpload
+* CompleteMultipartUpload
+* UploadPart
+* UploadPartCopy
+
+ a| 
+
+
+
+ a| 
+s3:PutObjectLegalHold
+ a| 
+PutObjectLegalHold
+ a| 
+
+
+
+ a| 
+s3:PutObjectRetention
+ a| 
+PutObjectRetention
+ a| 
+
+
+
+ a| 
+s3:PutObjectTagging
+ a| 
+PutObjectTagging
+ a| 
+
+
+
+ a| 
+s3:PutObjectVersionTagging
+ a| 
+PutObjectTagging（对象的特定版本）
+ a| 
+
+
+
+ a| 
+s3:PutOverwriteObject
+ a| 
+* 放置对象
+* CopyObject
+* PutObjectTagging
+* DeleteObjectTagging
+* CompleteMultipartUpload
+
+ a| 
+是
+
+
+
+ a| 
+s3:RestoreObject
+ a| 
+RestoreObject
+ a| 
+
+|===
+
+
+[[use-putoverwriteobject-permissionuse-putoverwriteobject-permission]]
+== [[use-putoverwriteobject-permission]]使用 PutOverwriteObject 权限
+
+s3:PutOverwriteObject 权限是应用于创建或更新对象的操作的自定义 StorageGRID 权限。此权限的设置确定客户端是否可以覆盖对象的数据、用户定义的元数据或 S3 对象标记。
+
+此权限的可能设置包括：
+
+* *Allow*：客户端可以覆盖对象。这是默认设置。
+* *拒绝*：客户端无法覆盖对象。设置为"拒绝"时，PutOverwriteObject 权限的工作原理如下：
++
+** 如果在同一路径中找到现有对象：
++
+*** 无法覆盖对象的数据、用户定义的元数据或 S3 对象标记。
+*** 正在进行的任何导入操作都将被取消，并返回错误。
+*** 如果启用了 S3 版本控制，则拒绝设置可防止 PutObjectTagging 或 DeleteObjectTagging 操作修改对象及其非当前版本的 TagSet。
+
+
+** 如果找不到现有对象，此权限无效。
+
+
+* 当此权限不存在时，效果与"允许"设置的效果相同。
+
+
+
+NOTE: 如果当前 S3 策略允许覆盖，并且 PutOverwriteObject 权限设置为拒绝，则客户端无法覆盖对象的数据、用户定义的元数据或对象标记。此外，如果选中*防止客户端修改*复选框（*配置* > *安全设置* > *网络和对象*），则该设置将覆盖 PutOverwriteObject 权限的设置。
+
+
+
+[[specify-conditions-in-a-policy]]
+== 在策略中指定条件
+
+条件定义了策略何时生效。条件由运算符和键值对组成。
+
+条件使用键值对进行评估。Condition 元素可以包含多个条件，每个条件可以包含多个键值对。条件块使用以下格式：
+
+[listing, subs="specialcharacters,quotes"]
+----
+Condition: {
+     _condition_type_: {
+          _condition_key_: _condition_values_
+----
+在以下示例中，IpAddress 条件使用 SourceIp 条件键。
+
+[listing]
+----
+"Condition": {
+    "IpAddress": {
+      "aws:SourceIp": "54.240.143.0/24"
+		...
+},
+		...
+----
+
+
+[[supported-condition-operators]]
+=== 支持的条件运算符
+
+条件运算符的分类如下：
+
+* 字符串
+* 数字
+* 布尔型
+* IP 地址
+* 空值检查
+
+
+[cols="1a,2a"]
+|===
+| 条件运算符 | 问题描述 
+
+
+ a| 
+StringEquals
+ a| 
+根据精确匹配（区分大小写）将键与字符串值进行比较。
+
+
+
+ a| 
+StringNotEquals
+ a| 
+将键与基于否定匹配的字符串值进行比较（区分大小写）。
+
+
+
+ a| 
+StringEqualsIgnoreCase
+ a| 
+根据精确匹配将键与字符串值进行比较（忽略大小写）。
+
+
+
+ a| 
+StringNotEqualsIgnoreCase
+ a| 
+根据否定匹配将键与字符串值进行比较（忽略大小写）。
+
+
+
+ a| 
+StringLike
+ a| 
+根据精确匹配（区分大小写）将键与字符串值进行比较。可以包含 * 和 ? 通配符。
+
+
+
+ a| 
+StringNotLike
+ a| 
+根据否定匹配（区分大小写）将键与字符串值进行比较。可以包含 * 和 ? 通配符。
+
+
+
+ a| 
+NumericEquals
+ a| 
+根据精确匹配将键与数值进行比较。
+
+
+
+ a| 
+NumericNotEquals
+ a| 
+将键与基于否定匹配的数值进行比较。
+
+
+
+ a| 
+NumericGreaterThan
+ a| 
+将键与基于"大于"匹配的数值进行比较。
+
+
+
+ a| 
+NumericGreaterThanEquals
+ a| 
+将键与基于"大于或等于"匹配的数值进行比较。
+
+
+
+ a| 
+NumericLessThan
+ a| 
+将键与基于"小于"匹配的数值进行比较。
+
+
+
+ a| 
+NumericLessThanEquals
+ a| 
+将键与基于"小于或等于"匹配的数值进行比较。
+
+
+
+ a| 
+Bool
+ a| 
+将键与基于"true或false"匹配的布尔值进行比较。
+
+
+
+ a| 
+IpAddress
+ a| 
+将密钥与 IP 地址或 IP 地址范围进行比较。
+
+
+
+ a| 
+NotIpAddress
+ a| 
+根据否定匹配将密钥与 IP 地址或 IP 地址范围进行比较。
+
+
+
+ a| 
+空
+ a| 
+检查当前请求上下文中是否存在条件键。
+
+
+
+ a| 
+IfExists
+ a| 
+附加到任何条件运算符（Null 条件除外），以检查该条件键是否不存在。如果条件键不存在，则返回 TRUE。
+
+|===
+
+
+[[supported-condition-keys]]
+=== 支持的条件键
+
+[cols="1a,1a,2a"]
+|===
+| 条件键 | 操作 | 问题描述 
+
+
+ a| 
+aws:SourceIp
+ a| 
+IP 运算符
+ a| 
+将与发送请求的 IP 地址进行比较。可用于存储桶或对象操作。
+
+*注意：* 如果 S3 请求是通过管理节点和网关节点上的负载均衡器服务发送的，这将与负载均衡器服务上游的 IP 地址进行比较。
+
+*Note*：如果使用第三方非透明负载均衡器，这将与该负载均衡器的 IP 地址进行比较。任何 `X-Forwarded-For`标头都将被忽略，因为其有效性无法确定。
+
+
+
+ a| 
+aws:username
+ a| 
+资源/身份
+ a| 
+将与发送请求的发件人的用户名进行比较。可用于存储桶或对象操作。
+
+
+
+ a| 
+s3:delimiter
+ a| 
+s3:ListBucket 以及
+
+s3:ListBucketVersions 权限
+ a| 
+将与ListObjects或ListObjectVersions请求中指定的分隔符参数进行比较。
+
+
+
+ a| 
+s3:ExistingObjectTag/<tag-key>
+ a| 
+s3:DeleteObjectTagging
+
+s3:DeleteObjectVersionTagging
+
+s3:GetObject
+
+s3:GetObjectAcl
+
+3:GetObjectTagging
+
+s3:GetObjectVersion
+
+s3:GetObjectVersionAcl
+
+s3:GetObjectVersionTagging
+
+s3:PutObjectAcl
+
+s3:PutObjectTagging
+
+s3:PutObjectVersionAcl
+
+s3:PutObjectVersionTagging
+ a| 
+将要求现有对象具有特定的标记键和值。
+
+
+
+ a| 
+s3:max-keys
+ a| 
+s3:ListBucket 以及
+
+s3:ListBucketVersions 权限
+ a| 
+将与 ListObjects 或 ListObjectVersions 请求中指定的 max-keys 参数进行比较。
+
+
+
+ a| 
+s3:object-lock-mode
+ a| 
+s3:PutObject
+ a| 
+与从 PutObject、CopyObject 和 CreateMultipartUpload 请求中的请求头展开的  `object-lock-mode` 进行比较。
+
+
+
+ a| 
+s3:object-lock-mode
+ a| 
+s3:PutObjectRetention
+ a| 
+与 PutObjectRetention 请求中从 XML 正文展开的 `object-lock-mode`进行比较。
+
+
+
+ a| 
+s3:object-lock-remaining-retention-days
+ a| 
+s3:PutObject
+ a| 
+与 `x-amz-object-lock-retain-until-date`请求标头中指定的或从存储桶默认保留期计算的 retain-until-date 进行比较，以确保这些值位于以下请求的允许范围内：
+
+* 放置对象
+* CopyObject
+* CreateMultipartUpload
+
+
+
+
+ a| 
+s3:object-lock-remaining-retention-days
+ a| 
+s3:PutObjectRetention
+ a| 
+与 PutObjectRetention 请求中指定的保留截止日期进行比较，以确保其处于允许范围内。
+
+
+
+ a| 
+s3:prefix
+ a| 
+s3:ListBucket 以及
+
+s3:ListBucketVersions 权限
+ a| 
+将与ListObjects或ListObjectVersions请求中指定的前缀参数进行比较。
+
+
+
+ a| 
+s3:RequestObjectTag/<tag-key>
+ a| 
+s3:PutObject
+
+s3:PutObjectTagging
+
+s3:PutObjectVersionTagging
+ a| 
+当对象请求包括标记时，将需要特定的标记键和值。
+
+
+
+ a| 
+s3:x-amz-server-side-encryption-customer-algorithm
+ a| 
+s3:PutObject
+ a| 
+与 PutObject、CopyObject、CreateMultipartUpload、UploadPart、UploadPartCopy 和 CompleteMultipartUpload 请求中从请求标头展开的 `sse-customer-algorithm`或 `copy-source-sse-customer-algorithm`进行比较。
+
+|===
+
+
+[[specify-variables-in-a-policy]]
+== 在策略中指定变量
+
+您可以使用策略中的变量来填充可用的策略信息。您可以在 `Resource`元素中使用策略变量，也可以在 `Condition`元素中的字符串比较中使用策略变量。
+
+在此示例中，变量 `${aws:username}`是 Resource 元素的一部分：
+
+[listing]
+----
+"Resource": "arn:aws:s3:::bucket-name/home/${aws:username}/*"
+----
+在此示例中，变量 `${aws:username}`是条件块中条件值的一部分：
+
+[listing]
+----
+"Condition": {
+    "StringLike": {
+      "s3:prefix": "${aws:username}/*"
+		...
+},
+		...
+----
+[cols="1a,2a"]
+|===
+| 变量 | 问题描述 
+
+
+ a| 
+`${aws:SourceIp}`
+ a| 
+使用 SourceIp 键作为提供的变量。
+
+
+
+ a| 
+`${aws:username}`
+ a| 
+使用用户名密钥作为提供的变量。
+
+
+
+ a| 
+`${s3:prefix}`
+ a| 
+使用特定于服务的前缀键作为提供的变量。
+
+
+
+ a| 
+`${s3:max-keys}`
+ a| 
+使用特定于服务的 max-keys 键作为提供的变量。
+
+
+
+ a| 
+`${*}`
+ a| 
+特殊字符。使用字符作为字面 * 字符。
+
+
+
+ a| 
+`${?}`
+ a| 
+特殊字符。使用字符作为字面 ? 字符。
+
+
+
+ a| 
+`${$}`
+ a| 
+特殊字符。将字符用作字面上的 $ 字符。
+
+|===
+
+
+[[create-policies-requiring-special-handling]]
+== 制定需要特殊处理的策略
+
+有时，策略可以授予对安全性有危险或对持续操作有危险的权限，例如锁定帐户的 root 用户。StorageGRID S3 REST API 实现在策略验证期间的限制性低于 Amazon，但在策略评估期间同样严格。
+
+[cols="2a,1a,2a,2a"]
+|===
+| 策略说明 | 策略类型 | Amazon 行为 | StorageGRID 行为 
+
+
+ a| 
+拒绝自己对 root 账户的任何权限
+ a| 
+存储桶
+ a| 
+有效并强制执行，但 root 用户帐户保留所有 S3 存储桶策略操作的权限
+ a| 
+相同
+
+
+
+ a| 
+拒绝自己对用户/组的任何权限
+ a| 
+组
+ a| 
+有效且强制执行
+ a| 
+相同
+
+
+
+ a| 
+允许外部账户组具有任何权限
+ a| 
+存储桶
+ a| 
+无效的主体
+ a| 
+有效，但所有 S3 存储桶策略操作的权限在策略允许时返回 405 Method Not Allowed 错误
+
+
+
+ a| 
+允许外部账户 root 或用户拥有任何权限
+ a| 
+存储桶
+ a| 
+有效，但所有 S3 存储桶策略操作的权限在策略允许时返回 405 Method Not Allowed 错误
+ a| 
+相同
+
+
+
+ a| 
+允许所有人执行所有操作
+ a| 
+存储桶
+ a| 
+有效，但所有 S3 存储桶策略操作的权限对外部帐户 root 用户和普通用户返回 405 Method Not Allowed 错误
+ a| 
+相同
+
+
+
+ a| 
+拒绝所有人对所有操作的权限
+ a| 
+存储桶
+ a| 
+有效并强制执行，但 root 用户帐户保留所有 S3 存储桶策略操作的权限
+ a| 
+相同
+
+
+
+ a| 
+主体是不存在的用户或组
+ a| 
+存储桶
+ a| 
+无效的主体
+ a| 
+有效
+
+
+
+ a| 
+资源是不存在的 S3 存储桶
+ a| 
+组
+ a| 
+有效
+ a| 
+相同
+
+
+
+ a| 
+主体是本地组
+ a| 
+存储桶
+ a| 
+无效的主体
+ a| 
+有效
+
+
+
+ a| 
+策略授予非所有者帐户（包括匿名帐户）放置对象的权限。
+ a| 
+存储桶
+ a| 
+有效。对象归创建者账户所有，不适用存储桶策略。创建者账户必须使用对象 ACL 授予对象的访问权限。
+ a| 
+有效。对象由存储桶所有者帐户拥有。存储桶策略适用。
+
+|===
+
+
+[[write-once-read-many-worm-protection]]
+== 一次写入多次读取（WORM）保护
+
+您可以创建一次写入多次读取 (WORM) 存储桶以保护数据、用户定义的对象元数据和 S3 对象标记。您可以配置 WORM 存储桶以允许创建新对象并防止覆盖或删除现有内容。使用此处描述的方法之一。
+
+要确保覆盖始终被拒绝，您可以：
+
+* 从 Grid Manager 中，转到*配置* > *安全* > *安全设置* > *网络和对象*，然后选中*防止客户端修改*复选框。
+* 应用以下规则和 S3 策略：
++
+** 向 S3 策略添加 PutOverwriteObject DENY 操作。
+** 向 S3 策略添加 DeleteObject DENY 操作。
+** 向 S3 策略中添加 PutObject ALLOW 操作。
+
+
+
+
+
+NOTE: 在 S3 策略中将 DeleteObject 设置为 DENY 不会阻止 ILM 在存在"30 天后零副本"等规则时删除对象。
+
+
+NOTE: 即使应用了所有这些规则和策略，它们也不能防止并发写入（请参阅情况 A）。它们确实可以防止顺序完成的覆盖（请参阅情况 B）。
+
+*情况 A*：并发写入（未防范）
+
+[listing]
+----
+/mybucket/important.doc
+PUT#1 ---> OK
+PUT#2 -------> OK
+----
+*情况 B*：顺序完成覆盖（防止）
+
+[listing]
+----
+/mybucket/important.doc
+PUT#1 -------> PUT#2 ---X (denied)
+----
+.相关信息
+* link:how-storagegrid-ilm-rules-manage-objects.html["StorageGRID ILM 规则如何管理对象"]
+* link:example-bucket-policies.html["存储桶策略示例"]
+* link:example-group-policies.html["组策略示例"]
+* link:example-session-policies.html["示例会话策略"]
+* link:../ilm/index.html["使用 ILM 管理对象"]
+* link:../tenant/index.html["使用租户帐户"]
+

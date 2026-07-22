@@ -1,0 +1,24 @@
+---
+permalink: expand/adding-storage-capacity-for-replicated-objects.html 
+sidebar: sidebar 
+keywords: replication, replicated, copies, capacity, storage nodes, expand, expansion, StorageGRID 
+summary: '如果部署的信息生命周期管理 (ILM) 策略包含创建对象复制副本的规则，则必须考虑添加多少存储以及在哪里添加新的存储卷或存储节点。' 
+---
+= StorageGRID 中复制数据的扩展规划
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果部署的信息生命周期管理 (ILM) 策略包含创建对象复制副本的规则，则必须考虑添加多少存储以及在哪里添加新的存储卷或存储节点。
+
+有关在何处添加其他存储的指导，请检查创建复制副本的 ILM 规则。如果 ILM 规则创建了两个或多个对象副本，请计划在生成对象副本的每个位置添加存储。举一个简单的示例：如果您有一个双站点网格和一个在每个站点创建一个对象副本的 ILM 规则，则必须link:../expand/adding-storage-volumes-to-storage-nodes.html["添加存储空间"]到每个站点，以增加网格的整体对象容量。有关对象复制的信息，请参阅link:../ilm/what-replication-is.html["什么是复制"]。
+
+出于性能原因，应尝试在各站点之间保持存储容量和计算能力的平衡。因此，对于此示例，应将相同数量的存储节点添加到每个站点，或在每个站点添加额外的存储卷。
+
+如果您有一个更复杂的 ILM 策略，其中包括根据存储桶名称等条件将对象放置在不同位置的规则，或者随时间推移更改对象位置的规则，那么您对扩展所需存储位置的分析将类似，但更为复杂。
+
+绘制总体存储容量消耗的速度图表可以帮助您了解在扩展中添加多少存储空间，以及何时需要额外的存储空间。您可以使用 Grid Manager link:../monitor/monitoring-storage-capacity.html["监控和绘制存储容量图表"]。
+
+在规划扩展时间时，请记住考虑采购和安装额外存储可能需要多长时间。为简化扩展计划，请考虑在现有 Storage Nodes 容量达到 70% 时添加 Storage Nodes。

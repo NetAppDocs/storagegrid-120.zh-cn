@@ -1,0 +1,47 @@
+---
+permalink: audit/audit-message-format.html 
+sidebar: sidebar 
+keywords: storagegrid, audit, message formats, message format 
+summary: 在 StorageGRID 系统内交换的审核消息包括所有消息通用的标准信息以及描述所报告事件或活动的特定内容。 
+---
+= 了解 StorageGRID 审核消息的结构
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 StorageGRID 系统内交换的审核消息包括所有消息通用的标准信息以及描述所报告事件或活动的特定内容。
+
+如果link:using-audit-explain-tool.html["audit-explain"]和link:using-audit-sum-tool.html["audit-sum"]工具提供的摘要信息不足，请参阅本节以了解所有审计消息的一般格式。
+
+下面是审核日志文件中可能出现的审核消息示例：
+
+[listing]
+----
+2014-07-17T03:50:47.484627
+[AUDT:[RSLT(FC32):VRGN][AVER(UI32):10][ATIM(UI64):1405569047484627][ATYP(FC32):SYSU][ANID(UI32):11627225][AMID(FC32):ARNI][ATID(UI64):9445736326500603516]]
+----
+每个审核消息都包含一个属性元素字符串。整个字符串用括号括起来(`[ ]`），字符串中的每个属性元素具有以下特点：
+
+* 括在括号中 `[ ]`
+* 由字符串 `AUDT`引入，表示审核消息
+* 前后不带分隔符（无逗号或空格）
+* 由换行符终止 `\n`
+
+
+每个元素都包含以下格式报告的属性代码、数据类型和值：
+
+[listing]
+----
+[ATTR(type):value][ATTR(type):value]...
+[ATTR(type):value]\n
+----
+消息中的属性元素数量取决于消息的事件类型。属性元素不按任何特定顺序列出。
+
+以下列表描述了属性元素：
+
+* `ATTR` 是所报告属性的四个字符的代码。有些属性是所有审计消息共有的，有些属性则是特定于事件的。
+* `type` 是值编程数据类型的四个字符的标识符，例如 UI64、FC32 等。该类型用括号括起来 `( )`。
+* `value` 是属性的内容，通常是数值或文本值。值始终跟在冒号 (`:` 后面）。数据类型为 CSTR 的值用双引号 " " 括起来。
+

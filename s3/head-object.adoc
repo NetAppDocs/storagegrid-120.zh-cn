@@ -1,0 +1,198 @@
+---
+permalink: s3/head-object.html 
+sidebar: sidebar 
+keywords: HeadObject 
+summary: 您可以使用 S3 HeadObject 请求从对象检索元数据，而无需返回对象本身。 
+---
+= 使用 S3 HeadObject 请求从 StorageGRID 中的对象检索元数据
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 S3 HeadObject 请求从对象检索元数据，而无需返回对象本身。如果对象存储在云存储池中，则可以使用 HeadObject 来确定对象的过渡状态。
+
+
+
+[[headobject-and-multipart-objects]]
+== HeadObject 和多部分对象
+
+您可以使用 `partNumber`请求参数检索多部分或分段对象的特定部分的元数据。 `x-amz-mp-parts-count`响应元素指示对象有多少个部分。
+
+您可以将 `partNumber`设置为 1，适用于分段/多部分对象和非分段/非多部分对象；但是， `x-amz-mp-parts-count`响应元素仅针对分段或多部分对象返回。
+
+
+
+[[utf-8-characters-in-user-metadata]]
+== 用户元数据中的 UTF-8 字符
+
+StorageGRID 不解析或解释用户定义元数据中转义的 UTF-8 字符。对于在用户定义元数据中包含转义 UTF-8 字符的对象的 HEAD 请求，如果键名称或值包含不可打印的字符，则不会返回 `x-amz-missing-meta`标头。
+
+
+
+[[supported-request-header]]
+== 支持的请求标头
+
+支持以下请求标头：
+
+* `x-amz-checksum-mode`
++
+The `partNumber` 参数和 `Range` 标头不支持与 `x-amz-checksum-mode` 一起用于 HeadObject。当您在启用了 `x-amz-checksum-mode` 的请求中包含这些参数时，StorageGRID 不会在响应中返回校验和值。
+
+
+
+
+
+[[unsupported-request-header]]
+== 不支持的请求标头
+
+以下请求标头不受支持，并返回 `XNotImplemented`：
+
+* `x-amz-website-redirect-location`
+
+
+
+
+[[versioning]]
+== 版本控制
+
+如果未指定 `versionId`子资源，则该操作将获取版本化存储区中对象的最新版本。如果对象的当前版本是删除标记，则会返回"Not Found"状态，并将 `x-amz-delete-marker`响应标头设置为 `true`。
+
+
+
+[[request-headers-for-server-side-encryption-with-customer-provided-encryption-keys-sse-c]]
+== 使用客户提供的加密密钥 (SSE-C) 进行服务器端加密的请求标头
+
+如果对象使用您提供的唯一密钥加密，请使用所有这三个标头。
+
+* `x-amz-server-side-encryption-customer-algorithm`：指定 `AES256`。
+* `x-amz-server-side-encryption-customer-key`: 指定对象的加密密钥。
+* `x-amz-server-side-encryption-customer-key-MD5`：指定对象加密密钥的 MD5 摘要。
+
+
+
+CAUTION: 您提供的加密密钥绝不会被存储。如果丢失加密密钥，则会丢失相应的对象。在使用客户提供的密钥保护对象数据之前，请查看 link:using-server-side-encryption.html["${post_edited_translations.segment}"] 中的注意事项。
+
+
+
+[[headobject-responses-for-cloud-storage-pool-objects]]
+== Cloud Storage Pool 对象的 HeadObject 响应
+
+如果对象存储在 link:../ilm/what-cloud-storage-pool-is.html["云存储池"] 中，则返回以下响应标头：
+
+* `x-amz-storage-class: GLACIER`
+* `x-amz-restore`
+
+
+响应标头提供有关对象移动到云存储池、可选地转换到不可检索状态以及还原时的状态的信息。
+
+[cols="1a,1a"]
+|===
+| 对象的状态 | 对 HeadObject 的响应 
+
+
+ a| 
+已载入 StorageGRID 但尚未经过 ILM 评估的对象，或存储在传统存储池中或使用纠删码的对象
+ a| 
+`200 OK` （未返回特殊响应标头。）
+
+
+
+ a| 
+云存储池中的对象，但尚未转换到不可检索的状态
+ a| 
+`200 OK`
+
+`x-amz-storage-class: GLACIER`
+
+`x-amz-restore: ongoing-request="false", expiry-date="Sat, 23 July 20 2030 00:00:00 GMT"`
+
+在对象转换为不可检索状态之前， `expiry-date` 的值将设置为将来某个遥远的时间。转换的确切时间不受 StorageGRID 系统的控制。
+
+
+
+ a| 
+对象已转换为不可检索状态，但网格上也至少存在一个副本
+ a| 
+`200 OK`
+
+`x-amz-storage-class: GLACIER`
+
+`x-amz-restore: ongoing-request="false", expiry-date="Sat, 23 July 20 2030 00:00:00 GMT"`
+
+ `expiry-date` 的值设置为将来某个较远的时间。
+
+*注意*：如果网格上的副本不可用（例如，存储节点已关闭），则必须发出 link:post-object-restore.html["RestoreObject"] 请求，以便从云存储池还原副本，然后才能成功检索对象。
+
+
+
+ a| 
+对象已转换为不可检索的状态，并且网格上不存在副本
+ a| 
+`200 OK`
+
+`x-amz-storage-class: GLACIER`
+
+
+
+ a| 
+正在从不可检索状态还原的对象
+ a| 
+`200 OK`
+
+`x-amz-storage-class: GLACIER`
+
+`x-amz-restore: ongoing-request="true"`
+
+
+
+ a| 
+对象已完全还原到云存储池
+ a| 
+`200 OK`
+
+`x-amz-storage-class: GLACIER`
+
+`x-amz-restore: ongoing-request="false", expiry-date="Sat, 23 July 20 2018 00:00:00 GMT"`
+
+ `expiry-date` 指示云存储池中的对象何时将返回到不可检索状态。
+
+|===
+
+
+[[multipart-or-segmented-objects-in-cloud-storage-pool]]
+=== 云存储池中的多部分或分段对象
+
+如果您上传了多部分对象，或者 StorageGRID 将大型对象拆分为多个分段，StorageGRID 将通过对对象的部分或分段进行采样来确定该对象在云存储池中是否可用。在某些情况下，当对象的某些部分已转换为不可检索状态或对象的某些部分尚未还原时，HeadObject 请求可能会错误地返回 `x-amz-restore: ongoing-request="false"`。
+
+
+
+[[headobject-and-cross-grid-replication]]
+== HeadObject 和跨网格复制
+
+如果您正在使用link:../admin/grid-federation-overview.html["网格联盟"]并且为存储桶启用了link:../tenant/grid-federation-manage-cross-grid-replication.html["跨网格复制"]，则 S3 客户端可以通过发出 HeadObject 请求来验证对象的复制状态。响应包括 StorageGRID 特定的 `x-ntap-sg-cgr-replication-status`响应标头，该标头将具有以下值之一：
+
+[cols="1a,2a"]
+|===
+| Grid | 复制状态 
+
+
+ a| 
+源
+ a| 
+* *COMPLETED*：复制成功。
+* *PENDING*：对象尚未复制。
+* *FAILURE*：复制失败，出现永久性故障。用户必须解决此错误。
+
+
+
+
+ a| 
+目标
+ a| 
+*REPLICA*：该对象已从源网格复制。
+
+|===
+
+NOTE: StorageGRID 不支持 `x-amz-replication-status`标头。

@@ -1,0 +1,104 @@
+---
+permalink: ilm/how-object-retention-is-determined.html 
+sidebar: sidebar 
+keywords: how object retention is determined 
+summary: StorageGRID 为网格管理员和单个租户用户提供指定对象存储时间的选项。一般来说，租户用户提供的任何保留指令都优先于网格管理员提供的保留指令。 
+---
+= StorageGRID 如何确定对象保留
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+StorageGRID 为网格管理员和单个租户用户提供指定对象存储时间的选项。一般来说，租户用户提供的任何保留指令都优先于网格管理员提供的保留指令。
+
+
+
+[[how-tenant-users-control-object-retention]]
+== 租户用户如何控制对象保留
+
+租户用户可以使用这些方法来控制其对象在 StorageGRID 中的存储时长：
+
+* 如果为网格启用了全局 S3 Object Lock 设置，则 S3 租户用户可以创建启用了 S3 Object Lock 的存储桶，然后为每个存储桶选择*默认保留期*。
+* 如果为网格启用了全局 S3 对象锁定设置，则 S3 租户用户可以创建启用了 S3 对象锁定的存储桶，然后使用 S3 REST API 为添加到该存储桶的每个对象版本指定 retain-until-date 和 legal hold 设置。
++
+** 无法通过任何方法删除合法冻结的对象版本。
+** 在达到对象版本的 retain-until-date 之前，无法通过任何方法删除该版本。
+** 启用了 S3 对象锁定的存储桶中的对象将被 ILM "永久"保留。但是，在达到其 retain-until-date 后，可以通过客户端请求或存储桶生命周期到期来删除对象版本。请参阅 link:managing-objects-with-s3-object-lock.html["使用 S3 Object Lock 管理对象"]。
+
+
+* S3 租户用户可以向其存储桶添加指定过期操作的生命周期配置。如果存在存储桶生命周期，StorageGRID 将存储对象，直到满足 Expiration 操作中指定的日期或天数，除非客户端先删除该对象。请参阅 link:../s3/create-s3-lifecycle-configuration.html["创建 S3 生命周期配置"]。
+* S3 客户端可以发出删除对象请求。在确定是删除还是保留对象时，StorageGRID 始终将客户端删除请求优先于 S3 存储桶生命周期或 ILM。
+
+
+
+
+[[how-grid-administrators-control-object-retention]]
+== 网格管理员如何控制对象保留
+
+网格管理员可以使用这些方法来控制对象保留：
+
+* 为每个租户设置 S3 对象锁定最大保留期限。然后，租户用户可以为其每个存储桶设置默认保留期限。对于该存储桶新接收的任何对象（对象的保留截止日期），也会强制执行最大保留期限。
+* 创建 ILM 放置说明以控制对象的存储时间。当对象与 ILM 规则匹配时，StorageGRID 存储这些对象，直到 ILM 规则中的最后一个时间段结束。如果为放置说明指定了"forever"，则对象将无限期保留。
+* 无论谁控制对象保留多长时间，ILM 设置都会控制存储的对象副本类型（复制或纠删编码）以及副本的位置（存储节点或云存储池）。
+
+
+
+
+[[how-s3-bucket-lifecycle-and-ilm-interact]]
+== S3 存储桶生命周期和 ILM 如何相互作用
+
+配置 S3 存储桶生命周期后，生命周期到期操作将覆盖与生命周期筛选器匹配的对象的 ILM 策略。因此，即使放置对象的所有 ILM 指令均已失效，对象仍可能保留在网格中。
+
+
+
+[[examples-for-object-retention]]
+== 对象保留示例
+
+为了更好地了解 S3 对象锁定、存储区生命周期设置、客户端删除请求和 ILM 之间的交互，请考虑以下示例。
+
+
+
+[[example-1-s3-bucket-lifecycle-keeps-objects-longer-than-ilm]]
+=== 示例 1：S3 存储桶生命周期保留对象的时间长于 ILM
+
+ILM:: 将两份副本存储 1 年（365 天）
+存储桶生命周期:: 对象在 2 年内过期（730 天）
+结果:: StorageGRID 存储对象 730 天。StorageGRID 使用存储桶生命周期设置来确定是删除还是保留对象。
+
+
+
+NOTE: 如果存储桶生命周期指定对象的保存时间应超过 ILM 指定的时间，StorageGRID 会继续使用 ILM 放置说明来确定要存储的副本数量和类型。在此示例中，从第 366 天到第 730 天，对象的两个副本将继续存储在 StorageGRID 中。
+
+
+
+[[example-2-s3-bucket-lifecycle-expires-objects-before-ilm]]
+=== 示例 2：S3 存储桶生命周期在 ILM 之前使对象过期
+
+ILM:: 将两份副本存储 2 年（730 天）
+存储桶生命周期:: 对象在 1 年（365 天）内过期
+结果:: StorageGRID 会在第 365 天后删除对象的两个副本。
+
+
+
+
+[[example-3-client-delete-overrides-bucket-lifecycle-and-ilm]]
+=== 示例 3：客户端删除覆盖存储桶生命周期和 ILM
+
+ILM:: 在存储节点上"永久"存储两个副本
+存储桶生命周期:: 对象在 2 年内过期（730 天）
+客户端删除请求:: 签发时间：第400天
+结果:: StorageGRID 在第 400 天删除对象的两个副本，以响应客户端删除请求。
+
+
+
+
+[[example-4-s3-object-lock-overrides-client-delete-request]]
+=== 示例 4：S3 对象锁定覆盖客户端删除请求
+
+S3 对象锁定:: 对象版本的 Retain-until-date 为 2026-03-31。法律保留无效。
+合规 ILM 规则:: 在存储节点上"永久"存储两个副本
+客户端删除请求:: 签发日期2024-03-31
+结果:: StorageGRID 不会删除对象版本，因为距离保留截止日期还有 2 年。
+

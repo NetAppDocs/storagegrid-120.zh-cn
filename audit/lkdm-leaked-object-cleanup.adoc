@@ -1,0 +1,96 @@
+---
+permalink: audit/lkdm-leaked-object-cleanup.html 
+sidebar: sidebar 
+keywords: storagegrid, audit, message, LKDM, Leaked Object Cleanup 
+summary: 当已泄漏的块被清除或删除时，将生成 LKDM 审核消息。 
+---
+= StorageGRID 中泄漏对象清理的 LKDM 审计消息
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当已清理或删除泄漏的区块时，将生成此消息。区块可以是复制对象或擦除编码对象的一部分。
+
+[cols="1a,1a,4a"]
+|===
+| 代码 | 字段 | 问题描述 
+
+
+ a| 
+CLOC
+ a| 
+区块位置
+ a| 
+已删除的已泄露区块的文件路径。
+
+
+
+ a| 
+CTYP
+ a| 
+区块类型
+ a| 
+区块类型：
+
+`ec: Erasure-coded object chunk`
+
+`repl: Replicated object chunk`
+
+
+
+ a| 
+LTYP
+ a| 
+泄漏类型
+ a| 
+可检测到的五种泄漏类型：
+
+`object_leaked: Object doesn’t exist in the grid`
+
+`location_leaked: Object exists in the grid, but found location doesn’t belong to object`
+
+`mup_seg_leaked: Multipart upload was stopped or not completed, and the segment/part was left out`
+
+`segment_leaked: Parent UUID/CBID (associated container object) is valid but doesn't contain this segment`
+
+`no_parent: Container object is deleted, but object segment was left out and not deleted`
+
+
+
+ a| 
+CTIM
+ a| 
+区块创建时间
+ a| 
+创建泄漏块的时间。
+
+
+
+ a| 
+UUID
+ a| 
+通用唯一标识符
+ a| 
+${post_edited_translations.segment}
+
+
+
+ a| 
+CBID
+ a| 
+内容块标识符
+ a| 
+泄漏区块所属对象的 CBID。
+
+
+
+ a| 
+CSIZ
+ a| 
+内容大小
+ a| 
+区块的大小（以字节为单位）。
+
+|===

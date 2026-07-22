@@ -1,0 +1,86 @@
+---
+permalink: tenant/understanding-tenant-management-api.html 
+sidebar: sidebar 
+keywords: how to understand tenant management api 
+summary: 可以使用租户管理 REST API 而不是 Tenant Manager 用户界面来执行系统管理任务。例如，您可能希望使用 API 来自动化操作或更快地创建多个实体（例如用户）。 
+---
+= 了解 StorageGRID 租户管理 API
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+可以使用租户管理 REST API 而不是 Tenant Manager 用户界面来执行系统管理任务。例如，您可能希望使用 API 来自动化操作或更快地创建多个实体（例如用户）。
+
+租户管理 API：
+
+* 使用 Swagger 开源 API 平台。Swagger 提供了一个直观的用户界面，允许开发人员和非开发人员与 API 进行交互。Swagger 用户界面为每个 API 操作提供完整的详细信息和文档。
+* 使用 link:tenant-management-api-versioning.html["版本控制以支持无中断升级"]。
+
+
+要访问 Tenant Management API 的 Swagger 文档：
+
+. 登录到租户管理器。
+. 在租户管理器顶端，选择帮助图标，然后选择 *API documentation*。
+
+
+
+
+[[api-operations]]
+== API 操作
+
+租户管理 API 将可用的 API 操作组织到以下部分：
+
+* *account*：对当前租户帐户的操作，包括获取存储使用情况信息。
+* *auth*：执行用户会话身份验证的操作。
++
+租户管理 API 支持承载令牌身份验证方案。对于租户登录，请在身份验证请求的 JSON 正文中提供用户名、密码和 accountId（即 `POST /api/v3/authorize`）。如果用户成功通过身份验证，则返回安全令牌。此令牌必须在后续 API 请求的标头中提供（"Authorization: Bearer token"）。
+
++
+有关提高身份验证安全性的信息，请参见 link:protecting-against-cross-site-request-forgery-csrf.html["防止跨站请求伪造"]。
+
++
+
+NOTE: 如果为 StorageGRID 系统启用了单点登录 (SSO)，则必须执行不同的步骤以进行身份验证。请参阅 link:../admin/using-grid-management-api.html["使用 Grid Management API 的说明"]。
+
+* *config*：与产品版本和租户管理 API 版本相关的操作。您可以列出该版本支持的产品发布版本和 API 的主要版本。
+* *容器*：对 S3 存储桶的操作。
+* *deactivated-features*：查看可能已停用的功能的操作。
+* *endpoints*：管理端点的操作。端点允许 S3 存储桶使用外部服务进行 StorageGRID CloudMirror 复制、通知或搜索集成。
+* *grid-federation-connections*：对网格联合连接和跨网格复制的操作。
+* *groups*：管理本地租户组和从外部身份源检索联合租户组的操作。
+* *identity-source*：配置外部身份源并手动同步联合组和用户信息的操作。
+* *ilm*：对信息生命周期管理 (ILM) 设置执行的操作。
+* *regions*：用于确定为 StorageGRID 系统配置了哪些区域的操作。
+* *s3*：管理租户用户的 S3 访问密钥的操作。
+* *s3-object-lock*：全局 S3 对象锁定设置上的操作，用于支持法规遵从性。
+* *users*：用于查看和管理租户用户的操作。
+
+
+
+
+[[operation-details]]
+== 操作详细信息
+
+展开每个 API 操作时，可以查看其 HTTP 操作、端点 URL、任何必需或可选参数的列表、请求正文的示例（如果需要）以及可能的响应。
+
+image:tenant_api_swagger_example.gif["在 Swagger API 中显示 GET groups 操作的示例"]
+
+
+
+[[issue-api-requests]]
+== 发出 API 请求
+
+
+CAUTION: 使用 API 文档网页执行的任何 API 操作都是实时操作。注意不要错误地创建、更新或删除配置数据或其他数据。
+
+.步骤
+. 选择 HTTP 操作以查看请求详细信息。
+. 确定请求是否需要其他参数，例如组或用户 ID。然后，获取这些值。您可能需要先发出其他 API 请求，才能获取所需信息。
+. 确定是否需要修改示例请求正文。如果是，您可以选择 *Model* 以了解每个字段的要求。
+. 选择*试用*。
+. 请提供任何所需的参数，或根据需要修改请求正文。
+. ${post_edited_translations.segment}
+. 查看响应代码以确定请求是否成功。
+

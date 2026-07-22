@@ -1,0 +1,47 @@
+---
+indexpage:
+  title: 监控 StorageGRID 系统并排除故障
+  summary: 当您的系统启动并运行时，您应该定期监控其活动，并对任何警报进行故障排除和解决。您可能还需要配置外部 syslog 服务器、使用 SNMP 监控或收集其他数据。
+  keywords: monitor, troubleshoot
+  lead: 当您的系统启动并运行时，您应该定期监控其活动，并对任何警报进行故障排除和解决。您可能还需要配置外部 syslog 服务器、使用 SNMP 监控或收集其他数据。
+  tiles:
+  - title: 监控系统
+    links:
+    - title: 管理控制面板
+      url: "../monitor/viewing-dashboard.html"
+    - title: 查看节点页面
+      url: "../monitor/viewing-nodes-page.html"
+    - title: 监控系统运行状况
+      url: "../monitor/monitoring-system-health.html"
+    - title: 监控存储容量
+      url: "../monitor/monitoring-storage-capacity.html"
+  - title: 管理提醒和通知
+    links:
+    - title: "${post_edited_translations.segment}"
+      url: "../monitor/managing-alerts.html"
+    - title: 创建自定义提醒
+      url: "../monitor/creating-custom-alert-rules.html"
+    - title: 管理警报电子邮件
+      url: "../monitor/email-alert-notifications.html"
+    - title: 使用 SNMP 监控
+      url: "../monitor/using-snmp-monitoring.html"
+  - title: 使用审核消息和其他日志
+    links:
+    - title: 配置日志管理
+      url: "../monitor/configure-log-management.html"
+    - title: 使用外部 syslog 服务器
+      url: "../monitor/considerations-for-external-syslog-server.html"
+    - title: 查看审核日志
+      url: "../audit/index.html"
+    - title: 日志文件引用
+      url: "../monitor/logs-files-reference.html"
+  - title: 诊断和故障排除
+    links:
+    - title: 查看支持指标
+      url: "../monitor/reviewing-support-metrics.html"
+    - title: 更改I/O优先级
+      url: "../monitor/manage-io-prioritization.html"
+    - title: 运行诊断
+      url: "../monitor/running-diagnostics.html"
+    - title: 常见问题的疑难解答
+      url: "../troubleshoot/index.html"

@@ -1,0 +1,63 @@
+---
+permalink: ilm/when-to-use-cloud-storage-pools.html 
+sidebar: sidebar 
+keywords: use cloud storage pool, benefits of cloud storage pools 
+summary: 使用云存储池，您可以将数据备份或分层到外部位置。此外，您可以将数据备份或分层到多个云。 
+---
+= StorageGRID 中的云存储池用例
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用云存储池，您可以将数据备份或分层到外部位置。此外，您可以将数据备份或分层到多个云。
+
+
+
+[[back-up-storagegrid-data-to-external-location]]
+== 将 StorageGRID 数据备份到外部位置
+
+您可以使用云存储池将 StorageGRID 对象备份到外部位置。
+
+如果无法访问 StorageGRID 副本，则可以使用云存储池中的对象数据来服务客户端请求。但是，您可能需要发出 S3 RestoreObject 请求才能访问云存储池中的备份对象副本。
+
+云存储池中的对象数据也可用于恢复因存储卷或 Storage Node 故障而从 StorageGRID 中丢失的数据。如果对象的唯一剩余副本位于云存储池中，StorageGRID 会临时还原该对象并在已恢复的 Storage Node 上创建新副本。
+
+要实施备份解决方案：
+
+. 创建单个云存储池。
+. 配置 ILM 规则，在存储节点上同时存储对象副本（作为复制或纠删编码副本），并在云存储池中存储单个对象副本。
+. 将此规则添加到您的 ILM 策略。然后，模拟并激活此策略。
+
+
+
+
+[[tier-data-from-storagegrid-to-external-location]]
+== 将数据从 StorageGRID 分层到外部位置
+
+您可以使用云存储池来存储 StorageGRID 系统之外的对象。例如，假设您有大量需要保留的对象，但您预计很少（甚至从不）访问这些对象。您可以使用云存储池将对象分层到低成本存储，并释放 StorageGRID 中的空间。
+
+要实施分层解决方案：
+
+. 创建单个云存储池。
+. 配置一个 ILM 规则，将很少使用的对象从存储节点移动到 Cloud Storage Pool。
+. 将此规则添加到您的 ILM 策略。然后，模拟并激活此策略。
+
+
+
+
+[[maintain-multiple-cloud-endpoints]]
+== 维护多个云端点
+
+如果要将对象数据分层或备份到多个云，则可以配置多个云存储池端点。ILM 规则中的筛选器允许您指定存储在每个云存储池中的对象。例如，您可能希望将某些租户或存储区中的对象存储在 Amazon S3 Glacier 中，并将其他租户或存储区中的对象存储在 Azure Blob 存储中。或者，您可能希望在 Amazon S3 Glacier 和 Azure Blob 存储之间移动数据。
+
+
+NOTE: 使用多个云存储池端点时，请记住，一个对象一次只能存储在一个云存储池中。
+
+要实现多个云端点：
+
+. 创建最多 10 个云存储池。
+. 配置 ILM 规则，以便在每个云存储池的适当时间存储适当的对象数据。例如，将存储桶 A 中的对象存储在云存储池 A 中，并将存储桶 B 中的对象存储在云存储池 B 中。或者，将对象存储在云存储池 A 中一段时间，然后将其移动到云存储池 B。
+. 请将此规则添加到您的 ILM 策略中。然后，模拟并激活此策略。
+

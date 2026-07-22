@@ -1,0 +1,300 @@
+---
+permalink: maintain/restoring-object-data-to-storage-volume-where-system-drive-is-intact.html 
+sidebar: sidebar 
+keywords: restore replicated data, restore erasure-coded data, recover storage node, recover storage volume 
+summary: 在系统驱动器完好无损的存储节点上恢复存储卷后，可以恢复存储卷出现故障时丢失的复制或纠删编码的对象数据。 
+---
+= 将对象数据还原至系统驱动器完好无损的 StorageGRID 存储卷
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在系统驱动器完好无损的存储节点上恢复存储卷后，可以恢复存储卷出现故障时丢失的复制或纠删编码的对象数据。
+
+
+
+[[which-procedure-should-i-use]]
+== 我应该使用哪个程序？
+
+尽可能使用网格管理器中的*卷恢复*页面恢复对象数据。
+
+* 如果卷列在*维护* > *卷还原* > *要还原的节点*中，请使用 link:../maintain/restoring-volume.html["Grid Manager 中的卷恢复页面"] 还原对象数据。
+* 如果卷未在*维护* > *卷恢复* > *要恢复的节点*中列出，请按照以下步骤使用 `repair-data`脚本恢复对象数据。
++
+如果恢复的存储节点包含的卷少于其要替换的节点，则必须使用 `repair-data`脚本。
+
+
+
+
+NOTE: 修复数据脚本已弃用，将在未来版本中删除。如有可能，请使用 link:../maintain/restoring-volume.html["Grid Manager 中的卷恢复过程"]。
+
+
+
+[[use-the-repair-data-script-to-restore-object-data]]
+== 使用 `repair-data`脚本还原对象数据
+
+.开始之前
+* 您已确认恢复的存储节点在网格管理器中的*节点* > *概览*选项卡上的连接状态为*已连接* image:icon_alert_green_checkmark.png["图标警报绿色复选标记"]。
+
+
+.关于此任务
+可以从其他存储节点或云存储池还原对象数据，前提是网格的 ILM 规则已配置为使对象副本可用。
+
+请注意以下事项：
+
+* 如果将 ILM 规则配置为仅存储一个复制副本，并且该副本存在于出现故障的存储卷上，则将无法恢复该对象。
+* 如果对象的唯一剩余副本位于云存储池中，则 StorageGRID 必须向云存储池端点发出多个请求以还原对象数据。在执行此程序之前，请联系技术支持以获得有关估计恢复时间范围和相关费用的帮助。
+
+
+
+
+[[about-the-repair-data-script]]
+== 关于 `repair-data`脚本
+
+要还原对象数据，请运行 `repair-data`脚本。此脚本将启动还原对象数据的过程，并与 ILM 扫描配合使用，以确保满足 ILM 规则。
+
+选择下面的*复制数据*或*擦除编码 (EC) 数据*，以了解  `repair-data` 脚本的不同选项，具体取决于您是还原复制数据还是擦除编码数据。如果需要还原两种类型的数据，则必须运行两组命令。
+
+
+NOTE: 有关 `repair-data`脚本的详细信息，请从主管理节点的命令行输入 `repair-data --help`。
+
+
+NOTE: 修复数据脚本已弃用，将在未来版本中删除。如有可能，请使用 link:../maintain/restoring-volume.html["Grid Manager 中的卷恢复过程"]。
+
+[role="tabbed-block"]
+====
+.已复制数据
+--
+根据需要修复整个节点还是仅修复节点上的某些卷，有两个命令可用于恢复复制的数据：
+
+`repair-data start-replicated-node-repair`
+
+`repair-data start-replicated-volume-repair`
+
+您可以使用此命令跟踪复制数据的修复：
+
+`repair-data show-replicated-repair-status`
+
+--
+.纠删码 (EC) 数据
+--
+根据需要修复整个节点还是仅修复节点上的某些卷，有两个命令可用于恢复擦除编码的数据：
+
+`repair-data start-ec-node-repair`
+
+`repair-data start-ec-volume-repair`
+
+您可以使用以下命令跟踪纠删码数据的修复：
+
+`repair-data show-ec-repair-status`
+
+
+NOTE: 在某些存储节点脱机时，可以开始修复擦除编码的数据。但是，如果无法计算所有擦除编码数据，则无法完成修复。修复将在所有节点可用后完成。
+
+
+NOTE: EC 修复作业会暂时保留大量存储空间。可能会触发存储警报，但修复完成后警报将自动解除。如果没有足够的存储空间用于预留，EC 修复作业将失败。EC 修复作业完成后，无论作业成功还是失败，存储预留都将释放。
+
+--
+====
+
+
+[[find-hostname-for-storage-node]]
+== 查找存储节点的主机名
+
+. 登录到任何管理节点：
++
+.. 输入以下命令： `ssh admin@_primary_Admin_Node_IP_`
+.. 输入 `Passwords.txt`文件中列出的密码。
+.. 输入以下命令切换到 root： `su -`
+.. 输入 `Passwords.txt`文件中列出的密码。
++
+以 root 身份登录时，提示符将从 `$`更改为 `#`。
+
+
+
+. 使用 `/etc/hosts`文件查找已还原存储卷的存储节点的主机名。要查看网格中所有节点的列表，请输入以下内容： `cat /etc/hosts`。
+
+
+
+
+[[repair-data-if-all-volumes-have-failed]]
+== 如果所有卷出现故障，则修复数据
+
+如果所有存储卷都出现故障，请修复整个节点。根据您是否使用复制数据、纠删编码 (EC) 数据或两者，按照*复制数据*、*纠删编码 (EC) 数据*或两者的说明进行操作。
+
+如果只有部分卷出现故障，请转到 <<仅在某些卷出现故障时修复数据>>。
+
+
+NOTE: 您不能同时为多个节点运行 `repair-data`操作。要恢复多个节点，请联系技术支持。
+
+[role="tabbed-block"]
+====
+.已复制数据
+--
+如果您的网格包含复制的数据，请使用 `repair-data start-replicated-node-repair`命令，并带有 `--nodes`选项，其中 `--nodes`是主机名（系统名称），以修复整个存储节点。
+
+此命令修复名为 SG-DC-SN3 的存储节点上的复制数据：
+
+`repair-data start-replicated-node-repair --nodes SG-DC-SN3`
+
+
+NOTE: 当对象数据恢复时，如果 StorageGRID 系统无法定位复制的对象数据，则会触发 *对象丢失* 警报。整个系统的存储节点上可能会触发警报。您应确定丢失的原因以及是否可以恢复。请参阅 link:../troubleshoot/investigating-potentially-lost-objects.html["调查可能丢失的对象"]。
+
+--
+.纠删码 (EC) 数据
+--
+如果您的网格包含纠删码数据，请使用 `repair-data start-ec-node-repair`命令并指定 `--nodes`选项，其中 `--nodes`是主机名（系统名称），以修复整个存储节点。
+
+此命令修复名为 SG-DC-SN3 的存储节点上的擦除编码数据：
+
+`repair-data start-ec-node-repair --nodes SG-DC-SN3`
+
+操作返回一个唯一的 `repair ID`，用于标识此 `repair_data`操作。使用此 `repair ID`可跟踪 `repair_data`操作的进度和结果。恢复过程完成后，不会返回任何其他反馈。
+
+当某些存储节点脱机时，可以开始修复擦除编码数据。修复将在所有节点可用后完成。
+
+--
+====
+
+
+[[repair-data-if-only-some-volumes-have-failed]]
+== 仅在某些卷出现故障时修复数据
+
+如果仅部分卷出现故障，请修复受影响的卷。根据您是否使用复制数据、纠删编码 (EC) 数据或两者，请按照*复制数据*、*纠删编码 (EC) 数据*或两者的说明进行操作。
+
+如果所有卷都出现故障，请转到 <<如果所有卷出现故障，则修复数据>>。
+
+以十六进制输入卷 ID。例如， `0000` 是第一卷， `000F` 是第十六卷。您可以指定一个卷、一系列卷或多个不在序列中的卷。
+
+所有卷必须位于同一存储节点上。如果需要还原多个存储节点的卷，请联系技术支持。
+
+[role="tabbed-block"]
+====
+.已复制数据
+--
+如果您的网格包含已复制的数据，请使用  `start-replicated-volume-repair` 命令以及  `--nodes` 选项来标识节点（其中  `--nodes` 是该节点的非限定主机名）。然后添加  `--volumes` 或  `--volume-range` 选项，如以下示例所示。
+
+*单个卷*：此命令将复制的数据还原到名为 SG-DC-SN3 的存储节点上的卷 `0002`：
+
+`repair-data start-replicated-volume-repair --nodes SG-DC-SN3 --volumes 0002`
+
+*卷范围*：此命令将复制的数据还原到名为 SG-DC-SN3 的存储节点上范围 `0003`到 `0009`内的所有卷：
+
+`repair-data start-replicated-volume-repair --nodes SG-DC-SN3 --volume-range 0003,0009`
+
+*多个卷不在序列中*：此命令将复制的数据还原到名为 SG-DC-SN3 的 Storage Node 上的卷 `0001`、 `0005` 和 `0008`：
+
+`repair-data start-replicated-volume-repair --nodes SG-DC-SN3 --volumes 0001,0005,0008`
+
+
+NOTE: 当对象数据恢复时，如果 StorageGRID 系统无法定位复制的对象数据，则会触发 *对象丢失* 警报。整个系统的存储节点上可能会触发警报。请注意警报描述和建议操作，以确定丢失原因以及是否可以恢复。
+
+--
+.纠删码 (EC) 数据
+--
+如果您的网格包含纠删码数据，请使用  `start-ec-volume-repair` 命令并结合  `--nodes` 选项来标识节点（其中  `--nodes` 是该节点的宿主机名）。然后添加  `--volumes` 或  `--volume-range` 选项，如以下示例所示。
+
+*单个卷*：此命令将纠删编码数据还原到名为 SG-DC-SN3 的存储节点 `0007`上的卷：
+
+`repair-data start-ec-volume-repair --nodes SG-DC-SN3 --volumes 0007`
+
+*卷范围*：此命令将纠删码数据恢复到名为 SG-DC-SN3 的存储节点上范围为  `0004` 到  `0006` 的所有卷：
+
+`repair-data start-ec-volume-repair --nodes SG-DC-SN3 --volume-range 0004,0006`
+
+*非连续的多个卷*：此命令可将纠删码数据还原到名为 SG-DC-SN3 的存储节点上的卷  `000A`、 `000C` 和  `000E`：
+
+`repair-data start-ec-volume-repair --nodes SG-DC-SN3 --volumes 000A,000C,000E`
+
+此  `repair-data` 操作将返回一个用于标识此  `repair_data` 操作的唯一  `repair ID`。使用此  `repair ID` 可跟踪该  `repair_data` 操作的进度和结果。恢复过程完成后，不会返回其他反馈。
+
+
+NOTE: 当某些存储节点脱机时，可以开始修复擦除编码数据。修复将在所有节点可用后完成。
+
+--
+====
+
+
+[[monitor-repairs]]
+== 监控修复
+
+根据您是否使用*复制数据*、*擦除编码 (EC) 数据*或两者，监控修复作业的状态。
+
+您还可以监视正在进行的卷还原作业的状态，并查看在 link:../maintain/restoring-volume.html["Grid Manager"] 中完成的还原作业的历史记录。
+
+[role="tabbed-block"]
+====
+.已复制数据
+--
+* 要获得已复制修复的估计完成百分比，请将 `show-replicated-repair-status`选项添加到 repair-data 命令中。
++
+`repair-data show-replicated-repair-status`
+
+* 要确定维修是否已完成：
++
+.. 选择*节点* > *_正在修复的存储节点_* > *ILM*。
+.. 查看"评估"部分中的属性。修复完成后，*等待 - 所有*属性指示 0 个对象。
+
+
+* 要更详细地监控修复过程：
++
+.. 选择 *Nodes*。
+.. 选择 *_网格名称_* > *ILM*。
+.. 将光标放在 ILM 队列图上，以查看 *扫描速率（对象/秒）* 属性的值，该属性是扫描网格中的对象并将其排入 ILM 队列的速率。
+.. 在 ILM 队列部分，查看以下属性：
++
+*** *扫描周期 - 估计*：完成所有对象的完整 ILM 扫描的预计时间。
++
+完全扫描并不能保证已将 ILM 应用于所有对象。
+
+*** *尝试修复*：针对被认为是高风险的复制数据尝试的对象修复操作的总数。高风险对象是具有剩余一个副本的任何对象，无论是由 ILM 策略指定还是由于丢失副本。每次存储节点尝试修复高风险对象时，此计数都会增加。如果网格变得繁忙，则优先处理高风险 ILM 修复。
++
+如果修复后复制失败，相同的对象修复可能会再次增加。+ 当您监控存储节点卷恢复的进度时，这些属性非常有用。如果尝试修复的次数已停止增加，并且已完成完全扫描，则修复可能已完成。
+
+
+
+.. 或者，为 `storagegrid_ilm_scan_period_estimated_minutes`和 `storagegrid_ilm_repairs_attempted`提交 Prometheus 查询。
+
+
+
+
+--
+.纠删码 (EC) 数据
+--
+要监控擦除编码数据的修复并重试可能失败的任何请求，请执行以下操作：
+
+. 确定擦除编码数据修复的状态：
++
+** 选择 *Support* > *Tools* > *Metrics* 以查看当前作业的预计完成时间和完成百分比。然后，在 Grafana 部分中选择 *EC Overview*。查看 *Grid EC Job Estimated Time to Completion* 和 *Grid EC Job Percentage Completed* 仪表板。
+** 使用此命令可查看特定 `repair-data`操作的状态：
++
+`repair-data show-ec-repair-status --repair-id repair ID`
+
+** 使用此命令可列出所有维修：
++
+`repair-data show-ec-repair-status`
+
++
+输出列出了所有以前和当前正在运行的修复的信息，包括 `repair ID`。
+
+
+
+. 如果输出显示修复操作失败，请使用 `--repair-id`选项重试修复。
++
+此命令使用修复 ID 6949309319275667690 重试失败的节点修复：
+
++
+`repair-data start-ec-node-repair --repair-id 6949309319275667690`
+
++
+此命令使用修复 ID 6949309319275667690 重试失败的卷修复：
+
++
+`repair-data start-ec-volume-repair --repair-id 6949309319275667690`
+
+
+
+--
+====

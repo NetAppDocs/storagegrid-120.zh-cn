@@ -1,0 +1,172 @@
+---
+permalink: admin/configure-vlan-interfaces.html 
+sidebar: sidebar 
+keywords: how to configure vlan interfaces, vlan interfaces, trunk interface 
+summary: '您可以在管理节点和网关节点上创建虚拟 LAN (VLAN) 接口，并在 HA 组和负载平衡器端点中使用它们，以隔离和分区流量，从而实现安全性、灵活性和性能。' 
+---
+= 在 StorageGRID 中配置 VLAN 接口
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在管理节点和网关节点上创建虚拟 LAN (VLAN) 接口，并在 HA 组和负载均衡器端点中使用这些接口来隔离和分区流量，以实现安全性、灵活性和性能。HA 组中的选定节点可以使用 VLAN 接口共享多达 10 个虚拟 IP 地址，因此如果某个节点发生故障，另一个节点将接管与虚拟 IP 地址之间的流量。
+
+
+
+[[considerations-for-vlan-interfaces]]
+== VLAN 接口注意事项
+
+* 通过输入 VLAN ID 并在一个或多个节点上选择父接口来创建 VLAN 接口。
+* 必须在交换机上将父接口配置为中继接口。
+* 父接口可以是网格网络 (eth0)、客户端网络 (eth2)，也可以是虚拟机或裸机主机的附加中继接口（例如 ens256）。
+* 对于每个 VLAN 接口，您只能为给定节点选择一个父接口。例如，您不能在同一 Gateway Node 上同时使用网格网络接口和客户端网络接口作为同一 VLAN 的父接口。
+* 如果 VLAN 接口用于管理节点流量（包括与 Grid Manager 和 Tenant Manager 相关的流量），请仅选择管理节点上的接口。
+* 如果VLAN接口用于S3客户端流量，请选择管理节点或网关节点上的接口。
+* 如果需要添加中继接口，请参见以下详细信息：
++
+** *VMware （安装节点后）*：link:../maintain/vmware-adding-trunk-or-access-interfaces-to-node.html["VMware：将中继或访问接口添加到节点"]
+** *Linux（安装节点之前）*：link:../swnodes/creating-node-configuration-files.html["创建节点配置文件"]
+** *Linux（安装节点后）*：link:../maintain/linux-adding-trunk-or-access-interfaces-to-node.html["将中继或接入接口添加到节点"]
+
+
+
+
+
+NOTE: "Linux"是指 RHEL、Ubuntu 或 Debian 部署。有关受支持版本的列表，请参见 https://imt.netapp.com/matrix/#welcome["NetApp 互操作性矩阵工具 (IMT)"^]。
+
+
+
+[[create-a-vlan-interface]]
+== 创建 VLAN 接口
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["root 访问权限"]。
+* 中继接口已在网络中配置并连接到 VM 或 Linux 节点。您知道中继接口的名称。
+* 您知道要配置的 VLAN 的 ID。
+
+
+.关于此任务
+网络管理员可能已配置一个或多个中继接口和一个或多个 VLAN，以隔离属于不同应用程序或租户的客户端或管理员流量。每个 VLAN 都由数字 ID 或标记标识。例如，您的网络可能使用 VLAN 100 作为 FabricPool 流量，使用 VLAN 200 作为存档应用程序。
+
+您可以使用 Grid Manager 创建 VLAN 接口，允许客户端访问特定 VLAN 上的 StorageGRID。创建 VLAN 接口时，您需要指定 VLAN ID 并在一个或多个节点上选择父（中继）接口。
+
+
+
+[[access-the-wizard]]
+=== 访问此向导
+
+.步骤
+. 选择*配置* > *网络* > *VLAN接口*。
+. 选择 *Create*。
+
+
+
+
+[[enter-details-for-the-vlan-interfaces]]
+=== 输入 VLAN 接口的详细信息
+
+.步骤
+. 指定网络中的 VLAN 的 ID。您可以输入介于 1 到 4094 之间的任何值。
++
+VLAN ID 不必是唯一的。例如，您可以将 VLAN ID 200 用于一个站点的管理员流量，将相同的 VLAN ID 用于另一个站点的客户端流量。您可以在每个站点上创建具有不同父接口集的单独 VLAN 接口。但是，具有相同 ID 的两个 VLAN 接口不能在节点上共享相同的接口。如果指定已使用的 ID，则会显示一条消息。
+
+. （可选）输入 VLAN 接口的简短说明。
+. 选择 *Continue*。
+
+
+
+
+[[choose-parent-interfaces]]
+=== 选择父接口
+
+该表列出了网格中每个站点上所有管理节点和网关节点的可用接口。管理网络 (eth1) 接口不能用作父接口，因此不会显示。
+
+.步骤
+. 选择一个或多个要附加此 VLAN 的父接口。
++
+例如，您可能希望将 VLAN 连接到网关节点和管理节点的客户端网络 (eth2) 接口。
+
++
+image:vlan-create-parent-interfaces.png["VLAN创建向导父接口"]
+
+. 选择 *Continue*。
+
+
+
+
+[[confirm-the-settings]]
+=== 确认设置
+
+.步骤
+. 查看配置并进行任何更改。
++
+** 如果需要更改 VLAN ID 或描述，请在页面顶部选择 *输入 VLAN 详细信息*。
+** 如果需要更改父接口，请在页面顶部选择 *Choose parent interfaces*，或选择 *Previous*。
+** 如果需要删除父接口，请选择垃圾桶 image:icon-trash-can.png["垃圾桶图标"]。
+
+
+. 选择 *Save*。
+. 等待最多 5 分钟，新接口将作为选项显示在高可用性组页面上，并列在节点的*网络接口*表中（*节点* > *_父接口节点_* > *网络*）。
+
+
+
+
+[[edit-a-vlan-interface]]
+== 编辑 VLAN 接口
+
+当您编辑 VLAN 接口时，您可以进行以下类型的更改：
+
+* 更改 VLAN ID 或说明。
+* 添加或删除父接口。
+
+
+例如，如果您计划停用关联的节点，您可能希望从 VLAN 接口中删除父接口。
+
+请注意以下事项：
+
+* 如果 VLAN 接口用于 HA 组，则无法更改 VLAN ID。
+* 如果父接口用于 HA 组，则无法删除该父接口。
++
+例如，假设 VLAN 200 连接到节点 A 和 B 上的父接口。如果 HA 组使用节点 A 的 VLAN 200 接口和节点 B 的 eth2 接口，则可以删除节点 B 未使用的父接口，但不能删除节点 A 正在使用的父接口。
+
+
+
+.步骤
+. 选择*配置* > *网络* > *VLAN接口*。
+. 选中要编辑的 VLAN 接口的复选框。然后，选择 *操作* > *编辑*。
+. （可选）更新 VLAN ID 或说明。然后，选择*继续*。
++
+如果 VLAN 用于 HA 组，则无法更新 VLAN ID。
+
+. （可选）选中或清除复选框以添加父接口或删除未使用的接口。然后，选择 *Continue*。
+. 查看配置并进行任何更改。
+. 选择 *Save*。
+
+
+
+
+[[remove-a-vlan-interface]]
+== 删除 VLAN 接口
+
+您可以删除一个或多个 VLAN 接口。
+
+如果 VLAN 接口当前在 HA 组中使用，则无法删除该接口。必须先从 HA 组中删除 VLAN 接口，然后才能将其删除。
+
+为避免客户流量中断，请考虑采取以下措施之一：
+
+* 请先在 HA 组中添加一个新 VLAN 接口，然后再删除此 VLAN 接口。
+* 创建不使用此 VLAN 接口的新 HA 组。
+* 如果要删除的 VLAN 接口当前是活动接口，请编辑 HA 组。将要删除的 VLAN 接口移动到优先级列表的底部。等待在新的主接口上建立通信，然后从 HA 组中删除旧接口。最后，删除该节点上的 VLAN 接口。
+
+
+.步骤
+. 选择*配置* > *网络* > *VLAN接口*。
+. 选中要删除的每个 VLAN 接口的复选框。然后，选择 *Actions* > *Delete*。
+. 选择*是*以确认您的选择。
++
+您选择的所有 VLAN 接口均已删除。VLAN 接口页面上将显示绿色成功横幅。
+
+

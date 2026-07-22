@@ -1,0 +1,75 @@
+---
+permalink: monitor/monitoring-information-lifecycle-management.html 
+sidebar: sidebar 
+keywords: lifecycle management, lifecycle, monitoring, ILM, information lifecycle management 
+summary: '信息生命周期管理 (ILM) 系统为存储在网格中的所有对象提供数据管理。您必须监控 ILM 操作，以了解网格是否可以处理当前负载，或者是否需要更多资源。' 
+---
+= 监控 StorageGRID 中的信息生命周期管理
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+信息生命周期管理 (ILM) 系统为存储在网格中的所有对象提供数据管理。您必须监控 ILM 操作，以了解网格是否可以处理当前负载，或者是否需要更多资源。
+
+.关于此任务
+StorageGRID 系统通过应用活动 ILM 策略来管理对象。ILM 策略和相关的 ILM 规则确定制作的副本数、创建的副本类型、放置副本的位置以及保留每个副本的时间长度。
+
+对象摄取和其他与对象相关的活动可能超过 StorageGRID 评估 ILM 的速率，导致系统将无法近乎实时地完成 ILM 放置指令的对象排入队列。您应该监控 StorageGRID 是否能跟上客户端操作。
+
+
+
+[[use-grid-manager-dashboard-tab]]
+== 使用 Grid Manager 仪表板选项卡
+
+.步骤
+使用网格管理器仪表板上的 ILM 选项卡来监控 ILM 操作：
+
+. ${post_edited_translations.segment}
+. 从仪表板中，选择 ILM 选项卡，并记录 ILM 队列（对象）卡和 ILM 评估率卡上的值。
++
+仪表板上 ILM 队列（对象）卡中出现临时峰值是正常现象。但是，如果队列持续增加且从不下降，则网格需要更多资源才能高效运行：要么增加更多 Storage Nodes，要么在 ILM 策略将对象放置在远程位置时增加更多网络带宽。
+
+
+
+
+
+[[use-the-nodes-page]]
+== 使用"节点"页面
+
+.步骤
+此外，使用*节点*页面调查 ILM 队列：
+
+
+NOTE: *节点*页面上的图表将在未来的 StorageGRID 版本中替换为相应的仪表板卡。
+
+. 选择 *Nodes*。
+. 选择 *_网格名称_* > *ILM*。
+. 将光标放在 ILM 队列图上，以查看以下属性在给定时间点的值：
++
+** *排队的对象（来自客户端操作）*：由于客户端操作（例如，载入）而等待 ILM 评估的对象总数。
+** *排队对象（来自所有操作）*：等待 ILM 评估的对象总数。
+** *扫描速率（对象/秒）*：扫描网格中的对象并将其排入 ILM 队列的速率。
+** *评估速率（对象/秒）*：根据网格中的 ILM 策略评估对象的当前速率。
+
+
++
+
+NOTE: ILM 队列部分仅包含在网格中。此信息不会显示在站点或存储节点的 ILM 选项卡上。
+
+. 在 ILM 队列部分，查看以下属性。
++
+** *扫描周期 - 估计*：完成所有对象的完整 ILM 扫描的预计时间。
++
+
+NOTE: 完全扫描并不能保证已将 ILM 应用于所有对象。
+
+** *尝试修复*：已尝试的已复制数据的对象修复操作总数。每次存储节点尝试修复高风险对象时，此计数都会增加。如果网格变得繁忙，则优先处理高风险 ILM 修复。
++
+如果修复后复制失败，相同的对象修复可能会再次增加。+ 当您监控存储节点卷恢复的进度时，这些属性非常有用。如果尝试修复的次数已停止增加，并且已完成完全扫描，则修复可能已完成。
+
+
+
+. 或者，为 `storagegrid_ilm_scan_period_estimated_minutes`和 `storagegrid_ilm_repairs_attempted`提交 Prometheus 查询。
+

@@ -1,0 +1,37 @@
+---
+permalink: maintain/rebooting-grid-node-from-command-shell.html 
+sidebar: sidebar 
+keywords: storagegrid, recover, reboot node, command shell reboot 
+summary: 如果需要更密切地监视重新启动操作，或者无法访问 Grid Manager，可以登录到网格节点并从命令外壳运行 Server Manager 重新启动命令。 
+---
+= 从命令外壳重新启动 StorageGRID 节点
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果需要更密切地监视重新启动操作，或者无法访问 Grid Manager，可以登录到网格节点并从命令外壳运行 Server Manager 重新启动命令。
+
+.开始之前
+您拥有  `Passwords.txt` 文件。
+
+.步骤
+. ${post_edited_translations.segment}
++
+.. 输入以下命令： `ssh admin@_grid_node_IP_`
+.. 输入 `Passwords.txt`文件中列出的密码。
+.. 输入以下命令切换到 root： `su -`
+.. 输入 `Passwords.txt`文件中列出的密码。
+
+
++
+以 root 身份登录时，提示符将从 `$`更改为 `#`。
+
+. 或者，停止服务： `service servermanager stop`
++
+停止服务是一个可选步骤，但建议您这样做。服务可能需要长达 15 分钟才能关闭，您可能需要在下一步重新启动节点之前远程登录到系统以监控关闭过程。
+
+. 重新启动网格节点： `reboot`
+. 从命令 shell 中注销： `exit`
+

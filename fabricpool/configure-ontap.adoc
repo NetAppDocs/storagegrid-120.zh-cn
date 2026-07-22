@@ -1,0 +1,124 @@
+---
+permalink: fabricpool/configure-ontap.html 
+sidebar: sidebar 
+keywords: fabricPool, StorageGRID, system manager, ONTAP CLI, add cloud tier 
+summary: 获取所需的 StorageGRID 信息后，您可以转到 ONTAP 将 StorageGRID 添加为云层。 
+---
+= 配置 ONTAP System Manager 以将 StorageGRID 添加为 FabricPool 云层
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+获取所需的 StorageGRID 信息后，您可以转到 ONTAP 将 StorageGRID 添加为云层。
+
+.开始之前
+* 如果已完成 FabricPool 安装向导，则拥有已下载的 `ONTAP_FabricPool_settings___bucketname__.txt`文件。
+* 如果您手动配置了 StorageGRID，则您拥有用于 StorageGRID 的完全限定域名 (FQDN) 或 StorageGRID HA 组的虚拟 IP (VIP) 地址、负载平衡器端点的端口号、负载平衡器证书、租户帐户 root 用户的访问密钥 ID 和密钥，以及 ONTAP 将在该租户中使用的存储桶名称。
+
+
+
+
+[[access-ontap-system-manager]]
+== 访问 ONTAP System Manager
+
+这些说明介绍了如何使用 ONTAP System Manager 将 StorageGRID 添加为云层。您可以使用 ONTAP CLI 完成相同的配置。有关说明，请转到 https://docs.netapp.com/us-en/ontap/fabricpool/index.html["适用于 FabricPool 的 ONTAP 文档"^]。
+
+.步骤
+. 访问要分层到 StorageGRID 的 ONTAP 集群的 System Manager。
+. 以集群管理员身份登录。
+. 导航到 *STORAGE* > *Tiers* > *Add Cloud Tier*。
+. 从对象存储提供程序列表中选择 *StorageGRID*。
+
+
+
+
+[[enter-storagegrid-values]]
+== 输入 StorageGRID 值
+
+有关详细信息，请参见 https://docs.netapp.com/us-en/ontap/fabricpool/index.html["适用于 FabricPool 的 ONTAP 文档"^]。
+
+.步骤
+. 使用 `ONTAP_FabricPool_settings___bucketname__.txt`文件或您手动获取的值填写"添加云层"表单。
++
+[cols="1a,3a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+名称
+ a| 
+为此云层输入唯一名称。您可以接受默认值。
+
+
+
+ a| 
+URL 样式
+ a| 
+如果您link:../admin/configuring-s3-api-endpoint-domain-names.html["配置的 S3 端点域名"]，请选择 *Virtual Hosted-Style URL*。
+
+*Path-Style URL* 是 ONTAP 的默认设置，但建议对 StorageGRID 使用虚拟托管式请求。如果为 *Server name (FQDN)* 字段提供的是 IP 地址而非域名，则必须使用 *Path-Style URL*。
+
+
+
+ a| 
+服务器名称 (FQDN)
+ a| 
+输入用于 StorageGRID 的完全限定域名 (FQDN) 或 StorageGRID HA 组的虚拟 IP (VIP) 地址。例如， `s3.storagegrid.__company__.com`。
+
+请注意以下事项：
+
+** 您在此处指定的 IP 地址或域名必须与您为 StorageGRID 负载均衡器端点上传或生成的证书匹配。
+** 如果提供域名，DNS 记录必须映射到您将用于连接 StorageGRID 的每个 IP 地址。请参阅 link:configure-dns-server.html["配置 DNS 服务器"]。
+
+
+
+
+ a| 
+SSL
+ a| 
+已启用（默认）。
+
+
+
+ a| 
+对象存储证书
+ a| 
+粘贴用于 StorageGRID 负载平衡器端点的证书 PEM，包括：
+`-----BEGIN CERTIFICATE-----`和 `-----END CERTIFICATE-----`。
+
+*注意：* 如果中间 CA 颁发了 StorageGRID 证书，则必须提供中间 CA 证书。如果 StorageGRID 证书由根 CA 直接颁发，则必须提供根 CA 证书。
+
+
+
+ a| 
+端口
+ a| 
+输入 StorageGRID 负载平衡器端点使用的端口。ONTAP 连接到 StorageGRID 时将使用此端口。例如，10433。
+
+
+
+ a| 
+访问密钥和私有密钥
+ a| 
+输入 StorageGRID 租户帐户 root 用户的访问密钥 ID 和机密访问密钥。
+
+*提示*：如果您将来在 StorageGRID 中生成新的访问密钥和秘密访问密钥，请在从 StorageGRID 删除旧值之前将新密钥输入 ONTAP。否则，ONTAP 可能会暂时失去对 StorageGRID 的访问权限。
+
+
+
+ a| 
+容器名称
+ a| 
+输入您为此 ONTAP 层创建的 StorageGRID 存储桶的名称。
+
+|===
+. 在 ONTAP 中完成最终的 FabricPool 配置。
++
+.. 将一个或多个聚合附加到云层。
+.. （可选）创建卷分层策略。
+
+
+

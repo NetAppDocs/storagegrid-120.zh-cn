@@ -1,0 +1,40 @@
+---
+section: troubleshoot
+title: StorageGRID 系统故障排除
+entries:
+- title: 故障排除指南
+  pdf-filename: StorageGRID 系统故障排除
+  url: "/troubleshoot/index.html"
+- title: 对象和存储问题疑难解答
+  entries:
+  - title: 确认对象数据位置
+    url: "/troubleshoot/confirming-object-data-locations.html"
+  - title: 对象存储失败
+    url: "/troubleshoot/object-store-storage-volume-failures.html"
+  - title: 验证对象完整性
+    url: "/troubleshoot/verifying-object-integrity.html"
+  - title: 排查 S3 PUT Object size too large 警报
+    url: "/troubleshoot/troubleshoot-s3-put-object-size-too-large-alert.html"
+  - title: 对象数据丢失和缺失故障排除
+    entries:
+    - title: 检索对象的方法
+      pdf-filename: 对象数据丢失和缺失故障排除
+      url: "/troubleshoot/troubleshooting-lost-and-missing-object-data.html"
+    - title: 调查可能丢失的对象
+      url: "/troubleshoot/investigating-potentially-lost-objects.html"
+  - title: 排查低对象数据存储警报
+    url: "/troubleshoot/troubleshooting-low-object-data-storage-alert.html"
+  - title: 排查低只读水印覆盖警报
+    url: "/troubleshoot/troubleshoot-low-watermark-alert.html"
+- title: 排查元数据问题
+  url: "/troubleshoot/troubleshooting-metadata-issues.html"
+- title: 对证书错误进行故障诊断
+  url: "/troubleshoot/troubleshooting-certificate-errors.html"
+- title: 排除管理节点和用户界面问题
+  url: "/troubleshoot/troubleshooting-admin-node-and-user-interface-issues.html"
+- title: 对网络、硬件和平台问题进行故障诊断
+  url: "/troubleshoot/troubleshooting-network-hardware-and-platform-issues.html"
+- title: 对外部 syslog 服务器进行故障排除
+  url: "/troubleshoot/troubleshooting-syslog-server.html"
+- title: 对负载平衡器缓存进行故障排除
+  url: "/troubleshoot/troubleshooting-load-balancer-caching.html"

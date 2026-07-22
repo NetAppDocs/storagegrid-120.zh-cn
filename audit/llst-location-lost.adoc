@@ -1,0 +1,99 @@
+---
+permalink: audit/llst-location-lost.html 
+sidebar: sidebar 
+keywords: storagegrid, audit, message, LLST, Location Lost 
+summary: 每当找不到对象副本（复制或擦除编码）的位置时，都会生成此消息。 
+---
+= StorageGRID 中丢失对象副本位置的 LLST 审核消息
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+每当找不到对象副本（复制或擦除编码）的位置时，都会生成此消息。
+
+[cols="1a,1a,4a"]
+|===
+| 代码 | 字段 | 问题描述 
+
+
+ a| 
+CBIL
+ a| 
+CBID
+ a| 
+受影响的CBID。
+
+
+
+ a| 
+ECPR
+ a| 
+纠删码配置文件
+ a| 
+用于擦除编码对象数据。使用的擦除编码配置文件的 ID。
+
+
+
+ a| 
+LTYP
+ a| 
+位置类型
+ a| 
+CLDI（在线）：用于复制对象数据
+
+CLEC（在线）：用于擦除编码对象数据
+
+CLNL（近线）：用于已存档的复制对象数据
+
+
+
+ a| 
+NOID
+ a| 
+源节点 ID
+ a| 
+丢失位置的节点 ID。
+
+
+
+ a| 
+PCLD
+ a| 
+复制对象的路径
+ a| 
+丢失对象数据的磁盘位置的完整路径。仅当 LTYP 的值为 CLDI 时（即对于复制对象）才返回。
+
+格式为 `/var/local/rangedb/2/p/13/13/00oJs6X%{h{U)SeUFxE@`
+
+
+
+ a| 
+RSLT
+ a| 
+结果
+ a| 
+始终为 NONE。RSLT 是必填消息字段，但与此消息无关。使用 NONE 而不是 SUCS，因此不会过滤此消息。
+
+
+
+ a| 
+TSRC
+ a| 
+触发源
+ a| 
+USER: 用户已触发
+
+SYST：系统触发
+
+
+
+ a| 
+UUID
+ a| 
+通用唯一ID
+ a| 
+${post_edited_translations.segment}
+
+|===

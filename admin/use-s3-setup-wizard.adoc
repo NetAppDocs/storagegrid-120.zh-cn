@@ -1,0 +1,60 @@
+---
+permalink: admin/use-s3-setup-wizard.html 
+sidebar: sidebar 
+keywords: S3, S3 setup wizard 
+summary: 您可以使用 S3 设置向导将 StorageGRID 配置为 S3 应用程序的对象存储系统。 
+---
+= StorageGRID S3 设置向导注意事项和要求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 S3 设置向导将 StorageGRID 配置为 S3 应用程序的对象存储系统。
+
+
+
+[[when-to-use-the-s3-setup-wizard]]
+== 何时使用 S3 设置向导
+
+S3 设置向导将指导您完成配置 StorageGRID 以用于 S3 应用程序的每个步骤。作为完成向导的一部分，您可以下载可用于在 S3 应用程序中输入值的文件。使用向导可以更快地配置您的系统，并确保您的设置符合 StorageGRID 最佳实践。
+
+如果具有link:admin-group-permissions.html["root 访问权限"]，则可以在开始使用 StorageGRID 网格管理器时完成 S3 设置向导，也可以在以后的任何时候访问并完成该向导。根据您的要求，您还可以手动配置某些或所有必需项目，然后使用向导汇编 S3 应用程序所需的值。
+
+
+
+[[before-using-the-wizard]]
+== 使用向导之前
+
+在使用向导之前，请确认您已完成这些先决条件。
+
+获取 IP 地址并设置 VLAN 接口:: 如果您将配置高可用性 (HA) 组，您将知道 S3 应用程序将连接到哪些节点以及将使用哪个 StorageGRID 网络。您还知道要为子网 CIDR、网关 IP 地址和虚拟 IP (VIP) 地址输入哪些值。
++
+--
+如果您计划使用虚拟 LAN 来隔离来自 S3 应用程序的流量，则表示您已经配置了 VLAN 接口。请参阅 link:../admin/configure-vlan-interfaces.html["配置 VLAN 接口"]。
+
+--
+配置身份联合和 SSO:: 如果您计划对 StorageGRID 系统使用身份联合或单点登录 (SSO)，则已启用这些功能。您还知道哪个联合组应具有 S3 应用程序将使用的租户帐户的根访问权限。请参阅 link:../admin/using-identity-federation.html["${post_edited_translations.segment}"] 和 link:../admin/how-sso-works.html["${post_edited_translations.segment}"]。
+获取并配置域名:: 您知道要用于 StorageGRID 的完全限定域名 (FQDN)。域名服务器 (DNS) 条目会将此 FQDN 映射到使用向导创建的 HA 组的虚拟 IP (VIP) 地址。
++
+--
+如果您计划使用 S3 虚拟托管风格的请求，则应该使用 link:../admin/configuring-s3-api-endpoint-domain-names.html["配置的 S3 端点域名"]。建议使用虚拟主机式请求。
+
+--
+查看负载均衡器和安全证书要求:: 如果您计划使用 StorageGRID 负载均衡器，则已查看负载均衡的一般注意事项。您拥有要上传的证书或生成证书所需的值。
++
+--
+如果您计划使用外部（第三方）负载均衡器端点，则您具有该负载均衡器的完全限定域名 (FQDN)、端口和证书。
+
+--
+配置任何网格联合连接:: 如果要允许 S3 租户使用网格联合连接克隆帐户数据并将存储桶对象复制到另一个网格，请在启动向导之前确认以下内容：
++
+--
+* 您有 link:grid-federation-manage-connection.html["已配置网格联盟连接"]。
+* 连接状态为*已连接*。
+* ${post_edited_translations.segment}
+
+
+--
+

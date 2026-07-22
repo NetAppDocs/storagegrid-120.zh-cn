@@ -1,0 +1,77 @@
+---
+permalink: tenant/troubleshooting-platform-services-endpoint-errors.html 
+sidebar: sidebar 
+keywords: how to troubleshoot platform services endpoint 
+summary: 如果 StorageGRID 尝试与平台服务端点通信时发生错误，则仪表板上将显示一条消息。在 Platform services endpoints 页面上，Last error 列指示错误发生的时间。如果与端点凭据关联的权限不正确，则不会显示错误。 
+---
+= StorageGRID 平台服务端点错误故障排除
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果 StorageGRID 尝试与平台服务端点通信时发生错误，则仪表板上将显示一条消息。在 Platform services endpoints 页面上，Last error 列指示错误发生的时间。如果与端点凭据关联的权限不正确，则不会显示错误。
+
+
+
+[[determine-if-error-has-occurred]]
+== 确定是否发生错误
+
+如果在过去 7 天内发生任何平台服务端点错误，租户管理器仪表板将显示一条警报消息。您可以转到 Platform services endpoints 页面以查看有关错误的更多详细信息。
+
+image:tenant_dashboard_endpoint_error.png["${post_edited_translations.segment}"]
+
+仪表板上显示的相同错误也会显示在平台服务端点页面的顶端。要查看更详细的错误消息：
+
+.步骤
+. 从端点列表中，选择出现错误的端点。
+. 在端点详细信息页面上，选择*连接*。此选项卡仅显示端点的最新错误，并指示错误发生的时间。包含红色 X 图标 image:icon_alert_red_critical.png["${post_edited_translations.segment}"] 的错误发生在过去 7 天内。
+
+
+
+
+[[check-if-error-is-still-current]]
+== 检查错误是否仍然存在
+
+某些错误即使在解决后仍可能继续显示在*上一个错误*列中。要查看错误是否为当前错误或强制从表中删除已解决的错误，请执行以下操作：
+
+.步骤
+. 选择端点。
++
+此时将显示端点详细信息页面。
+
+. 选择*连接* > *测试连接*。
+
+
+选择*测试连接*将导致 StorageGRID 验证平台服务端点是否存在，以及是否可以使用当前凭据访问该端点。从每个站点的一个节点验证到端点的连接。
+
+
+
+[[resolve-endpoint-errors]]
+== 解决端点错误
+
+您可以使用端点详细信息页面上的*上一个错误*消息来帮助确定导致错误的原因。某些错误可能需要您编辑端点以解决此问题。例如，如果 StorageGRID 因没有正确的访问权限或访问密钥已过期而无法访问目标 S3 存储桶，则可能会发生 CloudMirroring 错误。消息为"Either the endpoint credentials or the destination access needs to be updated"，详细信息为"AccessDenied"或"InvalidAccessKeyId。"
+
+如果需要编辑端点以解决错误，选择*测试并保存更改*将导致 StorageGRID 验证更新的端点并确认可以使用当前凭据访问它。从每个站点的一个节点验证与端点的连接。
+
+.步骤
+. 选择端点。
+. 在端点详细信息页面上，选择*配置*。
+. 根据需要编辑端点配置。
+. 选择*连接* > *测试连接*。
+
+
+
+
+[[endpoint-credentials-with-insufficient-permissions]]
+== 权限不足的端点凭据
+
+当 StorageGRID 验证平台服务端点时，它确认端点的凭据可用于联系目标资源，并执行基本权限检查。但是，StorageGRID 不会验证某些平台服务操作所需的所有权限。因此，如果在尝试使用平台服务时收到错误（例如"403 Forbidden"），请检查与端点凭据相关联的权限。
+
+.相关信息
+* link:../admin/troubleshooting-platform-services.html["管理 StorageGRID > 排查平台服务问题"]
+* link:creating-platform-services-endpoint.html["创建平台服务端点"]
+* link:testing-connection-for-platform-services-endpoint.html["测试平台服务端点的连接"]
+* link:editing-platform-services-endpoint.html["编辑平台服务端点"]
+

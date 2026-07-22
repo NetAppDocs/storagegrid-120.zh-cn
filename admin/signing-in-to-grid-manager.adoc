@@ -1,0 +1,132 @@
+---
+permalink: admin/signing-in-to-grid-manager.html 
+sidebar: sidebar 
+keywords: grid manager, sign in, log in 
+summary: '您可以通过在受支持的 Web 浏览器的地址栏中输入管理节点的完全限定域名 (FQDN) 或 IP 地址来访问网格管理器登录页面。' 
+---
+= 登录到 StorageGRID Grid Manager
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过在受支持的 Web 浏览器的地址栏中输入管理节点的完全限定域名 (FQDN) 或 IP 地址来访问网格管理器登录页面。
+
+每个 StorageGRID 系统包括一个主 Admin 节点和任意数量的非主 Admin 节点。您可以登录任何 Admin 节点上的 Grid Manager 来管理 StorageGRID 系统。但是，某些维护操作只能从主 Admin 节点执行。
+
+
+
+[[connect-to-ha-group]]
+=== 连接到 HA 组
+
+如果管理节点包含在高可用性 (HA) 组中，则使用 HA 组的虚拟 IP 地址或映射到虚拟 IP 地址的完全限定域名进行连接。应选择主管理节点作为组的主界面，以便在访问 Grid Manager 时，可以在主管理节点上访问它，除非主管理节点不可用。请参阅 link:managing-high-availability-groups.html["管理高可用性组"]。
+
+
+
+[[use-sso]]
+=== 使用 SSO
+
+如果 link:how-sso-works.html["${post_edited_translations.segment}"]，登录步骤会略有不同。
+
+
+
+[[sign-in-to-grid-manager-on-first-admin-node]]
+== 在第一个管理节点上登录到 Grid Manager
+
+.开始之前
+* 您拥有登录凭据。
+* 您正在使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"]。
+* Cookie 已在您的 Web 浏览器中启用。
+* ${post_edited_translations.segment}
+* 您有 Grid Manager 的 URL：
++
+`https://_FQDN_or_Admin_Node_IP_/`
+
++
+您可以使用完全限定域名、管理节点的 IP 地址或管理节点 HA 组的虚拟 IP 地址。
+
++
+${post_edited_translations.segment}
+
++
+`https://_FQDN_or_Admin_Node_IP:port_/`
+
++
+
+NOTE: SSO 在受限 Grid Manager 端口上不可用。必须使用端口 443。
+
+
+
+.步骤
+. 启动受支持的 Web 浏览器。
+. ${post_edited_translations.segment}
+. 如果系统提示您收到安全警报，请使用浏览器的安装向导安装证书。请参阅 link:using-storagegrid-security-certificates.html["管理安全证书"]。
+. ${post_edited_translations.segment}
++
+显示的登录屏幕取决于是否已为 StorageGRID 配置单点登录 (SSO)。
+
++
+[role="tabbed-block"]
+====
+.未使用SSO
+--
+.. ${post_edited_translations.segment}
+.. 选择*登录*。
+
+
+--
+.${post_edited_translations.segment}
+--
+** ${post_edited_translations.segment}
++
+... 选择*登录*。您可以在"帐户"字段中保留 0。
+... 在组织的 SSO 登录页面上输入标准 SSO 凭据。
++
+例如，如果 StorageGRID 正在使用 SSO，并且您以前曾访问过网格管理器或租户帐户：
+
++
+.... 输入 *0*（Grid Manager 的帐户 ID），如果 *Grid Manager* 显示在最近帐户列表中，则选择 *Grid Manager*。
+.... 选择*登录*。
+.... ${post_edited_translations.segment}
+
+
+
+
+
+
+--
+====
+
+
+登录后，系统将显示 Grid Manager 的主页，其中包含仪表板。要了解提供了哪些信息，请参见 link:../monitor/viewing-dashboard.html["${post_edited_translations.segment}"]。
+
+
+
+[[sign-into-another-admin-node]]
+== ${post_edited_translations.segment}
+
+${post_edited_translations.segment}
+
+[role="tabbed-block"]
+====
+.未使用SSO
+--
+.步骤
+. 在浏览器的地址栏中，输入其他管理节点的完全限定域名或 IP 地址。根据需要包括端口号。
+. ${post_edited_translations.segment}
+. 选择*登录*。
+
+
+--
+.${post_edited_translations.segment}
+--
+${post_edited_translations.segment}
+
+.步骤
+. ${post_edited_translations.segment}
+. 如果您的SSO会话已过期，请重新输入您的凭据。
+
+
+--
+====

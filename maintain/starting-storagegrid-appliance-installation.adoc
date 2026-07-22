@@ -1,0 +1,102 @@
+---
+permalink: maintain/starting-storagegrid-appliance-installation.html 
+sidebar: sidebar 
+keywords: storagegrid, recover, appliance, appliance install 
+summary: 要在设备存储节点上安装 StorageGRID，请使用设备中包含的 StorageGRID Appliance Installer。 
+---
+= 开始 StorageGRID 设备安装
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要在设备存储节点上安装 StorageGRID，请使用设备中包含的 StorageGRID Appliance Installer。
+
+.开始之前
+* 设备已安装在机架中，已连接到您的网络并已通电。
+* 已使用 StorageGRID 设备安装程序为设备配置网络链路和 IP 地址。
+* 您知道 StorageGRID 网格的主管理节点的 IP 地址。
+* StorageGRID 设备安装程序的 IP 配置页面上列出的所有网格网络子网都已在主管理节点的网格网络子网列表中定义。
+* 您已按照存储设备的安装说明完成这些必备任务。请参阅 https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/index.html["硬件安装快速入门"^]。
+* 您正在使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"]。
+* 您知道设备中分配给计算控制器的一个 IP 地址。您可以使用管理网络（控制器上的管理端口 1）、网格网络或客户端网络的 IP 地址。
+
+
+.关于此任务
+要在设备存储节点上安装 StorageGRID：
+
+* 您可以指定或确认主管理节点的 IP 地址以及节点的主机名（系统名称）。
+* ${post_edited_translations.segment}
++
+
+NOTE: 恢复应用装置存储节点时，请使用与原始应用装置相同的存储类型（组合、仅元数据或仅数据）重新安装它。如果指定其他存储类型，则恢复将失败，并需要使用指定的正确存储类型重新安装设备。
+
+* 在此过程中，安装暂停。要恢复安装，您必须登录到 Grid Manager，并将待处理的存储节点配置为故障节点的替换节点。
+* 配置节点后，设备安装过程完成，设备将重新启动。
+
+
+.步骤
+. 打开浏览器，输入设备中计算控制器的一个 IP 地址。
++
+`https://_Controller_IP_:8443`
+
++
+${post_edited_translations.segment}
+
+. 在主管理节点连接部分中，确定是否需要指定主管理节点的 IP 地址。
++
+StorageGRID 设备安装程序可以自动发现此 IP 地址，前提是主管理节点或至少一个配置了 ADMIN_IP 的其他网格节点位于同一子网。
+
+. 如果未显示此 IP 地址或需要更改它，请指定地址：
++
+[cols="1a,2a"]
+|===
+| 选项 | 步骤 
+
+
+ a| 
+手动 IP 输入
+ a| 
+.. 清除*启用管理节点发现*复选框。
+.. 手动输入 IP 地址。
+
+
+*注意*：对于安装，请手动输入要用于安装节点的管理节点的 IP 地址。对于恢复，请使用主管理节点的 IP（如果可用）；否则，请使用非主管理节点的 IP。
+
+.. 选择 *Save*。
+.. 等待新 IP 地址的连接状态变为"就绪"。
+
+
+
+
+ a| 
+自动发现所有已连接的主管理节点
+ a| 
+.. 选中*启用管理节点发现*复选框。
+.. 从发现的 IP 地址列表中，为将要部署此设备存储节点的网格选择管理节点。
+
+
+*注意*：要恢复，请使用主管理节点的 IP（如果可用）；否则，请使用非主管理节点的 IP。
+
+.. 选择 *Save*。
+.. 等待新 IP 地址的连接状态变为"就绪"。
+
+
+|===
+
+
+. 在*节点名称*字段中，输入用于正在恢复的节点的相同主机名（系统名称），然后单击*保存*。
+. 在“安装”部分，确认当前状态为 "已准备好开始将  `_node name_` 安装到具有主管理节点 `_admin_ip_` 的网格中"，并且 *Start Installation* 按钮已启用。
++
+如果未启用*开始安装*按钮，则可能需要更改网络配置或端口设置。有关说明，请参见设备的维护说明。
+
+. 在 StorageGRID 设备安装程序主页中，单击 *Start Installation*。
++
+当前状态更改为"正在安装"，并显示监控安装页面。
+
++
+
+NOTE: 如果需要手动访问监视器安装页面，请单击菜单栏中的*监视器安装*。请参阅 https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/monitoring-appliance-installation.html["监控设备安装"^]。
+
+

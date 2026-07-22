@@ -1,0 +1,36 @@
+---
+permalink: maintain/stopping-server-manager-and-all-services.html 
+sidebar: sidebar 
+keywords: storagegrid, recover, stop server manager, stop all services, stop services 
+summary: 服务器管理器旨在始终运行，但可能需要停止服务器管理器和在网格节点上运行的所有服务。 
+---
+= 停止 StorageGRID Server Manager 和所有服务
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+服务器管理器旨在始终运行，但可能需要停止服务器管理器和在网格节点上运行的所有服务。
+
+.开始之前
+您拥有  `Passwords.txt` 文件。
+
+.步骤
+. ${post_edited_translations.segment}
++
+.. 输入以下命令： `ssh admin@_grid_node_IP_`
+.. 输入 `Passwords.txt`文件中列出的密码。
+.. 输入以下命令切换到 root： `su -`
+.. 输入 `Passwords.txt`文件中列出的密码。
+
+
++
+以 root 身份登录时，提示符将从 `$`更改为 `#`。
+
+. 停止服务器管理器和网格节点上运行的所有服务： `service servermanager stop`
++
+服务器管理器和网格节点上运行的所有服务均已正常终止。服务可能需要长达 15 分钟才能关闭。
+
+. 从命令 shell 中注销： `exit`
+

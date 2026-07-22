@@ -1,0 +1,14 @@
+---
+permalink: maintain/preparing-to-decommission-grid-nodes.html 
+sidebar: sidebar 
+keywords: storagegrid, decommission 
+summary: 您必须查看删除网格节点的注意事项，并确认没有针对擦除编码数据的修复作业处于活动状态。 
+---
+= 准备停用 StorageGRID 节点
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须查看删除网格节点的注意事项，并确认没有针对擦除编码数据的修复作业处于活动状态。

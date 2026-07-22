@@ -1,0 +1,84 @@
+---
+permalink: s3/configuring-tenant-accounts-and-connections.html 
+sidebar: sidebar 
+keywords: aws cli, test s3 client connection 
+summary: '您可以使用 Amazon Web Services 命令行界面 (AWS CLI) 测试与系统的连接并验证是否可以读写对象。' 
+---
+= 测试 StorageGRID S3 REST API 配置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 Amazon Web Services 命令行界面 (AWS CLI) 测试与系统的连接并验证是否可以读写对象。
+
+.开始之前
+* 您已从 https://aws.amazon.com/cli["aws.amazon.com/cli"^]下载并安装 AWS CLI。
+* 可选地，您有link:../admin/configuring-load-balancer-endpoints.html["已创建负载均衡器端点"]。否则，您知道要连接到的存储节点的 IP 地址以及要使用的端口号。请参阅link:../admin/summary-ip-addresses-and-ports-for-client-connections.html["用于客户端连接的 IP 地址和端口"]。
+* 您有 link:../admin/creating-tenant-account.html["创建了 S3 租户帐户"]。
+* 您已登录到租户和 link:../tenant/creating-your-own-s3-access-keys.html["已创建访问密钥"]。
+
+
+有关这些步骤的详细信息，请参见 link:../admin/configuring-client-connections.html["配置客户端连接"]。
+
+.步骤
+. 配置 AWS CLI 设置以使用您在 StorageGRID 系统中创建的帐户：
++
+.. 输入配置模式： `aws configure`
+.. 输入您创建的帐户的访问密钥 ID。
+.. 输入您创建的帐户的私有访问密钥。
+.. 输入要使用的默认区域。例如， `us-east-1`。
+.. 请输入要使用的默认输出格式，或按 *Enter* 键选择 JSON。
+
+
+. 创建存储桶。
++
+此示例假设您将负载均衡器端点配置为使用 IP 地址 10.96.101.17 和端口 10443。
+
++
+[listing]
+----
+aws s3api --endpoint-url https://10.96.101.17:10443
+--no-verify-ssl create-bucket --bucket testbucket
+----
++
+如果成功创建存储桶，则返回存储桶的位置，如以下示例所示：
+
++
+[listing]
+----
+"Location": "/testbucket"
+----
+. 上传对象。
++
+[listing]
+----
+aws s3api --endpoint-url https://10.96.101.17:10443 --no-verify-ssl
+put-object --bucket testbucket --key s3.pdf --body C:\s3-test\upload\s3.pdf
+----
++
+如果成功上传对象，则返回 Etag，这是对象数据的哈希值。
+
+. 列出存储桶的内容以确认对象已上传。
++
+[listing]
+----
+aws s3api --endpoint-url https://10.96.101.17:10443 --no-verify-ssl
+list-objects --bucket testbucket
+----
+. 删除对象。
++
+[listing]
+----
+aws s3api --endpoint-url https://10.96.101.17:10443 --no-verify-ssl
+delete-object --bucket testbucket --key s3.pdf
+----
+. 删除存储桶。
++
+[listing]
+----
+aws s3api --endpoint-url https://10.96.101.17:10443 --no-verify-ssl
+delete-bucket --bucket testbucket
+----
+

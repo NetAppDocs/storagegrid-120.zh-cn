@@ -1,0 +1,184 @@
+---
+permalink: monitor/monitoring-tenant-activity.html 
+sidebar: sidebar 
+keywords: how to monitor tenant activity 
+summary: 所有 S3 客户端活动都与 StorageGRID 租户帐户相关联。您可以使用 Grid Manager 监控所有租户或特定租户的存储使用情况或网络流量。您可以使用审核日志或 Grafana 仪表板收集有关租户如何使用 StorageGRID 的更多详细信息。 
+---
+= 监控 StorageGRID 中的租户活动
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+所有 S3 客户端活动都与 StorageGRID 租户帐户相关联。您可以使用 Grid Manager 监控所有租户或特定租户的存储使用情况或网络流量。您可以使用审核日志或 Grafana 仪表板收集有关租户如何使用 StorageGRID 的更多详细信息。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["Root 访问权限或租户帐户权限"]。
+
+
+
+
+[[view-all-tenants]]
+== 查看所有租户
+
+租户页面显示所有当前租户帐户的基本信息。
+
+.步骤
+. ${post_edited_translations.segment}
+. 查看租户页面上显示的信息。
++
+列出了每个租户的已用逻辑空间、配额使用情况、配额和对象计数。如果未为租户设置配额，则配额使用量和配额字段包含破折号（&#8212;）。
+
++
+
+NOTE: 属于此租户的所有对象的逻辑大小包括不完整和正在进行的多部分上传。此大小不包括用于 ILM 策略的额外物理空间。空间使用值为估算值。这些估算值受摄取时间、网络连接和节点状态的影响。
+
++
+image:tenant_accounts_page.png["${post_edited_translations.segment}"]
+
+. （可选）通过选择*登录/复制 URL* 列中的登录链接 image:icon_tenant_sign_in.png["租户登录图标"] 登录到租户帐户。
+. 或者，通过选择*登录/复制 URL* 列中的复制 URL 链接 image:icon_tenant_copy_url.png["租户副本 URL 图标"]，复制租户登录页面的 URL。
+. （可选）选择 *Export to CSV* 以查看和导出包含所有租户使用值的 `.csv`文件。
++
+系统会提示您打开或保存 `.csv`文件。
+
++
+ `.csv` 文件的内容类似于以下示例：
+
++
+image:tenant_accounts_example_csv.png["租户帐户示例 .csv"]
+
++
+您可以在电子表格应用程序中打开  `.csv` 文件，也可以在自动化中使用它。
+
+. 如果未列出任何对象，可以选择*操作* > *删除*以删除一个或多个租户。请参阅 link:../admin/deleting-tenant-account.html["删除租户帐户"]。
++
+如果帐户包含任何存储桶或容器，则无法删除租户帐户。
+
+
+
+
+
+[[view-a-specific-tenant]]
+== 查看特定租户
+
+您可以查看特定租户的详细信息。
+
+.步骤
+. 从租户页面中选择租户名称。
++
+此时将显示租户详细信息页面。
+
++
+image:tenant_usage_modal.png["租户使用情况模态框"]
+
+. 查看页面顶端的租户概述。
++
+详细信息页面的此部分提供租户的摘要信息，包括租户的对象计数、配额使用情况、使用的逻辑空间和配额设置。
+
++
+
+NOTE: 属于此租户的所有对象的逻辑大小包括不完整和正在进行的多部分上传。此大小不包括用于 ILM 策略的额外物理空间。空间使用值为估算值。这些估算值受摄取时间、网络连接和节点状态的影响。
+
+. 在*空间明细*选项卡中，查看*空间消耗*图表。
++
+此图表显示了租户所有 S3 存储桶的总空间消耗情况。
+
++
+如果为此租户设置了配额，则使用和剩余的配额数量将以文本形式显示（例如， `85.00 GB of 100 GB used`）。如果未设置配额，则租户具有无限配额，并且文本仅包含已使用的空间量（例如， `85.00 GB used`）。条形图显示每个桶或容器中的配额百分比。如果租户超过存储配额超过 1% 且至少超过 1 GB，则图表将显示总配额和超额数量。
+
++
+您可以将光标放在条形图上，以查看每个存储桶或容器使用的存储空间。您可以将光标放在可用空间段上，以查看剩余的存储配额量。
+
++
+image:tenant_bucket_space_consumption_GM.png["租户桶消耗条形图"]
+
++
+
+CAUTION: 配额使用率基于内部估计，在某些情况下可能会超出配额。例如，StorageGRID 会在租户开始上传对象时检查配额，如果租户已超出配额，则拒绝新的接收请求。但是，StorageGRID 在确定是否超过配额时不会考虑当前上传的大小。如果删除对象，则在重新计算配额使用量之前，可能会暂时阻止租户上传新对象。配额使用量计算可能需要 10 分钟或更长时间。
+
++
+
+NOTE: 租户的配额使用情况表示租户已上传到 StorageGRID 的对象数据总量（逻辑大小）。配额使用情况不表示用于存储这些对象的副本及其元数据（物理大小）的空间。
+
++
+
+NOTE: 您可以启用*租户配额使用率高*警报规则，以确定租户是否正在使用其配额。如果启用，则当租户已使用其配额的 90% 时会触发此警报。有关说明，请参见 link:../monitor/editing-alert-rules.html["编辑警报规则"]。
+
+. 在*空间明细*选项卡中，查看*存储桶详细信息*。
++
+此表列出了租户的 S3 存储桶。已用空间是存储桶或容器中对象数据的总量。此值不表示 ILM 副本和对象元数据所需的存储空间。
+
+. （可选）选择 *Export to CSV* 以查看和导出包含每个存储桶或容器使用值的 .csv 文件。
++
+单个 S3 租户 `.csv`文件的内容如下所示：
+
++
+image:tenant_bucket_details_csv.png["租户存储桶详细信息 CSV 示例"]
+
++
+您可以在电子表格应用程序中打开  `.csv` 文件，也可以在自动化中使用它。
+
+. （可选）选择*允许的功能*选项卡以查看为租户启用的权限和功能列表。如果需要更改这些设置，请参阅link:../admin/editing-tenant-account.html["编辑租户帐户"]。
+. 如果租户具有*使用网格联合连接*权限，则可选择*网格联合*选项卡以了解有关连接的详细信息。
++
+请参见link:../admin/grid-federation-overview.html["什么是网格联盟？"]和link:../admin/grid-federation-manage-tenants.html["管理网格联盟的允许租户"]。
+
+
+
+
+
+[[view-network-traffic]]
+== 查看网络流量
+
+如果为租户设置了流量分类策略，请查看该租户的网络流量。
+
+.步骤
+. 选择*配置* > *网络* > *流量分类*。
++
+此时将显示"Traffic Classification Policies"（流量分类策略）页面，表中列出了现有策略。
+
+. 请查看策略列表，以确定适用于特定租户的策略。
+. 要查看与策略关联的指标，请选择策略左侧的单选按钮，然后选择 *Metrics*。
+. 分析图形以确定策略限制流量的频率以及是否需要调整策略。
+
+
+有关详细信息，请参见 link:../admin/managing-traffic-classification-policies.html["${post_edited_translations.segment}"]。
+
+
+
+[[use-the-audit-log]]
+== 使用审核日志
+
+您可以选择使用审核日志对租户的活动进行更精细的监控。
+
+例如，您可以监控以下类型的信息：
+
+* 特定客户端操作，例如PUT、GET或DELETE
+* 对象大小
+* 应用于对象的ILM规则
+* 客户端请求的源 IP
+
+
+审核日志将写入文本文件，您可以使用所选的日志分析工具进行分析。这有助于您更好地了解客户端活动，或实施复杂的退款和计费模型。
+
+有关详细信息，请参见 link:../audit/index.html["查看审核日志"]。
+
+
+
+[[use-prometheus-metrics]]
+== 使用 Prometheus 指标
+
+（可选）使用 Prometheus 指标报告租户活动。
+
+* 在网格管理器中，选择 *Support* > *Tools* > *Metrics*。您可以使用现有仪表板（例如 S3 Overview）来查看客户端活动。
++
+
+NOTE: "指标"页面上提供的工具主要用于技术支持。这些工具中的某些功能和菜单项故意设置为不可用。
+
+* 在网格管理器顶部，选择帮助图标并选择 *API documentation*。您可以使用网格管理 API 的"指标"部分中的指标为租户活动创建自定义警报规则和仪表板。
+
+
+有关详细信息，请参见 link:reviewing-support-metrics.html["查看支持指标"]。

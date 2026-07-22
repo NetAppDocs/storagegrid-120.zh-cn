@@ -1,0 +1,39 @@
+---
+permalink: tenant/guidelines-for-configuring-openldap-server.html 
+sidebar: sidebar 
+keywords: how to configure open ldap 
+summary: 如果要将 OpenLDAP 服务器用于身份联合，则必须在 OpenLDAP 服务器上配置特定设置。 
+---
+= 为 StorageGRID 配置 OpenLDAP 服务器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要将 OpenLDAP 服务器用于身份联合，则必须在 OpenLDAP 服务器上配置特定设置。
+
+
+
+[[memberof-and-refint-overlays]]
+== Memberof和refint叠加层
+
+应启用 memberof 和 refint 叠加层。有关详细信息，请参见 _OpenLDAP Software Administrator's Guide_ 中的反向组成员资格维护说明。
+
+
+
+[[indexing]]
+== 索引
+
+必须使用指定的索引关键字配置以下 OpenLDAP 属性：
+
+[listing]
+----
+olcDbIndex: objectClass eq
+olcDbIndex: uid eq,pres,sub
+olcDbIndex: cn eq,pres,sub
+olcDbIndex: entryUUID eq
+----
+此外，请确保用户名帮助中提到的字段已编入索引，以实现最佳性能。
+
+请参阅 _OpenLDAP Software Administrator's Guide_ 中有关反向组成员资格维护的信息。

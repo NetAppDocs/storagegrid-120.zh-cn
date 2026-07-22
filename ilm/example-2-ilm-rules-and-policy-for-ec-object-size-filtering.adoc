@@ -1,0 +1,111 @@
+---
+permalink: ilm/example-2-ilm-rules-and-policy-for-ec-object-size-filtering.html 
+sidebar: sidebar 
+keywords: object size for erasure coding, example ILM rule, information lifecycle rule examples, 1 MB 
+summary: 您可以使用以下示例规则和策略作为起点来定义 ILM 策略，该策略按对象大小筛选以满足推荐的 EC 要求。 
+---
+= StorageGRID 中用于 EC 对象大小过滤的 ILM 规则和策略
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用以下示例规则和策略作为起点来定义 ILM 策略，该策略按对象大小筛选以满足推荐的 EC 要求。
+
+
+CAUTION: 以下 ILM 规则和策略只是示例。配置 ILM 规则的方法有很多。在激活新策略之前，请对其进行模拟，以确认其将按预期工作，以防止内容丢失。
+
+
+
+[[ilm-rule-1-for-example-2-use-ec-for-objects-greater-than-1-mb]]
+== ILM 规则 1（示例 2）：对大于 1 MB 的对象使用 EC
+
+此示例 ILM 规则对大于 1 MB 的对象进行纠删编码。
+
+
+NOTE: 纠删码最适合大于 1 MB 的对象。不要对小于 200 KB 的对象使用纠删码，以避免管理极小纠删码片段所带来的开销。
+
+[cols="2a,2a"]
+|===
+| 规则定义 | 示例值 
+
+
+ a| 
+规则名称
+ a| 
+仅 EC 对象 > 1 MB
+
+
+
+ a| 
+参考时间
+ a| 
+采集时间
+
+
+
+ a| 
+对象大小的高级筛选器
+ a| 
+对象大小大于 1 MB
+
+
+
+ a| 
+展示位置
+ a| 
+使用三个站点创建 2+1 纠删码副本
+
+|===
+image:policy_2_rule_1_ec_objects_adv_filtering.png["ILM 规则 1（示例 2）：对所有大于 1 MB 的对象使用 EC"]
+
+
+
+[[ilm-rule-2-for-example-2-two-replicated-copies]]
+== ILM 规则 2（示例 2）：两个复制副本
+
+此示例 ILM 规则创建两个复制副本，不按对象大小筛选。此规则是策略的默认规则。由于第一条规则筛选出大于 1 MB 的所有对象，因此此规则仅适用于 1 MB 或更小的对象。
+
+[cols="1a,2a"]
+|===
+| 规则定义 | 示例值 
+
+
+ a| 
+规则名称
+ a| 
+两个复制副本
+
+
+
+ a| 
+参考时间
+ a| 
+采集时间
+
+
+
+ a| 
+对象大小的高级筛选器
+ a| 
+无
+
+
+
+ a| 
+展示位置
+ a| 
+从第 0 天起永久在站点 1 保留一份复制副本，在站点 2 保留一份复制副本。
+
+|===
+
+
+[[ilm-policy-for-example-2-use-ec-for-objects-greater-than-1-mb]]
+== ILM 策略示例 2：对大于 1 MB 的对象使用 EC
+
+此示例 ILM 策略包括两个 ILM 规则：
+
+* 第一条规则对大于 1 MB 的所有对象进行纠删码编码。
+* 第二个（默认）ILM 规则创建两个复制副本。由于规则 1 已过滤掉大于 1 MB 的对象，因此规则 2 仅适用于 1 MB 或更小的对象。
+

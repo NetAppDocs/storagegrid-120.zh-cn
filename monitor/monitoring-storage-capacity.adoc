@@ -1,0 +1,209 @@
+---
+permalink: monitor/monitoring-storage-capacity.html 
+sidebar: sidebar 
+keywords: how to monitor storage capacity 
+summary: 监控可用的总可用空间，以确保 StorageGRID 系统不会耗尽对象或对象元数据的存储空间。 
+---
+= 监控 StorageGRID 中的存储容量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+监控可用的总可用空间，以确保 StorageGRID 系统不会耗尽对象或对象元数据的存储空间。
+
+StorageGRID 存储对象数据和对象元数据，并为包含对象元数据的分布式 Cassandra 数据库保留特定数量的空间。监控对象和对象元数据所消耗的总空间量，以及每项所消耗的空间量的趋势。这将使您能够提前规划节点的添加并避免任何服务中断。
+
+您可以link:viewing-storage-tab.html["查看存储容量信息"]针对整个网格、每个站点以及 StorageGRID 系统中的每个存储节点。
+
+
+
+[[monitor-storage-capacity-for-the-entire-grid]]
+== 监控整个网格的存储容量
+
+监控网格的整体存储容量，以确保为对象数据和对象元数据保留足够的可用空间。了解存储容量随时间的变化情况有助于您计划在网格的可用存储容量消耗之前添加存储节点或存储卷。
+
+网格管理器仪表板可让您快速评估整个网格和每个数据中心的可用存储量。节点页面提供了对象数据和对象元数据的更详细值。
+
+.步骤
+. 评估整个网格和每个数据中心的可用存储容量。
++
+.. 选择 *Dashboard > Overview*。
+.. 请注意数据空间使用情况细分和元数据允许的空间使用情况细分卡上的值。每张卡都列出了存储使用量的百分比、已用空间的容量以及站点可用或允许的总空间。
++
+
+NOTE: 此摘要不包括存档媒体。
+
++
+image:dashboard_data_and_metadata_space_usage_breakdown.png["数据和元数据空间使用量明细"]
+
+.. 请注意存储随时间推移卡上的图表。使用时间段下拉菜单可帮助您确定存储消耗的速度。
++
+image:dashboard_storage_over_time.png["随时间推移的存储图表"]
+
+
+
+. 使用"节点"页面可获取有关已使用多少存储空间以及网格中对象数据和对象元数据的可用存储空间的其他详细信息。
++
+.. 选择 *Nodes*。
+.. 选择 *_grid_* > *Storage*。
++
+image:nodes_deployment_storage_tab.png["节点部署存储选项卡"]
+
+.. 将光标放在*使用的存储 - 对象数据*和*使用的存储 - 对象元数据*图表上，以查看整个网格有多少对象存储和对象元数据存储可用，以及随时间推移使用了多少。
++
+
+NOTE: 站点或网格的总值不包括至少五分钟未报告指标的节点，例如离线节点。
+
+
+
+. 计划在网格的可用存储容量耗尽之前执行扩展，以添加存储节点或存储卷。
++
+在规划扩建时间时，请考虑采购和安装额外存储需要多长时间。
+
++
+
+NOTE: 如果您的 ILM 策略使用纠删码，您可能希望在现有存储节点已满约 70% 时进行扩展，以减少必须添加的节点数量。
+
++
+有关规划存储扩展的详细信息，请参见 link:../expand/index.html["扩展 StorageGRID 的说明"]。
+
+
+
+
+
+[[monitor-storage-capacity-for-each-storage-node]]
+== 监控每个存储节点的存储容量
+
+监控每个存储节点的总可用空间，以确保节点具有足够空间用于新对象数据。
+
+.关于此任务
+可用空间是可用于存储对象的存储空间量。存储节点的总可用空间是通过将节点内所有对象存储上的可用空间相加来计算的。
+
+image:calculating_watermarks.gif["总可用空间的概念图"]
+
+.步骤
+. 选择*节点* > *_存储节点_* > *存储*。
++
+此时将显示此节点的图形和表格。
+
+. 将光标置于已用存储 - 对象数据图形上。
++
+此时将显示以下值：
+
++
+** *已用 (%)*：已用于对象数据的总可用空间的百分比。
+** *已使用*：已用于对象数据的总可用空间量。
+** *已复制数据*：此节点、站点或网格上已复制对象数据量的估计值。
+** *纠删码数据*：此节点、站点或网格上纠删码对象数据量的估计值。
+** *Total*：此节点、站点或网格上的可用空间总量。Used 值是 `storagegrid_storage_utilization_data_bytes`度量值。
++
+image:nodes_page_storage_used_object_data.png["节点页面存储已用对象数据"]
+
+
+
+. 查看图表下方的 Volumes 和 Object stores 表中的 Available 值。
++
+
+NOTE: 要查看这些值的图形，请单击"可用列"中的图表图标 image:icon_chart_new_for_11_5.png["图表图标"]。
+
++
+image:nodes_page_storage_tables.png["对象存储表"]
+
+. 随时间推移监控这些值，以估计可用存储空间的消耗速率。
+. 若要维护正常系统操作，请在使用可用空间之前添加存储节点、添加存储卷或存档对象数据。
++
+在规划扩建时间时，请考虑采购和安装额外存储需要多长时间。
+
++
+
+NOTE: 如果您的 ILM 策略使用纠删码，您可能希望在现有存储节点已满约 70% 时进行扩展，以减少必须添加的节点数量。
+
++
+有关规划存储扩展的详细信息，请参见 link:../expand/index.html["扩展 StorageGRID 的说明"]。
+
++
+当存储节点上用于存储对象数据的空间不足时，将触发 link:../troubleshoot/troubleshooting-low-object-data-storage-alert.html["对象数据存储量低"] 警报。
+
+
+
+
+
+[[monitor-object-metadata-capacity-for-each-storage-node]]
+== ${post_edited_translations.segment}
+
+监控每个存储节点的元数据使用情况，以确保有足够的空间可用于基本数据库操作。在对象元数据超过允许的元数据空间的 100% 之前，必须在每个站点添加新的存储节点。
+
+.关于此任务
+StorageGRID 在每个站点维护三个对象元数据副本，以提供冗余并保护对象元数据免于丢失。这三个副本均匀分布在每个站点的所有存储节点上，使用为每个存储节点的存储卷 0 上的元数据预留的空间。
+
+在某些情况下，网格的对象元数据容量可能会比其对象存储容量消耗得更快。例如，如果您通常摄取大量小型对象，则可能需要添加存储节点以增加元数据容量，即使仍有足够的对象存储容量。
+
+可以增加元数据使用量的一些因素包括用户元数据和标记的大小和数量、多部分上传中的部分总数以及 ILM 存储位置的更改频率。
+
+.步骤
+. 选择*节点* > *_存储节点_* > *存储*。
+. 将光标放在"已用存储 - 对象元数据"图形上，以查看特定时间的值。
++
+image:storage_used_object_metadata.png["已用存储 - 对象元数据"]
+
++
+已用(%):: 此存储节点上已使用的允许元数据空间的百分比。
++
+--
+Prometheus 指标： `storagegrid_storage_utilization_metadata_bytes`和 `storagegrid_storage_utilization_metadata_allowed_bytes`
+
+--
+已用:: 在此存储节点上已使用的允许元数据空间的字节数。
++
+--
+Prometheus 指标： `storagegrid_storage_utilization_metadata_bytes`
+
+--
+允许:: 此存储节点上允许的对象元数据空间。要了解如何确定每个存储节点的此值，请参见 link:../admin/managing-object-metadata-storage.html#allowed-metadata-space["允许元数据空间的完整说明"]。
++
+--
+Prometheus 指标： `storagegrid_storage_utilization_metadata_allowed_bytes`
+
+--
+实际预留:: 在此存储节点上为元数据保留的实际空间。包括允许的空间和基本元数据操作所需的空间。要了解如何为每个存储节点计算此值，请参见 link:../admin/managing-object-metadata-storage.html#actual-reserved-space-for-metadata["元数据实际预留空间的完整说明"]。
++
+--
+_Prometheus 指标将在未来版本中添加。_
+
+--
+
+
++
+
+NOTE: 站点或网格的总值不包括至少五分钟未报告指标的节点，例如离线节点。
+
+. 如果 *Used (%)* 值为 70% 或更高，请通过向每个站点添加存储节点来扩展 StorageGRID 系统。
++
+
+CAUTION: 当 *已用 (%)* 值达到特定阈值时，会触发 *低元数据存储* 警报。如果对象元数据占用超过 100% 的允许空间，则可能会出现不良结果。
+
++
+添加新节点时，系统会自动重新平衡站点内所有存储节点的对象元数据。请参阅link:../expand/index.html["扩展 StorageGRID 系统的说明"]。
+
+
+
+
+
+[[monitor-space-usage-forecasts]]
+== 监控空间使用量预测
+
+监控用户数据和元数据的空间使用预测，以估计何时需要 link:../expand/index.html["展开网格"]。
+
+如果您注意到消耗率随时间变化，请从 *Averaged over* 下拉菜单中选择较短的范围，以仅反映最近的摄取模式。如果您注意到季节性模式，请选择较长的范围。
+
+如果您有新的 StorageGRID 安装，请在评估空间使用预测之前允许数据和元数据累积。
+
+.步骤
+. 在控制面板上，选择*存储空间*。
+. 查看仪表板卡、按存储池预测数据使用情况以及按站点预测元数据使用情况。
+. 使用这些值来估计何时需要为数据和元数据存储添加新的存储节点。
+
+
+image:forecast-metadata-usage.png["按站点预测元数据使用情况"]

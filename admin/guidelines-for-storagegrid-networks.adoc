@@ -1,0 +1,107 @@
+---
+permalink: admin/guidelines-for-storagegrid-networks.html 
+sidebar: sidebar 
+keywords: admin network, client network, grid network, access interface, trunk interface 
+summary: StorageGRID 支持每个网格节点最多三个网络接口，允许您为每个单独的网格节点配置网络，以满足您的安全和访问要求。 
+---
+= StorageGRID 网络指南
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 Grid Manager 配置和管理 StorageGRID 网络和连接。
+
+请参见link:configuring-client-connections.html["配置 S3 客户端连接"]以了解如何连接 S3 客户端。
+
+
+
+[[default-storagegrid-networks]]
+== 默认 StorageGRID 网络
+
+默认情况下，StorageGRID 支持每个网格节点三个网络接口，允许您为每个单独的网格节点配置网络，以满足您的安全和访问要求。
+
+有关网络拓扑的详细信息，请参见 link:../network/index.html["网络连接准则"]。
+
+
+
+[[grid-network]]
+=== 网格网络
+
+必需。网格网络用于所有内部 StorageGRID 流量。它提供网格中所有节点之间、所有站点和子网之间的连接。
+
+
+
+[[admin-network]]
+=== 管理网络
+
+可选。管理网络通常用于系统管理和维护。它也可用于客户端协议访问。管理网络通常是专用网络，不需要在站点之间路由。
+
+
+
+[[client-network]]
+=== 客户端网络
+
+可选。客户端网络是一个开放网络，通常用于提供对 S3 客户端应用程序的访问，因此可以隔离和保护网格网络。客户端网络可以与通过本地网关可访问的任何子网通信。
+
+
+
+[[guidelines]]
+== 实施准则
+
+* 每个 StorageGRID 节点都需要为其分配的每个网络提供专用网络接口、IP 地址、子网掩码和网关。
+* 一个网格节点在网络上不能有多个接口。
+* 每个网络、每个网格节点支持一个网关，且该网关必须与节点位于同一子网。如果需要，您可以在网关中实现更复杂的路由。
+* 在每个节点上，每个网络都映射到特定的网络接口。
++
+[cols="1a,1a"]
+|===
+| 网络 | 接口名称 
+
+
+ a| 
+Grid
+ a| 
+eth0
+
+
+
+ a| 
+管理员（可选）
+ a| 
+eth1
+
+
+
+ a| 
+客户端（可选）
+ a| 
+eth2
+
+|===
+* 如果节点连接到 StorageGRID 设备，则每个网络都使用特定端口。有关详细信息，请参见设备的安装说明。
+* 默认路由是按节点自动生成的。如果启用了 eth2，则 0.0.0.0/0 使用 eth2 上的客户端网络。如果未启用 eth2，则 0.0.0.0/0 使用 eth0 上的网格网络。
+* 在网格节点加入网格之前，客户端网络不会开始运行
+* 可以在网格节点部署期间配置管理网络，以允许在网格完全安装之前访问安装用户界面。
+
+
+
+
+[[optional-interfaces]]
+== 可选接口
+
+您也可以选择向节点添加额外的接口。例如，您可能希望向管理节点或网关节点添加中继接口，以便使用 link:../admin/configure-vlan-interfaces.html["VLAN 接口"] 隔离属于不同应用程序或租户的流量。或者，您可能需要添加一个访问接口，以便在 link:../admin/configure-high-availability-group.html["高可用性(HA)组"] 中使用。
+
+要添加中继或接入接口，请参见以下内容：
+
+* *VMware （安装节点后）*：link:../maintain/vmware-adding-trunk-or-access-interfaces-to-node.html["VMware：将中继或访问接口添加到节点"]
++
+** *Linux（安装节点之前）*：link:../swnodes/creating-node-configuration-files.html["创建节点配置文件"]
+** *Linux（安装节点后）*：link:../maintain/linux-adding-trunk-or-access-interfaces-to-node.html["将中继或接入接口添加到节点"]
+
+
+
+
+
+NOTE: "Linux"是指 RHEL、Ubuntu 或 Debian 部署。有关受支持版本的列表，请参见 https://imt.netapp.com/matrix/#welcome["NetApp 互操作性矩阵工具 (IMT)"^]。

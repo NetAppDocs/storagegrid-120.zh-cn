@@ -1,0 +1,96 @@
+---
+permalink: tenant/grid-federation-clone-keys-with-api.html 
+sidebar: sidebar 
+keywords: s3 access key, secret key id, account clone, tenant manager api 
+summary: 如果您的 StorageGRID 租户帐户具有使用网格联合连接权限，则可以使用租户管理 API 手动克隆 S3 访问密钥。 
+---
+= 使用租户管理 API 在 StorageGRID 网格之间克隆 S3 访问密钥
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您的 StorageGRID 租户帐户具有 *Use grid federation connection* 权限，您可以使用 Tenant Management API 手动将 S3 访问密钥从源网格上的租户克隆到目标网格上的租户。
+
+.开始之前
+* 租户帐户具有*使用网格联合连接*权限。
+* 网格联盟连接的*连接状态*为*已连接*。
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到租户源网格上的租户管理器。
+* 您属于具有 link:tenant-management-permissions.html["管理自己的 S3 凭据或根访问权限"] 的用户组。
+* 如果要克隆本地用户的访问密钥，则该用户已存在于两个网格中。
++
+
+NOTE: 为联合用户克隆 S3 访问密钥时，用户和 S3 访问密钥都将添加到目标租户。
+
+
+
+
+
+[[clone-your-own-access-keys]]
+== 克隆自己的访问密钥
+
+如果需要在两个网格上访问相同的存储桶，则可以克隆自己的访问密钥。
+
+.步骤
+. 在源网格上使用租户管理器，link:creating-your-own-s3-access-keys.html["创建自己的访问密钥"]然后下载 `.csv`文件。
+. 在租户管理器顶端，选择帮助图标，然后选择 *API documentation*。
+. 在 *s3* 部分，选择以下端点：
++
+`POST /org/users/current-user/replicate-s3-access-key`
+
++
+image:grid-federation-post-current-user-replicate.png["用于复制自己的访问密钥的 POST 端点"]
+
+. 选择*试用*。
+. 在*正文*文本框中，将 *accessKey* 和 *secretAccessKey* 的示例条目替换为您下载的 *.csv* 文件中的值。
++
+请务必保留每个字符串周围的双引号。
+
++
+image:grid-federation-clone-access-key.png["租户管理器 API 输入值以克隆访问密钥"]
+
+. 如果密钥将过期，请将 *expires* 的示例条目替换为 ISO 8601 数据时间格式的字符串形式的到期日期和时间（例如， `2024-02-28T22:46:33-08:00`）。如果密钥不会过期，请输入 *null* 作为 *expires* 条目的值（或删除 *Expires* 行和前面的逗号）。
+. ${post_edited_translations.segment}
+. 确认服务器响应代码为 *204*，表示密钥已成功克隆到目标网格。
+
+
+
+
+[[clone-another-users-access-keys]]
+== 克隆其他用户的访问密钥
+
+如果另一个用户需要访问两个网格上的相同存储桶，则可以克隆他们的访问密钥。
+
+.步骤
+. 在源网格上使用租户管理器，link:creating-another-users-s3-access-keys.html["创建其他用户的 S3 访问密钥"]然后下载 `.csv`文件。
+. 在租户管理器顶端，选择帮助图标，然后选择 *API documentation*。
+. 获取用户 ID。您将需要此值来克隆其他用户的访问密钥。
++
+.. 从*用户*部分中，选择以下端点：
++
+`GET /org/users`
+
+.. 选择*试用*。
+.. 指定查找用户时要使用的任何参数。
+.. ${post_edited_translations.segment}
+.. 找到要克隆其密钥的用户，然后复制 *id* 字段中的数字。
+
+
+. 在 *s3* 部分，选择以下端点：
++
+`POST /org/users/{userId}/replicate-s3-access-key`
+
++
+image:grid-federation-post-other-user.png["用于复制其他用户访问密钥的 POST 端点"]
+
+. 选择*试用*。
+. 在 *userId* 文本框中，粘贴您复制的用户 ID。
+. 在*正文*文本框中，将*示例访问密钥*和*秘密访问密钥*的示例条目替换为该用户的 *.csv* 文件中的值。
++
+${post_edited_translations.segment}
+
+. 如果密钥将过期，请将 *expires* 的示例条目替换为 ISO 8601 数据时间格式的字符串形式的到期日期和时间（例如， `2023-02-28T22:46:33-08:00`）。如果密钥不会过期，请输入 *null* 作为 *expires* 条目的值（或删除 *Expires* 行和前面的逗号）。
+. ${post_edited_translations.segment}
+. 确认服务器响应代码为 *204*，表示密钥已成功克隆到目标网格。
+

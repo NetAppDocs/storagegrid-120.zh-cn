@@ -1,0 +1,334 @@
+---
+permalink: admin/creating-tenant-account.html 
+sidebar: sidebar 
+keywords: create tenant, tenant account 
+summary: 必须至少创建一个租户帐户才能控制对 StorageGRID 系统中存储的访问。 
+---
+= 创建 StorageGRID 租户帐户
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+必须至少创建一个租户帐户才能控制对 StorageGRID 系统中存储的访问。
+
+根据是否配置了link:using-identity-federation.html["身份联合"]和link:how-sso-works.html["单点登录"]，以及用于创建租户帐户的 Grid Manager 帐户是否属于具有 Root access 权限的管理员组，创建租户帐户的步骤会有所不同。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["Root 访问权限或租户帐户权限"]。
+* 如果租户帐户将使用为 Grid Manager 配置的身份源，并且要将租户帐户的 Root 访问权限授予联合组，则已将该联合组导入 Grid Manager。您无需为此管理组分配任何 Grid Manager 权限。请参阅 link:managing-admin-groups.html["管理管理员组"]。
+* 如果要允许 S3 租户使用网格联合连接克隆帐户数据并将存储桶对象复制到另一个网格：
++
+** 您有 link:grid-federation-create-connection.html["已配置网格联盟连接"]。
+** 连接状态为*已连接*。
+** ${post_edited_translations.segment}
+** 您已查看 link:grid-federation-manage-tenants.html["管理网格联合的允许租户"] 的注意事项。
+** 如果租户帐户将使用为 Grid Manager 配置的身份源，则已将同一联合组导入两个网格上的 Grid Manager。
++
+创建租户时，您将选择此组以获得源和目标租户帐户的初始 Root 访问权限。
+
++
+
+TIP: 如果在创建租户之前两个网格上都不存在此管理组，则租户不会被复制到目标。
+
+
+
+
+
+
+
+[[access-the-wizard]]
+== 访问此向导
+
+.步骤
+. ${post_edited_translations.segment}
+. 选择 *Create*。
+
+
+
+
+[[enter-details]]
+== 输入详细信息
+
+.步骤
+. 输入租户的详细信息。
++
+[cols="1a,3a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+名称
+ a| 
+租户帐户的名称。租户名称不需要是唯一的。创建租户帐户后，它将收到一个唯一的 20 位帐户 ID。
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+${post_edited_translations.segment}
+
+如果您正在创建将使用网格联盟连接的租户，则可以根据需要使用此字段来帮助识别哪个是源租户，哪个是目标租户。例如，在网格 1 上创建的租户的以下描述也将显示在复制到网格 2 的租户中：“此租户是在网格 1 上创建的。”
+
+
+
+ a| 
+客户端类型
+ a| 
+必须是 *S3*。
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+如果希望此租户具有存储配额，则为配额和单位的数值。
+
+|===
+. 选择 *Continue*。
+
+
+
+
+[[admin-tenant-select-permissionsselect-permissions]]
+== ${post_edited_translations.segment}
+
+.步骤
+. ${post_edited_translations.segment}
++
+
+NOTE: 其中部分权限具有其他要求。有关详细信息，请选择每个权限的帮助图标。
+
++
+[cols="1a,3a"]
+|===
+| 权限 | 如果选择…… 
+
+
+ a| 
+允许平台服务
+ a| 
+租户可以使用 S3 平台服务，例如 CloudMirror。请参阅 link:../admin/manage-platform-services-for-tenants.html["管理 S3 租户帐户的平台服务"]。
+
+
+
+ a| 
+使用自己的身份源
+ a| 
+租户可以为其联合组和用户配置和管理自己的身份源。如果您为 StorageGRID 系统link:../admin/how-sso-works.html["已配置 SSO"]，则此选项将被禁用。
+
+
+
+ a| 
+允许 S3 Select
+ a| 
+租户可以发出 S3 SelectObjectContent API 请求以筛选和检索对象数据。请参阅 link:../admin/manage-s3-select-for-tenant-accounts.html["管理租户帐户的 S3 Select"]。
+
+*重要提示*：SelectObjectContent 请求可能会降低所有 S3 客户端和所有租户的负载均衡器性能。仅在需要时且仅对受信任的租户启用此功能。
+
+|===
+. ${post_edited_translations.segment}
++
+[cols="1a,3a"]
+|===
+| 权限 | 如果选择…… 
+
+
+ a| 
+网格联盟连接
+ a| 
+租户可以使用网格联合连接，其中：
+
+** 使此租户以及添加到帐户的所有租户组和用户从此网格（_源网格_）克隆到选定连接中的另一个网格（_目标网格_）。
+** 允许此租户在每个网格上的相应存储桶之间配置跨网格复制。
+
+
+请参阅 link:../admin/grid-federation-manage-tenants.html["管理网格联盟的允许租户"]。
+
+
+
+ a| 
+S3 对象锁定
+ a| 
+允许租户使用 S3 对象锁定的特定功能：
+
+** *Set maximum retention period* 定义从摄取时间开始，添加到此存储桶的新对象应保留多长时间。
+** *Allow compliance mode* 可防止用户在保留期间覆盖或删除受保护对象版本。
+
+
+|===
+. 选择 *Continue*。
+
+
+
+
+[[define-root-access-and-create-tenant]]
+== 定义根访问权限并创建租户
+
+.步骤
+. 根据您的 StorageGRID 系统是使用身份联合、单点登录 (SSO) 还是两者，定义租户帐户的 root 访问权限。
++
+[cols="1a,2a"]
+|===
+| 选项 | 执行此操作 
+
+
+ a| 
+如果未启用身份联合
+ a| 
+指定以本地 root 用户身份登录租户时使用的密码。
+
+
+
+ a| 
+如果启用了身份联合
+ a| 
+.. 选择现有联合组以获得租户的 root 访问权限。
+.. （可选）指定以本地 root 用户身份登录租户时使用的密码。
+
+
+
+
+ a| 
+如果已启用身份联合和单一登录(SSO)
+ a| 
+选择现有联合组以具有租户的 Root 访问权限。没有本地用户可以登录。
+
+|===
+. 选择*创建租户*。
++
+此时将显示一条成功消息，并在"租户"页面上列出新租户。要了解如何查看租户详细信息和监视租户活动，请参阅link:../monitor/monitoring-tenant-activity.html["监控租户活动"]。
+
++
+
+NOTE: ${post_edited_translations.segment}
+
+. 如果为租户选择了*使用网格联合连接*权限：
++
+.. 确认已将相同的租户复制到连接中的另一个网格。两个网格上的租户将具有相同的 20 位帐户 ID、名称、描述、配额和权限。
++
+
+NOTE: 如果您看到错误消息"Tenant created without a clone"，请参阅 link:grid-federation-troubleshoot.html["对网格联合错误进行故障排除"] 中的说明。
+
+.. 如果在定义 root 访问权限时提供了本地 root 用户密码，link:changing-password-for-tenant-local-root-user.html["更改本地 root 用户的密码"] 用于复制的租户。
++
+
+TIP: ${post_edited_translations.segment}
+
+
+
+
+
+
+
+[[sign-in-to-tenant-optional]]
+== 登录租户（可选）
+
+根据需要，您可以立即登录到新租户以完成配置，也可以稍后登录到该租户。登录步骤取决于您是使用默认端口（443）还是使用受限端口登录到 Grid Manager。请参阅 link:controlling-access-through-firewalls.html["控制外部防火墙的访问"]。
+
+
+
+[[sign-in-now]]
+=== 立即登录
+
+[cols="1a,3a"]
+|===
+| 条件 | 操作 
+
+
+ a| 
+端口 443，您为本地 root 用户设置了密码
+ a| 
+. 选择 *Sign in as root*。
++
+登录时，将显示用于配置存储桶、身份联合、组和用户的链接。
+
+. 选择链接以配置租户帐户。
++
+每个链接都会在租户管理器中打开相应的页面。要完成页面，请参见 link:../tenant/index.html["租户帐户的使用说明"]。
+
+
+
+
+
+ a| 
+端口 443，您未为本地 root 用户设置密码
+ a| 
+选择 *Sign in*，然后输入 Root access 联盟组中用户的凭据。
+
+
+
+ a| 
+受限端口
+ a| 
+. 选择*完成*
+. 在租户表中选择*受限*以了解有关访问此租户帐户的更多信息。
++
+租户管理器的 URL 具有以下格式：
+
++
+`https://_FQDN_or_Admin_Node_IP:port_/?accountId=_20-digit-account-id_/`
+
++
+** `_FQDN_or_Admin_Node_IP_` 是完全限定域名或管理节点的 IP 地址
+** `_port_` 是仅限租户的端口
+** `_20-digit-account-id_` 是租户的唯一帐户 ID
+
+
+
+
+|===
+
+
+[[sign-in-later]]
+=== 稍后登录
+
+[cols="1a,3a"]
+|===
+| 条件 | 执行以下操作之一…… 
+
+
+ a| 
+端口 443
+ a| 
+* 在网格管理器中，选择 *Tenants*，然后选择租户名称右侧的 *Sign in*。
+* 在 Web 浏览器中输入租户的 URL：
++
+`https://_FQDN_or_Admin_Node_IP_/?accountId=_20-digit-account-id_/`
+
++
+** `_FQDN_or_Admin_Node_IP_` 是完全限定域名或管理节点的 IP 地址
+** `_20-digit-account-id_` 是租户的唯一帐户 ID
+
+
+
+
+
+
+ a| 
+受限端口
+ a| 
+* 在网格管理器中，选择 *Tenants*，然后选择 *Restricted*。
+* 在 Web 浏览器中输入租户的 URL：
++
+`https://_FQDN_or_Admin_Node_IP:port_/?accountId=_20-digit-account-id_`
+
++
+** `_FQDN_or_Admin_Node_IP_` 是完全限定域名或管理节点的 IP 地址
+** `_port_` 为仅限租户的受限端口
+** `_20-digit-account-id_` 是租户的唯一帐户 ID
+
+
+
+
+|===
+
+
+[[configure-the-tenant]]
+== 配置租户
+
+按照 link:../tenant/index.html["使用租户帐户"] 中的说明管理租户组和用户、S3 访问密钥、存储桶、平台服务以及帐户克隆和跨网格复制。

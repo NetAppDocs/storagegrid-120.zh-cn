@@ -1,0 +1,71 @@
+---
+permalink: expand/updating-subnets-for-grid-network.html 
+sidebar: sidebar 
+keywords: expand, expansion, add subnets, Grid Network, StorageGRID 
+summary: ${post_edited_translations.segment} 
+---
+= 在 StorageGRID 中添加或更新网格网络的子网以进行扩展
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+${post_edited_translations.segment}
+
+StorageGRID 维护着一个网络子网列表，用于在 Grid Network (eth0) 上的网格节点之间进行通信。这些条目包括您的 StorageGRID 系统中每个站点用于 Grid Network 的子网，以及用于通过 Grid Network 网关访问的 NTP、DNS、LDAP 或其他外部服务器的任何子网。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["维护或 root 访问权限"]。
+* 您有配置密码短语。
+* ${post_edited_translations.segment}
+
+
+.关于此任务
+如果任何新节点在先前未使用的子网上具有网格网络 IP 地址，则必须在开始扩展之前将新子网添加到网格网络子网列表中。否则，您将不得不取消扩展，添加新子网，然后重新开始此过程。
+
+[NOTE]
+====
+对于任何节点的网格网络、管理网络或客户端网络，请勿使用包含以下 IPv4 地址的子网：
+
+* 192,168,130,101
+* 192,168,130,121
+* 192,168,131,101
+* 192,168,131,121
+* 192,168,130,102
+* 192,168,130,122
+* 192,168,131,102
+* 192,168,131,122
+* 198.51.100.2
+* 198.51.100.4
+
+
+例如，对于任何节点的网格网络、管理网络或客户端网络，请不要使用以下子网范围：
+
+* 192.168.130.0/24，因为此子网范围包含 IP 地址 192.168.130.101 和 192.168.130.102
+* 192.168.131.0/24，因为此子网范围包含 IP 地址 192.168.131.101 和 192.168.131.102
+* ${post_edited_translations.segment}
+
+
+====
+.步骤
+. ${post_edited_translations.segment}
+. 选择 *Add another subnet* 以 CIDR 表示法添加新的子网。
++
+例如，请输入 `10.96.104.0/22`。
+
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
++
+.. 选择*维护* > *系统* > *恢复包*。
+.. 输入 *Provisioning Passphrase*。
++
+
+CAUTION: 必须保护恢复包文件，因为它包含可用于从 StorageGRID 系统获取数据的加密密钥和密码。它还用于恢复主管理节点。
+
+
+
+
+
+已为您的 StorageGRID 系统自动配置指定的子网。

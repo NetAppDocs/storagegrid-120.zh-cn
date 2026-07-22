@@ -1,0 +1,50 @@
+---
+permalink: monitor/reviewing-support-metrics.html 
+sidebar: sidebar 
+keywords: how to view support metrics, how to review support metrics 
+summary: 解决问题时，您可以与技术支持人员一起查看 StorageGRID 系统的详细指标和图表。 
+---
+= 查看 StorageGRID 支持指标
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+解决问题时，您可以与技术支持人员一起查看 StorageGRID 系统的详细指标和图表。
+
+.开始之前
+* 必须使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["特定访问权限"]。
+
+
+.关于此任务
+"指标"页面允许您访问 Prometheus 和 Grafana 用户界面。Prometheus 是用于收集指标的开源软件。Grafana 是用于指标可视化的开源软件。
+
+
+NOTE: "指标"页面上提供的工具仅供技术支持人员使用。这些工具中的某些功能和菜单项故意无法正常使用，可能会发生变化。查看 link:commonly-used-prometheus-metrics.html["常用的 Prometheus 指标"] 的列表。
+
+.步骤
+. 根据技术支持的指示，选择*Support* > *Tools* > *Metrics*。
++
+此处显示了"指标"页面的示例：
+
++
+image:metrics_page.png["指标页面"]
+
+. 要查询 StorageGRID 指标的当前值并查看值随时间变化的图形，请单击 Prometheus 部分中的链接。
++
+此时将显示 Prometheus 界面。您可以使用此界面对可用的 StorageGRID 指标执行查询，并随时间绘制 StorageGRID 指标的图形。
+
++
+
+NOTE: 名称中包含 _private_ 的指标仅供内部使用，在 StorageGRID 版本之间如有更改，恕不另行通知。
+
+. 要访问包含 StorageGRID 指标随时间变化图表的预构建仪表板，请单击 Grafana 部分中的链接。
++
+此时将显示您选择的链接的 Grafana 界面。
+
++
+image:metrics_page_grafana.png["指标页面 Grafana"]
+
+

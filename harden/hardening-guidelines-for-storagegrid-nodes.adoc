@@ -1,0 +1,160 @@
+---
+permalink: harden/hardening-guidelines-for-storagegrid-nodes.html 
+sidebar: sidebar 
+keywords: StorageGRID, hardening guidelines, nodes, security 
+summary: StorageGRID 节点可以部署在 VMware 虚拟机上、Linux 主机上的容器引擎内或作为专用硬件设备。每种类型的平台和每种类型的节点都有自己的一套强化最佳实践。 
+---
+= StorageGRID 节点的加固准则
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+StorageGRID 节点可以部署在 VMware 虚拟机上、Linux 主机上的容器引擎内或作为专用硬件设备。每种类型的平台和每种类型的节点都有自己的一套强化最佳实践。
+
+
+
+[[block-remote-ipmicontrol-remote-ipmi-access-to-bmc]]
+== [[block-remote-ipmi]]控制对 BMC 的远程 IPMI 访问
+
+您可以为所有包含 BMC 的设备启用或禁用远程 IPMI 访问。远程 IPMI 接口允许拥有 BMC 帐户和密码的任何人对您的 StorageGRID 设备进行低级硬件访问。如果不需要远程 IPMI 访问 BMC，请禁用此选项。
+
+* 要在 Grid Manager 中控制对 BMC 的远程 IPMI 访问，请转到 *Configuration* > *Security* > *Security settings* > *Appliances*：
++
+** 清除*启用远程 IPMI 访问*复选框以禁用对 BMC 的 IPMI 访问。
+** 选中*启用远程 IPMI 访问*复选框以启用对 BMC 的 IPMI 访问。
+
+
+
+
+有关 BMC 加固的其他信息，请参见 https://media.defense.gov/2023/Jun/14/2003241405/-1/-1/0/CSI_HARDEN_BMCS.PDF["加固基板管理控制器"^]来自 https://www.nsa.gov/["国家安全局（NSA）"^]和 https://www.cisa.gov/["网络安全和基础设施安全局（CISA）"^]的网络安全信息表。
+
+
+
+[[firewall-configuration]]
+== 防火墙配置
+
+作为系统强化过程的一部分，您必须查看外部防火墙配置并进行修改，以便仅接受来自严格需要的 IP 地址和端口的流量。
+
+StorageGRID 在每个节点上包含一个内部防火墙，通过控制对节点的网络访问来增强网格的安全性。您应该link:../admin/manage-firewall-controls.html["管理内部防火墙控制"]阻止所有端口上的网络访问，特定网格部署所必需的端口除外。在防火墙控制页面上所做的配置更改将部署到每个节点。
+
+具体来说，您可以管理以下方面：
+
+* *特权地址*：您可以允许选定的 IP 地址或子网访问通过"管理外部访问"选项卡上的设置关闭的端口。
+* *管理外部访问*：您可以关闭默认打开的端口，或重新打开以前关闭的端口。
+* *不受信任的客户端网络*：您可以指定节点是否信任来自客户端网络的入站流量，以及在配置不受信任的客户端网络时要打开的其他端口。
+
+
+虽然此内部防火墙提供了针对某些常见威胁的额外保护层，但它并不能消除对外部防火墙的需求。
+
+有关 StorageGRID 使用的所有内部和外部端口的列表，请参见 link:../network/internal-grid-node-communications.html#storagegrid-internal-ports["StorageGRID 内部端口"] 和 link:../network/external-communications.html#ports-used-for-external-communications["用于外部通信的端口"]。
+
+
+
+[[disable-unused-services]]
+== 禁用未使用的服务
+
+对于所有 StorageGRID 节点，应禁用或阻止对未使用服务的访问。例如，如果您不打算使用 DHCP，请使用 Grid Manager 关闭端口 68。选择 *Configuration* > *Firewall control* > *Manage external access*。然后将端口 68 的状态切换从 *Open* 更改为 *Closed*。
+
+
+
+[[virtualization-containers-and-shared-hardware]]
+== 虚拟化、容器和共享硬件
+
+对于所有 StorageGRID 节点，请避免在与不受信任的软件相同的物理硬件上运行 StorageGRID。如果 StorageGRID 和恶意软件都存在于同一物理硬件上，请勿假设虚拟机监控程序保护能够阻止恶意软件访问受 StorageGRID 保护的数据。例如，Meltdown 和 Spectre 攻击利用了现代处理器中的关键漏洞，允许程序窃取同一台计算机内存中的数据。
+
+
+
+[[protect-nodes-during-installation]]
+== 在安装过程中保护节点
+
+在安装节点时，不允许不受信任的用户通过网络访问 StorageGRID 节点。节点在加入网格之前不会完全安全。
+
+
+
+[[limit-physical-access-to-hardware]]
+== 限制对硬件的物理访问
+
+您必须将对 StorageGRID 硬件设备节点以及运行 StorageGRID 的 VMware 虚拟机主机和 Linux 主机的物理访问权限限制为仅授权管理员。物理访问控制的一些示例包括锁、防护装置、物理屏障和视频监控。
+
+硬件设备节点仅供授权管理员安装和操作。不允许未经授权的管理员访问硬件设备节点。
+
+
+
+[[guidelines-for-admin-nodes]]
+== 管理节点指南
+
+管理节点提供系统配置、监控和日志记录等管理服务。登录到 Grid Manager 或 Tenant Manager 时，您将连接到管理节点。
+
+请遵循以下指南来保护 StorageGRID 系统中的管理节点：
+
+* 保护所有管理节点免受不受信任的客户端（例如开放互联网上的客户端）的攻击。确保任何不受信任的客户端都不能访问网格网络、管理网络或客户端网络上的任何管理节点。
+* StorageGRID 组控制对 Grid Manager 和 Tenant Manager 功能的访问。为每个用户组授予其角色所需的最低权限，并使用只读访问模式以防止用户更改配置。
+* 使用 StorageGRID 负载均衡器端点时，对于不受信任的客户端流量，请使用网关节点而不是管理节点。
+* 如果您有不受信任的租户，请不要允许他们直接访问租户管理器或租户管理 API。相反，让任何不受信任的租户使用租户门户或与租户管理 API 交互的外部租户管理系统。
+* （可选）使用管理代理可以更好地控制从管理节点到 NetApp 支持的 AutoSupport 通信。请参见 link:../admin/configuring-admin-proxy-settings.html["创建管理员代理"] 的步骤。
+* 可选地，使用受限的 8443 和 9443 端口将 Grid Manager 和 Tenant Manager 通信分开。阻止共享端口 443，并将租户请求限制到端口 9443 以获得额外保护。
+* （可选）为网格管理员和租户用户使用单独的管理节点。
+
+
+有关详细信息，请参见 link:../admin/index.html["管理 StorageGRID"] 的说明。
+
+
+
+[[guidelines-for-storage-nodes]]
+== 存储节点指南
+
+存储节点管理和存储对象数据和元数据。按照以下指南保护 StorageGRID 系统中的存储节点。
+
+* 不允许不受信任的客户端直接连接到存储节点。使用由网关节点或第三方负载平衡器提供的负载平衡器端点。
+* 请勿为不受信任的租户启用出站服务。例如，为不受信任的租户创建帐户时，不允许租户使用自己的身份源，也不允许使用平台服务。请参阅 link:../admin/creating-tenant-account.html["创建租户帐户"] 的步骤。
+* 对于不受信任的客户端流量，请使用第三方负载均衡器。第三方负载均衡可提供更多控制和额外的防御层。
+* （可选）使用存储代理来更好地控制云存储池和平台服务从存储节点到外部服务的通信。查看link:../admin/configuring-storage-proxy-settings.html["创建存储代理"]的步骤。
+* （可选）使用客户端网络连接到外部服务。然后，选择*配置* > *安全* > *防火墙控制* > *不受信任的客户端网络*，并指示存储节点上的客户端网络不受信任。存储节点不再接受客户端网络上的任何传入流量，但它继续允许平台服务的出站请求。
+
+
+
+
+[[guidelines-for-gateway-nodes]]
+== 网关节点指南
+
+网关节点提供了一个可选的负载平衡接口，客户端应用程序可以使用它来连接至 StorageGRID。请遵循以下指南来保护 StorageGRID 系统中的任何网关节点：
+
+* 配置和使用负载平衡器端点。请参阅 link:../admin/managing-load-balancing.html["负载平衡注意事项"]。
+* 使用客户端与网关节点或存储节点之间的第三方负载均衡器来处理不受信任的客户端流量。第三方负载均衡提供了更多的控制和额外的防御层。如果使用第三方负载均衡器，则仍可以选择将网络流量配置为通过内部负载均衡器端点或直接发送到存储节点。
+* 如果使用负载平衡器端点，可以选择让客户端通过客户端网络连接。然后，选择 *配置* > *安全* > *防火墙控制* > *不受信任的客户端网络*，并指示网关节点上的客户端网络不受信任。网关节点仅接受显式配置为负载平衡器端点的端口上的入站流量。
+
+
+
+
+[[guidelines-for-hardware-appliance-nodes]]
+== 硬件设备节点指南
+
+StorageGRID 硬件设备专为用于 StorageGRID 系统而设计。有些设备可以用作存储节点。其他设备可以用作管理节点或网关节点。您可以将设备节点与基于软件的节点相结合，或部署完全设计的全设备网格。
+
+请遵循以下指南来保护 StorageGRID 系统中的任何硬件设备节点：
+
+* 如果设备使用 SANtricity System Manager 进行存储控制器管理，请防止不受信任的客户端通过网络访问 SANtricity System Manager。
+* 如果设备具有基板管理控制器 (BMC)，请注意 BMC 管理端口允许低级硬件访问。仅将 BMC 管理端口连接到安全、可信的内部管理网络。
++
+您可以建立 VLAN 来隔离 BMC 网络连接，并将 BMC Internet 访问限制为受信任的网络。有关强制 VLAN 分离的其他信息，请参见 https://media.defense.gov/2023/Jun/14/2003241405/-1/-1/0/CSI_HARDEN_BMCS.PDF["加固基板管理控制器"^]中的网络安全信息表，来源为 https://www.nsa.gov/["国家安全局（NSA）"^]和 https://www.cisa.gov/["网络安全和基础设施安全局（CISA）"^]。
+
++
+如果安全、受信任的内部管理网络不可用，请保持 BMC 管理端口未连接或被阻止。技术支持可能会在支持案例期间请求临时访问权限。
+
+* 如果设备支持使用智能平台管理接口(IPMI)标准通过以太网远程管理控制器硬件，请阻止端口 623 上的不受信任流量。
+
+
+
+NOTE: 您可以为所有包含 BMC 的设备启用或禁用远程 IPMI 访问。远程 IPMI 接口允许任何拥有 BMC 帐户和密码的人对您的 StorageGRID 设备进行低级硬件访问。如果您不需要远程 IPMI 访问 BMC，请使用以下方法之一禁用此选项：+ 在 Grid Manager 中，转到 *Configuration* > *Security* > *Security settings* > *Appliances*，然后清除 *Enable remote IPMI access* 复选框。+ 在 Grid management API 中，使用专用端点： `PUT /private/bmc`。
+
++ 您也可以 <<block-remote-ipmi,禁用远程 IPMI 访问>>。
+
+* 对于包含使用 SANtricity System Manager 管理的 SED、FDE 或 FIPS NL-SAS 驱动器的设备型号， https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/accessing-and-configuring-santricity-system-manager.html["启用和配置 SANtricity Drive Security"^]。
+* 对于包含使用 StorageGRID Appliance Installer 和 Grid Manager 管理的 SED 或 FIPS NVMe SSD 的设备型号， https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/optional-enabling-node-encryption.html#enable-drive-encryption["启用并配置 StorageGRID 驱动器加密"^]。
+* 对于没有 SED、FDE 或 FIPS 驱动器的设备，请使用密钥管理服务器 (KMS)  https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/optional-enabling-node-encryption.html#enable-node-encryption["启用并配置 StorageGRID 软件节点加密"^]。
+
+
+.相关信息
+https://docs.netapp.com/us-en/e-series-santricity/sm-settings/overview-drive-security.html["了解 SANtricity System Manager 中的驱动器安全性"^]

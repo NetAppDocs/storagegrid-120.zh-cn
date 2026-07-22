@@ -1,0 +1,41 @@
+---
+permalink: maintain/preparing-appliance-for-reinstallation-platform-replacement-only.html 
+sidebar: sidebar 
+keywords: storagegrid, recover, appliance, reinstallation appliance, reinstall appliance 
+summary: 恢复托管在服务设备上的网格节点时，必须首先准备设备以重新安装 StorageGRID 软件。 
+---
+= 准备 StorageGRID 设备以重新安装（仅更换平台）
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+恢复托管在服务设备上的网格节点时，必须首先准备设备以重新安装 StorageGRID 软件。
+
+仅当更换服务设备上托管的故障节点时，才执行此过程。如果故障节点最初托管在 VMware 或 Linux 主机上，请勿执行这些步骤。
+
+.步骤
+. 登录到失败的网格节点：
++
+.. 输入以下命令： `ssh admin@_grid_node_IP_`
+.. 输入 `Passwords.txt`文件中列出的密码。
+.. 输入以下命令切换到 root： `su -`
+.. 输入 `Passwords.txt`文件中列出的密码。
+
+
++
+以 root 身份登录时，提示符将从 `$`更改为 `#`。
+
+. 准备设备以安装 StorageGRID 软件。输入： `sgareinstall`
+. 出现继续提示时，请输入： `y`
++
+设备重新启动，SSH 会话结束。StorageGRID Appliance Installer 通常需要大约 5 分钟才能可用，但在某些情况下，您可能需要等待最多 30 分钟。
+
++
+服务设备已重置，无法再访问网格节点上的数据。在原始安装过程中配置的 IP 地址应保持不变；但是，建议您在操作完成后确认这一点。
+
++
+执行 `sgareinstall`命令后，所有 StorageGRID 预置的帐户、密码和 SSH 密钥将被删除，并生成新的主机密钥。
+
+

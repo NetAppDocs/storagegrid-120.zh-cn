@@ -1,0 +1,46 @@
+---
+permalink: admin/configuring-stored-object-compression.html 
+sidebar: sidebar 
+keywords: object compression, compress stored objects 
+summary: 您可以启用对象压缩以减少存储在 StorageGRID 中的对象大小，从而使对象占用更少的存储空间。 
+---
+= 压缩 StorageGRID 中存储的对象
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以启用对象压缩以减少存储在 StorageGRID 中的对象大小，从而使对象占用更少的存储空间。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["特定访问权限"]。
+
+
+.关于此任务
+默认情况下，禁用对象压缩。如果启用压缩，StorageGRID 会尝试在保存每个对象时使用无损压缩对其进行压缩。
+
+
+NOTE: 如果更改此设置，应用新设置大约需要一分钟。配置的值将被缓存以提升性能和扩展能力。
+
+在启用对象压缩之前，请注意以下几点：
+
+* 除非您知道存储的数据是可压缩的，否则不应选择*压缩存储的对象*。
+* 将对象保存到 StorageGRID 的应用程序可能会在保存对象之前对其进行压缩。如果客户端应用程序在将对象保存到 StorageGRID 之前已对其进行压缩，则选择此选项不会进一步减小对象的大小。
+* 如果您将 NetApp FabricPool 与 StorageGRID 结合使用，请勿选择*压缩存储的对象*。
+* 如果选择*压缩存储对象*，S3 客户端应用程序应避免执行指定返回字节范围的 GetObject 操作。这些"范围读取"操作效率低下，因为 StorageGRID 必须有效地解压缩对象才能访问所请求的字节。从非常大的对象请求小范围字节的 GetObject 操作效率特别低；例如，从 50 GB 压缩对象读取 10 MB 范围是低效的。
++
+如果从压缩对象读取范围，则客户端请求可能会超时。
+
++
+
+NOTE: 如果需要压缩对象，并且客户端应用程序必须使用范围读取，请增加应用程序的读取超时时间。
+
+
+
+.步骤
+. 选择*配置* > *系统* > *存储设置* > *对象压缩*。
+. 选中*压缩存储对象*复选框。
+. 选择 *Save*。
+

@@ -1,0 +1,31 @@
+---
+permalink: ilm/what-replication-is.html 
+sidebar: sidebar 
+keywords: replication, object copies 
+summary: 复制是 StorageGRID 用于存储对象数据的两种方法之一。当对象与使用复制的 ILM 规则匹配时，系统会创建对象数据的精确副本，并将副本存储在存储节点上。 
+---
+= 了解 StorageGRID 中的复制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+复制是 StorageGRID 用于存储对象数据的两种方法之一（纠删码是另一种方法）。当对象与使用复制的 ILM 规则匹配时，系统会创建对象数据的精确副本，并将副本存储在存储节点上。
+
+当您将 ILM 规则配置为创建复制副本时，您需要指定应创建多少个副本、这些副本应放置在何处以及副本应在每个位置存储多长时间。
+
+在以下示例中，ILM 规则指定将每个对象的两个复制副本放置在包含三个存储节点的存储池中。
+
+image:ilm_replication_make_2_copies.png["Make 2 Copies 规则"]
+
+当 StorageGRID 将对象与此规则匹配时，它会创建对象的两个副本，将每个副本放在存储池中的不同存储节点上。这两个副本可以放置在三个可用存储节点中的任意两个节点上。在这种情况下，规则将对象副本放置在存储节点 2 和 3 上。由于存在两个副本，因此如果存储池中的任何节点出现故障，仍可检索该对象。
+
+
+NOTE: StorageGRID 只能在任何给定存储节点上存储对象的一个复制副本。如果您的网格包括三个存储节点，并且您创建了 4 副本 ILM 规则，则只会创建三个副本——每个存储节点一个副本。系统将触发 *ILM placement unachievable* 警报，指示 ILM 规则无法完全应用。
+
+.相关信息
+* link:what-erasure-coding-is.html["什么是纠删码"]
+* link:what-storage-pool-is.html["什么是存储池"]
+* link:using-multiple-storage-pools-for-cross-site-replication.html["使用复制和纠删码启用站点丢失保护"]
+

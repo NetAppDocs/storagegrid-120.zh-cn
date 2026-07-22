@@ -1,0 +1,178 @@
+---
+permalink: s3/get-object.html 
+sidebar: sidebar 
+keywords: get object 
+summary: 您可以使用 S3 GET Object 请求从 S3 存储桶检索对象。 
+---
+= 使用 GetObject 请求从 StorageGRID 中的存储桶检索对象
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 S3 GetObject 请求从 S3 存储桶检索对象。
+
+
+
+[[getobject-and-multipart-objects]]
+== GetObject 和多部件对象
+
+您可以使用 `partNumber`请求参数检索多部分或分段对象的特定部分。 `x-amz-mp-parts-count`响应元素指示对象有多少个部分。
+
+您可以将 `partNumber`设置为 1，适用于分段/多部分对象和非分段/非多部分对象；但是， `x-amz-mp-parts-count`响应元素仅针对分段或多部分对象返回。
+
+
+
+[[utf-8-characters-in-user-metadata]]
+== 用户元数据中的 UTF-8 字符
+
+StorageGRID 不解析或解释用户定义元数据中转义的 UTF-8 字符。如果键名称或值包含不可打印的字符，则用户定义的元数据中具有转义 UTF-8 字符的对象的 GET 请求不会返回 `x-amz-missing-meta`标头。
+
+
+
+[[supported-request-header]]
+== 支持的请求标头
+
+支持以下请求标头：
+
+* `x-amz-checksum-mode`：指定 `ENABLED`
++
+ `Range` 标头不支持与  `x-amz-checksum-mode` 一起用于 GetObject。当您在请求中包含  `Range` 且启用了  `x-amz-checksum-mode` 时，StorageGRID 不会在响应中返回校验和值。
+
+
+
+
+
+[[unsupported-request-header]]
+== 不支持的请求标头
+
+不支持以下请求标头，返回 `XNotImplemented`：
+
+* `x-amz-website-redirect-location`
+
+
+
+
+[[versioning]]
+== 版本控制
+
+如果未指定 `versionId`子资源，则该操作将获取版本化存储区中对象的最新版本。如果对象的当前版本是删除标记，则会返回"Not Found"状态，并将 `x-amz-delete-marker`响应标头设置为 `true`。
+
+
+
+[[request-headers-for-server-side-encryption-with-customer-provided-encryption-keys-sse-c]]
+== 使用客户提供的加密密钥 (SSE-C) 进行服务器端加密的请求标头
+
+如果对象使用您提供的唯一密钥加密，请使用所有三个标头。
+
+* `x-amz-server-side-encryption-customer-algorithm`：指定 `AES256`。
+* `x-amz-server-side-encryption-customer-key`: 指定对象的加密密钥。
+* `x-amz-server-side-encryption-customer-key-MD5`：指定对象加密密钥的 MD5 摘要。
+
+
+
+CAUTION: 您提供的加密密钥绝不会被存储。如果丢失加密密钥，则会丢失相应的对象。在使用客户提供的密钥保护对象数据之前，请查看 link:using-server-side-encryption.html["${post_edited_translations.segment}"] 中的注意事项。
+
+
+
+[[behavior-of-getobject-for-cloud-storage-pool-objects]]
+== GetObject 对 Cloud Storage Pool 对象的行为
+
+如果对象已存储在 link:../ilm/what-cloud-storage-pool-is.html["云存储池"] 中，则 GetObject 请求的行为取决于对象的状态。有关更多详细信息，请参见 link:head-object.html["HeadObject"]。
+
+
+NOTE: 如果对象存储在云存储池中，并且该对象的一个或多个副本也存在于网格上，则GetObject请求将尝试从网格检索数据，然后再从云存储池检索数据。
+
+[cols="1a,1a"]
+|===
+| 对象的状态 | GetObject 的行为 
+
+
+ a| 
+已载入 StorageGRID 但尚未经过 ILM 评估的对象，或存储在传统存储池中或使用纠删码的对象
+ a| 
+`200 OK`
+
+检索到对象的副本。
+
+
+
+ a| 
+云存储池中的对象，但尚未转换到不可检索的状态
+ a| 
+`200 OK`
+
+检索到对象的副本。
+
+
+
+ a| 
+对象已转换为不可检索状态
+ a| 
+`403 Forbidden`, `InvalidObjectState`
+
+使用 link:post-object-restore.html["RestoreObject"] 请求将对象还原到可检索状态。
+
+
+
+ a| 
+正在从不可检索状态还原的对象
+ a| 
+`403 Forbidden`, `InvalidObjectState`
+
+等待 RestoreObject 请求完成。
+
+
+
+ a| 
+对象已完全还原到云存储池
+ a| 
+`200 OK`
+
+检索到对象的副本。
+
+|===
+
+
+[[multipart-or-segmented-objects-in-a-cloud-storage-pool]]
+=== 云存储池中的多部分或分段对象
+
+如果您上传了多部分对象，或者 StorageGRID 将大型对象拆分为多个分段，StorageGRID 将通过对对象的部分或分段进行采样来确定该对象在云存储池中是否可用。在某些情况下，当对象的某些部分已转换为不可检索状态或对象的某些部分尚未还原时，GetObject 请求可能会错误地返回 `200 OK`。
+
+在这些情况下：
+
+* GetObject 请求可能会返回一些数据，但在传输过程中停止。
+* 后续 GetObject 请求可能会返回 `403 Forbidden`。
+
+
+
+
+[[getobject-and-cross-grid-replication]]
+== GetObject 和跨网格复制
+
+如果您正在使用link:../admin/grid-federation-overview.html["网格联盟"]并且为存储桶启用了link:../tenant/grid-federation-manage-cross-grid-replication.html["跨网格复制"]，则 S3 客户端可以通过发出 GetObject 请求来验证对象的复制状态。响应包括 StorageGRID 特定的 `x-ntap-sg-cgr-replication-status`响应标头，该标头将采用以下其中一个值：
+
+[cols="1a,2a"]
+|===
+| Grid | 复制状态 
+
+
+ a| 
+源
+ a| 
+* *COMPLETED*：复制成功。
+* *PENDING*：对象尚未复制。
+* *FAILURE*：复制失败，出现永久性故障。用户必须解决此错误。
+
+
+
+
+ a| 
+目标
+ a| 
+*REPLICA*：该对象已从源网格复制。
+
+|===
+
+NOTE: StorageGRID 不支持 `x-amz-replication-status`标头。

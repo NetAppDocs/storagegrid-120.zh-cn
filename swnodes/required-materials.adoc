@@ -1,0 +1,70 @@
+---
+permalink: swnodes/required-materials.html 
+sidebar: sidebar 
+keywords: installation materials 
+summary: 在安装 StorageGRID 之前，请收集并准备所需的信息和材料。 
+---
+= StorageGRID 所需的信息和材料
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在安装 StorageGRID 之前，请收集并准备所需的信息和材料。
+
+
+
+[[required-information]]
+== 必填信息
+
+网络计划:: 您打算将哪些网络连接到每个 StorageGRID 节点。StorageGRID 支持多个网络，以实现流量分离、安全性和管理便利。
++
+--
+请参见 StorageGRID link:../network/index.html["网络连接准则"]。
+
+--
+网络信息:: 用于分配给每个网格节点的 IP 地址以及 DNS 和 NTP 服务器的 IP 地址。
+网格节点的服务器:: 确定一组服务器（物理、虚拟或两者兼而有之），这些服务器总共提供足够的资源来支持您计划部署的 StorageGRID 节点的数量和类型。
++
+--
+
+NOTE: 如果您的 StorageGRID 安装将不使用 StorageGRID 设备（硬件）存储节点，则必须使用带有电池后备写缓存（BBWC）的硬件 RAID 存储。StorageGRID 不支持使用虚拟存储区域网络（vSAN）、软件 RAID 或无 RAID 保护。
+
+--
+节点迁移（仅 Ubuntu 和 Debian，如果需要）:: 了解 link:node-container-migration-requirements.html["节点迁移的要求"]，如果要在不中断任何服务的情况下对物理主机执行计划维护。
+相关信息:: https://imt.netapp.com/matrix/#welcome["NetApp 互操作性表工具"^]
+
+
+
+
+[[required-materials]]
+== 必备材料
+
+NetApp StorageGRID 许可证:: 您必须具有有效的数字签名 NetApp 许可证。
+
+
+
+NOTE: StorageGRID 安装存档中包含可用于测试和概念验证网格的非生产许可证。
+
+StorageGRID 安装归档:: link:downloading-and-extracting-storagegrid-installation-files.html["下载 StorageGRID 安装存档并提取这些文件"]。
+维修笔记本电脑:: StorageGRID 系统通过服务笔记本电脑安装。
++
+--
+维修笔记本电脑必须具有：
+
+* 网络端口
+* SSH 客户端（例如 PuTTY）
+* link:../admin/web-browser-requirements.html["支持的 Web 浏览器"]
+
+
+--
+StorageGRID 文档::
++
+--
+* https://library.netapp.com/ecm/ecm_download_file/ECMLP3351267["发行说明"^]。您必须使用您的 NetApp 帐户登录或创建帐户才能访问发行说明。
+* link:../admin/index.html["StorageGRID 管理说明"]
+
+
+--
+

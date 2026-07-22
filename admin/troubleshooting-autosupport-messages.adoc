@@ -1,0 +1,57 @@
+---
+permalink: admin/troubleshooting-autosupport-messages.html 
+sidebar: sidebar 
+keywords: troubleshoot autosupport, asup package 
+summary: 如果尝试发送 AutoSupport 软件包失败，StorageGRID 系统会根据 AutoSupport 软件包类型采取不同的操作。 
+---
+= 对 StorageGRID AutoSupport 包进行故障排除
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果尝试发送 AutoSupport 软件包失败，StorageGRID 系统会根据 AutoSupport 软件包类型采取不同的操作。您可以通过选择 *支持* > *工具* > *AutoSupport* > *结果* 来检查 AutoSupport 软件包的状态。
+
+当 AutoSupport 包发送失败时，*AutoSupport* 页面的 *Results* 选项卡上将显示 “Failed”。
+
+
+NOTE: 如果您配置了代理服务器以将 AutoSupport 包转发到 NetApp，则应link:configuring-admin-proxy-settings.html["验证代理服务器配置设置是否正确"]。
+
+
+
+[[weekly-autosupport-package-failure]]
+== 每周 AutoSupport 软件包故障
+
+如果每周 AutoSupport 软件包发送失败，StorageGRID 系统将采取以下操作：
+
+. 将"最新结果"属性更新为"重试"。
+. 尝试在一小时内每四分钟重新发送 AutoSupport 软件包 15 次。
+. 发送失败一小时后，将"最近结果"属性更新为"失败"。
+. 尝试在下一个计划时间再次发送 AutoSupport 软件包。
+. 如果由于 NMS 服务不可用而导致包发送失败，且在七天内发送了包，则保持常规 AutoSupport 计划。
+. 当 NMS 服务再次可用时，如果已有七天或更长时间未发送 AutoSupport 包，则会立即发送一个包。
+
+
+
+
+[[user-triggered-or-event-triggered-autosupport-package-failure]]
+== 用户触发或事件触发的 AutoSupport 包失败
+
+如果用户触发或事件触发的 AutoSupport 包发送失败，StorageGRID 系统将采取以下操作：
+
+. 如果错误已知，则显示错误消息。例如，如果用户在未提供正确电子邮件配置设置的情况下选择了 SMTP 协议，则会显示以下错误： `AutoSupport packages cannot be sent using SMTP protocol due to incorrect settings on the E-mail Server page.`
+. ${post_edited_translations.segment}
+. 将错误记录在  `nms.log` 中。
+
+
+如果发生故障且选择的协议是 SMTP，请验证 StorageGRID 系统的电子邮件服务器配置是否正确，并且您的电子邮件服务器正在运行（*支持* > *警报（旧版）* > *旧版电子邮件设置*）。以下错误消息可能会显示在 AutoSupport 页面上： `AutoSupport packages cannot be sent using SMTP protocol due to incorrect settings on the E-mail Server page.`
+
+了解如何 link:../monitor/email-alert-notifications.html["${post_edited_translations.segment}"]。
+
+
+
+[[correct-an-autosupport-package-failure]]
+== 修复 AutoSupport 包故障
+
+如果发生故障，并且 SMTP 是所选协议，请验证 StorageGRID 系统的电子邮件服务器是否正确配置，以及您的电子邮件服务器是否正在运行。AutoSupport 页面上可能会显示以下错误消息： `AutoSupport packages cannot be sent using SMTP protocol due to incorrect settings on the E-mail Server page.`

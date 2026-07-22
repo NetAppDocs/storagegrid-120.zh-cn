@@ -1,0 +1,51 @@
+---
+permalink: s3/put-bucket-last-access-time-request.html 
+sidebar: sidebar 
+keywords: S3 REST API, S3 operations, put bucket last access time request 
+summary: PUT Bucket 上次访问时间请求允许您启用或禁用单个存储桶的上次访问时间更新。 
+---
+= 使用 PUT Bucket 上次访问时间请求在 StorageGRID 中启用和禁用上次访问时间更新
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+PUT Bucket 上次访问时间请求允许您为单个存储桶启用或禁用上次访问时间更新。禁用上次访问时间更新将提高性能，并且是使用 10.3.0 或更高版本创建的所有存储桶的默认设置。
+
+要完成此操作，您必须具有存储桶的 s3:PutBucketLastAccessTime 权限，或者是帐户根用户。
+
+
+NOTE: 从 StorageGRID 版本 10.3 开始，默认情况下对所有新存储桶禁用上次访问时间的更新。如果您有使用较早版本的 StorageGRID 创建的存储桶，并且希望匹配新的默认行为，则必须明确禁用每个较早存储桶的上次访问时间更新。您可以使用 PUT Bucket last access time 请求或从租户管理器中存储桶的详细信息页面启用或禁用上次访问时间的更新。请参阅link:../tenant/enabling-or-disabling-last-access-time-updates.html["启用或禁用上次访问时间更新"]。
+
+如果对存储桶禁用了上次访问时间更新，则将对存储桶上的操作应用以下行为：
+
+* GetObject、GetObjectAcl、GetObjectTagging 和 HeadObject 请求不会更新上次访问时间。对象未添加到信息生命周期管理 (ILM) 评估队列中。
+* CopyObject 和 PutObjectTagging 仅更新元数据的请求也会更新上次访问时间。该对象已添加到 ILM 评估队列。
+* 如果对源存储桶禁用了对上次访问时间的更新，则 CopyObject 请求不会更新源存储桶的上次访问时间。已复制的对象未添加到源存储桶的 ILM 评估队列中。但是，对于目标，CopyObject 请求始终更新上次访问时间。对象的副本将添加到 ILM 评估队列中。
+* CompleteMultipartUpload 请求更新上次访问时间。已完成的对象已添加到 ILM 评估队列。
+
+
+
+
+[[request-examples]]
+== 请求示例
+
+此示例启用存储桶的上次访问时间。
+
+[listing, subs="specialcharacters,quotes"]
+----
+PUT /bucket?x-ntap-sg-lastaccesstime=enabled HTTP/1.1
+Date: _date_
+Authorization: _authorization string_
+Host: _host_
+----
+此示例禁用存储区的上次访问时间。
+
+[listing, subs="specialcharacters,quotes"]
+----
+PUT /bucket?x-ntap-sg-lastaccesstime=disabled HTTP/1.1
+Date: _date_
+Authorization: _authorization string_
+Host: _host_
+----

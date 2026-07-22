@@ -1,0 +1,85 @@
+---
+permalink: monitor/running-diagnostics.html 
+sidebar: sidebar 
+keywords: how to run diagnostics 
+summary: 解决问题时，您可以与技术支持人员一起对 StorageGRID 系统运行诊断并查看结果。 
+---
+= 在 StorageGRID 中运行诊断
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+解决问题时，您可以与技术支持人员一起对 StorageGRID 系统运行诊断并查看结果。
+
+* link:reviewing-support-metrics.html["查看支持指标"]
+* link:commonly-used-prometheus-metrics.html["常用 Prometheus 指标"]
+
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["特定访问权限"]。
+
+
+.关于此任务
+"诊断"页面对网格的当前状态执行一组诊断检查。每个诊断检查可以采用以下三种状态之一：
+
+* image:icon_alert_green_checkmark.png["图标警报绿色复选标记"] *Normal*：所有值都在正常范围内。
+* image:icon_alert_yellow_minor.png["图标警报黄色轻微"] *Attention*：一个或多个值超出正常范围。
+* image:icon_alert_red_critical.png["图标警报红色严重"] *Caution*：一个或多个值明显超出正常范围。
+
+
+诊断状态独立于当前警报，可能不会指示网格的操作问题。例如，即使未触发任何警报，诊断检查也可能显示"警告"状态。
+
+.步骤
+. 选择*支持* > *工具* > *诊断*。
++
+此时将显示"诊断"页面，并列出每次诊断检查的结果。结果按严重程度排序（警告、注意，然后是正常）。在每个严重程度内，结果按字母顺序排序。
+
++
+在此示例中，一个诊断具有"注意"状态，三个诊断具有"正常"状态。
+
++
+image:support_diagnostics_page.png["支持诊断页面"]
+
+. 要了解有关特定诊断的更多信息，请单击该行中的任意位置。
++
+此时将显示有关诊断及其当前结果的详细信息。此处列出了以下详细信息：
+
++
+** *状态*：此诊断的当前状态：正常、注意或警告。
+** *Prometheus query*：如果用于诊断，则用于生成状态值的 Prometheus 表达式。（并非所有诊断都使用 Prometheus 表达式。）
+** *阈值*：如果可用于诊断，则为每个异常诊断状态定义系统定义的阈值。（并非所有诊断都使用阈值。）
++
+
+NOTE: 您无法更改这些阈值。
+
+** *状态值*：显示整个 StorageGRID 系统的状态和诊断值的图形和表格（屏幕截图中未显示表格）。在此示例中，显示了 StorageGRID 系统中每个节点的当前 CPU 利用率。所有节点值均低于 Attention 和 Caution 阈值，因此诊断的整体状态为正常。
++
+image:support_diagnostics_cpu_utilization.png["诊断状态值示例"]
+
+
+
+. *可选*：要查看与此诊断相关的 Grafana 图表，请选择 *Grafana dashboard*。
++
+并非所有诊断都显示此链接。
+
++
+此时将显示相关的 Grafana 控制面板。在此示例中，Node dashboard（节点仪表板）显示此节点随时间的 CPU 利用率以及该节点的其他 Grafana 图表。
+
++
+
+NOTE: 您还可以从*支持* > *工具* > *指标*页面的 Grafana 部分访问预构建的 Grafana 仪表板。
+
++
+image:grafana_dashboard_nodes.png["Grafana Dashboard 节点"]
+
+. *可选*：要查看 Prometheus 表达式随时间变化的图表，请单击 *View in Prometheus*。
++
+将显示诊断中使用的表达式的 Prometheus 图。
+
++
+image:support_diagnostics_prometheus_png.png["支持诊断 Prometheus 页面"]
+
+

@@ -1,0 +1,33 @@
+---
+permalink: tenant/deleting-another-users-s3-access-keys.html 
+sidebar: sidebar 
+keywords: how to delete access key for other user 
+summary: 如果使用的是 S3 租户并且具有适当的权限，则可以删除其他用户的 S3 访问密钥。删除访问密钥后，它不能再用于访问租户帐户中的对象和存储桶。 
+---
+= 在 StorageGRID 中删除其他用户的 S3 访问密钥
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果使用的是 S3 租户并且具有适当的权限，则可以删除其他用户的 S3 访问密钥。删除访问密钥后，它不能再用于访问租户帐户中的对象和存储桶。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到租户管理器。
+* 您有 link:tenant-management-permissions.html["root 访问权限"]。
+
+
+
+CAUTION: 可以使用租户管理器中为该用户显示的访问密钥 ID 和机密访问密钥来访问属于该用户的 S3 存储桶和对象。为此，请像保护密码一样保护访问密钥。定期轮换访问密钥，从账户中删除所有未使用的密钥，切勿与其他用户共享密钥。
+
+.步骤
+. 选择*访问管理* > *用户*。
+. 从"用户"页面中，选择要管理其 S3 访问密钥的用户。
+. 在"用户详细信息"页面中，选择 *Access keys*，然后选中要删除的每个访问密钥的复选框。
+. 选择*操作* > *删除所选键*。
+. 在确认对话框中，选择*Delete key*。
++
+页面右上角会显示一条确认消息。
+
+

@@ -1,0 +1,79 @@
+---
+permalink: primer/how-storagegrid-manages-data.html 
+sidebar: sidebar 
+keywords: StorageGRID, how storagegrid manages data, what an object is, how object data is protected 
+summary: 对于对象存储，存储单元是对象，而不是文件或块。与文件系统或块存储的树状层次结构不同，对象存储以平坦的非结构化布局组织数据。 
+---
+= 什么是 StorageGRID 对象
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+对于对象存储，存储单元是对象，而不是文件或块。与文件系统或块存储的树状层次结构不同，对象存储以平坦的非结构化布局组织数据。
+
+对象存储将数据的物理位置与用于存储和检索该数据的方法分离。
+
+基于对象的存储系统中的每个对象都有两个部分：对象数据和对象元数据。
+
+image:object_conceptual_drawing.png["对象"]
+
+
+
+[[what-is-object-data]]
+== 什么是对象数据？
+
+对象数据可以是任何东西，例如照片、电影或医疗记录。
+
+
+
+[[what-is-object-metadata]]
+== 什么是对象元数据？
+
+对象元数据是描述对象的任何信息。StorageGRID 使用对象元数据来跟踪网格中所有对象的位置，并随时间管理每个对象的生命周期。
+
+对象元数据包括以下信息：
+
+* 系统元数据，包括每个对象的唯一 ID （UUID）、对象名称、S3 存储桶的名称、租户帐户名称或 ID、对象的逻辑大小、对象首次创建的日期和时间以及对象上次修改的日期和时间。
+* 每个对象副本或擦除编码片段的当前存储位置。
+* 与对象关联的任何用户元数据。
+
+
+对象元数据可自定义且可扩展，使应用程序能够灵活使用。
+
+要了解 StorageGRID 存储对象元数据的方式和位置的详细信息，请转到 link:../admin/managing-object-metadata-storage.html["管理对象元数据存储"]。
+
+
+
+[[how-is-object-data-protected]]
+== 如何保护对象数据？
+
+StorageGRID 系统为您提供了两种保护对象数据免受丢失的机制：复制和纠删编码。
+
+
+
+[[replication]]
+=== 复制
+
+当 StorageGRID 将对象与配置为创建复制副本的信息生命周期管理 (ILM) 规则匹配时，系统会创建对象数据的精确副本，并将其存储在存储节点或云存储池中。ILM 规则规定了制作的副本数、存储这些副本的位置以及系统保留这些副本的时长。如果副本丢失（例如，由于存储节点丢失），只要该对象的副本存在于 StorageGRID 系统中的其他位置，该对象仍然可用。
+
+在以下示例中，Make 2 Copies 规则指定将每个对象的两个复制副本放置在包含三个存储节点的存储池中。
+
+image:ilm_replication_make_2_copies.png["Make 2 Copies 规则"]
+
+
+
+[[erasure-coding]]
+=== 纠删编码
+
+当 StorageGRID 将对象与配置为创建纠删码副本的 ILM 规则匹配时，它会将对象数据切片为数据片段，计算其他奇偶校验片段，并将每个片段存储在不同的存储节点上。访问对象时，使用存储的片段重新组装对象。如果数据或奇偶校验片段损坏或丢失，纠删码算法可以使用剩余数据和奇偶校验片段的子集重新创建该片段。ILM 规则和纠删码配置文件决定了所使用的纠删码方案。
+
+以下示例说明了对象数据的纠删编码的使用。在此示例中，ILM 规则使用 4+2 纠删编码方案。每个对象被切割成四个相等的数据片段，并从对象数据中计算出两个奇偶校验片段。六个片段中的每一个都存储在三个数据中心的不同存储节点上，以提供针对节点故障或站点丢失的数据保护。
+
+image:ec_three_sites_4_plus_2.png["三站点 4 加 2 纠删码"]
+
+.相关信息
+* link:../ilm/index.html["使用 ILM 管理对象"]
+* link:using-information-lifecycle-management.html["使用信息生命周期管理"]
+

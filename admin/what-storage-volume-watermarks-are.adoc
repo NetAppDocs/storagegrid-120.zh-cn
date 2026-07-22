@@ -1,0 +1,115 @@
+---
+permalink: admin/what-storage-volume-watermarks-are.html 
+sidebar: sidebar 
+keywords: what are storage volume watermarks, storage volume soft read-only watermark, storage volume hard read-only watermark, storage volume read-write watermark 
+summary: StorageGRID 使用三个存储卷水印，以确保存储节点在空间严重不足之前安全地转换为只读状态，并允许已转换为只读状态的存储节点再次变为读写状态。 
+---
+= 了解 StorageGRID 中的存储卷水印
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+StorageGRID 使用三个存储卷水印，以确保存储节点在空间严重不足之前安全地转换为只读状态，并允许已转换为只读状态的存储节点再次变为读写状态。
+
+image:storage_volume_watermarks.png["存储卷水位线"]
+
+
+NOTE: 存储卷水印仅适用于用于复制和纠删编码对象数据的空间。要了解为卷 0 上的对象元数据预留的空间，请转到 link:managing-object-metadata-storage.html["管理对象元数据存储"]。
+
+
+
+[[what-is-the-soft-read-only-watermark]]
+== 什么是软只读水印？
+
+*存储卷软只读水印*是表示存储节点用于对象数据的可用空间正在变满的第一个水印。
+
+如果存储节点中的每个卷的可用空间少于该卷的软只读水印，则存储节点将转换为_只读模式_。只读模式意味着存储节点向 StorageGRID 系统的其余部分通告只读服务，但会完成所有挂起的写入请求。
+
+例如，假设存储节点中的每个卷都有 10 GB 的软只读水印。一旦每个卷的可用空间少于 10 GB，存储节点就会转换为软只读模式。
+
+
+
+[[what-is-the-hard-read-only-watermark]]
+== 什么是硬只读水印？
+
+*存储卷硬只读水印*是下一个水印，用于指示节点用于对象数据的可用空间即将耗尽。
+
+如果卷上的可用空间小于该卷的硬只读水印，则对卷的写入将失败。但是，可以继续写入其他卷，直到这些卷上的可用空间小于其硬只读水印。
+
+例如，假设存储节点中的每个卷都有 5 GB 的硬只读水印。一旦每个卷的可用空间少于 5 GB，存储节点就不再接受任何写入请求。
+
+硬只读水印始终小于软只读水印。
+
+
+
+[[what-is-the-read-write-watermark]]
+== 什么是读写水印？
+
+*存储卷读写水印*仅适用于已过渡到只读模式的 Storage Nodes。它决定了节点何时可以再次变为读写状态。当 Storage Node 中任意一个存储卷上的可用空间大于该卷的读写水印时，该节点会自动过渡回读写状态。
+
+例如，假设存储节点已转换为只读模式。另外，假设每个卷的读写水印为 30 GB。一旦任何卷的可用空间增加到 30 GB，节点就会再次变为读写模式。
+
+读写水印始终大于软只读水印和硬只读水印。
+
+
+
+[[view-storage-volume-watermarks]]
+== 查看存储卷水位标记
+
+您可以查看当前的水印设置和系统优化的值。如果未使用优化的水印，您可以确定是否可以或应该调整设置。
+
+.开始之前
+* 您已完成升级到 StorageGRID 11.6 或更高版本。
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["root 访问权限"]。
+
+
+
+
+[[view-current-watermark-settings]]
+=== 查看当前水印设置
+
+您可以在网格管理器中查看当前的存储水印设置。
+
+.步骤
+. 选择*支持* > *其他* > *存储水印*。
+. 在"存储水印"页面上，查看"使用优化值"复选框。
++
+** 如果选中此复选框，则会根据存储节点的大小和卷的相对容量为每个存储节点上的每个存储卷优化所有三个水印。
++
+这是默认和推荐的设置。不要更新这些值。或者，您可以 <<view-optimized-storage-watermarks,查看优化的存储水印>>。
+
+** 如果未选中"使用优化值"复选框，则将使用自定义（非优化）水印。不建议使用自定义水印设置。请参阅link:../troubleshoot/troubleshoot-low-watermark-alert.html["低只读水印覆盖警报故障排除"]的说明，以确定您是否可以或应该调整设置。
++
+指定自定义水印设置时，必须输入大于 0 的值。
+
+
+
+
+
+
+
+[[view-optimized-storage-watermarksview-optimized-storage-watermarks]]
+=== [[view-optimized-storage-watermarks]]查看优化的存储水印
+
+StorageGRID 使用两个 Prometheus 指标来显示它为存储卷软只读水印计算的优化值。您可以查看网格中每个存储节点的最小和最大优化值。
+
+. ${post_edited_translations.segment}
+. 在 Prometheus 部分，选择链接以访问 Prometheus 用户界面。
+. 要查看推荐的最小软只读水印，请输入以下 Prometheus 指标，然后选择 *Execute*：
++
+`storagegrid_storage_volume_minimum_optimized_soft_readonly_watermark`
+
++
+最后一列显示每个存储节点上所有存储卷的软只读水印的最小优化值。如果此值大于存储卷软只读水印的自定义设置，则会为存储节点触发 *Low read-only watermark override* 警报。
+
+. 要查看建议的最大软只读水印，请输入以下 Prometheus 指标，然后选择*执行*：
++
+`storagegrid_storage_volume_maximum_optimized_soft_readonly_watermark`
+
++
+最后一列显示每个存储节点上所有存储卷的软只读水印的最大优化值。
+
+

@@ -1,0 +1,69 @@
+---
+permalink: primer/storagegrid-architecture-and-network-topology.html 
+sidebar: sidebar 
+keywords: StorageGRID, architecture, deployment, topology, site, node redundancy, services, nodes 
+summary: StorageGRID 系统由一个或多个数据中心站点的多种类型的网格节点组成。 
+---
+= StorageGRID 架构和网络拓扑
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+StorageGRID 系统由一个或多个数据中心站点的多种类型的网格节点组成。
+
+了解 link:nodes-and-services.html["网格节点类型"]。
+
+有关 StorageGRID 网络拓扑、要求和网格通信的其他信息，请参见 link:../network/index.html["网络连接准则"]。
+
+
+
+[[deployment-topologies]]
+== 部署拓扑
+
+StorageGRID 系统可以部署到单个数据中心站点或多个数据中心站点。每个部署的站点数上限为 16 个。
+
+
+
+[[single-site]]
+=== 单个站点
+
+在具有单个站点的部署中，StorageGRID 系统的基础设施和操作是集中管理的。
+
+image:data_center_site_single.png["单个数据中心站点"]
+
+
+
+[[multiple-sites]]
+=== 多个站点
+
+在具有多个站点的部署中，每个站点可以安装不同类型和数量的 StorageGRID 资源。例如，一个数据中心可能需要比另一个数据中心更多的存储空间。
+
+站点通常位于不同故障区域的不同地理位置，例如地震断层线或泛滥平原。通过自动将数据分发到其他站点来实现数据共享和灾难恢复。
+
+image:data_center_sites_multiple.png["多个数据中心站点"]
+
+单个数据中心内还可以存在多个逻辑站点，以便使用分布式复制和纠删码来提高可用性和弹性。
+
+
+
+[[grid-node-redundancy]]
+=== 网格节点冗余
+
+在单站点或多站点部署中，您可以选择包括多个管理节点或网关节点以实现冗余。例如，您可以在单个站点或多个站点上安装多个管理节点。但是，每个 StorageGRID 系统只能有一个主管理节点。
+
+
+
+[[system-architecture]]
+== 系统架构
+
+此图显示了网格节点在 StorageGRID 系统中的排列方式。
+
+image:grid_nodes_and_components.png["由周围文本描述的图"]
+
+S3 客户端在 StorageGRID 中存储和检索对象。其他客户端用于发送电子邮件通知、访问 StorageGRID 管理界面以及可选地访问审核共享。
+
+S3 客户端可以连接到网关节点或管理节点，以使用到存储节点的负载平衡接口。或者，S3 客户端可以使用 HTTPS 直接连接到存储节点。
+
+对象可以存储在 StorageGRID 基于软件或硬件的存储节点上，也可以存储在云存储池中，云存储池由外部 S3 存储桶或 Azure Blob 存储容器组成。

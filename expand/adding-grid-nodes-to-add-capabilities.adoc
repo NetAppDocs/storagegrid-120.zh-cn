@@ -1,0 +1,31 @@
+---
+permalink: expand/adding-grid-nodes-to-add-capabilities.html 
+sidebar: sidebar 
+keywords: grid nodes, expand, expansion, site, add, StorageGRID 
+summary: ${post_edited_translations.segment} 
+---
+= 在 StorageGRID 中添加网格节点的准则
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+${post_edited_translations.segment}
+
+${post_edited_translations.segment}
+
+您可以在单个扩展操作中将以下一个或多个类型的节点添加到一个或多个现有站点：
+
+* 非主管理节点
+* 存储节点
+* 网关节点
+
+
+在准备添加网格节点时，请注意以下限制：
+
+* 主 Admin Node 是在初始安装期间部署的。您无法在扩容期间添加主 Admin Node。
+* ${post_edited_translations.segment}
+* 在添加 Storage Nodes 时，您必须仔细规划新节点的数量和位置。请参见 link:../expand/guidelines-for-adding-object-capacity.html["${post_edited_translations.segment}"]。
+* 如果"防火墙"控制页面上"不受信任的客户端网络"选项卡上的*设置新节点默认值*选项为*不受信任*，则使用客户端网络连接到扩展节点的客户端应用程序必须使用负载平衡器端点端口（*配置* > *安全* > *防火墙控制*）进行连接。请参阅link:../admin/configure-firewall-controls.html["更改新节点的安全设置"]和link:../admin/configuring-load-balancer-endpoints.html["配置负载平衡器端点"]的说明。
+

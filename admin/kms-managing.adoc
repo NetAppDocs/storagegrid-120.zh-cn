@@ -1,0 +1,408 @@
+---
+permalink: admin/kms-managing.html 
+sidebar: sidebar 
+keywords: manage kms, manage key management server, view kms, view key management server, edit kms, edit key management server, view encrypted nodes, remove kms, remove key management server 
+summary: '管理密钥管理服务器 (KMS) 涉及查看或编辑详细信息、管理证书、查看加密节点以及在不再需要时删除 KMS。' 
+---
+= 在 StorageGRID 中管理密钥管理服务器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+管理密钥管理服务器 (KMS) 涉及查看或编辑详细信息、管理证书、查看加密节点以及在不再需要时删除 KMS。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["所需的访问权限"]。
+
+
+
+
+[[view-kms-details]]
+== 查看KMS详细信息
+
+您可以查看有关 StorageGRID 系统中每个密钥管理服务器 (KMS) 的信息，包括密钥详细信息以及服务器和客户端证书的当前状态。
+
+.步骤
+. 选择*配置* > *安全* > *密钥管理服务器*。
++
+此时将显示密钥管理服务器页面，并显示以下信息：
+
++
+** 配置详细信息选项卡列出了已配置的任何密钥管理服务器。
+** 已加密节点选项卡列出已启用节点加密的任何节点。
+
+
+. 要查看特定 KMS 的详细信息并对该 KMS 执行操作，请选择 KMS 的名称。KMS 的详细信息页面列出了以下信息：
++
+[cols="1a,3a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+与 KMS 关联的 StorageGRID 站点。
+
+此字段显示特定 StorageGRID 站点或*不由其他 KMS 管理的站点的名称（默认 KMS）。*
+
+
+
+ a| 
+主机名称
+ a| 
+KMS 的完全限定域名或 IP 地址。
+
+如果有两个密钥管理服务器的集群，则列出两个服务器的完全限定域名或 IP 地址。如果集群中有两个以上的密钥管理服务器，则会列出第一个 KMS 的完全限定域名或 IP 地址以及集群中其他密钥管理服务器的数量。
+
+例如： `10.10.10.10 and 10.10.10.11` 或  `10.10.10.10 and 2 others`。
+
+要查看集群中的所有主机名，请选择一个 KMS 并选择*编辑*或*操作* > *编辑*。
+
+|===
+. 在 KMS 详细信息页面上选择一个选项卡以查看以下信息：
++
+[cols="1a,1a,3a"]
+|===
+| 选项卡 | 字段 | 问题描述 
+
+
+ a| 
+关键详细信息
+ a| 
+密钥名称
+ a| 
+KMS 中 StorageGRID 客户端的密钥别名。
+
+
+
+ a| 
+密钥 UID
+ a| 
+最新版本密钥的唯一标识符。
+
+
+
+ a| 
+上次修改时间
+ a| 
+最新版本密钥的日期和时间。
+
+
+
+ a| 
+服务器证书
+ a| 
+元数据
+ a| 
+证书的元数据，例如序列号、到期日期和时间以及证书 PEM。
+
+
+
+ a| 
+证书 PEM
+ a| 
+证书的 PEM（隐私增强邮件）文件的内容。
+
+
+
+ a| 
+客户端证书
+ a| 
+元数据
+ a| 
+证书的元数据，例如序列号、到期日期和时间以及证书 PEM。
+
+
+
+ a| 
+证书 PEM
+ a| 
+证书的 PEM（隐私增强邮件）文件的内容。
+
+|===
+. [[rotate-key]]根据组织安全实践的要求，选择*Rotate key*，或使用 KMS 软件创建新版本的密钥。
++
+密钥轮换成功后，将更新密钥 UID 和上次修改字段。
+
++
+[CAUTION]
+====
+如果您使用 KMS 软件轮换加密密钥，请将其从该密钥上次使用的版本轮换为同一密钥的新版本。请勿轮换为完全不同的密钥。
+
+切勿尝试通过更改 KMS 的密钥名称（别名）来轮换密钥。StorageGRID 要求所有以前使用的密钥版本（以及任何未来的密钥版本）都可以使用相同的密钥别名从 KMS 访问。如果更改已配置的 KMS 的密钥别名，StorageGRID 可能无法解密您的数据。
+
+====
+
+
+
+
+[[manage-certificates]]
+== 管理证书
+
+及时解决任何服务器或客户端证书问题。如果可能，请在证书过期前更换。
+
+
+CAUTION: 您必须尽快解决任何证书问题，以保持数据访问权限。
+
+.步骤
+. 选择*配置* > *安全* > *密钥管理服务器*。
+. 在表中，查看每个 KMS 的证书过期值。
+. 如果任何 KMS 的证书过期时间为未知，请等待最多 30 分钟，然后刷新您的 Web 浏览器。
+. ${post_edited_translations.segment}
++
+.. 选择 *Server certificate* 并验证"Expires on"字段的值。
+.. 要替换证书，请选择*编辑证书*以上传新证书。
+.. 重复这些子步骤，选择*客户端证书*而不是服务器证书。
+
+
+. 当 *KMS CA 证书过期*、*KMS 客户端证书过期*和 *KMS 服务器证书过期*警报触发时，请注意每个警报的描述并执行建议的操作。
++
+StorageGRID 可能需要长达 30 分钟才能获取证书过期的更新。刷新 Web 浏览器以查看当前值。
+
+
+
+
+NOTE: ${post_edited_translations.segment}
+
+
+
+[[view-encrypted-nodes]]
+== 查看加密节点
+
+您可以查看有关在您的 StorageGRID 系统中启用了 *Node Encryption* 设置的设备节点的信息。
+
+.步骤
+. 选择*配置* > *安全* > *密钥管理服务器*。
++
+此时将显示密钥管理服务器页面。"配置详细信息"选项卡显示已配置的任何密钥管理服务器。
+
+. ${post_edited_translations.segment}
++
+加密节点选项卡列出了 StorageGRID 系统中已启用*节点加密*设置的设备节点。
+
+. 查看表格中每个设备节点的信息。
++
+[cols="1a,3a"]
+|===
+| 列 | 问题描述 
+
+
+ a| 
+节点名称
+ a| 
+${post_edited_translations.segment}
+
+
+
+ a| 
+节点类型
+ a| 
+节点的类型：Storage、Admin 或 Gateway。
+
+
+
+ a| 
+站点
+ a| 
+安装节点的 StorageGRID 站点的名称。
+
+
+
+ a| 
+KMS 名称
+ a| 
+用于节点的KMS的描述性名称。
+
+如果未列出 KMS，请选择"配置详细信息"选项卡以添加 KMS。
+
+link:kms-adding.html["添加密钥管理服务器 (KMS)"]
+
+
+
+ a| 
+密钥 UID
+ a| 
+用于对应用装置节点上的数据进行加密和解密的加密密钥的唯一 ID。要查看完整的密钥 UID，请选择该文本。
+
+破折号(--)表示密钥 UID 未知，可能是因为设备节点和 KMS 之间存在连接问题。
+
+
+
+ a| 
+状态
+ a| 
+KMS 与设备节点之间的连接状态。如果节点已连接，则时间戳每 30 分钟更新一次。更改 KMS 配置后，连接状态可能需要几分钟才能更新。
+
+*注意：*刷新您的网络浏览器以查看新值。
+
+|===
+. ${post_edited_translations.segment}
++
+在正常的 KMS 操作期间，状态将为 *Connected to KMS*。如果节点与网格断开连接，则会显示节点连接状态（Administratively Down 或 Unknown）。
+
++
+其他状态消息对应于同名的 StorageGRID 警报：
+
++
+** ${post_edited_translations.segment}
+** KMS 连接错误
+** 未找到 KMS 加密密钥名称
+** KMS加密密钥轮换失败
+** ${post_edited_translations.segment}
+** ${post_edited_translations.segment}
+
+
++
+${post_edited_translations.segment}
+
+
+
+
+CAUTION: 您必须立即解决任何问题，以确保您的数据得到充分保护。
+
+
+
+[[edit-a-kms]]
+== 编辑 KMS
+
+您可能需要编辑密钥管理服务器的配置，例如，如果证书即将过期。
+
+.开始之前
+* 如果您计划更新为 KMS 选择的站点，则表示您已阅读 link:kms-considerations-for-changing-for-site.html["${post_edited_translations.segment}"]。
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["root 访问权限"]。
+
+
+.步骤
+. 选择*配置* > *安全* > *密钥管理服务器*。
++
+此时将显示密钥管理服务器页面，并显示已配置的所有密钥管理服务器。
+
+. ${post_edited_translations.segment}
++
+您还可以通过在表中选择KMS名称并在KMS详细信息页面上选择*编辑*来编辑KMS。
+
+. （可选）更新"编辑密钥管理服务器向导"的*步骤 1（KMS 详细信息）*中的详细信息。
++
+[cols="1a,3a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+KMS 名称
+ a| 
+用于帮助您识别此 KMS 的描述性名称。必须介于 1 到 64 个字符之间。
+
+
+
+ a| 
+密钥名称
+ a| 
+KMS 中 StorageGRID 客户端的确切密钥别名。必须介于 1 到 255 个字符之间。
+
+您只需要在极少数情况下编辑密钥名称。例如，如果别名在 KMS 中重命名，或者如果上一个密钥的所有版本都已复制到新别名的版本历史记录中，则必须编辑密钥名称。
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+如果您正在编辑特定于站点的 KMS，并且尚无默认 KMS，则可以选择 *未由其他 KMS 管理的站点（默认 KMS）*。此选择会将特定于站点的 KMS 转换为默认 KMS，该 KMS 将适用于所有没有专用 KMS 的站点以及在扩容中添加的任何站点。
+
+*注意：*如果您正在编辑特定于站点的 KMS，则无法选择其他站点。如果您正在编辑默认 KMS，则无法选择特定站点。
+
+
+
+ a| 
+端口
+ a| 
+KMS 服务器用于密钥管理互操作性协议 (KMIP) 通信的端口。默认为 5696，即 KMIP 标准端口。
+
+
+
+ a| 
+主机名称
+ a| 
+${post_edited_translations.segment}
+
+*注意：* 服务器证书的“主题备用名称 (SAN)”字段必须包含您在此处输入的 FQDN 或 IP 地址。否则，StorageGRID 将无法连接到 KMS 或 KMS 集群中的所有服务器。
+
+|===
+. 如果要配置 KMS 集群，请选择 *添加另一个主机名* 为集群中的每个服务器添加主机名。
+. 选择 *Continue*。
++
+此时将显示"编辑密钥管理服务器"向导的第 2 步（上传服务器证书）。
+
+. 如果需要更换服务器证书，请选择*浏览*并上传新文件。
+. 选择 *Continue*。
++
+此时将显示"编辑密钥管理服务器"向导的第 3 步（上传客户端证书）。
+
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
++
+对受影响站点的密钥管理服务器和所有节点加密设备节点之间的连接进行了测试。如果所有节点连接都有效，并且在 KMS 上找到了正确的密钥，则会将密钥管理服务器添加到"密钥管理服务器"页面上的表中。
+
+. 如果出现错误消息，请查看消息详情，然后选择*OK*。
++
+${post_edited_translations.segment}
+
+. 如果需要在解决连接错误之前保存当前配置，请选择*强制保存*。
++
+
+CAUTION: 选择*强制保存*将保存 KMS 配置，但不会测试每个设备到该 KMS 的外部连接。如果配置出现问题，则可能无法重新启动在受影响站点上启用了节点加密的设备节点。在问题得到解决之前，您可能会失去对数据的访问权限。
+
++
+KMS 配置已保存。
+
+. 查看确认警告，如果确定要强制保存配置，请选择*OK*。
++
+已保存 KMS 配置，但未测试与 KMS 的连接。
+
+
+
+
+
+[[remove-a-key-management-server-kms]]
+== ${post_edited_translations.segment}
+
+在某些情况下，您可能需要删除密钥管理服务器。例如，如果您已停用站点，则可能需要删除特定于站点的 KMS。
+
+.开始之前
+* 您已审阅 link:kms-considerations-and-requirements.html["使用密钥管理服务器的注意事项和要求"]。
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["root 访问权限"]。
+
+
+.关于此任务
+在以下情况下，您可以删除 KMS：
+
+* 如果站点已停用或站点不包括启用了节点加密的设备节点，则可以删除站点特定的KMS。
+* ${post_edited_translations.segment}
+
+
+.步骤
+. 选择*配置* > *安全* > *密钥管理服务器*。
++
+此时将显示密钥管理服务器页面，并显示已配置的所有密钥管理服务器。
+
+. 选择要删除的 KMS，然后选择*操作* > *删除*。
++
+${post_edited_translations.segment}
+
+. 确认是否满足以下条件：
++
+** ${post_edited_translations.segment}
+** 您正在删除默认的 KMS，但每个具有节点加密的站点已经存在特定于站点的 KMS。
+
+
+. ${post_edited_translations.segment}
++
+已删除 KMS 配置。
+
+

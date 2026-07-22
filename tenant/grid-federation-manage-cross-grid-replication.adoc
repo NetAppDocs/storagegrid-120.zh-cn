@@ -1,0 +1,183 @@
+---
+permalink: tenant/grid-federation-manage-cross-grid-replication.html 
+sidebar: sidebar 
+keywords: grid federation, cross-grid replication, use grid federation connection, replicate client delete markers, s3 bucket 
+summary: 如果您的租户帐户在创建时分配了 Use grid federation connection 权限，则可以使用跨网格复制在租户源网格上的存储桶和租户目标网格上的存储桶之间自动复制对象。跨网格复制可以在一个方向或两个方向上发生。 
+---
+= 在 StorageGRID 中管理跨网格复制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您的租户帐户在创建时被分配了*使用网格联合连接*权限，则可以使用跨网格复制在租户源网格上的存储桶和租户目标网格上的存储桶之间自动复制对象。跨网格复制可以在一个方向或两个方向上发生。
+
+
+
+[[workflow-for-cross-grid-replication]]
+== 跨网格复制的工作流
+
+工作流程图总结了您在两个网格上的存储桶之间配置跨网格复制所执行的步骤。这些步骤将在图表下方进行更详细的描述。
+
+image:grid-federation-cgr-workflow.png["跨网格复制工作流"]
+
+
+
+[[configure-cross-grid-replication]]
+== 配置跨网格复制
+
+在使用跨网格复制之前，必须登录到每个网格上的相应租户帐户并创建两个存储桶。然后，您可以在其中一个或两个存储桶上启用跨网格复制。
+
+.开始之前
+* 您已查看了跨网格复制的要求。请参阅 link:../admin/grid-federation-what-is-cross-grid-replication.html["什么是跨网格复制"]。
+* 您正在使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"]。
+* 租户帐户具有*使用网格联合连接*权限，并且两个网格上存在相同的租户帐户。请参阅 link:../admin/grid-federation-manage-tenants.html["管理网格联合连接的允许租户"]。
+* 您登录的租户用户已存在于两个网格中，并且属于具有 link:tenant-management-permissions.html["root 访问权限"] 的用户组。
+* 如果以本地用户身份登录到租户的目标网格，则租户帐户的 root 用户已在该网格上为您的用户帐户设置了密码。
+
+
+
+
+[[create-two-buckets]]
+=== 创建两个存储桶
+
+作为第一步，登录到每个网格上的相应租户帐户，并在每个网格上创建一个存储桶。
+
+.步骤
+. 从网格联合连接中的任一网格开始，创建一个新存储桶：
++
+.. 使用存在于两个网格上的租户用户的凭据登录到租户帐户。
++
+如果您无法以本地用户身份登录到租户的目标网格，请确认租户帐户的 root 用户已为您的用户帐户设置了密码。
+
+.. 按照说明 link:creating-s3-bucket.html["创建一个 S3 存储桶"]。
++
+
+TIP: 每个网格上的存储桶名称和区域可以不同。
+
+.. 在*管理对象设置*选项卡上，选择*启用对象版本控制*。
+.. 如果您的 StorageGRID 系统已启用 S3 Object Lock，请参阅 link:../admin/grid-federation-what-is-cross-grid-replication.html#cgr-with-ol["使用 S3 Object Lock 的跨网格复制"]。
+.. 选择*创建存储桶*。
+.. 选择 *Finish*。
+
+
+. 重复这些步骤，为网格联合连接中的另一个网格上的同一租户帐户创建存储桶。
++
+
+TIP: 根据需要，每个存储桶可以使用不同的区域。
+
+
+
+
+
+[[enable-cross-grid-replication]]
+=== 启用跨网格复制
+
+在将任何对象添加到任一存储桶之前，必须执行这些步骤。
+
+.步骤
+. 从要复制的对象的网格开始，启用 link:../admin/grid-federation-what-is-cross-grid-replication.html["单向跨网格复制"]：
++
+.. 登录到存储桶的租户帐户。
+.. 从控制面板中选择*查看存储桶*，或选择*存储（S3）* > *存储桶*。
+.. 从表中选择存储桶名称以访问存储桶详细信息页面。
+.. 选择*跨网格复制*选项卡。
+.. 选择*启用*，然后查看要求列表。
+.. 如果满足所有要求，请选择要使用的网格联合连接。
+.. （可选）更改*复制删除标记*的设置，以确定当 S3 客户端向源网格发出不包含版本 ID 的删除请求时，目标网格上会发生什么：
++
+*** *是*（默认）：删除标记将添加到源存储桶，并复制到目标存储桶。
+*** *否*：删除标记已添加到源存储桶，但未复制到目标存储桶。
++
+image:grid-federation-cross-grid-replication-client-deletes.png["${post_edited_translations.segment}"]
+
++
+
+NOTE: 如果删除请求包含版本 ID，则该对象版本将从源存储桶中永久删除。StorageGRID 不会复制包含版本 ID 的删除请求，因此不会从目标中删除相同的对象版本。
+
++
+有关详细信息，请参阅 link:../admin/grid-federation-what-is-cross-grid-replication.html["什么是跨网格复制"]。
+
+
+
+.. （可选）更改*跨网格复制*审核类别的设置，以管理审核消息的数量：
++
+*** *Error*（默认）：审计输出中仅包含失败的跨网格复制请求。
+*** *Normal*：包括所有跨网格复制请求，这大大增加了审核输出的数量。
+
+
+.. 检查您的选择。除非两个存储桶都为空，否则您无法更改这些设置。
+.. 选择*启用并测试*。
++
+过了一会儿，出现一条成功消息。添加到此存储桶的对象现在会自动复制到另一个网格。*跨网格复制*在存储桶详细信息页面上显示为已启用的功能。
+
+
+
+. 可选地，转到另一个网格上的相应存储桶，然后 link:../admin/grid-federation-what-is-cross-grid-replication.html["启用双向跨网格复制"]。
+
+
+
+
+[[test-replication-between-grids]]
+== 测试网格之间的复制
+
+如果为存储区启用了跨网格复制，则可能需要验证连接和跨网格复制是否正常工作，以及源和目标存储区是否仍然满足所有要求（例如，仍启用了版本控制）。
+
+.开始之前
+* 您正在使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"]。
+* 您属于具有 link:tenant-management-permissions.html["root 访问权限"] 的用户组。
+
+
+.步骤
+. 登录到存储桶的租户帐户。
+. 从控制面板中选择*查看存储桶*，或选择*存储（S3）* > *存储桶*。
+. 从表中选择存储桶名称以访问存储桶详细信息页面。
+. 选择*跨网格复制*选项卡。
+. 选择*测试连接*。
++
+如果连接正常，则会显示成功横幅。否则，系统会显示一条错误消息，供您和网格管理员用于解决此问题。有关详细信息，请参阅 link:../admin/grid-federation-troubleshoot.html["对网格联合错误进行故障排除"]。
+
+. 如果跨网格复制配置为在两个方向上进行，请转到另一个网格上的相应存储桶，然后选择 *测试连接* 以验证跨网格复制是否在另一个方向上正常工作。
+
+
+
+
+[[disable-cross-grid-replication]]
+== 禁用跨网格复制
+
+如果不想再将对象复制到另一个网格，则可以永久停止跨网格复制。
+
+禁用跨网格复制之前，请注意以下事项：
+
+* 禁用跨网格复制不会删除已在网格之间复制的任何对象。例如，如果禁用该存储桶的跨网格复制，则不会删除 Grid 1 上的  `my-bucket` 中已复制到 Grid 2 上的  `my-bucket` 的对象。如果要删除 these 对象，则必须手动将其删除。
+* 如果为每个存储桶启用了跨网格复制（即，如果复制在两个方向上发生），则可以禁用其中一个或两个存储桶的跨网格复制。例如，您可能希望禁用将对象从网格 1 上的 `my-bucket`复制到网格 2 上的 `my-bucket`，同时继续将对象从网格 2 上的 `my-bucket`复制到网格 1 上的 `my-bucket`。
+* 必须先禁用跨网格复制，然后才能删除租户使用网格联合连接的权限。请参阅 link:../admin/grid-federation-manage-tenants.html["管理允许的租户"]。
+* 如果禁用包含对象的存储桶的跨网格复制，则除非同时删除源和目标存储桶中的所有对象，否则将无法重新启用跨网格复制。
++
+
+CAUTION: 除非两个存储桶都为空，否则无法重新启用复制。
+
+
+
+.开始之前
+* 您正在使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"]。
+* 您属于具有 link:tenant-management-permissions.html["root 访问权限"] 的用户组。
+
+
+.步骤
+. 从不再需要复制的对象的网格开始，停止存储桶的跨网格复制：
++
+.. 登录到存储桶的租户帐户。
+.. 从控制面板中选择*查看存储桶*，或选择*存储（S3）* > *存储桶*。
+.. 从表中选择存储桶名称以访问存储桶详细信息页面。
+.. 选择*跨网格复制*选项卡。
+.. 选择*禁用复制*。
+.. 如果确实要为此存储桶禁用跨网格复制，请在文本框中键入 *Yes* ，然后选择 *Disable*。
++
+片刻之后，会出现一条成功消息。添加到此存储桶的新对象不能再自动复制到另一个网格。*跨网格复制*不再显示为"存储桶"页面上的"已启用"功能。
+
+
+
+. 如果跨网格复制配置为双向进行，请转到另一个网格上的相应存储桶，并停止另一个方向的跨网格复制。
+

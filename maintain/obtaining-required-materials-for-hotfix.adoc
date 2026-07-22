@@ -1,0 +1,61 @@
+---
+permalink: maintain/obtaining-required-materials-for-hotfix.html 
+sidebar: sidebar 
+keywords: storagegrid, hotfix 
+summary: 在应用修补程序之前，您必须获得所有必需的材料。 
+---
+= 获取 StorageGRID 修补程序所需的材料
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在应用修补程序之前，您必须获得所有必需的材料。
+
+[cols="1a,2a"]
+|===
+| 个项目 | 说明 
+
+
+ a| 
+StorageGRID 修补程序文件
+ a| 
+您必须下载 StorageGRID 修补程序文件。
+
+
+
+ a| 
+* 网络端口
+* link:../admin/web-browser-requirements.html["支持的 Web 浏览器"]
+* SSH 客户端（例如 PuTTY）
+
+ a| 
+
+
+
+ a| 
+恢复包(`.zip`）文件
+ a| 
+在应用修补程序之前，link:downloading-recovery-package.html["下载最新的恢复包文件"]以防在修补程序期间发生任何问题。然后，在应用修补程序后，下载恢复包文件的新副本并将其保存在安全位置。更新的恢复包文件允许您在发生故障时还原系统。
+
+
+
+| Passwords.txt 文件  a| 
+可选，仅在使用 SSH 客户端手动应用修补程序时使用。此 `Passwords.txt`文件是恢复包 `.zip`文件的一部分。
+
+
+
+ a| 
+配置密码短语
+ a| 
+密码在首次安装 StorageGRID 系统时创建并记录。配置密码未在 `Passwords.txt`文件中列出。
+
+
+
+ a| 
+相关文档
+ a| 
+`readme.txt` 修补程序的文件。此文件包含在修补程序下载页面中。在应用修补程序之前，请务必仔细查看该  `readme` 文件。
+
+|===

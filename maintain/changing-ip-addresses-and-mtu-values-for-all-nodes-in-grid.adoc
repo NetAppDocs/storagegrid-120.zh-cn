@@ -1,0 +1,146 @@
+---
+permalink: maintain/changing-ip-addresses-and-mtu-values-for-all-nodes-in-grid.html 
+sidebar: sidebar 
+keywords: storagegrid, node ip address, change node ip, change node ip address, changing node ip, changing node ip address 
+summary: 如果您需要更改网格中所有节点的网格网络 IP 地址，则必须遵循此特殊过程。无法使用更改单个节点的过程进行网格范围的网格网络 IP 更改。 
+---
+= 更改 StorageGRID 网格中所有节点的 IP 地址
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您需要更改网格中所有节点的网格网络 IP 地址，则必须遵循此特殊过程。无法使用更改单个节点的过程进行网格范围的网格网络 IP 更改。
+
+.开始之前
+* 您拥有  `Passwords.txt` 文件。
+
+
+为了确保网格成功启动，您必须同时进行所有更改。
+
+
+NOTE: 本程序仅适用于网格网络。您不能使用此过程更改管理网络或客户端网络上的 IP 地址。
+
+如果只想更改一个站点节点的 IP 地址和 MTU，请按照 link:changing-nodes-network-configuration.html["更改节点网络配置"] 说明进行操作。
+
+.步骤
+. 提前计划需要在更改 IP 工具之外进行的更改，例如更改 DNS 或 NTP，以及更改单点登录 (SSO) 配置（如果使用）。
++
+
+NOTE: 如果现有的 NTP 服务器将无法通过新 IP 地址访问网格，请在执行 change-ip 过程之前添加新的 NTP 服务器。
+
++
+
+NOTE: 如果现有 DNS 服务器将无法通过新 IP 地址访问网格，请在执行更改 IP 过程之前添加新的 DNS 服务器。
+
++
+
+NOTE: 如果为您的 StorageGRID 系统启用了 SSO，并且使用管理节点 IP 地址（而不是建议的完全限定域名）配置了任何依赖方信任，请准备在更改 IP 地址后立即更新或重新配置 Active Directory Federation Services (AD FS) 中的这些依赖方信任。请参阅 link:../admin/configure-sso.html["${post_edited_translations.segment}"]。
+
++
+
+NOTE: 如有必要，请为新 IP 地址添加新子网。
+
+. 默认情况下会阻止外部 SSH 访问。如有需要，link:../admin/manage-external-ssh-access.html["暂时允许访问"]。
+. ${post_edited_translations.segment}
++
+.. 输入以下命令： `ssh admin@_primary_Admin_Node_IP_`
+.. 输入 `Passwords.txt`文件中列出的密码。
+.. 输入以下命令切换到 root： `su -`
+.. 输入 `Passwords.txt`文件中列出的密码。
+
+
++
+以 root 身份登录时，提示符将从 `$`更改为 `#`。
+
+. 通过输入以下命令启动 Change IP 工具： `change-ip`
+. 在提示符处输入配置密码。
++
+此时将显示主菜单。默认情况下， `Selected nodes` 字段设置为  `all`。
+
++
+image:change_ip_tool_main_menu.png["屏幕截图显示更改 IP 工具的欢迎屏幕"]
+
+. 在主菜单上，选择 *2* 编辑所有节点的 IP/子网掩码、网关和 MTU 信息。
++
+.. 选择 *1* 以更改网格网络。
++
+选择后，提示显示节点名称、网格网络名称、数据类型（IP/掩码、网关或 MTU）和当前值。
+
++
+编辑 DHCP 配置接口的 IP 地址、前缀长度、网关或 MTU 会将接口更改为静态。在每个由 DHCP 配置的接口之前都会显示警告。
+
++
+配置为 `fixed`的接口无法编辑。
+
+.. 要设置新值，请按当前值显示的格式输入。
+.. 编辑完所有要更改的节点后，输入 *q* 返回主菜单。
++
+您的更改将保留，直到清除或应用。
+
+
+
+. 通过选择以下选项之一来检查您的更改：
++
+** *5*：显示输出中的编辑，这些编辑被隔离以仅显示更改的项目。更改以绿色（添加）或红色（删除）突出显示，如示例输出中所示：
++
+image:change_ip_tool_edit_ip_mask_sample_output.png["周围文本描述的屏幕截图"]
+
+** *6*：在显示完整配置的输出中显示编辑。更改以绿色（添加）或红色（删除）突出显示。
++
+
+NOTE: 某些命令行界面可能会使用删除线格式显示添加和删除。正确显示取决于您的终端客户端是否支持必要的 VT100 转义序列。
+
+
+
+. 选择选项 *7* 以验证所有更改。
++
+此验证可确保不违反网格网络的规则，例如不使用重叠的子网。
+
++
+在此示例中，验证返回错误。
+
++
+image:change_ip_tool_validate_sample_error_messages.gif["周围文本描述的屏幕截图"]
+
++
+在此示例中，验证通过。
+
++
+image:change_ip_tool_validate_sample_passed_messages.gif["周围文本描述的屏幕截图"]
+
+. 验证通过后，选择 *10* 以应用新的网络配置。
+. 选择 *stage* 以在下次重新启动节点时应用更改。
++
+
+NOTE: 必须选择 *stage*。不要手动或通过选择 *apply* 而不是 *stage* 来执行滚动重启；网格将无法成功启动。
+
+. 更改完成后，选择 *0* 退出 Change IP 工具。
+. 同时关闭所有节点。
++
+
+NOTE: 必须关闭整个网格，以便所有节点同时关闭。
+
+. 进行所需的物理或虚拟网络更改。
+. 验证所有网格节点均已关闭。
+. 打开所有节点的电源。
+. 成功启动网格后：
++
+.. 如果添加了新的 NTP 服务器，请删除旧的 NTP 服务器值。
+.. 如果添加了新的 DNS 服务器，请删除旧的 DNS 服务器值。
+
+
+. 从 Grid Manager 下载新的恢复包。
++
+.. 选择*维护* > *系统* > *恢复包*。
+.. 输入配置密码。
+
+
+. 如果您已允许外部 SSH 访问，请在完成 IP 地址更改后link:../admin/manage-external-ssh-access.html["阻止访问"]。
+
+
+.相关信息
+* link:adding-to-or-changing-subnet-lists-on-grid-network.html["添加到或更改网格网络上的子网列表"]
+* link:shutting-down-grid-node.html["关闭网格节点"]
+

@@ -1,0 +1,63 @@
+---
+permalink: fabricpool/other-best-practices-for-storagegrid-and-fabricpool.html 
+sidebar: sidebar 
+keywords: fabricPool, StorageGRID, best practices, audit log, encryption, compressions, tiering, ontap, consistency 
+summary: 在配置 StorageGRID 系统以与 FabricPool 配合使用时，您可能需要更改其他 StorageGRID 选项。在更改全局设置之前，请考虑该更改将如何影响其他 S3 应用程序。 
+---
+= StorageGRID 全局设置与 FabricPool 的最佳实践
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在配置 StorageGRID 系统以与 FabricPool 配合使用时，您可能需要更改其他 StorageGRID 选项。在更改全局设置之前，请考虑该更改将如何影响其他 S3 应用程序。
+
+
+
+[[audit-message-and-log-destinations]]
+== ${post_edited_translations.segment}
+
+FabricPool 工作负载通常具有较高的读取操作速率，这可能会生成大量的审核消息。
+
+* 如果您不需要记录 FabricPool 或任何其他 S3 应用程序的客户端读取操作，可选择转到*配置* > *监控* > *审核和 syslog 服务器*。将*客户端读取*设置更改为*错误*，以减少审核日志中记录的审核消息数。有关详细信息，请参阅 link:../monitor/configure-log-management.html["配置日志管理和外部 syslog 服务器"]。
+* 如果您有大型网格，使用多种类型的 S3 应用程序，或者希望保留所有审核数据，请配置外部 syslog 服务器并远程保存审核信息。使用外部服务器可最大限度地减少审核消息日志记录对性能的影响，而不会降低审核数据的完整性。有关详细信息，请参阅 link:../monitor/considerations-for-external-syslog-server.html["外部 syslog 服务器的注意事项"]。
+
+
+
+
+[[object-encryption]]
+== 对象加密
+
+配置 StorageGRID 时，如果其他 StorageGRID 客户端需要数据加密，则可以选择启用 link:../admin/changing-network-options-object-encryption.html["存储对象加密的全局选项"]。从 FabricPool 分层到 StorageGRID 的数据已加密，因此无需启用 StorageGRID 设置。客户端加密密钥由 ONTAP 拥有。
+
+
+
+[[object-compression]]
+== ${post_edited_translations.segment}
+
+配置 StorageGRID 时，不要启用link:../admin/configuring-stored-object-compression.html["用于压缩存储对象的全局选项"]。从 FabricPool 分层到 StorageGRID 的数据已被压缩。使用 StorageGRID 选项不会进一步减小对象的大小。
+
+
+
+[[s3-object-lock]]
+== S3 对象锁定
+
+如果为 StorageGRID 系统启用了全局 S3 对象锁定设置，请不要在创建 FabricPool 存储桶时启用 link:../s3/use-s3-api-for-s3-object-lock.html["S3 对象锁定"]。S3 Object Lock 不支持 FabricPool 存储桶。
+
+
+
+[[bucket-consistency]]
+== Bucket 一致性
+
+对于 FabricPool 存储桶，建议的存储桶一致性为 *Read-after-new-write*，这是新存储桶的默认一致性。请勿编辑 FabricPool 存储桶以使用 *Available* 或 *Strong-site*。
+
+
+
+[[fabricpool-tiering]]
+== FabricPool 分层
+
+如果 StorageGRID 节点使用从 NetApp ONTAP 系统分配的存储，请确认该卷未启用 FabricPool 分层策略。例如，如果 StorageGRID 节点正在 VMware 主机上运行，请确保为 StorageGRID 节点支持数据存储区的卷未启用 FabricPool 分层策略。对用于 StorageGRID 节点的卷禁用 FabricPool 分层，可简化故障排除和存储操作。
+
+
+CAUTION: 切勿使用 FabricPool 将任何与 StorageGRID 相关的数据分层回 StorageGRID 本身。将 StorageGRID 数据分层回 StorageGRID 会增加故障排除和操作的复杂性。

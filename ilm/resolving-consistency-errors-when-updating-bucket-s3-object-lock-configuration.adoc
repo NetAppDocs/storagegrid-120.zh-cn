@@ -1,0 +1,36 @@
+---
+permalink: ilm/resolving-consistency-errors-when-updating-bucket-s3-object-lock-configuration.html 
+sidebar: sidebar 
+keywords: consistency error, s3 object lock and consistency 
+summary: 如果一个数据中心站点或站点上的多个存储节点不可用，则可能需要帮助 S3 租户用户将更改应用于 S3 对象锁定或旧版合规性配置。 
+---
+= 解决在 StorageGRID 中更新 S3 Object Lock 或旧版合规性设置时的一致性错误
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果一个数据中心站点或站点上的多个存储节点不可用，则可能需要帮助 S3 租户用户将更改应用于 S3 对象锁定或旧版合规性配置。
+
+拥有已启用 S3 Object Lock（或旧版合规性）的存储桶的租户用户可以更改某些设置。例如，使用 S3 Object Lock 的租户用户可能需要将对象版本置于合法保留状态。
+
+当租户用户更新 S3 存储区或对象版本的设置时，StorageGRID 尝试立即跨网格更新存储区或对象元数据。如果系统由于某个数据中心站点或多个存储节点不可用而无法更新元数据，则会返回错误：
+
+[listing]
+----
+503: Service Unavailable
+Unable to update compliance settings because the settings can't be consistently applied on enough storage services. Contact your grid administrator for assistance.
+----
+要解决此错误，请执行以下步骤：
+
+. 尽快尝试使所有存储节点或站点重新可用。
+. 如果您无法在每个站点提供足够的存储节点，请联系技术支持，他们可以帮助您恢复节点，并确保在整个网格中始终如一地应用更改。
+. 解决潜在问题后，提醒租户用户重试其配置更改。
+
+
+.相关信息
+* link:../tenant/index.html["使用租户帐户"]
+* link:../s3/index.html["使用 S3 REST API"]
+* link:../maintain/index.html["恢复和维护"]
+

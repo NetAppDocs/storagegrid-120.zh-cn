@@ -1,0 +1,62 @@
+---
+permalink: maintain/selecting-node-recovery-procedure.html 
+sidebar: sidebar 
+keywords: storagegrid, recover, procedure 
+summary: 必须为发生故障的节点类型选择正确的恢复过程。 
+---
+= 选择 StorageGRID 节点恢复过程
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+必须为发生故障的节点类型选择正确的恢复过程。
+
+[cols="1a,2a"]
+|===
+| 网格节点 | 恢复过程 
+
+
+ a| 
+多个存储节点
+ a| 
+联系技术支持。如果多个存储节点出现故障，则技术支持必须协助恢复，以防止可能导致数据丢失的数据库不一致。可能需要站点恢复程序。
+
+link:how-site-recovery-is-performed-by-technical-support.html["技术支持如何恢复站点"]
+
+
+
+ a| 
+单个存储节点
+ a| 
+存储节点恢复流程取决于故障类型和持续时间。
+
+link:recovering-from-storage-node-failures.html["从存储节点故障中恢复"]
+
+
+
+ a| 
+管理节点
+ a| 
+管理节点过程取决于是需要恢复主管理节点还是非主管理节点。
+
+link:recovering-from-admin-node-failures.html["从管理节点故障中恢复"]
+
+
+
+ a| 
+网关节点
+ a| 
+link:replacing-gateway-node.html["从网关节点故障中恢复"]
+
+
+
+ a| 
+归档节点
+ a| 
+https://docs.netapp.com/us-en/storagegrid-118/maintain/recovering-from-archive-node-failures.html["从归档节点故障中恢复（StorageGRID 11.8 文档站点）"^]
+
+|===
+
+NOTE: 如果托管多个网格节点的服务器发生故障，则可以按任何顺序恢复节点。但是，如果故障服务器托管的是主管理节点，则必须先恢复该节点。首先恢复主管理节点可防止其他节点在等待联系主管理节点时停止恢复。

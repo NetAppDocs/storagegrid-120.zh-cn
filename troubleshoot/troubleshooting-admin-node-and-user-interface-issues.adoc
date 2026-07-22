@@ -1,0 +1,180 @@
+---
+permalink: troubleshoot/troubleshooting-admin-node-and-user-interface-issues.html 
+sidebar: sidebar 
+keywords: how to troubleshoot admin node issues, how to troubleshoot user interface issues 
+summary: 您可以执行多个任务来帮助确定与管理节点和 StorageGRID 用户界面相关的问题的来源。 
+---
+= 对 StorageGRID 中的管理节点和用户界面问题进行故障排除
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以执行多个任务来帮助确定与管理节点和 StorageGRID 用户界面相关的问题的来源。
+
+
+
+[[admin-node-sign-in-errors]]
+== 管理节点登录错误
+
+如果您在登录 StorageGRID 管理节点时遇到错误，则您的系统可能存在 link:../troubleshoot/troubleshooting-network-hardware-and-platform-issues.html["网络连接"] 或  https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/troubleshooting-hardware-installation-sg100-and-sg1000.html["硬件"^] 问题、link:../primer/what-admin-node-is.html["管理节点服务"] 问题，或连接的存储节点上的 link:../maintain/recovering-failed-storage-volumes-and-rebuilding-cassandra-database.html["Cassandra 数据库的问题"] 问题。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您拥有  `Passwords.txt` 文件。
+* 您有 link:../admin/admin-group-permissions.html["特定访问权限"]。
+
+
+.关于此任务
+如果在尝试登录到管理节点时看到以下任一错误消息，请使用以下故障排除指南：
+
+* `Your credentials for this account were invalid. Please try again.`
+* `Waiting for services to start...`
+* `Internal server error. The server encountered an error and could not complete your request. Please try again. If the problem persists, contact Technical Support.`
+* `Unable to communicate with server. Reloading page...`
+
+
+.步骤
+. 请稍等 10 分钟，然后尝试重新登录。
++
+如果错误未自动解决，请转至下一步。
+
+. 如果您的 StorageGRID 系统有多个管理节点，请尝试从另一个管理节点登录到 Grid Manager，以检查不可用的管理节点的状态。
++
+** 如果您能够登录，可以使用*控制面板*、*节点*、*提醒*和*支持*选项来帮助确定错误的原因。
+** 如果您只有一个管理节点或仍无法登录，请转至下一步。
+
+
+. 确定节点的硬件是否已脱机。
+. 如果您的 StorageGRID 系统启用了单点登录 (SSO)，请参见 link:../admin/configure-sso.html["配置单点登录"] 的步骤。
++
+您可能需要暂时禁用并重新启用单个管理节点的 SSO 以解决相关问题。
+
++
+
+NOTE: 如果启用了 SSO，则无法使用受限端口登录。您必须使用端口 443。
+
+. 确定您使用的帐户是否属于联合用户。
++
+如果联合用户帐户不起作用，请尝试以本地用户（例如 root）身份登录到 Grid Manager。
+
++
+** 如果本地用户可以登录：
++
+... 查看警报。
+... 选择*配置* > *访问控制* > *身份联合*。
+... 单击*测试连接*以验证您的 LDAP 服务器连接设置。
+... 如果测试失败，请解决所有配置错误。
+
+
+** 如果本地用户无法登录，并且您确信凭据正确，请转到下一步。
+
+
+. 使用安全 Shell (SSH) 登录到管理节点：
++
+.. 输入以下命令： `ssh admin@Admin_Node_IP`
+.. 输入 `Passwords.txt`文件中列出的密码。
+.. 输入以下命令切换到 root： `su -`
+.. 输入 `Passwords.txt`文件中列出的密码。
++
+以 root 身份登录时，提示符将从 `$`更改为 `#`。
+
+
+
+. 查看网格节点上运行的所有服务的状态： `storagegrid-status`
++
+确保 nms、mi、nginx 和 mgmt api 服务均在运行。
+
++
+如果服务的状态发生变化，输出将立即更新。
+
++
+....
+$ storagegrid-status
+Host Name                      99-211
+IP Address                     10.96.99.211
+Operating System Kernel        4.19.0         Verified
+Operating System Environment   Debian 10.1    Verified
+StorageGRID Webscale Release   11.4.0         Verified
+Networking                                    Verified
+Storage Subsystem                             Verified
+Database Engine                5.5.9999+default Running
+Network Monitoring             11.4.0         Running
+Time Synchronization           1:4.2.8p10+dfsg Running
+ams                            11.4.0         Running
+cmn                            11.4.0         Running
+nms                            11.4.0         Running
+ssm                            11.4.0         Running
+mi                             11.4.0         Running
+dynip                          11.4.0         Running
+nginx                          1.10.3         Running
+tomcat                         9.0.27         Running
+grafana                        6.4.3          Running
+mgmt api                       11.4.0         Running
+prometheus                     11.4.0         Running
+persistence                    11.4.0         Running
+ade exporter                   11.4.0         Running
+alertmanager                   11.4.0         Running
+attrDownPurge                  11.4.0         Running
+attrDownSamp1                  11.4.0         Running
+attrDownSamp2                  11.4.0         Running
+node exporter                  0.17.0+ds      Running
+sg snmp agent                  11.4.0         Running
+....
+. 确认 nginx-gw 服务正在运行 `# service nginx-gw status`
+. [[use_Lumberjack_to_collect_logs]]使用 Lumberjack 收集日志： `# /usr/local/sbin/lumberjack.rb`
++
+如果身份验证失败发生在过去，您可以使用 --start 和 --end Lumberjack 脚本选项指定适当的时间范围。有关这些选项的详细信息，请使用 lumberjack -h。
+
++
+终端的输出指示已复制日志存档的位置。
+
+. [[review_logs, start=10]]查看以下日志：
++
+** `/var/local/log/bycast.log`
+** `/var/local/log/bycast-err.log`
+** `/var/local/log/nms.log`
+** `**/*commands.txt`
+
+
+. 如果您无法识别管理节点的任何问题，请发出以下命令之一，以确定在您的站点运行 ADC 服务的三个存储节点的 IP 地址。通常，这些是在该站点安装的前三个存储节点。
++
+[listing]
+----
+# cat /etc/hosts
+----
++
+[listing]
+----
+# gpt-list-services adc
+----
++
+管理节点在身份验证过程中使用 ADC 服务。
+
+. 从管理节点，使用 ssh 登录到每个 ADC 存储节点，使用您确定的 IP 地址。
+. 查看网格节点上运行的所有服务的状态： `storagegrid-status`
++
+确保 idnt、acct、nginx 和 cassandra 服务都在运行。
+
+. 重复步骤 <<use_Lumberjack_to_collect_logs,使用 Lumberjack 收集日志>> 和 <<review_logs,查看日志>> 以查看存储节点上的日志。
+. 如果您无法解决此问题，请与技术支持联系。
++
+将您收集的日志提供给技术支持。另请参阅link:../monitor/logs-files-reference.html["日志文件引用"]。
+
+
+
+
+
+[[user-interface-issues]]
+== 用户界面问题
+
+升级 StorageGRID 软件后，Grid Manager 或 Tenant Manager 的用户界面可能无法按预期响应。
+
+.步骤
+. 请确保使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"]。
+. 清除 Web 浏览器缓存。
++
+清除缓存可删除先前版本的 StorageGRID 软件使用的过时资源，并允许用户界面再次正常运行。有关说明，请参见 Web 浏览器的文档。
+
+

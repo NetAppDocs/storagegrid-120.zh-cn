@@ -1,0 +1,92 @@
+---
+permalink: tenant/grid-federation-view-connections-tenant.html 
+sidebar: sidebar 
+keywords: grid federation connection, view, clear error, last error 
+summary: 如果您的租户帐户具有使用网格联合连接权限，则可以查看允许的连接。 
+---
+= 在 StorageGRID 中查看网格联合连接
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您的租户帐户具有*使用网格联合连接*权限，则可以查看允许的连接。
+
+.开始之前
+* 租户帐户具有*使用网格联合连接*权限。
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到租户管理器。
+* 您属于具有 link:tenant-management-permissions.html["root 访问权限"] 的用户组。
+
+
+.步骤
+. 选择 *STORAGE (S3)* > *Grid federation connections*。
++
+此时将显示"网格联合连接"页面，其中包含一个汇总以下信息的表格：
+
++
+[cols="1a,2a"]
+|===
+| 列 | 问题描述 
+
+
+ a| 
+连接名称
+ a| 
+此租户有权使用的网格联合连接。
+
+
+
+ a| 
+具有跨网格复制的存储桶
+ a| 
+对于每个网格联合连接，已启用跨网格复制的租户存储桶。添加到这些存储桶的对象将被复制到连接中的另一个网格。
+
+
+
+ a| 
+上次错误
+ a| 
+对于每个网格联合连接，数据复制到另一个网格时发生的最新错误（如果有）。请参阅 <<clear-last-error,清除最后一个错误>>。
+
+|===
+. （可选）选择一个存储桶名称 link:viewing-s3-bucket-details.html["查看存储桶详细信息"]。
+
+
+
+
+[[clear-last-errorclear-the-last-error]]
+== [[clear-last-error]]清除最后一个错误
+
+由于以下原因之一，*上一个错误*列中可能出现错误：
+
+* 未找到源对象版本。
+* 未找到源存储桶。
+* ${post_edited_translations.segment}
+* ${post_edited_translations.segment}
+* ${post_edited_translations.segment}
+* ${post_edited_translations.segment}
+
+
+
+NOTE: 此列仅显示最后发生的跨网格复制错误；不会显示以前可能发生的错误。
+
+.步骤
+. 如果*上一个错误*列中显示消息，请查看消息文本。
++
+例如，此错误指示跨网格复制的目标存储桶处于无效状态，可能是因为版本控制已挂起或已启用 S3 Object Lock。
+
++
+image:grid-federation-cgr-object-example-last-error.png["grid-federation-cgr-object-example-last-error"]
+
+. 执行任何推荐的操作。例如，如果针对跨网格复制暂停了目标存储桶的版本控制，请重新启用该存储桶的版本控制。
+. 从表中选择连接。
+. 选择*清除错误*。
+. ${post_edited_translations.segment}
+. 等待 5-6 分钟，然后向存储桶中摄入一个新对象。确认未再次出现该错误消息。
++
+
+NOTE: 为确保清除错误消息，请在消息中的时间戳后至少等待 5 分钟，然后再摄取新对象。
+
+. 要确定是否因存储区错误而无法复制任何对象，请参阅 link:../admin/grid-federation-retry-failed-replication.html["${post_edited_translations.segment}"]。
+

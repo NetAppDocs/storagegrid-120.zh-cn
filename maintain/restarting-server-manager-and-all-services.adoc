@@ -1,0 +1,40 @@
+---
+permalink: maintain/restarting-server-manager-and-all-services.html 
+sidebar: sidebar 
+keywords: storagegrid, recover, server manager, restart server manager 
+summary: 您可能需要重新启动 Server Manager 和在网格节点上运行的所有服务。 
+---
+= 重新启动 StorageGRID Server Manager 和所有服务
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可能需要重新启动 Server Manager 和在网格节点上运行的所有服务。
+
+.开始之前
+您拥有  `Passwords.txt` 文件。
+
+.步骤
+. ${post_edited_translations.segment}
++
+.. 输入以下命令： `ssh admin@_grid_node_IP_`
+.. 输入 `Passwords.txt`文件中列出的密码。
+.. 输入以下命令切换到 root： `su -`
+.. 输入 `Passwords.txt`文件中列出的密码。
+
+
++
+以 root 身份登录时，提示符将从 `$`更改为 `#`。
+
+. 重新启动服务器管理器和网格节点上的所有服务： `service servermanager restart`
++
+服务器管理器和网格节点上的所有服务将停止，然后重新启动。
+
++
+
+NOTE: 使用 `restart`命令与先使用 `stop`命令再使用 `start`命令的效果相同。
+
+. 从命令 shell 中注销： `exit`
+

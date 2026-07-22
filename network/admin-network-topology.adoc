@@ -1,0 +1,24 @@
+---
+permalink: network/admin-network-topology.html 
+sidebar: sidebar 
+keywords: admin network topology, using admin network 
+summary: 拥有管理网络是可选的。使用管理网络和网格网络的一种方法是为每个节点配置可路由的网格网络和有界管理网络。 
+---
+= StorageGRID 的管理网络拓扑
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+拥有管理网络是可选的。使用管理网络和网格网络的一种方法是为每个节点配置可路由的网格网络和有界管理网络。
+
+配置管理网络时，您需要为每个网格节点的 eth1 接口设置主机 IP 地址、子网掩码和网关 IP 地址。
+
+管理网络可以对每个节点都是唯一的，并且可以由多个子网组成。可以为每个节点配置管理外部子网列表 (AESL)。AESL 列出每个节点通过管理网络可访问的子网。AESL 还必须包括网格将通过管理网络访问的任何服务的子网，例如 NTP、DNS、KMS 和 LDAP。静态路由应用于 AESL 中的每个子网。
+
+在此示例中，网格网络用于与 S3 客户端请求和对象管理相关的流量，而管理网络用于管理功能。
+
+image:grid_admin_networks.png["网格管理网络"]
+
+image:grid_admin_networks_ips.png["网格管理网络IP"]

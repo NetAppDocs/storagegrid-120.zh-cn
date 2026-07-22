@@ -1,0 +1,35 @@
+---
+permalink: maintain/reviewing-warnings-for-system-drive-recovery.html 
+sidebar: sidebar 
+keywords: storagegrid, recover, system drive warning, storage node 
+summary: 在恢复存储节点的故障系统驱动器之前，请查看网格节点恢复的一般警告和注意事项以及以下特定警告。 
+---
+= StorageGRID 存储节点系统驱动器恢复警告
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在恢复存储节点的故障系统驱动器之前，请查看常规link:warnings-and-considerations-for-grid-node-recovery.html["网格节点恢复的警告和注意事项"]和以下特定警告。
+
+存储节点具有包含对象元数据的 Cassandra 数据库。在以下情况下，可能会重建 Cassandra 数据库：
+
+* 存储卷出现故障并恢复。
+* 系统驱动器和一个或多个存储卷出现故障并进行恢复。
+
+
+重建 Cassandra 时，系统会使用来自其他存储节点的信息。如果 Cassandra 最近已重建，则 Cassandra 数据在整个网格中可能尚不一致。如果有太多存储节点处于离线状态：
+
+* 某些 Cassandra 数据可能不可用。
+* 可能会发生数据丢失。
+
+
+
+CAUTION: 如果多个存储节点出现故障（或处于脱机状态），请与技术支持联系。请勿执行以下恢复过程。可能会发生数据丢失。有关详细信息，请参阅 link:how-site-recovery-is-performed-by-technical-support.html["技术支持如何恢复站点"]。
+
+
+CAUTION: 如果此存储节点处于只读维护模式，以允许具有发生故障的存储卷的另一个存储节点检索对象，则在恢复此发生故障的存储节点之前，请恢复具有发生故障的存储卷的存储节点上的卷。请参阅 link:recovering-from-storage-volume-failure-where-system-drive-is-intact.html["从系统驱动器完好无损的存储卷故障中恢复"] 的说明。
+
+
+CAUTION: 如果将 ILM 规则配置为仅存储一个复制副本，并且该副本存在于出现故障的存储卷上，则您将无法恢复该对象。

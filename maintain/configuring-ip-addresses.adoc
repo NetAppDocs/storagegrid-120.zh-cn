@@ -1,0 +1,52 @@
+---
+permalink: maintain/configuring-ip-addresses.html 
+sidebar: sidebar 
+keywords: configure ip address, change IP tool, ethernet, dhcp, ha group 
+summary: 您可以通过使用 Change IP 工具为网格节点配置 IP 地址来执行网络配置。 
+---
+= StorageGRID IP 地址指南
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过使用 Change IP 工具为网格节点配置 IP 地址来执行网络配置。
+
+您必须使用更改 IP 工具对最初在网格部署期间设置的网络配置进行大多数更改。使用标准 Linux 网络命令和文件进行的手动更改可能不会传播到所有 StorageGRID 服务，并且可能不会在升级、重新启动或节点恢复过程中持续生效。
+
+
+NOTE: IP 变更程序可能是中断性程序。在应用新配置之前，部分网格可能不可用。
+
+
+NOTE: 如果仅对网格网络子网列表进行更改，请使用网格管理器添加或更改网络配置。否则，如果由于网络配置问题无法访问网格管理器，或者同时执行网格网络路由更改和其他网络更改，请使用更改 IP 工具。
+
+
+TIP: 如果要更改网格中所有节点的网格网络 IP 地址，请使用 link:changing-ip-addresses-and-mtu-values-for-all-nodes-in-grid.html["适用于全网格更改的特殊程序"]。
+
+
+
+[[ethernet-interfaces]]
+== 以太网接口
+
+分配给 eth0 的 IP 地址始终是网格节点的网格网络 IP 地址。分配给 eth1 的 IP 地址始终是网格节点的管理网络 IP 地址。分配给 eth2 的 IP 地址始终是网格节点的客户端网络 IP 地址。
+
+请注意，在某些平台上，例如 StorageGRID 设备，eth0、eth1 和 eth2 可能是由从属网桥或物理或 VLAN 接口的绑定组成的聚合接口。在这些平台上，*SSM* > *Resources* 选项卡可能显示除 eth0、eth1 或 eth2 之外分配给其他接口的网格、管理员和客户端网络 IP 地址。
+
+
+
+[[dhcp]]
+== DHCP
+
+您只能在部署阶段设置 DHCP。您无法在配置过程中设置 DHCP。如果要更改网格节点的 IP 地址、子网掩码和默认网关，则必须使用 IP 地址更改过程。使用 Change IP 工具将导致 DHCP 地址变为静态。
+
+
+
+[[high-availability-ha-groups]]
+== 高可用性 (HA) 组
+
+* 如果客户端网络接口包含在 HA 组中，则无法将该接口的客户端网络 IP 地址更改为位于为 HA 组配置的子网之外的地址。
+* 无法将客户端网络 IP 地址更改为分配给客户端网络接口上配置的 HA 组的现有虚拟 IP 地址的值。
+* 如果网格网络接口包含在 HA 组中，则无法将该接口的网格网络 IP 地址更改为位于为 HA 组配置的子网之外的地址。
+* 无法将网格网络 IP 地址更改为分配给网格网络接口上配置的 HA 组的现有虚拟 IP 地址的值。
+

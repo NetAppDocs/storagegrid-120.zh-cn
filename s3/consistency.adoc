@@ -1,0 +1,148 @@
+---
+permalink: s3/consistency.html 
+sidebar: sidebar 
+keywords: consistency, consistency control, consistency values 
+summary: 一致性提供了对象的可用性和这些对象在不同存储节点和站点之间的一致性之间的平衡。您可以根据应用程序的要求更改一致性。 
+---
+= StorageGRID S3 REST API 如何平衡可用性和一致性
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+一致性提供了对象的可用性和这些对象在不同存储节点和站点之间的一致性之间的平衡。您可以根据应用程序的要求更改一致性。
+
+默认情况下，StorageGRID 保证新创建的对象的写后读一致性。成功完成 PUT 后的任何 GET 都可以读取新写入的数据。现有对象的覆盖、元数据更新和删除最终是一致的。
+
+如果要以不同的一致性执行对象操作，则可以：
+
+* 请指定 <<bucket-consistency,每个存储桶>> 的一致性。
+* 为 <<api-operation-consistency-control,每个 API 操作>> 指定一致性。
+* 通过执行以下任务之一更改默认网格范围的一致性：
++
+** 在网格管理器中，转到*配置* > *系统* > *存储设置* > *默认存储桶一致性*。
+** 。
++
+
+NOTE: 对网格范围一致性的更改仅适用于更改设置后创建的存储桶。要确定更改的详细信息，请参见位于 `/var/local/log`的审计日志（搜索 *consistencyLevel*）。
+
+
+
+
+
+
+
+[[consistency-values]]
+== 一致性值
+
+一致性会影响StorageGRID用于跟踪对象的元数据在节点之间的分布方式。一致性会影响客户端请求对象的可用性。
+
+可以将存储桶或 API 操作的一致性设置为以下值之一：
+
+* *所有*：所有节点立即接收对象元数据，否则请求将失败。
+* *Strong-global*：保证所有站点上所有客户端请求的写后读一致性。配置 Quorum 语义时，适用以下行为：
++
+** 当网格具有三个或更多站点时，允许客户端请求的站点容错。双站点网格不具有站点故障容限。
+** 如果一个站点关闭，以下 S3 操作将不会成功：
++
+*** DeleteBucketEncryption
+*** PutBucketBranch
+*** PutBucketEncryption
+*** PutBucketVersioning
+*** PutObjectLegalHold
+*** PutObjectLockConfiguration
+*** PutObjectRetention
+
+
+
+
++
+如有需要，您可以 https://kb.netapp.com/hybrid/StorageGRID/Object_Mgmt/Configuring_StorageGRID_quorum_semantics_for_strong-global_consistency["配置 StorageGRID 仲裁语义以实现强全局一致性"^]。
+
+* *Strong-site*：对象元数据会立即分发到站点上的其他节点。保证站点内所有客户端请求的写后读一致性。
+* *Read-after-new-write*：为新对象提供写后读一致性，并为对象更新提供最终一致性。提供高可用性和数据保护保证。建议在大多数情况下使用。
+* *可用*：为新对象和对象更新提供最终一致性。对于 S3 存储桶，仅根据需要使用（例如，对于包含很少读取的日志值的存储桶，或者对于不存在的键的 HEAD 或 GET 操作）。不支持 S3 FabricPool 存储桶。
+
+
+
+
+[[use-read-after-new-write-and-available-consistency]]
+== 使用"新写后读"和"可用"一致性
+
+当 HEAD 或 GET 操作使用"新写后读"一致性时，StorageGRID 将按以下步骤执行查找：
+
+* 它首先使用低一致性查找对象。
+* 如果查找失败，它会重复查找下一个一致性值，直到达到与 strong-global 行为等效的一致性。
+
+
+如果 HEAD 或 GET 操作使用"新写后读"一致性，但对象不存在，则对象查找将始终达到与 strong-global 行为等效的一致性。由于这种一致性要求每个站点提供多个对象元数据副本，因此如果同一站点上的两个或多个存储节点不可用，则可能会收到大量 500 Internal Server 错误。
+
+除非您需要类似于 Amazon S3 的一致性保证，否则可以通过将一致性设置为"可用"来防止 HEAD 和 GET 操作出现这些错误。当 HEAD 或 GET 操作使用"可用"一致性时，StorageGRID 仅提供最终一致性。它不会以增加一致性的方式重试失败的操作，因此不需要提供多个对象元数据副本。
+
+
+
+[[api-operation-consistency-controlspecify-consistency-for-api-operation]]
+== [[api-operation-consistency-control]]指定 API 操作的一致性
+
+要为单个 API 操作设置一致性，必须为该操作支持一致性值，并且必须在请求标头中指定一致性。此示例将 GetObject 操作的一致性设置为"Strong-site"。
+
+[listing, subs="specialcharacters,quotes"]
+----
+GET /bucket/object HTTP/1.1
+Date: date
+Authorization: _authorization name_
+Host: _host_
+Consistency-Control: strong-site
+----
+
+NOTE: 您必须对PutObject和GetObject操作使用相同的一致性。
+
+
+
+[[bucket-consistencyspecify-consistency-for-bucket]]
+== [[bucket-consistency]]指定bucket的一致性
+
+要设置存储桶的一致性，您可以使用 StorageGRID link:put-bucket-consistency-request.html["PUT Bucket 一致性"] 请求。或者，您可以从租户管理器 link:../tenant/manage-bucket-consistency.html#change-bucket-consistency["更改存储桶的一致性"]。
+
+在设置存储区的一致性时，请注意以下几点：
+
+* 设置存储桶的一致性决定了对存储桶中的对象或存储桶配置执行的 S3 操作所使用的一致性。它不影响存储桶本身的操作。
+* 单个 API 操作的一致性将覆盖存储桶的一致性。
+* 一般来说，存储桶应使用默认的一致性，"Read-after-new-write."如果请求无法正常工作，请尽可能更改应用程序客户端行为。或者，配置客户端以指定每个 API 请求的一致性。仅作为最后手段，在存储桶级别设置一致性。
+
+
+
+
+[[how-consistency-and-ilm-rules-interacthow-consistency-and-ilm-rules-interact-to-affect-data-protection]]
+== [[how-consistency-and-ILM-rules-interact]]一致性和ILM规则如何相互作用以影响数据保护
+
+您选择的一致性和 ILM 规则都会影响对象的保护方式。这些设置可以相互影响。
+
+例如，存储对象时使用的一致性会影响对象元数据的初始放置，而为 ILM 规则选择的摄取行为会影响对象副本的初始放置。由于 StorageGRID 需要访问对象的元数据及其数据来满足客户端请求，因此为一致性和摄取行为选择匹配的保护级别可以提供更好的初始数据保护和更可预测的系统响应。
+
+以下link:../ilm/data-protection-options-for-ingest.html["载入选项"]可用于 ILM 规则：
+
+双提交:: StorageGRID 立即生成对象的临时副本，并将成功返回给客户端。ILM 规则中指定的副本将在可能时创建。
+严格:: 在成功返回到客户端之前，必须创建 ILM 规则中指定的所有副本。
+平衡:: StorageGRID 尝试在导入时生成 ILM 规则中指定的所有副本；如果无法实现，则生成临时副本并将成功状态返回给客户端。ILM 规则中指定的副本将在可能时生成。
+
+
+
+
+[[example-of-how-the-consistency-and-ilm-rule-can-interact]]
+== 一致性和 ILM 规则如何相互作用的示例
+
+假设您有一个具有以下 ILM 规则和以下一致性的三站点网格：
+
+* ILM 规则：创建三个对象副本，一个在本地站点，一个在每个远程站点。使用严格的载入行为。
+* *一致性*：强全局（对象元数据立即分发到多个站点）。
+
+
+当客户端将对象存储到网格中时，StorageGRID 会创建所有三个对象副本并将元数据分发到多个站点，然后再将成功状态返回给客户端。
+
+对象在接收成功消息时受到完全保护，不会丢失。例如，如果本地站点在载入后不久丢失，则对象数据和对象元数据的副本仍然存在于远程站点。该对象可从其他站点完全检索。
+
+如果改为使用相同的 ILM 规则和强站点一致性，则在对象数据复制到远程站点但对象元数据分发到远程站点之前，客户端可能会收到一条成功消息。在这种情况下，对象元数据的保护级别与对象数据的保护级别不匹配。如果本地站点在载入后不久丢失，则对象元数据将丢失。无法检索对象。
+
+一致性和 ILM 规则之间的相互关系可能很复杂。如需帮助，请联系 NetApp。

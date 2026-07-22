@@ -1,0 +1,163 @@
+---
+permalink: admin/manage-tls-ssh-policy.html 
+sidebar: sidebar 
+keywords: TLS and SSH policy, secure connection, FIPS, Common Criteria 
+summary: TLS 和 SSH 策略确定使用哪些协议和密码与客户端应用程序建立安全的 TLS 连接，以及与内部 StorageGRID 服务建立安全的 SSH 连接。 
+---
+= 在 StorageGRID 中管理 TLS 和 SSH 策略
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+TLS 和 SSH 策略确定使用哪些协议和密码与客户端应用程序建立安全的 TLS 连接，以及与内部 StorageGRID 服务建立安全的 SSH 连接。
+
+安全策略控制 TLS 和 SSH 如何加密传输中的数据。通常，使用 Modern compatibility（默认）策略，除非您的系统需要符合 Common Criteria 标准，或者您需要使用其他密码。
+
+
+NOTE: 某些 StorageGRID 服务尚未更新为使用这些策略中的密码。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["root 访问权限"]。
+
+
+
+
+[[select-a-security-policy]]
+== 选择安全策略
+
+.步骤
+. 选择*配置* > *安全* > *安全设置*。
++
+*TLS and SSH policies* 选项卡显示可用策略。当前有效的策略在策略图块上以绿色复选标记标注。
+
++
+image:securitysettings_tls_ssh_policies_current.png["TLS和SSH策略"]
+
+. 查看选项卡以了解可用的策略。
++
+[role="tabbed-block"]
+====
+.现代兼容性（默认）
+--
+如果您需要强加密且没有特殊要求，请使用默认策略。此策略与大多数 TLS 和 SSH 客户端兼容。
+
+--
+.旧版兼容性
+--
+如果您需要旧版客户端的其他兼容性选项，请使用旧版兼容性策略。此策略中的其他选项可能会使其安全性低于新式兼容性策略。
+
+--
+.通用标准
+--
+如果您需要Common Criteria认证，请使用Common Criteria策略。
+
+--
+.FIPS 严格
+--
+如果您需要通用标准认证，并且需要使用 NetApp 加密安全模块 (NCSM) 3.0.8 或 NetApp StorageGRID Kernel Crypto API 6.1.129-1-ntap1-amd64 模块进行与负载均衡器端点、租户管理器和网格管理器的外部客户端连接，请使用 FIPS 严格策略。使用此策略可能会降低性能。
+
+NCSM 3.0.8 和 NetApp StorageGRID Kernel Crypto API 6.1.129-1-ntap1-amd64 模块用于以下操作：
+
+** NCSM
++
+*** 以下服务之间的 TLS 连接：ADC、AMS、CMN、DDS、LDR、SSM、NMS、mgmt-api、nginx、nginx-gw 和 cache-svc
+*** 客户端与 nginx-gw 服务（负载均衡器端点）之间的 TLS 连接
+*** 客户端与 LDR 服务之间的 TLS 连接
+*** SSE-S3、SSE-C 和存储对象加密设置的对象内容加密
+*** SSH 连接
+
+
++
+有关详细信息，请参见 NIST Cryptographic Algorithm Validation Program link:https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/4838["证书 #4838"^]。
+
+** NetApp StorageGRID 内核加密 API 模块
++
+NetApp StorageGRID 内核加密 API 模块仅存在于 VM 和 StorageGRID 设备平台上。
+
++
+*** 熵收集
+*** 节点加密
+
+
++
+有关详细信息，请参见 NIST Cryptographic Algorithm Validation Program link:https://csrc.nist.gov/projects/cryptographic-algorithm-validation-program/validation-search?searchMode=implementation&product=NetApp+StorageGRID+Kernel+Crypto+API&productType=-1&ipp=50["证书 #A6242 至 #A6257"^]和 link:https://csrc.nist.gov/projects/cryptographic-module-validation-program/entropy-validations/certificate/223["熵证书 #E223"^]。
+
+
+
+*注意*：选择此策略后，link:../maintain/rolling-reboot-procedure.html["执行滚动重启"]所有节点都要激活 NCSM。使用 *维护* > *滚动重启* 来启动和监控重启。
+
+--
+.自定义
+--
+如果需要应用自己的密码，请创建自定义策略。
+
+或者，如果您的 StorageGRID 具有 FIPS 140 加密要求，则启用 FIPS 模式功能以使用 NCSM 3.0.8 和 NetApp StorageGRID Kernel Crypto API 6.1.129-1-ntap1-amd64 模块：
+
+.. 将 `fipsMode`参数设置为 `true`。
+.. 出现提示时，link:../maintain/rolling-reboot-procedure.html["执行滚动重启"]让所有节点激活加密模块。使用 *Maintenance* > *Rolling reboot* 启动和监控重启。
+.. 选择 *Support* > *Diagnostics* 以查看活动的 FIPS 模块版本。
+
+
+--
+====
+. 要查看每个策略的密码、协议和算法的详细信息，请选择 *View details*。
+. 要更改当前策略，请选择 *Use policy*。
++
+策略磁贴上的*当前策略*旁边会显示一个绿色复选标记。
+
+
+
+
+
+[[create-a-custom-security-policy]]
+== 创建自定义安全策略
+
+如果需要应用自己的密码，则可以创建自定义策略。
+
+.步骤
+. 从与要创建的自定义策略最相似的策略图块中，选择*查看详细信息*。
+. 选择*复制到剪贴板*，然后选择*取消*。
++
+image:securitysettings-custom-security-policy-copy.png["复制现有策略以创建自定义策略"]
+
+. 在*自定义策略*图块中，选择*配置和使用*。
+. 粘贴您复制的 JSON 并进行所需的更改。
+. 选择*使用策略*。
++
+自定义策略磁贴上的*当前策略*旁边会显示一个绿色复选标记。
+
+. （可选）选择*编辑配置*以对新的自定义策略进行更多更改。
+
+
+
+
+[[temporarily-revert-to-the-default-security-policy]]
+[[temporarily-revert-to-default-security-policy]]
+== 暂时还原为默认安全策略
+
+如果配置了自定义安全策略，且配置的 TLS 策略与 link:global-certificate-types.html["已配置的服务器证书"] 不兼容，则可能无法登录到 Grid Manager。
+
+您可以暂时还原为默认安全策略。
+
+.步骤
+. 登录到管理节点：
++
+.. 输入以下命令： `ssh admin@_Admin_Node_IP_`
+.. 输入 `Passwords.txt`文件中列出的密码。
+.. 输入以下命令切换到 root： `su -`
+.. 输入 `Passwords.txt`文件中列出的密码。
++
+以 root 身份登录时，提示符将从 `$`更改为 `#`。
+
+
+
+. 运行以下命令：
++
+`restore-default-cipher-configurations`
+
+. 在 Web 浏览器中，访问同一管理节点上的 Grid Manager。
+. 请按照 <<select-a-security-policy,选择安全策略>> 中的步骤重新配置策略。
+

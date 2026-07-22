@@ -1,0 +1,248 @@
+---
+permalink: maintain/changing-nodes-network-configuration.html 
+sidebar: sidebar 
+keywords: storagegrid, network configuration, node network configuration 
+summary: 您可以使用 Change IP 工具更改一个或多个节点的网络配置。您可以更改网格网络的配置，或者添加、更改或删除管理网络或客户端网络。 
+---
+= 更改 StorageGRID 中的节点网络配置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 Change IP 工具更改一个或多个节点的网络配置。您可以更改网格网络的配置，或者添加、更改或删除管理网络或客户端网络。
+
+.开始之前
+您拥有  `Passwords.txt` 文件。
+
+.关于此任务
+*Linux：* 如果您是第一次将网格节点添加到管理网络或客户端网络，并且之前未在节点配置文件中配置 ADMIN_NETWORK_TARGET 或 CLIENT_NETWORK_TARGET，则必须立即执行此操作。请参阅适用于您的 Linux 操作系统的 StorageGRID link:../swnodes/index.html["安装说明"]。
+
+*设备：* 在 StorageGRID 设备上，如果在初始安装期间未在 StorageGRID 设备安装程序中配置客户端或管理网络，则无法仅使用更改 IP 工具添加网络。首先，必须 https://docs.netapp.com/us-en/storagegrid-appliances/commonhardware/placing-appliance-into-maintenance-mode.html["将设备置于维护模式"^]，配置链接，将设备恢复到正常运行模式，然后使用更改 IP 工具修改网络配置。请参阅 https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/configuring-network-links.html["配置网络链路的过程"^]。
+
+您可以更改任何网络上一个或多个节点的 IP 地址、子网掩码、网关或 MTU 值。
+
+您还可以从客户端网络或管理网络中添加或删除节点：
+
+* 您可以通过将网络上的 IP 地址/子网掩码添加到节点，从而将节点添加到客户端网络或管理网络。
+* 您可以通过删除该网络上节点的 IP 地址/子网掩码，从客户端网络或管理网络中删除节点。
++
+无法从网格网络中删除节点。
+
+
+
+
+NOTE: 不允许交换 IP 地址。如果您必须在网格节点之间交换 IP 地址，则必须使用临时中间 IP 地址。
+
+
+NOTE: 如果您的 StorageGRID 系统启用了单点登录 (SSO)，并且您正在更改管理节点的 IP 地址，请注意，使用管理节点的 IP 地址（而不是建议的完全限定域名）配置的任何依赖方信任都将失效。您将无法再登录到该节点。更改 IP 地址后，必须立即使用新 IP 地址在 Active Directory Federation Services (AD FS) 中更新或重新配置节点的依赖方信任。请参阅 link:../admin/configure-sso.html["配置 SSO"] 的说明。
+
+
+NOTE: 使用更改 IP 工具对网络所做的任何更改都将传播到 StorageGRID 设备的安装程序固件中。这样，如果在设备上重新安装 StorageGRID 软件，或者将设备置于维护模式，则网络配置将正确无误。
+
+.步骤
+. 默认情况下会阻止外部 SSH 访问。如有需要，link:../admin/manage-external-ssh-access.html["暂时允许访问"]。
+. ${post_edited_translations.segment}
++
+.. 输入以下命令： `ssh admin@_primary_Admin_Node_IP_`
+.. 输入 `Passwords.txt`文件中列出的密码。
+.. 输入以下命令切换到 root： `su -`
+.. 输入 `Passwords.txt`文件中列出的密码。
+
+
++
+以 root 身份登录时，提示符将从 `$`更改为 `#`。
+
+. 通过输入以下命令启动 Change IP 工具： `change-ip`
+. 在提示符处输入配置密码。
++
+此时将显示主菜单。
+
++
+image:change_ip_tool_main_menu.png["屏幕截图显示更改 IP 工具的欢迎屏幕"]
+
+. （可选）选择 *1* 以选择要更新的节点。然后从下列选项中选择一项：
++
+** *1*：单个节点——按名称选择
+** *2*：单个节点——按站点选择，然后按名称选择
+** *3*：单节点——按当前 IP 选择
+** *4*：站点中的所有节点
+** *5*：网格中的所有节点
++
+*注意：* 如果要更新所有节点，请允许"全部"保持选中状态。
+
+
+
++
+做出选择后，主菜单将显示，并更新 *所选节点* 字段以反映您的选择。所有后续操作仅在显示的节点上执行。
+
+. 在主菜单上，选择选项 *2* 以编辑所选节点的 IP/掩码、网关和 MTU 信息。
++
+.. 选择要进行更改的网络:
++
+--
+*** *1*：Grid 网络
+*** *2*：管理网络
+*** *3*：客户端网络
+*** *4*：所有网络
+
+
+--
++
+--
+选择后，提示将显示节点名称、网络名称（Grid、Admin 或 Client）、数据类型（IP/掩码、网关或 MTU）和当前值。
+
+编辑 DHCP 配置接口的 IP 地址、前缀长度、网关或 MTU 会将接口更改为静态。当您选择更改 DHCP 配置的接口时，将显示一条警告，通知您接口将更改为静态。
+
+配置为 `fixed`的接口无法编辑。
+
+--
+.. 要设置新值，请按当前值显示的格式输入。
+.. 要保持当前值不变，请按 *Enter*。
+.. 如果数据类型为 `IP/mask`，您可以通过输入 *d* 或 *0.0.0.0/0* 从节点中删除 Admin 或 Client Network。
+.. 编辑完所有要更改的节点后，输入 *q* 返回主菜单。
++
+您的更改将保留，直到清除或应用。
+
+
+
+. 通过选择以下选项之一来检查您的更改：
++
+** *5*：显示输出中的编辑，这些编辑被隔离以仅显示更改的项目。更改以绿色（添加）或红色（删除）突出显示，如示例输出中所示：
++
+image:change_ip_tool_edit_ip_mask_sample_output.png["周围文本描述的屏幕截图"]
+
+** *6*：在显示完整配置的输出中显示编辑。更改以绿色（添加）或红色（删除）突出显示。
++
+
+NOTE: 某些命令行界面可能会使用删除线格式显示添加和删除。正确显示取决于您的终端客户端是否支持必要的 VT100 转义序列。
+
+
+
+. 选择选项 *7* 以验证所有更改。
++
+此验证可确保不违反网格、管理和客户端网络的规则，例如不使用重叠的子网。
+
++
+在此示例中，验证返回错误。
+
++
+image:change_ip_tool_validate_sample_error_messages.gif["周围文本描述的屏幕截图"]
+
++
+在此示例中，验证通过。
+
++
+image:change_ip_tool_validate_sample_passed_messages.gif["周围文本描述的屏幕截图"]
+
+. 验证通过后，从下列选项中选择一项：
++
+** *8*：保存未应用的更改。
++
+此选项用于退出 Change IP 工具并稍后重新启动，而不会丢失任何未应用的更改。
+
+** *10*：应用新的网络配置。
+
+
+. 如果您选择了选项 *10*，请从以下选项中选择一项：
++
+** *apply*：立即应用更改，并在必要时自动重新启动每个节点。
++
+如果新的网络配置不需要任何物理网络更改，则可以选择 *apply* 以立即应用更改。如有必要，节点将自动重新启动。需要重新启动的节点将会显示。
+
+** *stage*：下次手动重新启动节点时应用更改。
++
+如果需要对新的网络配置进行物理或虚拟网络配置更改才能正常运行，则必须使用 *stage* 选项，关闭受影响的节点，进行必要的物理网络更改，然后重新启动受影响的节点。如果您选择 *apply* 而没有首先进行这些网络更改，则更改通常会失败。
+
++
+
+NOTE: 如果使用 *stage* 选项，则必须在暂存后尽快重新启动节点，以最大限度地减少中断。
+
+** *cancel*：目前不要进行任何网络更改。
++
+如果您不知道建议的更改需要重新启动节点，则可以推迟更改以尽量减少对用户的影响。选择 *cancel* 将返回主菜单并保留更改，以便稍后应用。
+
++
+当您选择 *apply* 或 *stage* 时，将生成一个新的网络配置文件，执行配置，并使用新的工作信息更新节点。
+
++
+在配置期间，输出将显示应用更新时的状态。
+
++
+[listing]
+----
+Generating new grid networking description file...
+
+Running provisioning...
+
+Updating grid network configuration on Name
+----
+
+
++
+应用或暂存更改后，由于网格配置更改，将生成新的恢复包。
+
+. 如果您选择了 *stage*，请在设置完成后执行以下步骤：
++
+.. 进行所需的物理或虚拟网络更改。
++
+*物理网络更改*：进行必要的物理网络更改，必要时安全关闭节点。
+
++
+*Linux*：如果您是首次将节点添加到管理网络或客户端网络，请确保已按照 link:linux-adding-interfaces-to-existing-node.html["Linux：向现有节点添加接口"] 中所述添加接口。
+
+.. 重新启动受影响的节点。
+
+
+. 选择 *0* 以在更改完成后退出 Change IP 工具。
+. 从 Grid Manager 下载新的恢复包。
++
+.. 选择*维护* > *系统* > *恢复包*。
+.. 输入配置密码。
+
+
+. 如果您已允许外部 SSH 访问，请在完成节点网络配置更改后link:../admin/manage-external-ssh-access.html["阻止访问"]。
+
+
+
+
+[[temporarily-changing-the-lacp-pdu-rate]]
+== 临时更改 LACP PDU 速率
+
+要对设备中安装的网络组件执行维护操作，例如升级 NIC 固件，您可以检查当前的 LACP PDU 速率设置是否满足 NIC 通信计时要求。如果需要，您可以在快速（1 秒等待）和慢速（30 秒等待）之间非持久地切换 LACP PDU 速率。
+
+
+NOTE: 要永久更改 LACP PDU 速率，请参见 https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/configuring-network-links.html["配置网络链接"^]。
+
+.开始之前
+* 管理节点已安装且正在运行。
+* 您拥有  `Passwords.txt` 文件。
+
+
+.步骤
+. ${post_edited_translations.segment}
++
+.. 输入以下命令： `ssh admin@primary_Admin_Node_IP`
+.. 输入 `Passwords.txt`文件中列出的密码。
+.. 输入以下命令切换到 root： `su -`
+.. 输入 `Passwords.txt`文件中列出的密码。
++
+以 root 身份登录时，提示符将从 `$`更改为 `#`。
+
+
+
+. 要检查当前 LACP PDU 速率设置，请输入以下命令：
++
+`run-each-node --parallel --port 8022 '/usr/sbin/set-lacp-rate.sh'`
+
+. 要临时更改 LACP PDU 速率，请输入以下命令：
++
+`run-each-node --parallel --port 8022 '/usr/sbin/set-lacp-rate.sh _<speed>_'`
+
++
+其中 `_<speed>_`为 `fast`或 `slow`。
+
+
+
+LACP PDU 速率将在下次设备重启时还原为先前的设置。

@@ -1,0 +1,1038 @@
+= 节点配置文件的位置
+:allow-uri-read: 
+
+
+
+
+[[location-for-node-configuration-files]]
+== 节点配置文件的位置
+
+将每个 StorageGRID 节点的配置文件放在节点将运行的主机上的 `/etc/storagegrid/nodes`目录中。例如，如果计划在 HostA 上运行一个管理节点、一个网关节点和一个存储节点，则必须在 HostA 上的 `/etc/storagegrid/nodes`中放置三个节点配置文件。
+
+您可以使用文本编辑器（如 vim 或 nano）直接在每个主机上创建配置文件，也可以在其他位置创建这些文件，然后将其移动到每个主机。
+
+
+
+[[naming-of-node-configuration-files]]
+== 节点配置文件的命名
+
+配置文件的名称非常重要。格式为 `node-name.conf`，其中 `node-name`是分配给该节点的名称。此名称出现在 StorageGRID 安装程序中，用于节点维护操作，例如节点迁移。
+
+节点名称必须遵循这些规则：
+
+* 必须是唯一的
+* 必须以字母开头
+* 可以包含字符 A 到 Z 和 a 到 z
+* 可以包含0到9的数字
+* 可以包含一个或多个连字符（-）
+* 不能超过 32 个字符，不包括 `.conf`扩展名
+
+
+ `/etc/storagegrid/nodes`中任何不符合这些命名约定的文件都不会被主机服务解析。
+
+如果您为网格规划了多站点拓扑，则典型的节点命名方案可能是：
+
+`site-nodetype-nodenumber.conf`
+
+例如，您可能对数据中心 1 中的第一个管理节点使用 `dc1-adm1.conf`，对数据中心 2 中的第三个存储节点使用 `dc2-sn3.conf`。但是，您可以使用任何您喜欢的方案，只要所有节点名称都遵循命名规则即可。
+
+
+
+[[contents-of-a-node-configuration-file]]
+== 节点配置文件的内容
+
+配置文件包含键/值对，每行一个键和一个值。对于每个键/值对，请遵循以下规则：
+
+* 键和值必须用等号（(`=`）和可选空格分隔。
+* 这些密钥不能包含空格。
+* 这些值可以包含嵌入式空格。
+* 任何前导或尾随空格都将被忽略。
+
+
+下表定义了所有支持的键的值。每个键都有以下名称之一：
+
+* *必需*：对于每个节点或指定的节点类型都是必需的
+* *最佳实践*：可选，但推荐
+* *Optional*：所有节点均为可选
+
+
+
+
+[[admin-network-keys]]
+=== 管理员网络密钥
+
+
+
+==== ADMIN_IP
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+要用于安装基于 Linux 的节点的管理节点的网格网络 IPv4 地址。对于恢复，请使用主管理节点的 IP（如果可用）；否则，请使用非主管理节点的 IP。如果省略此参数，节点将尝试使用 mDNS 发现主管理节点。
+
+link:how-grid-nodes-discover-primary-admin-node.html["网格节点如何发现主管理节点"]
+
+*注意*：此值在主管理节点上将被忽略，且可能被禁止。
+ a| 
+最佳做法
+
+|===
+
+
+==== ADMIN_NETWORK_CONFIG
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+DHCP、STATIC 或 DISABLED
+ a| 
+可选
+
+|===
+
+
+==== ADMIN_NETWORK_ESL
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+以 CIDR 表示法表示的子网列表（以逗号分隔），此节点应使用管理网络网关与之通信。
+
+示例： `172.16.0.0/21,172.17.0.0/21`
+ a| 
+可选
+
+|===
+
+
+==== ADMIN_NETWORK_GATEWAY
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+此节点的本地管理网络网关的 IPv4 地址。必须位于 ADMIN_NETWORK_IP 和 ADMIN_NETWORK_MASK 定义的子网上。对于 DHCP 配置的网络，此值将被忽略。
+
+示例：
+
+`1.1.1.1`
+
+`10.224.4.81`
+ a| 
+如果指定了  `ADMIN_NETWORK_ESL`，则为必需。否则为可选。
+
+|===
+
+
+==== ADMIN_NETWORK_IP
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+此节点在管理网络上的 IPv4 地址。仅当 ADMIN_NETWORK_CONFIG = STATIC 时才需要此键；不要为其他值指定它。
+
+示例：
+
+`1.1.1.1`
+
+`10.224.4.81`
+ a| 
+当 ADMIN_NETWORK_CONFIG = STATIC 时为必填项。
+
+否则为可选。
+
+|===
+
+
+==== ADMIN_NETWORK_MAC
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+容器中 Admin Network 接口的 MAC 地址。
+
+此字段为可选字段。如果省略，将自动生成 MAC 地址。
+
+必须是由冒号分隔的6对十六进制数字。
+
+示例： `b2:9c:02:c2:27:10`
+ a| 
+可选
+
+|===
+
+
+==== ADMIN_NETWORK_MASK
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+此节点在管理网络上的 IPv4 网络掩码。当 ADMIN_NETWORK_CONFIG = STATIC 时指定此键；不要为其他值指定它。
+
+示例：
+
+`255.255.255.0`
+
+`255.255.248.0`
+ a| 
+如果指定了 ADMIN_NETWORK_IP 且 ADMIN_NETWORK_CONFIG = STATIC，则为必填项。
+
+否则为可选。
+
+|===
+
+
+==== ADMIN_NETWORK_MTU
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+管理网络上此节点的最大传输单位 (MTU)。如果 ADMIN_NETWORK_CONFIG = DHCP，请勿指定。如果指定，该值必须介于 1280 和 9216 之间。如果省略，则使用 1500。
+
+如果要使用巨型帧，请将 MTU 设置为适合巨型帧的值，例如 9000。否则，请保留默认值。
+
+*重要提示*：网络的 MTU 值必须与节点连接的交换机端口上配置的值相匹配。否则，可能会出现网络性能问题或数据包丢失。
+
+示例：
+
+`1500`
+
+`8192`
+ a| 
+可选
+
+|===
+
+
+==== ADMIN_NETWORK_TARGET
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+您将用于 StorageGRID 节点进行管理网络访问的主机设备的名称。仅支持网络接口名称。通常，您使用的接口名称与为 GRID_NETWORK_TARGET 或 CLIENT_NETWORK_TARGET 指定的接口名称不同。
+
+*注意*：不要使用绑定或桥接设备作为网络目标。在绑定设备之上配置 VLAN（或其他虚拟接口），或使用网桥和虚拟以太网（veth）对。
+
+*最佳实践*：指定一个值，即使此节点最初没有管理网络 IP 地址。然后，您可以稍后添加管理网络 IP 地址，而无需在主机上重新配置节点。
+
+示例：
+
+`bond0.1002`
+
+`ens256`
+ a| 
+最佳做法
+
+|===
+
+
+==== ADMIN_NETWORK_TARGET_TYPE
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+接口（这是唯一支持的值。）
+ a| 
+可选
+
+|===
+
+
+==== ADMIN_NETWORK_TARGET_TYPE_INTERFACE_CLONE_MAC
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+是非题
+
+将密钥设置为"true"，以使 StorageGRID 容器使用 Admin 网络上主机目标接口的 MAC 地址。
+
+*最佳做法：*在需要混杂模式的网络中，请改用 ADMIN_NETWORK_TARGET_TYPE_INTERFACE_CLONE_MAC 键。
+
+有关 Linux 的 MAC 克隆的更多详细信息，请参见 link:../swnodes/configuring-host-network.html#considerations-and-recommendations-for-mac-address-cloning["MAC 地址克隆的注意事项和建议"]
+ a| 
+最佳做法
+
+|===
+
+
+==== ADMIN_ROLE
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+主要或非主要
+
+只有当 NODE_TYPE = VM_Admin_Node 时才需要此键；不要为其他节点类型指定它。
+ a| 
+NODE_TYPE = VM_Admin_Node 时为必填项
+
+否则为可选。
+
+|===
+
+
+[[block-device-keys]]
+=== 块设备密钥
+
+
+
+==== BLOCK_DEVICE_AUDIT_LOGS
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+此节点将用于持久存储审核日志的块设备特殊文件的路径和名称。
+
+示例：
+
+`/dev/disk/by-path/pci-0000:03:00.0-scsi-0:0:0:0`
+
+`/dev/disk/by-id/wwn-0x600a09800059d6df000060d757b475fd`
+
+`/dev/mapper/sgws-adm1-audit-logs`
+ a| 
+对于 NODE_TYPE = VM_Admin_Node 的节点是必需的。不要为其他节点类型指定它。
+
+|===
+
+
+==== BLOCK_DEVICE_RANGEDB_nnn
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+此节点将用于永久对象存储的块设备特殊文件的路径和名称。此键仅对于 NODE_TYPE = VM_Storage_Node 的节点是必需的；不要为其他节点类型指定它。
+
+仅需要 BLOCK_DEVICE_RANGEDB_000；其余为可选。为 BLOCK_DEVICE_RANGEDB_000 指定的块设备必须至少为 4 TB；其他设备可以更小。
+
+不要留下空白。如果指定 BLOCK_DEVICE_RANGEDB_005，则还必须指定 BLOCK_DEVICE_RANGEDB_004。
+
+*注意*：为了与现有部署兼容，升级后的节点支持两位数密钥。
+
+示例：
+
+`/dev/disk/by-path/pci-0000:03:00.0-scsi-0:0:0:0`
+
+`/dev/disk/by-id/wwn-0x600a09800059d6df000060d757b475fd`
+
+`/dev/mapper/sgws-sn1-rangedb-000`
+ a| 
+必填：
+
+BLOCK_DEVICE_RANGEDB_000
+
+可选：
+
+BLOCK_DEVICE_RANGEDB_001
+
+BLOCK_DEVICE_RANGEDB_002
+
+BLOCK_DEVICE_RANGEDB_003
+
+BLOCK_DEVICE_RANGEDB_004
+
+BLOCK_DEVICE_RANGEDB_005
+
+BLOCK_DEVICE_RANGEDB_006
+
+BLOCK_DEVICE_RANGEDB_007
+
+BLOCK_DEVICE_RANGEDB_008
+
+BLOCK_DEVICE_RANGEDB_009
+
+BLOCK_DEVICE_RANGEDB_010
+
+BLOCK_DEVICE_RANGEDB_011
+
+BLOCK_DEVICE_RANGEDB_012
+
+BLOCK_DEVICE_RANGEDB_013
+
+BLOCK_DEVICE_RANGEDB_014
+
+BLOCK_DEVICE_RANGEDB_015
+
+|===
+
+
+==== BLOCK_DEVICE_TABLES
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+此节点将用于持久存储数据库表的块设备特殊文件的路径和名称。此密钥仅对 NODE_TYPE = VM_Admin_Node 的节点是必需的；请勿为其他节点类型指定此密钥。
+
+示例：
+
+`/dev/disk/by-path/pci-0000:03:00.0-scsi-0:0:0:0`
+
+`/dev/disk/by-id/wwn-0x600a09800059d6df000060d757b475fd`
+
+`/dev/mapper/sgws-adm1-tables`
+ a| 
+必填项
+
+|===
+
+
+==== BLOCK_DEVICE_VAR_LOCAL
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+此节点将用于其 `/var/local`持久存储的块设备特殊文件的路径和名称。
+
+示例：
+
+`/dev/disk/by-path/pci-0000:03:00.0-scsi-0:0:0:0`
+
+`/dev/disk/by-id/wwn-0x600a09800059d6df000060d757b475fd`
+
+`/dev/mapper/sgws-sn1-var-local`
+ a| 
+必填项
+
+|===
+
+
+[[client-network-keys]]
+=== 客户端网络密钥
+
+
+
+==== CLIENT_NETWORK_CONFIG
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+DHCP、STATIC 或 DISABLED
+ a| 
+可选
+
+|===
+
+
+==== CLIENT_NETWORK_GATEWAY
+
+[cols="4a,2a"]
+|===
+
+
+ a| 
+值
+ a| 
+名称
+
+
+
+ a| 
+此节点的本地客户端网络网关的 IPv4 地址，该地址必须位于由 CLIENT_NETWORK_IP 和 CLIENT_NETWORK_MASK 定义的子网上。对于 DHCP 配置的网络，此值将被忽略。
+
+示例：
+
+`1.1.1.1`
+
+`10.224.4.81`
+ a| 
+可选
+
+|===
+
+
+==== CLIENT_NETWORK_IP
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+此节点在客户端网络上的 IPv4 地址。
+
+只有当 CLIENT_NETWORK_CONFIG = STATIC 时才需要此键；不要为其他值指定它。
+
+示例：
+
+`1.1.1.1`
+
+`10.224.4.81`
+ a| 
+当 CLIENT_NETWORK_CONFIG = STATIC 时必填
+
+否则为可选。
+
+|===
+
+
+==== CLIENT_NETWORK_MAC
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+容器中客户端网络接口的 MAC 地址。
+
+此字段为可选字段。如果省略，将自动生成 MAC 地址。
+
+必须是由冒号分隔的6对十六进制数字。
+
+示例： `b2:9c:02:c2:27:20`
+ a| 
+可选
+
+|===
+
+
+==== CLIENT_NETWORK_MASK
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+客户端网络上此节点的 IPv4 网络掩码。
+
+当 CLIENT_NETWORK_CONFIG = STATIC 时指定此键；不要为其他值指定它。
+
+示例：
+
+`255.255.255.0`
+
+`255.255.248.0`
+ a| 
+如果指定了 CLIENT_NETWORK_IP 且 CLIENT_NETWORK_CONFIG = STATIC，则为必填项
+
+否则为可选。
+
+|===
+
+
+==== ${post_edited_translations.segment}
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+客户端网络上此节点的最大传输单位 (MTU)。如果 CLIENT_NETWORK_CONFIG = DHCP，请勿指定。如果指定，该值必须介于 1280 和 9216 之间。如果省略，则使用 1500。
+
+如果要使用巨型帧，请将 MTU 设置为适合巨型帧的值，例如 9000。否则，请保留默认值。
+
+*重要提示*：网络的 MTU 值必须与节点连接的交换机端口上配置的值相匹配。否则，可能会出现网络性能问题或数据包丢失。
+
+示例：
+
+`1500`
+
+`8192`
+ a| 
+可选
+
+|===
+
+
+==== ${post_edited_translations.segment}
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+StorageGRID 节点用于客户端网络访问的主机设备名称。仅支持网络接口名称。通常，您使用的接口名称与为 GRID_NETWORK_TARGET 或 ADMIN_NETWORK_TARGET 指定的接口名称不同。
+
+*注意*：不要使用绑定或桥接设备作为网络目标。在绑定设备之上配置 VLAN（或其他虚拟接口），或使用网桥和虚拟以太网（veth）对。
+
+*最佳做法：* 指定一个值，即使此节点最初没有客户端网络 IP 地址。然后，您可以稍后添加客户端网络 IP 地址，而无需在主机上重新配置节点。
+
+示例：
+
+`bond0.1003`
+
+`ens423`
+ a| 
+最佳做法
+
+|===
+
+
+==== CLIENT_NETWORK_TARGET_TYPE
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+接口（这是唯一支持的值。）
+ a| 
+可选
+
+|===
+
+
+==== CLIENT_NETWORK_TARGET_TYPE_INTERFACE_CLONE_MAC
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+是非题
+
+将密钥设置为"true"，以使 StorageGRID 容器使用客户端网络上主机目标接口的 MAC 地址。
+
+*最佳实践：* 在需要混杂模式的网络中，请改用 CLIENT_NETWORK_TARGET_TYPE_INTERFACE_CLONE_MAC 键。
+
+有关 Linux 的 MAC 克隆的更多详细信息，请参见 link:../swnodes/configuring-host-network.html#considerations-and-recommendations-for-mac-address-cloning["MAC 地址克隆的注意事项和建议"]
+ a| 
+最佳做法
+
+|===
+
+
+[[grid-network-keys]]
+=== 网格网络密钥
+
+
+
+==== GRID_NETWORK_CONFIG
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+静态或DHCP
+
+如果未指定，则默认为 STATIC。
+ a| 
+最佳做法
+
+|===
+
+
+==== GRID_NETWORK_GATEWAY
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+此节点的本地网格网络网关的 IPv4 地址，该地址必须位于由 GRID_NETWORK_IP 和 GRID_NETWORK_MASK 定义的子网上。对于 DHCP 配置的网络，此值将被忽略。
+
+如果网格网络是没有网关的单个子网，请使用子网的标准网关地址 (X.Y.Z.1) 或此节点的 GRID_NETWORK_IP 值；这两个值都将简化未来可能的网格网络扩展。
+ a| 
+必填项
+
+|===
+
+
+==== GRID_NETWORK_IP
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+此节点在网格网络上的 IPv4 地址。仅当 GRID_NETWORK_CONFIG = STATIC 时才需要此键；不要为其他值指定它。
+
+示例：
+
+`1.1.1.1`
+
+`10.224.4.81`
+ a| 
+当GRID_NETWORK_CONFIG = STATIC时必需
+
+否则为可选。
+
+|===
+
+
+==== GRID_NETWORK_MAC
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+${post_edited_translations.segment}
+
+必须是由冒号分隔的6对十六进制数字。
+
+示例： `b2:9c:02:c2:27:30`
+ a| 
+可选
+
+如果省略，则会自动生成 MAC 地址。
+
+|===
+
+
+==== GRID_NETWORK_MASK
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+此节点在网格网络上的 IPv4 网络掩码。当 GRID_NETWORK_CONFIG = STATIC 时指定此键；不要为其他值指定它。
+
+示例：
+
+`255.255.255.0`
+
+`255.255.248.0`
+ a| 
+当指定 GRID_NETWORK_IP 且 GRID_NETWORK_CONFIG = STATIC 时为必需。
+
+否则为可选。
+
+|===
+
+
+==== GRID_NETWORK_MTU
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+网格网络上此节点的最大传输单位 (MTU)。如果 GRID_NETWORK_CONFIG = DHCP，请勿指定。如果指定，该值必须介于 1280 和 9216 之间。如果省略，则使用 1500。
+
+如果要使用巨型帧，请将 MTU 设置为适合巨型帧的值，例如 9000。否则，请保留默认值。
+
+*重要提示*：网络的 MTU 值必须与节点连接的交换机端口上配置的值相匹配。否则，可能会出现网络性能问题或数据包丢失。
+
+*重要提示*：为了获得最佳网络性能，所有节点都应在其网格网络接口上配置相似的 MTU 值。如果单个节点上网格网络的 MTU 设置存在显著差异，则会触发 *网格网络 MTU 不匹配* 警报。所有网络类型的 MTU 值不必相同。
+
+示例：
+
+`1500`
+
+`8192`
+ a| 
+可选
+
+|===
+
+
+==== GRID_NETWORK_TARGET
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+您将用于 StorageGRID 节点进行网格网络访问的主机设备的名称。仅支持网络接口名称。通常，您使用的接口名称与为 ADMIN_NETWORK_TARGET 或 CLIENT_NETWORK_TARGET 指定的接口名称不同。
+
+*注意*：不要使用绑定或桥接设备作为网络目标。在绑定设备之上配置 VLAN（或其他虚拟接口），或使用网桥和虚拟以太网（veth）对。
+
+示例：
+
+`bond0.1001`
+
+`ens192`
+ a| 
+必填项
+
+|===
+
+
+==== GRID_NETWORK_TARGET_TYPE
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+接口（这是唯一支持的值。）
+ a| 
+可选
+
+|===
+
+
+==== GRID_NETWORK_TARGET_TYPE_INTERFACE_CLONE_MAC
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+是非题
+
+将键的值设置为"true"，以使 StorageGRID 容器使用网格网络上主机目标接口的 MAC 地址。
+
+*最佳实践：* 在需要混杂模式的网络中，请改用 GRID_NETWORK_TARGET_TYPE_INTERFACE_CLONE_MAC 键。
+
+有关 Linux 的 MAC 克隆的更多详细信息，请参见 link:../swnodes/configuring-host-network.html#considerations-and-recommendations-for-mac-address-cloning["MAC 地址克隆的注意事项和建议"]
+ a| 
+最佳做法
+
+|===
+
+
+[[installation-password-key-temporary]]
+=== 安装密码密钥（临时）
+
+
+
+==== CUSTOM_TEMPORARY_PASSWORD_HASH
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+对于主管理节点，在安装过程中为 StorageGRID 安装 API 设置默认临时密码。
+
+*注意*：仅在主管理节点上设置安装密码。如果尝试在其他节点类型上设置密码，则节点配置文件的验证将失败。
+
+安装完成后，设置此值无效。
+
+如果忽略此密钥，默认情况下不会设置临时密码。或者，您可以使用 StorageGRID 安装 API 设置临时密码。
+
+必须是 `crypt()` SHA-512 密码哈希，格式为 `$6$<salt>$<password hash>`，密码长度至少 8 个字符且不超过 32 个字符。
+
+可以使用 CLI 工具生成此哈希，例如 SHA-512 模式下的 `openssl passwd`命令。
+ a| 
+最佳做法
+
+|===
+
+
+[[interfaces-key]]
+=== 接口密钥
+
+
+
+==== INTERFACE_TARGET_nnnn
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+要添加到此节点的额外接口的名称和可选说明。可以向每个节点添加多个额外接口。
+
+对于 _nnnn_，为要添加的每个 INTERFACE_TARGET 条目指定一个唯一的编号。
+
+对于值，指定裸机主机上物理接口的名称。然后，可选择添加逗号并提供接口的描述，该描述显示在 VLAN 接口页面和 HA 组页面上。
+
+示例： `INTERFACE_TARGET_0001=ens256, Trunk`
+
+如果添加中继接口，则必须在 StorageGRID 中配置 VLAN 接口。如果添加接入接口，则可以将该接口直接添加到 HA 组，无需配置 VLAN 接口。
+ a| 
+可选
+
+|===
+
+
+[[maximum-ram-key]]
+=== 最大RAM密钥
+
+
+
+==== MAXIMUM_RAM
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+允许此节点消耗的最大 RAM 量。如果忽略此键，则节点没有内存限制。为生产级别节点设置此字段时，请指定一个至少为 24 GB 且比总系统 RAM 少 16 至 32 GB 的值。
+
+*注意*：RAM 值会影响节点的实际元数据保留空间。请参阅 link:../admin/managing-object-metadata-storage.html["关于什么是元数据保留空间的说明"]。
+
+此字段的格式为 `_numberunit_`，其中 `_unit_`可以是 `b`、 `k`、 `m`或 `g`。
+
+示例：
+
+`24g`
+
+`38654705664b`
+
+*注意*：如果要使用此选项，则必须为内存 cgroup 启用内核支持。
+ a| 
+可选
+
+|===
+
+
+[[node-type-keys]]
+=== 节点类型密钥
+
+
+
+==== NODE_TYPE
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+节点类型：
+
+* VM_Admin_Node
+* VM_Storage_Node
+* VM_Archive_Node
+* VM_API_Gateway
+
+ a| 
+必填项
+
+|===
+
+
+==== STORAGE_TYPE
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+定义存储节点包含的对象类型。有关详细信息，请参见link:../primer/what-storage-node-is.html#types-of-storage-nodes["存储节点类型"]。此键仅适用于 NODE_TYPE = VM_Storage_Node 的节点；不要为其他节点类型指定。存储类型：
+
+* 组合
+* 数据
+* metadata
+
+
+*注意*：如果未指定 STORAGE_TYPE，默认情况下，存储节点类型设置为组合（数据和元数据）。
+ a| 
+可选
+
+|===
+
+
+[[port-remap-keys]]
+=== 端口重映射密钥
+
+
+NOTE: 对端口重新映射的支持已弃用，将在未来版本中删除。要删除重新映射的端口，请参阅 link:../maintain/removing-port-remaps-on-bare-metal-hosts.html["删除裸机主机上的端口重映射"]。
+
+
+
+==== PORT_REMAP
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+重新映射节点用于内部网格节点通信或外部通信的任何端口。如果企业网络策略限制 StorageGRID 使用的一个或多个端口，则需要重新映射端口，如 link:../network/internal-grid-node-communications.html["内部网格节点通信"] 或 link:../network/external-communications.html["外部通信"] 中所述。
+
+*重要提示*：请勿重新映射计划用于配置负载均衡器端点的端口。
+
+*注意*：如果仅设置了 PORT_REMAP，则指定的映射将用于入站和出站通信。如果还指定了 PORT_REMAP_INBOUND，则 PORT_REMAP 仅适用于出站通信。
+
+使用的格式为： `_network type_/_protocol_/_default port used by grid node_/_new port_`，其中 `_network type_`为 grid、admin 或 client， `_protocol_`为 tcp 或 udp。
+
+示例： `PORT_REMAP = client/tcp/18082/443`
+
+您也可以使用逗号分隔的列表重新映射多个端口。
+
+示例： `PORT_REMAP = client/tcp/18082/443, client/tcp/18083/80`
+ a| 
+可选
+
+|===
+
+
+==== PORT_REMAP_INBOUND
+
+[cols="4a,2a"]
+|===
+| 值 | 名称 
+
+
+ a| 
+将入站通信重新映射到指定端口。如果指定 PORT_REMAP_INBOUND 但未指定 PORT_REMAP 的值，则端口的出站通信将保持不变。
+
+*重要提示*：请勿重新映射计划用于配置负载均衡器端点的端口。
+
+使用的格式为： `_network type_/_protocol_/_remapped port_/_default port used by grid node_`，其中 `_network type_`为 grid、admin 或 client， `_protocol_`为 tcp 或 udp。
+
+示例： `PORT_REMAP_INBOUND = grid/tcp/3022/22`
+
+您也可以使用逗号分隔的列表重新映射多个入站端口。
+
+示例： `PORT_REMAP_INBOUND = grid/tcp/3022/22, admin/tcp/3022/22`
+ a| 
+可选
+
+|===

@@ -1,0 +1,447 @@
+---
+permalink: swnodes/storage-and-performance-requirements.html 
+sidebar: sidebar 
+keywords: storage requirements, performance requirements, host storage, host volumes, netapp ontap, fabricpool 
+summary: 您必须了解 StorageGRID 节点的存储要求，以便提供足够的空间来支持初始配置和未来的存储扩展。 
+---
+= StorageGRID 的存储和性能要求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须了解 StorageGRID 节点的存储要求，以便提供足够的空间来支持初始配置和未来的存储扩展。
+
+存储和性能要求因基于软件的节点实施而异。
+
+
+NOTE: "Linux"是指 RHEL、Ubuntu 或 Debian 部署。有关受支持版本的列表，请参见 https://imt.netapp.com/matrix/#welcome["NetApp 互操作性矩阵工具 (IMT)"^]。
+
+
+
+[[storage-categories]]
+== 存储类别
+
+StorageGRID 节点需要三个逻辑类别的存储：
+
+* *容器池* -- 节点容器的性能层（10K SAS 或 SSD）存储，当您在支持 StorageGRID 节点的主机上安装和配置容器引擎时，将分配给容器引擎存储驱动程序。
+* *系统数据* -- 性能层（10K SAS 或 SSD）存储，用于按节点持久存储系统数据和事务日志，StorageGRID 主机服务将消耗这些数据并将其映射到各个节点。
+* *对象数据* -- 性能层（10K SAS 或 SSD）存储和容量层（NL-SAS/SATA）批量存储，用于对象数据和对象元数据的持久存储。
+
+
+您必须为所有存储类别使用 RAID 支持的块设备。不支持非冗余磁盘、SSD 或 JBOD。您可以为任何存储类别使用共享或本地 RAID 存储；但是，如果要在 StorageGRID 中使用节点迁移功能，则必须在共享存储上存储系统数据和对象数据。有关详细信息，请参见 link:node-container-migration-requirements.html["节点容器迁移要求"]。
+
+
+
+[[performance-requirements]]
+== 性能要求
+
+用于容器池、系统数据和对象元数据的卷的性能显著影响系统的整体性能。您应该对这些卷使用性能层（10K SAS 或 SSD）存储，以确保在延迟、每秒输入/输出操作（IOPS）和吞吐量方面有足够的磁盘性能。您可以使用容量层（NL-SAS/SATA）存储来持久存储对象数据。
+
+用于容器池、系统数据和对象数据的卷必须启用回写缓存。缓存必须在受保护或永久性媒体上。
+
+
+
+[[requirements-for-hosts-that-use-netapp-ontap-storage]]
+== 使用 NetApp ONTAP 存储的主机的要求
+
+如果 StorageGRID 节点使用从 NetApp ONTAP 系统分配的存储，请确认此卷未启用 FabricPool 分层策略。对与 StorageGRID 节点配合使用的卷禁用 FabricPool 分层，可简化故障排除和存储操作。
+
+
+NOTE: 切勿使用 FabricPool 将任何与 StorageGRID 相关的数据分层回 StorageGRID 本身。将 StorageGRID 数据分层回 StorageGRID 会增加故障排除和操作的复杂性。
+
+
+
+[[number-of-hosts-required]]
+== 所需主机数量
+
+每个 StorageGRID 站点至少需要三个存储节点。
+
+
+NOTE: 在生产部署中，不要在单个物理或虚拟主机上运行多个存储节点。为每个存储节点使用专用主机可提供隔离的故障域。
+
+其他类型的节点，如管理节点或网关节点，可以部署在相同的主机上，也可以根据需要部署在自己的专用主机上。
+
+
+NOTE: 磁盘快照不能用于恢复网格节点。请参见每种类型节点的link:../maintain/warnings-and-considerations-for-grid-node-recovery.html["网格节点恢复"]过程。
+
+
+
+[[number-of-storage-volumes-for-each-node]]
+== 每个节点的存储卷数
+
+下表显示了每个主机所需的存储卷 (LUN) 数量以及每个 LUN 所需的最小大小，具体取决于将在该主机上部署的节点。
+
+测试的最大 LUN 大小为 39 TB。
+
+
+NOTE: 这些数字是针对每个主机，而不是针对整个网格。
+
+|===
+| LUN用途 | 存储类别 | LUN 数量 | 最小大小/LUN 
+
+
+ a| 
+容器引擎存储池
+ a| 
+容器池
+ a| 
+1
+ a| 
+节点总数 × 100 GB
+
+
+
+ a| 
+`/var/local` 卷
+ a| 
+系统数据
+ a| 
+此主机上的每个节点 1 个
+ a| 
+100 GB
+
+
+
+ a| 
+存储节点
+ a| 
+对象数据
+ a| 
+此主机上的每个存储节点 3 个
+
+*注意：* 基于 Linux 软件的存储节点可以具有 1 至 48 个存储卷。基于 VMware 软件的存储节点可以具有 1 至 16 个存储卷。建议至少具有 3 个存储卷。
+ a| 
+12 TB（最低 4 TB/LUN）
+
+已测试的最大 LUN 大小：39 TB。
+
+有关详细信息，请参见 <<storage_req_SN,存储节点的存储要求>>。
+
+
+
+ a| 
+存储节点（仅元数据）
+ a| 
+对象元数据
+ a| 
+1
+ a| 
+4 TB/LUN，最小
+
+已测试的最大 LUN 大小：39 TB。
+
+有关详细信息，请参见 <<storage_req_SN,存储节点的存储要求>>。
+
+*注意*：仅元数据存储节点仅需要一个 rangedb。
+
+
+
+ a| 
+管理节点审核日志
+ a| 
+系统数据
+ a| 
+此主机上的每个管理节点 1 个
+ a| 
+200 GB
+
+
+
+ a| 
+管理节点表
+ a| 
+系统数据
+ a| 
+此主机上的每个管理节点 1 个
+ a| 
+200 GB
+
+|===
+
+NOTE: 您可能需要增加每个管理节点上审核日志 LUN 的大小，具体取决于配置的审核级别、用户输入的大小（如 S3 对象密钥名称）以及需要保留的审核日志数据量。通常，网格每个 S3 操作生成约 1 KB 的审核数据，这意味着 200 GB LUN 将每天支持 7000 万个操作或每秒 800 个操作，持续两到三天。
+
+
+
+[[minimum-storage-space-for-a-host]]
+== 主机的最小存储空间
+
+下表显示了每种类型的节点所需的最小存储空间。您可以使用此表确定必须为每个存储类别中的主机提供的最小存储量，具体取决于将在该主机上部署的节点。
+
+
+NOTE: 磁盘快照不能用于恢复网格节点。请参见每种类型节点的link:../maintain/warnings-and-considerations-for-grid-node-recovery.html["网格节点恢复"]过程。
+
+每个节点主机都需要一个 100 GB 的 LUN 用于操作系统。
+
+|===
+| 节点类型 | 容器池 | 系统数据 | 对象数据 
+
+
+| 存储节点  a| 
+100 GB
+ a| 
+100 GB
+ a| 
+4,000 GB
+
+
+
+ a| 
+管理节点
+ a| 
+100 GB
+ a| 
+500 GB（3 个 LUN）
+ a| 
+_不适用_
+
+
+
+ a| 
+网关节点
+ a| 
+100 GB
+ a| 
+100 GB
+ a| 
+_不适用_
+
+|===
+
+
+[[example-calculating-the-storage-requirements-for-a-host-or-virtual-machine]]
+== 示例：计算主机或虚拟机的存储要求
+
+假设您计划在同一主机或虚拟机上部署三个节点：一个存储节点、一个管理节点和一个网关节点。您应向主机提供至少九个存储卷。您需要至少 300 GB 的性能层存储用于节点容器、700 GB 的性能层存储用于系统数据和事务日志，以及 12 TB 的容量层存储用于对象数据。
+
+[role="tabbed-block"]
+====
+.Linux 主机示例
+--
+|===
+| 节点类型 | LUN用途 | LUN 数量 | LUN 大小 
+
+
+| 存储节点  a| 
+容器引擎存储池
+ a| 
+1
+ a| 
+300 GB (100 GB/节点)
+
+
+
+ a| 
+存储节点
+ a| 
+`/var/local` 卷
+ a| 
+1
+ a| 
+100 GB
+
+
+
+| 存储节点  a| 
+对象数据
+ a| 
+3
+ a| 
+12 TB (4 TB/LUN)
+
+
+
+ a| 
+管理节点
+ a| 
+`/var/local` 卷
+ a| 
+1
+ a| 
+100 GB
+
+
+
+| 管理节点  a| 
+管理节点审核日志
+ a| 
+1
+ a| 
+200 GB
+
+
+
+| 管理节点  a| 
+管理节点表
+ a| 
+1
+ a| 
+200 GB
+
+
+
+ a| 
+网关节点
+ a| 
+`/var/local` 卷
+ a| 
+1
+ a| 
+100 GB
+
+
+
+ a| 
+*总计*
+ a| 
+ a| 
+*9*
+ a| 
+*容器池：* 300 GB
+
+*系统数据：* 700 GB
+
+*对象数据：* 12,000 GB
+
+|===
+--
+.VMware 虚拟机示例
+--
+|===
+| 节点类型 | LUN用途 | LUN 数量 | LUN 大小 
+
+
+ a| 
+存储节点
+ a| 
+OS 卷
+ a| 
+1
+ a| 
+100 GB
+
+
+
+| 存储节点  a| 
+对象数据
+ a| 
+3
+ a| 
+12 TB (4 TB/LUN)
+
+
+
+ a| 
+管理节点
+ a| 
+OS 卷
+ a| 
+1
+ a| 
+100 GB
+
+
+
+| 管理节点  a| 
+管理节点审核日志
+ a| 
+1
+ a| 
+200 GB
+
+
+
+| 管理节点  a| 
+管理节点表
+ a| 
+1
+ a| 
+200 GB
+
+
+
+ a| 
+网关节点
+ a| 
+OS 卷
+ a| 
+1
+ a| 
+100 GB
+
+
+
+ a| 
+*总计*
+ a| 
+ a| 
+*8*
+ a| 
+*系统数据：* 700 GB
+
+*对象数据：* 12,000 GB
+
+|===
+--
+====
+
+
+[[specific-storage-requirements-for-storage-nodes]]
+[[storage_req_SN]]
+== 存储节点的特定存储要求
+
+Linux和VMware对存储节点有不同的存储要求：
+
+* 一个基于 Linux 软件的存储节点可以有 1 到 48 个存储卷
+* 一个基于 VMware 软件的存储节点可以有 1 到 16 个存储卷
+* 建议使用三个或三个以上的存储卷。
+* 每个存储卷应为 4 TB 或更大。
+
+
+
+NOTE: 一个设备存储节点最多可以有48个存储卷。
+
+如图所示，StorageGRID 在每个存储节点的存储卷 0 上为对象元数据保留空间。存储卷 0 上的任何剩余空间以及存储节点中的任何其他存储卷均专用于对象数据。
+
+image:metadata_space_storage_node.png["元数据空间存储节点"]
+
+为了提供冗余并保护对象元数据免受丢失，StorageGRID 在每个站点存储系统中所有对象的三个元数据副本。对象元数据的三个副本均匀分布在每个站点的所有存储节点上。
+
+在安装具有仅元数据存储节点的网格时，网格还必须包含用于对象存储的最小数量的节点。有关仅元数据存储节点的详细信息，请参见 link:../primer/what-storage-node-is.html#types-of-storage-nodes["存储节点类型"]。
+
+* 对于单站点网格，至少要为对象和元数据配置两个存储节点。
+* 对于多站点网格，每个站点至少为对象和元数据配置一个存储节点。
+
+
+为新存储节点的卷 0 分配空间时，必须确保该节点的所有对象元数据部分有足够的空间。
+
+* 至少，您必须为卷 0 分配至少 4 TB。
++
+
+NOTE: 如果一个存储节点仅使用一个存储卷，并且将 4 TB 或更少的存储卷分配给该卷，则存储节点可能会在启动时进入存储只读状态，并且仅存储对象元数据。
+
++
+
+NOTE: 如果将小于 500 GB 的容量分配给卷 0（仅限非生产使用），则将为元数据保留 10% 的存储卷容量。
+
+* 基于软件的仅元数据节点资源必须与现有存储节点资源匹配。例如：
++
+** ${post_edited_translations.segment}
++
+*** 128 GB 内存
+*** ${post_edited_translations.segment}
+*** ${post_edited_translations.segment}
+
+
+** 如果现有的 StorageGRID 站点使用具有 24 GB RAM、8 核 CPU 和 3 TB 或 4 TB 元数据存储的虚拟存储节点，则基于软件的仅元数据节点应使用类似的资源（24 GB RAM、8 核 CPU 和 4 TB 元数据存储（rangedb/0））。
++
+添加新 StorageGRID 站点时，新站点的总元数据容量应至少与现有 StorageGRID 站点匹配，新站点资源应与现有 StorageGRID 站点上的存储节点匹配。
+
+
+
+* 如果要安装新系统（StorageGRID 11.6 或更高版本），并且每个存储节点具有 128 GB 或更多 RAM，请将 8 TB 或更多分配给卷 0。对卷 0 使用更大的值可以增加每个存储节点上元数据所允许的空间。
+* 为站点配置不同的存储节点时，如果可能，请对卷 0 使用相同的设置。如果站点包含不同大小的存储节点，卷 0 最小的存储节点将确定该站点的元数据容量。
+
+
+有关详细信息，请转到 link:../admin/managing-object-metadata-storage.html["管理对象元数据存储"]。

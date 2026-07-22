@@ -1,0 +1,157 @@
+---
+permalink: admin/kms-adding.html 
+sidebar: sidebar 
+keywords: add kms, key management server 
+summary: ${post_edited_translations.segment} 
+---
+= 在 StorageGRID 中添加密钥管理服务器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+${post_edited_translations.segment}
+
+.开始之前
+* 您已审阅 link:kms-considerations-and-requirements.html["使用密钥管理服务器的注意事项和要求"]。
+* 您拥有link:kms-configuring-storagegrid-as-client.html["在 KMS 中将 StorageGRID 配置为客户端"]，并且您拥有每个KMS或KMS集群所需的信息。
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["root 访问权限"]。
+
+
+.关于此任务
+如果可能，在配置适用于不由其他 KMS 管理的所有站点的默认 KMS 之前，请配置任何特定于站点的密钥管理服务器。如果首先创建默认 KMS，则网格中的所有节点加密设备都将使用默认 KMS 进行加密。如果要在以后创建站点特定的 KMS，则必须首先将当前版本的加密密钥从默认 KMS 复制到新 KMS。有关详细信息，请参阅 link:kms-considerations-for-changing-for-site.html["更改站点 KMS 的注意事项"]。
+
+
+
+[[step-1-kms-details]]
+== 步骤 1：KMS 详细信息
+
+在添加密钥管理服务器向导的步骤 1（KMS 详细信息）中，提供有关 KMS 或 KMS 集群的详细信息。
+
+.步骤
+. 选择*配置* > *安全* > *密钥管理服务器*。
++
+此时将显示密钥管理服务器页面，并选中"配置详细信息"选项卡。
+
+. 选择 *Create*。
++
+${post_edited_translations.segment}
+
+. ${post_edited_translations.segment}
++
+[cols="1a,2a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+KMS 名称
+ a| 
+用于帮助您识别此 KMS 的描述性名称。必须介于 1 到 64 个字符之间。
+
+
+
+ a| 
+密钥名称
+ a| 
+KMS 中 StorageGRID 客户端的确切密钥别名。必须介于 1 到 255 个字符之间。
+
+*注意*：如果您尚未使用 KMS 产品创建密钥，系统将提示您让 StorageGRID 创建密钥。
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+将与此 KMS 关联的 StorageGRID 站点。如果可能，应先配置特定站点的密钥管理服务器，再配置适用于所有非其他 KMS 管理站点的默认 KMS。
+
+** 如果此 KMS 将管理特定站点上设备节点的加密密钥，请选择一个站点。
+** 选择 *Sites not managed by another KMS (default KMS)* 以配置默认 KMS，该默认 KMS 将应用于没有专用 KMS 的任何站点以及您在后续扩展中添加的任何站点。
++
+${post_edited_translations.segment}
+
+
+
+
+
+ a| 
+端口
+ a| 
+KMS 服务器用于密钥管理互操作性协议 (KMIP) 通信的端口。默认为 5696，即 KMIP 标准端口。
+
+
+
+ a| 
+主机名称
+ a| 
+${post_edited_translations.segment}
+
+*注意：* 服务器证书的“主题备用名称 (SAN)”字段必须包含您在此处输入的 FQDN 或 IP 地址。否则，StorageGRID 将无法连接到 KMS 或 KMS 集群中的所有服务器。
+
+|===
+. 如果要配置 KMS 集群，请选择 *添加另一个主机名* 为集群中的每个服务器添加主机名。
+. 选择 *Continue*。
+
+
+
+
+[[step-2-upload-server-certificate]]
+== ${post_edited_translations.segment}
+
+在“添加密钥管理服务器”向导的第 2 步（上传服务器证书）中，您需要上传 KMS 的服务器证书（或证书包）。服务器证书允许外部 KMS 向 StorageGRID 进行自身身份验证。
+
+.步骤
+. ${post_edited_translations.segment}
+. 上传证书文件。
++
+此时将显示服务器证书元数据。
+
++
+
+NOTE: ${post_edited_translations.segment}
+
+. 选择 *Continue*。
+
+
+
+
+[[sg-create-keystep-3-upload-client-certificates]]
+== ${post_edited_translations.segment}
+
+在添加密钥管理服务器向导的步骤 3（上载客户端证书）中，上载客户端证书和客户端证书私钥。客户端证书允许 StorageGRID 向 KMS 进行身份验证。
+
+.步骤
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
++
+${post_edited_translations.segment}
+
+. 浏览到客户端证书专用密钥的位置。
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
++
+如果密钥不存在，系统会提示您让 StorageGRID 创建一个密钥。
+
++
+测试密钥管理服务器和设备节点之间的连接。如果所有连接都有效，并且在 KMS 上找到了正确的密钥，则会将新的密钥管理服务器添加到"密钥管理服务器"页面上的表中。
+
++
+
+NOTE: 添加 KMS 后，"密钥管理服务器"页面上的证书状态将立即显示为"未知"。StorageGRID 可能需要长达 30 分钟才能获取每个证书的实际状态。您必须刷新 Web 浏览器才能查看当前状态。
+
+. ${post_edited_translations.segment}
++
+例如，如果连接测试失败，您可能会收到 422: Unprocessable Entity 错误。
+
+. ${post_edited_translations.segment}
++
+
+CAUTION: 选择*强制保存*将保存 KMS 配置，但不会测试每个设备到该 KMS 的外部连接。如果配置出现问题，则可能无法重新启动在受影响站点上启用了节点加密的设备节点。在问题得到解决之前，您可能会失去对数据的访问权限。
+
+. 查看确认警告，如果确定要强制保存配置，请选择*OK*。
++
+${post_edited_translations.segment}
+
+

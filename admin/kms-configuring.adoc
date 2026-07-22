@@ -1,0 +1,21 @@
+---
+permalink: admin/kms-configuring.html 
+sidebar: sidebar 
+keywords: configure kms, key management server, kmip, Key Management Interoperability Protocol 
+summary: '密钥管理服务器 (KMS) 是一个外部第三方系统，它使用密钥管理互操作性协议 (KMIP) 向关联的 StorageGRID 站点上的 StorageGRID 设备节点提供加密密钥' 
+---
+= 了解 StorageGRID 中的密钥管理服务器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+${post_edited_translations.segment}
+
+StorageGRID 支持某些密钥管理服务器。有关受支持产品和版本的列表，请使用 https://imt.netapp.com/matrix/#welcome["NetApp 互操作性矩阵工具 (IMT)"^]。
+
+您可以使用一个或多个密钥管理服务器来管理在安装期间启用了 *节点加密* 设置的任何 StorageGRID 设备节点的节点加密密钥。将密钥管理服务器与这些设备节点结合使用，即使设备从数据中心移出，也可以保护您的数据。在对设备卷进行加密后，除非节点可以与 KMS 进行通信，否则您将无法访问该设备上的任何数据。
+
+
+CAUTION: StorageGRID 不创建或管理用于对应用装置节点进行加密和解密的外部密钥。如果您计划使用外部密钥管理服务器来保护 StorageGRID 数据，您必须了解如何设置该服务器，并且必须了解如何管理加密密钥。执行密钥管理任务超出了这些说明的范围。如果您需要帮助，请参见密钥管理服务器的文档或联系技术支持。

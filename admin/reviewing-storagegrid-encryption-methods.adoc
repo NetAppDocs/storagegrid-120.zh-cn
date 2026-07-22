@@ -1,0 +1,151 @@
+---
+permalink: admin/reviewing-storagegrid-encryption-methods.html 
+sidebar: sidebar 
+keywords: encryption, encrypting data, best practices 
+summary: StorageGRID 提供多种加密数据的选项。您应查看可用的方法，以确定哪些方法符合您的数据保护要求。 
+---
+= 查看 StorageGRID 加密方法
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+StorageGRID 提供多种加密数据的选项。您应查看可用的方法，以确定哪些方法符合您的数据保护要求。
+
+下表提供了 StorageGRID 中可用加密方法的概要摘要。
+
+[[bucket-encryption-table]]
+[cols="1a,1a,1a"]
+|===
+| 加密选项 | 工作原理 | 适用于 
+
+
+ a| 
+Grid Manager 中的密钥管理服务器 (KMS)
+ a| 
+您link:kms-configuring.html["配置密钥管理服务器"]用于 StorageGRID 站点和 https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/optional-enabling-node-encryption.html["为设备启用节点加密"^]。然后，设备节点连接到 KMS 以请求密钥加密密钥 (KEK)。此密钥对每个卷上的数据加密密钥 (DEK) 进行加密和解密。
+ a| 
+安装期间启用了*节点加密*的设备节点。设备上的所有数据都会受到保护，以防止物理丢失或从数据中心移除。
+
+*注意*：仅存储节点和服务设备支持使用 KMS 管理加密密钥。
+
+
+
+ a| 
+StorageGRID 设备安装程序中的驱动器加密页面
+ a| 
+如果设备包含支持硬件加密的驱动器，您可以在安装过程中设置驱动器密码。当您设置驱动器密码时，任何人都无法从已从系统中删除的驱动器中恢复有效数据，除非他们知道密码。在开始安装之前，请转到 *Configure Hardware* > *Drive Encryption* ，以设置适用于节点中所有 StorageGRID 管理的自加密驱动器的驱动器密码。
+ a| 
+包含自加密驱动器的设备。安全驱动器上的所有数据都会受到保护，以防止物理丢失或从数据中心移除。
+
+驱动器加密不适用于 SANtricity 管理的驱动器。如果您有带有自加密驱动器和 SANtricity 控制器的存储设备，则可以在 SANtricity 中启用驱动器安全性。
+
+
+
+ a| 
+SANtricity System Manager 中的驱动器安全性
+ a| 
+如果您的 StorageGRID 设备启用了驱动器安全功能，您可以使用 https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/accessing-and-configuring-santricity-system-manager.html["SANtricity System Manager"^]来创建和管理安全密钥。访问安全驱动器上的数据需要此密钥。
+ a| 
+具有全磁盘加密 (FDE) 驱动器或自加密驱动器的存储设备。安全驱动器上的所有数据都受到保护，以防止物理丢失或从数据中心中移除。不能与某些存储设备或任何服务设备一起使用。
+
+
+
+ a| 
+存储对象加密
+ a| 
+您在 Grid Manager 中启用 link:changing-network-options-object-encryption.html["存储对象加密"] 选项。启用后，任何未在存储桶级别或对象级别进行加密的新对象都将在摄入期间进行加密。
+ a| 
+${post_edited_translations.segment}
+
+现有的已存储对象不会被加密。对象元数据和其他敏感数据不会被加密。
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+您发出 PutBucketEncryption 请求以启用存储桶加密。任何未在对象级进行加密的新对象都会在摄入期间进行加密。
+ a| 
+${post_edited_translations.segment}
+
+必须为存储桶指定加密。现有的存储桶对象不会被加密。对象元数据和其他敏感数据不会被加密。
+
+link:../s3/operations-on-buckets.html["${post_edited_translations.segment}"]
+
+
+
+ a| 
+S3 对象服务器端加密 (SSE)
+ a| 
+您发出 S3 请求以存储对象并包含 `x-amz-server-side-encryption`请求标头。
+ a| 
+${post_edited_translations.segment}
+
+必须为对象指定加密。对象元数据和其他敏感数据未加密。
+
+StorageGRID 管理密钥。
+
+link:../s3/using-server-side-encryption.html["${post_edited_translations.segment}"]
+
+
+
+ a| 
+使用客户提供的密钥（SSE-C）对 S3 对象进行服务器端加密
+ a| 
+${post_edited_translations.segment}
+
+* `x-amz-server-side-encryption-customer-algorithm`
+* `x-amz-server-side-encryption-customer-key`
+* `x-amz-server-side-encryption-customer-key-MD5`
+
+ a| 
+${post_edited_translations.segment}
+
+必须为对象指定加密。对象元数据和其他敏感数据未加密。
+
+${post_edited_translations.segment}
+
+link:../s3/using-server-side-encryption.html["${post_edited_translations.segment}"]
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+${post_edited_translations.segment}
+ a| 
+${post_edited_translations.segment}
+
+外部加密方法可对加密算法和密钥进行更严格的控制。可以与列出的其他方法相结合。
+
+
+
+ a| 
+StorageGRID 外部的对象加密
+ a| 
+在将对象数据和元数据摄入 StorageGRID 之前，您可以使用 StorageGRID 外部的加密方法对其进行加密。
+ a| 
+仅对象数据和元数据（系统配置数据未加密）。
+
+外部加密方法可对加密算法和密钥进行更严格的控制。可以与列出的其他方法相结合。
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingClientSideEncryption.html["Amazon Simple Storage Service - 用户指南：使用客户端加密保护数据"^]
+
+|===
+
+
+[[use-multiple-encryption-methods]]
+== 使用多种加密方法
+
+根据您的要求，一次可以使用多个加密方法。例如：
+
+* 您可以使用 KMS 保护设备节点，也可以使用 SANtricity System Manager 中的驱动器安全功能对同一设备中自加密驱动器上的数据进行"双重加密"。
+* 您可以使用 KMS 来保护设备节点上的数据，也可以使用存储对象加密选项在接收所有对象时对其进行加密。
+
+
+如果只有一小部分对象需要加密，请考虑在存储桶或单个对象级别控制加密。启用多级加密会带来额外的性能成本。
+
+.相关信息
+link:manage-tls-ssh-policy.html#select-a-security-policy["了解 FIPS 认证加密选项"]

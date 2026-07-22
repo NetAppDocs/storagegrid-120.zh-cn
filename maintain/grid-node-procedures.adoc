@@ -1,0 +1,29 @@
+---
+permalink: maintain/grid-node-procedures.html 
+sidebar: sidebar 
+keywords: storagegrid, grid node procedure 
+summary: 您可能需要执行与特定网格节点或节点服务相关的维护过程。 
+---
+= StorageGRID 节点维护程序
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可能需要执行与特定网格节点或节点服务相关的维护过程。
+
+移动 ADC:: link:../maintain/understanding-adc-service-quorum.html["ADC 服务"] 位于某些存储节点上。在某些停用和节点转换的情况下，需要将 ADC 服务移至同一站点上的另一个存储节点。
+将存储节点转换为仅数据节点:: 您可以将不包含 ADC 服务的存储节点转换为仅数据存储节点。
+节点重新启动、关闭和通电:: 您可以使用这些过程重新启动一个或多个节点、关闭并重新启动节点或关闭节点电源并重新打开电源。
+端口重映射:: 您可以使用端口重新映射过程从节点删除端口重新映射，例如，如果要使用以前重新映射的端口配置负载平衡器端点。
+服务器管理器:: Server Manager 在每个网格节点上运行，以监督服务的启动和停止，并确保服务正常加入和离开 StorageGRID 系统。Server Manager 还监控每个网格节点上的服务，并将自动尝试重新启动任何报告故障的服务。
++
+--
+要执行 Server Manager 过程，通常需要访问节点的命令行。
+
+
+CAUTION: 只有在技术支持指示您执行此操作时，才应访问 Server Manager。
+
+--
+

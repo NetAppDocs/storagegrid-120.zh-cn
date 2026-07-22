@@ -1,0 +1,56 @@
+---
+permalink: monitor/viewing-load-balancer-tab.html 
+sidebar: sidebar 
+keywords: load balancer tab 
+summary: 负载平衡器选项卡包括与负载平衡器服务操作相关的性能和诊断图形。 
+---
+= 查看 StorageGRID 负载平衡器选项卡
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+负载平衡器选项卡包括与负载平衡器服务操作相关的性能和诊断图形。
+
+将显示管理节点和网关节点、每个站点和整个网格的负载平衡器选项卡。对于每个站点，负载平衡器选项卡提供该站点上所有节点的统计信息的汇总摘要。对于整个网格，负载平衡器选项卡提供所有站点统计数据的汇总摘要。
+
+如果没有通过负载均衡器服务运行 I/O，或者没有配置负载均衡器，则图表显示"No data."
+
+image:nodes_page_load_balancer_tab.png["节点页面负载平衡器选项卡"]
+
+
+
+[[request-traffic]]
+== 请求流量
+
+此图表提供了负载均衡器端点与发出请求的客户端之间传输的数据吞吐量的 3 分钟移动平均值，单位为位/秒。
+
+
+NOTE: 此值会在每个请求完成时更新。因此，此值可能与低请求率或持续时间很长的请求的实时吞吐量不同。您可以查看"网络"选项卡，以更真实地了解当前的网络行为。
+
+
+
+[[incoming-request-rate]]
+== 传入请求率
+
+此图表按请求类型（GET、PUT、HEAD 和 DELETE）提供每秒新请求数的 3 分钟移动平均值。当新请求的标头通过验证后，此值将更新。
+
+
+
+[[average-request-duration-non-error]]
+== 平均请求持续时间（非错误）
+
+此图表按请求类型（GET、PUT、HEAD 和 DELETE）提供了请求持续时间的 3 分钟移动平均值。每个请求持续时间从负载平衡器服务解析请求标头时开始，到完整的响应正文返回到客户端时结束。
+
+
+
+[[error-response-rate]]
+== 错误响应率
+
+此图表提供了每秒返回给客户端的错误响应数的 3 分钟移动平均值，并按错误响应代码进行了细分。
+
+.相关信息
+* link:monitoring-load-balancing-operations.html["监控负载平衡操作"]
+* link:../admin/index.html["管理 StorageGRID"]
+

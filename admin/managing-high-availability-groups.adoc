@@ -1,0 +1,97 @@
+---
+permalink: admin/managing-high-availability-groups.html 
+sidebar: sidebar 
+keywords: manage high availability group, ha groups, admin node, gateway node, active interface, backup interface, priority order 
+summary: '高可用性(HA)组为S3客户端提供高可用性数据连接，并为网格管理器和租户管理器提供高可用性连接。' 
+---
+= 了解 StorageGRID 高可用性组
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+高可用性(HA)组为S3客户端提供高可用性数据连接，并为网格管理器和租户管理器提供高可用性连接。
+
+您可以将多个管理节点和网关节点的网络接口分组到高可用性 (HA) 组中。如果 HA 组中的活动接口出现故障，备份接口可以管理工作负载。
+
+每个HA组都提供对选定节点上共享服务的访问权限。
+
+* 包括网关节点、管理节点或两者的 HA 组为 S3 客户端提供高可用数据连接。
+* 仅包含管理节点的 HA 组提供到 Grid Manager 和 Tenant Manager 的高可用性连接。
+* 仅包括服务设备和基于 VMware 的软件节点的 HA 组可以为 link:../admin/manage-s3-select-for-tenant-accounts.html["使用 S3 Select 的 S3 租户"] 提供高可用性连接。使用 S3 Select 时建议使用 HA 组，但不是必需的。
+
+
+
+
+[[how-do-you-create-an-ha-group]]
+== 如何创建 HA 组？
+
+. 您可以为一个或多个管理节点或网关节点选择一个网络接口。您可以使用网格网络 (eth0) 接口、客户端网络 (eth2) 接口、VLAN 接口或已添加到节点的访问接口。
++
+
+NOTE: 如果接口具有 DHCP 分配的 IP 地址，则无法将其添加到 HA 组。
+
+. 指定一个接口作为主接口。主接口是活动接口，除非发生故障。
+. 您可以确定任何备份接口的优先级顺序。
+. 您可以为组分配 1 到 10 个虚拟 IP (VIP) 地址。客户端应用程序可以使用这些 VIP 地址中的任何一个连接到 StorageGRID。
+
+
+有关说明，请参阅 link:configure-high-availability-group.html["配置高可用性组"]。
+
+
+
+[[what-is-the-active-interface]]
+== 什么是活动接口？
+
+在正常运行过程中，HA 组的所有 VIP 地址都会添加到主接口中，这是优先级顺序中的第一个接口。只要主接口保持可用，当客户端连接到组的任何 VIP 地址时，就会使用该接口。也就是说，在正常运行期间，主接口是组的"活动"接口。
+
+同样，在正常操作期间，HA 组的任何优先级较低的接口都充当"备份"接口。除非主（当前活动）接口不可用，否则不会使用这些备份接口。
+
+
+
+[[view-the-current-ha-group-status-of-a-node]]
+== 查看节点的当前HA组状态
+
+要查看是否将节点分配给 HA 组并确定其当前状态，请选择 *节点* > *_node_*。
+
+如果*概述*选项卡包含 *HA 组*的条目，则该节点将被分配到列出的 HA 组。组名后面的值是该节点在 HA 组中的当前状态：
+
+* *Active*：HA 组当前托管在此节点上。
+* *Backup*：HA 组当前未使用此节点；此为备份接口。
+* *已停止*：HA 组无法在此节点上托管，因为高可用性（keepalived）服务已手动停止。
+* *Fault*：由于以下一个或多个原因，HA 组无法在此节点上托管：
++
+** 节点上未运行负载平衡器(nginx-gw)服务。
+** 节点的 eth0 或 VIP 接口已关闭。
+** 此节点已关闭。
+
+
+
+
+在此示例中，主管理节点已添加到两个 HA 组。此节点当前是 Admin 客户端组的活动接口和 FabricPool 客户端组的备份接口。
+
+image:ha_group_primary_interface.png["HA组主接口"]
+
+
+
+[[what-happens-when-the-active-interface-fails]]
+== 活动接口出现故障时会发生什么？
+
+当前承载 VIP 地址的接口是活动接口。如果 HA 组包含多个接口，并且活动接口发生故障，则 VIP 地址将按优先级顺序移动到第一个可用的备份接口。如果该接口出现故障，VIP 地址将移动到下一个可用的备份接口，依此类推。
+
+可以出于以下任意原因触发故障转移：
+
+* 配置此接口的节点已关闭。
+* 配置该接口的节点将与所有其他节点断开连接至少 2 分钟。
+* 活动接口关闭。
+* 负载平衡器服务停止。
+* 高可用性服务停止。
+
+
+
+NOTE: 故障转移可能不会由托管活动接口的节点外部的网络故障触发。同样，故障转移不会由 Grid Manager 或 Tenant Manager 的服务触发。
+
+故障转移过程通常只需几秒钟，速度足够快，客户端应用程序受到的影响极小，可以依靠正常的重试行为继续运行。
+
+当故障得到解决且更高优先级的接口再次可用时，VIP 地址将自动移动到可用的最高优先级接口。

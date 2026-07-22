@@ -1,0 +1,99 @@
+---
+permalink: fabricpool/information-needed-to-attach-storagegrid-as-cloud-tier.html 
+sidebar: sidebar 
+keywords: StorageGRID, fabricPool, ONTAP System Manager, ONTAP CLI, port, FQDN, object store name 
+summary: 在将 StorageGRID 作为 FabricPool 的云层附加之前，您必须在 StorageGRID 中执行配置步骤并获取某些值。 
+---
+= 将 StorageGRID 作为 FabricPool 云层连接所需的信息
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在将 StorageGRID 作为 FabricPool 的云层附加之前，您必须在 StorageGRID 中执行配置步骤，并获取在 ONTAP 中使用的某些值。
+
+
+
+[[what-values-do-i-need]]
+== 我需要哪些值？
+
+下表显示了必须在 StorageGRID 中配置的值，以及 ONTAP 和 DNS 服务器如何使用这些值。
+
+[cols="1a,1a,1a"]
+|===
+| 值 | 配置值的位置 | 使用值的位置 
+
+
+ a| 
+虚拟 IP (VIP) 地址
+ a| 
+StorageGRID > HA 组
+ a| 
+DNS条目
+
+
+
+ a| 
+端口
+ a| 
+StorageGRID > 负载平衡器端点
+ a| 
+${post_edited_translations.segment}
+
+
+
+ a| 
+SSL 证书
+ a| 
+StorageGRID > 负载平衡器端点
+ a| 
+${post_edited_translations.segment}
+
+
+
+ a| 
+服务器名称 (FQDN)
+ a| 
+StorageGRID > 负载平衡器端点
+ a| 
+DNS条目
+
+
+
+ a| 
+访问密钥 ID 和秘密访问密钥
+ a| 
+${post_edited_translations.segment}
+ a| 
+${post_edited_translations.segment}
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+${post_edited_translations.segment}
+ a| 
+${post_edited_translations.segment}
+
+|===
+
+
+[[how-do-i-get-these-values]]
+== 如何获得这些值？
+
+根据您的要求，您可以执行以下操作之一来获取所需的信息：
+
+* 使用 link:use-fabricpool-setup-wizard.html["FabricPool 设置向导"]。FabricPool 设置向导可帮助您在 StorageGRID 中快速配置所需的值，并输出一个可用于配置 ONTAP System Manager 的文件。该向导将引导您完成所需的步骤，并帮助确保您的设置符合 StorageGRID 和 FabricPool 最佳实践。
+* 手动配置每个项目。然后，在 ONTAP System Manager 或 ONTAP CLI 中输入值。请按照以下步骤操作：
++
+.. link:creating-ha-group-for-fabricpool.html["为 FabricPool 配置高可用性 (HA) 组"]。
+.. link:creating-load-balancer-endpoint-for-fabricpool.html["为 FabricPool 创建负载平衡器端点"]。
+.. link:creating-tenant-account-for-fabricpool.html["为 FabricPool 创建租户帐户"]。
+.. 登录租户帐户，并 link:creating-s3-bucket-and-access-key.html["为 root 用户创建存储桶和访问密钥"]。
+.. 为 FabricPool 数据创建 ILM 规则，并将其添加到活动 ILM 策略中。请参见 link:using-storagegrid-ilm-with-fabricpool-data.html["配置 FabricPool 数据的 ILM"]。
+.. 或者，link:creating-traffic-classification-policy-for-fabricpool.html["为 FabricPool 创建流量分类策略"]。
+
+
+

@@ -1,0 +1,152 @@
+---
+permalink: troubleshoot/troubleshooting-syslog-server.html 
+sidebar: sidebar 
+keywords: how to troubleshoot the external syslog server 
+summary: 下表介绍了可能与使用外部 syslog 服务器相关的错误消息，并列出了纠正措施。 
+---
+= 对 StorageGRID 外部系统日志服务器错误消息进行故障排除
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+下表介绍了可能与使用外部 syslog 服务器相关的错误消息，并列出了纠正措施。
+
+如果您在发送测试消息以验证外部 syslog 服务器是否正确配置时遇到问题，配置外部 syslog 服务器向导会显示这些错误。
+
+运行时出现的问题可能会由 link:../monitor/alerts-reference.html#audit-and-syslog-alerts["外部syslog服务器转发错误"] 警报报告。如果收到此警报，请按照此警报中的说明重新发送测试消息，以便获取详细的错误消息。
+
+有关向外部 syslog 服务器发送审核信息的详细信息，请参见：
+
+* link:../monitor/considerations-for-external-syslog-server.html["使用外部 syslog 服务器的注意事项"]
+* link:../monitor/configure-log-management.html["配置日志管理和外部 syslog 服务器"]
+
+
+[cols="1a,3a"]
+|===
+| 错误消息 | 说明和建议操作 
+
+
+ a| 
+无法解析主机名称
+ a| 
+无法将您为 syslog 服务器输入的 FQDN 解析为 IP 地址。
+
+. 检查您输入的主机名。如果您输入了 IP 地址，请确保它是 W.X.Y.Z（"点分十进制"）表示法的有效 IP 地址。
+. 请检查DNS服务器配置是否正确。
+. 确认每个节点都可以访问 DNS 服务器的 IP 地址。
+
+
+
+
+ a| 
+连接被拒绝
+ a| 
+与 syslog 服务器的 TCP 或 TLS 连接被拒绝。主机的 TCP 或 TLS 端口上可能没有侦听服务，或者防火墙可能正在阻止访问。
+
+. 请检查您输入的系统日志服务器的 FQDN 或 IP 地址、端口和协议是否正确。
+. 确认 syslog 服务的主机正在运行侦听指定端口的 syslog 守护程序。
+. 确认防火墙没有阻止从节点到 syslog 服务器的 IP 和端口的 TCP/TLS 连接访问。
+
+
+
+
+ a| 
+网络不可达
+ a| 
+syslog 服务器不在直接连接的子网上。路由器返回了 ICMP 故障消息，表示无法将测试消息从列出的节点转发到 syslog 服务器。
+
+. 检查是否为 syslog 服务器输入了正确的 FQDN 或 IP 地址。
+. 对于列出的每个节点，请检查网格网络子网列表、管理网络子网列表和客户端网络网关。确认这些配置为通过预期的网络接口和网关（网格、管理或客户端）将流量路由到 syslog 服务器。
+
+
+
+
+ a| 
+主机不可达
+ a| 
+syslog 服务器位于直接连接的子网（列出的节点用于其网格、管理或客户端 IP 地址的子网）上。节点尝试发送测试消息，但未收到针对 syslog 服务器 MAC 地址的 ARP 请求的响应。
+
+. 检查是否为 syslog 服务器输入了正确的 FQDN 或 IP 地址。
+. 检查运行 syslog 服务的主机是否已启动。
+
+
+
+
+ a| 
+连接超时
+ a| 
+已尝试 TCP/TLS 连接，但长时间未收到来自 syslog 服务器的响应。可能存在路由配置错误，或者防火墙可能在未发送任何响应的情况下丢弃流量（常见配置）。
+
+. 检查是否为 syslog 服务器输入了正确的 FQDN 或 IP 地址。
+. 对于列出的每个节点，请检查网格网络子网列表、管理网络子网列表和客户端网络网关。确认这些配置为使用您希望访问 syslog 服务器的网络接口和网关（网格、管理员或客户端）将流量路由到 syslog 服务器。
+. 确认防火墙没有阻止从列出的节点到 syslog 服务器的 IP 和端口的 TCP/TLS 连接访问。
+
+
+
+
+ a| 
+连接被合作伙伴关闭
+ a| 
+与 syslog 服务器的 TCP 连接已成功建立，但后来被关闭。原因可能包括：
+
+* Syslog 服务器可能已重新启动或重启。
+* 节点和 syslog 服务器可能具有不同的 TCP/TLS 设置。
+* 中间防火墙可能正在关闭空闲的 TCP 连接。
+* 侦听 syslog 服务器端口的非 syslog 服务器可能已关闭连接。
+
+
+要解决此问题：
+
+. 请检查您输入的系统日志服务器的 FQDN 或 IP 地址、端口和协议是否正确。
+. 如果使用的是 TLS，请确认 syslog 服务器也在使用 TLS。如果使用的是 TCP，请确认 syslog 服务器也在使用 TCP。
+. 检查中间防火墙是否配置为关闭空闲的 TCP 连接。
+
+
+
+
+ a| 
+TLS证书错误
+ a| 
+从 syslog 服务器收到的服务器证书与您提供的 CA 证书捆绑包和客户端证书不兼容。
+
+. 确认 CA 证书捆绑包和客户端证书（如果有）与 syslog 服务器上的服务器证书兼容。
+. 确认来自 syslog 服务器的服务器证书中的标识包含预期的 IP 或 FQDN 值。
+
+
+
+
+ a| 
+转发已暂停
+ a| 
+Syslog 记录不再转发到 syslog 服务器，StorageGRID 无法检测到原因。
+
+查看此错误提供的调试日志，以尝试确定根本原因。
+
+
+
+ a| 
+TLS会话已终止
+ a| 
+syslog 服务器终止了 TLS 会话，StorageGRID 无法检测到原因。
+
+. 查看此错误提供的调试日志，以尝试确定根本原因。
+. 请检查您输入的系统日志服务器的 FQDN 或 IP 地址、端口和协议是否正确。
+. 如果使用的是 TLS，请确认 syslog 服务器也在使用 TLS。如果使用的是 TCP，请确认 syslog 服务器也在使用 TCP。
+. 确认 CA 证书捆绑包和客户端证书（如果有）与来自 syslog 服务器的服务器证书兼容。
+. 确认来自 syslog 服务器的服务器证书中的标识包含预期的 IP 或 FQDN 值。
+
+
+
+
+ a| 
+结果查询失败
+ a| 
+用于 syslog 服务器配置和测试的管理节点无法从列出的节点请求测试结果。一个或多个节点可能已关闭。
+
+. 遵循标准故障排除步骤，确保节点处于联机状态，并且所有预期的服务都在运行。
+. 在列出的节点上重新启动 miscd 服务。
+
+
+|===

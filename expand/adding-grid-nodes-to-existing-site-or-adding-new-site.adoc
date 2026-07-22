@@ -1,0 +1,30 @@
+---
+permalink: expand/adding-grid-nodes-to-existing-site-or-adding-new-site.html 
+sidebar: sidebar 
+keywords: grid node, add node, add site, expand, expansion, StorageGRID 
+summary: 按照以下步骤将网格节点添加到现有站点或添加新站点。您一次只能执行一种类型的扩容。 
+---
+= 向 StorageGRID 添加网格节点或新站点的工作流摘要
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+按照以下步骤将网格节点添加到现有站点或添加新站点。您一次只能执行一种类型的扩容。
+
+.开始之前
+* 您拥有 link:../admin/admin-group-permissions.html["Root 访问权限或维护权限"]。
+* ${post_edited_translations.segment}
+* 任何以前的扩展、升级、退役或恢复程序均已完成。
++
+
+NOTE: 在另一个扩容、升级、恢复或活动退役过程正在进行时，系统会阻止您启动扩容。但是，如有必要，您可以暂停退役过程以启动扩容。
+
+
+
+.步骤
+. link:updating-subnets-for-grid-network.html["更新网格网络的子网"]。
+. link:deploying-new-grid-nodes.html["部署新网格节点"]。
+. link:performing-expansion.html["执行扩展"]。
+

@@ -1,0 +1,33 @@
+---
+permalink: swnodes/specifying-domain-name-system-server-information.html 
+sidebar: sidebar 
+keywords: how to specify domain name system server information, dns 
+summary: 您必须为 StorageGRID 系统指定 DNS 信息，以便可以使用主机名而不是 IP 地址访问外部服务器。 
+---
+= 为 StorageGRID 指定 DNS 服务器信息
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须为 StorageGRID 系统指定 DNS 信息，以便可以使用主机名而不是 IP 地址访问外部服务器。
+
+.关于此任务
+指定 https://docs.netapp.com/us-en/storagegrid-appliances/commonhardware/checking-dns-server-configuration.html["DNS 服务器信息"^]允许您将完全限定域名 (FQDN) 主机名而不是 IP 地址用于电子邮件通知和 AutoSupport。
+
+为确保正常运行，请指定两台或三台 DNS 服务器。如果指定三个以上，则由于某些平台上的已知操作系统限制，可能会仅使用三个。如果环境中存在路由限制，则可以link:../maintain/modifying-dns-configuration-for-single-grid-node.html["自定义 DNS 服务器列表"]对单个节点（通常是站点上的所有节点）使用最多三个 DNS 服务器的不同集合。
+
+如果可能，请使用每个站点可以在本地访问的 DNS 服务器，以确保孤立的站点可以解析外部目标的 FQDN。
+
+.步骤
+. 在 *Server 1* 文本框中指定至少一个 DNS 服务器的 IPv4 地址。
+. 如有必要，请选择最后一个条目旁边的加号以添加其他服务器条目。
++
+image:9_gmi_installer_dns_page.gif["本图四周的文字提供了相关说明。"]
+
++
+最佳做法是指定至少两个 DNS 服务器。您最多可以指定六个 DNS 服务器。
+
+. 选择 *Next*。
+

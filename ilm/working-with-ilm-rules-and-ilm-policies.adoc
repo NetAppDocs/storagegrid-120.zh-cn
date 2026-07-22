@@ -1,0 +1,195 @@
+---
+permalink: ilm/working-with-ilm-rules-and-ilm-policies.html 
+sidebar: sidebar 
+keywords: remove ilm rule, edit ilm rule, clone ilm rule, ilm queue 
+summary: 随着存储要求的变化，您可能需要设置不同的策略或修改与该策略关联的 ILM 规则。您可以查看 ILM 指标以确定系统性能。 
+---
+= 在 StorageGRID 中使用 ILM 策略和 ILM 规则
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+随着存储要求的变化，您可能需要设置其他策略或修改与策略关联的 ILM 规则。您可以查看 ILM 指标以确定系统性能。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["特定访问权限"]。
+
+
+
+
+[[view-ilm-policies]]
+== 查看 ILM 策略
+
+要查看活动和非活动的 ILM 策略和策略激活历史记录：
+
+. 选择 *ILM* > *策略*。
+. 选择 *Policies* 可查看有效和无效策略列表。该表列出了每个策略的名称、分配给策略的标记以及策略是处于活动状态还是非活动状态。
+. 选择*Activation history*可查看策略的激活开始和结束日期列表。
+. 选择一个策略名称以查看该策略的详细信息。
++
+
+NOTE: 如果查看状态为"已编辑"或"已删除"的策略的详细信息，则会显示一条消息，说明您正在查看在指定时间段内处于活动状态且已被编辑或删除的策略版本。
+
+
+
+
+
+[[edit-an-ilm-policy]]
+[[edit-ilm-policy]]
+== 编辑 ILM 策略
+
+您只能编辑非活动策略。如果要编辑活动策略，请停用该策略或创建克隆并编辑该克隆。
+
+要编辑策略：
+
+. 选择 *ILM* > *策略*。
+. 选中要编辑的策略复选框，然后选择*编辑*。
+. 按照 link:creating-ilm-policy.html["创建 ILM 策略"] 中的说明编辑此策略。
+. 在重新激活策略之前，请先模拟该策略。
+
+
+
+CAUTION: 未正确配置的 ILM 策略可能会导致不可恢复的数据丢失。在激活 ILM 策略之前，请仔细查看 ILM 策略及其 ILM 规则，然后模拟 ILM 策略。始终确认 ILM 策略将按预期运行。
+
+
+
+[[clone-an-ilm-policy]]
+[[clone-ilm-policy]]
+== 克隆 ILM 策略
+
+要克隆 ILM 策略，请执行以下操作：
+
+. 选择 *ILM* > *策略*。
+. 选中要克隆的策略的复选框，然后选择 *Clone*。
+. 按照 link:creating-ilm-policy.html["创建 ILM 策略"] 中的说明，从已克隆的策略开始创建新策略。
+
+
+
+CAUTION: 未正确配置的 ILM 策略可能会导致不可恢复的数据丢失。在激活 ILM 策略之前，请仔细查看 ILM 策略及其 ILM 规则，然后模拟 ILM 策略。始终确认 ILM 策略将按预期运行。
+
+
+
+[[remove-an-ilm-policy]]
+[[remove-ilm-policy]]
+== 删除 ILM 策略
+
+您只能删除处于非活动状态的 ILM 策略。要删除策略，请执行以下操作：
+
+. 选择 *ILM* > *策略*。
+. 选中要删除的非活动策略的复选框。
+. 选择 *Remove*。
+
+
+
+
+[[view-ilm-rule-details]]
+== 查看 ILM 规则详细信息
+
+要查看 ILM 规则的详细信息，包括规则的保留图和放置说明：
+
+. 选择 *ILM* > *规则*。
+. 选择要查看其详细信息的规则的名称。例如：
++
+image:ilm_rule_details_page.png["ILM规则详细信息页面"]
+
+
+
+此外，您可以使用详细信息页面复制、编辑或删除规则。如果规则用于任何策略，您将无法编辑或删除该规则。
+
+
+
+[[clone-an-ilm-rule]]
+[[clone-ilm-rule]]
+== 克隆 ILM 规则
+
+如果要使用现有规则的某些设置创建新规则，则可以克隆现有规则。如果需要编辑任何策略中使用的规则，请改为克隆规则并对克隆进行更改。对克隆进行更改后，可以从策略中删除原始规则，并根据需要将其替换为修改后的版本。
+
+
+NOTE: 如果ILM规则是使用StorageGRID版本10.2或更早版本创建的，则无法克隆该规则。
+
+.步骤
+. 选择 *ILM* > *规则*。
+. 选中要克隆的规则的复选框，然后选择 *Clone*。或者，选择规则名称，然后从规则详细信息页面中选择 *Clone*。
+. 按照 <<编辑 ILM 规则,编辑 ILM 规则>> 和 link:create-ilm-rule-enter-details.html#use-advanced-filters-in-ilm-rules["在 ILM 规则中使用高级筛选器"] 的步骤更新克隆规则。
++
+克隆 ILM 规则时，必须输入新名称。
+
+
+
+
+
+[[edit-an-ilm-rule]]
+== 编辑 ILM 规则
+
+您可能需要编辑 ILM 规则来更改筛选器或放置说明。
+
+如果在任何 ILM 策略中使用规则，则无法对其进行编辑。您可以<<clone-ilm-rule,克隆规则>>对克隆副本进行任何所需的更改。
+
+
+CAUTION: 未正确配置的 ILM 策略可能会导致不可恢复的数据丢失。在激活 ILM 策略之前，请仔细查看 ILM 策略及其 ILM 规则，然后模拟 ILM 策略。始终确认 ILM 策略将按预期运行。
+
+.步骤
+. 选择 *ILM* > *规则*。
+. 确认您要编辑的规则未在任何 ILM 策略中使用。
+. 如果您要编辑的规则未使用，请选中该规则的复选框，然后选择*操作* > *编辑*。或者，选择规则的名称，然后在规则详细信息页面上选择*编辑*。
+. 完成编辑 ILM 规则向导的步骤。如有必要，请按照 link:create-ilm-rule-enter-details.html["创建 ILM 规则"] 和 link:create-ilm-rule-enter-details.html#use-advanced-filters-in-ilm-rules["在 ILM 规则中使用高级筛选器"] 的步骤进行操作。
++
+编辑 ILM 规则时，无法更改其名称。
+
+
+
+
+
+[[remove-an-ilm-rule]]
+== 删除 ILM 规则
+
+要使当前 ILM 规则列表易于管理，请删除不太可能使用的 ILM 规则。
+
+.步骤
+要删除当前在活动策略中使用的 ILM 规则，请执行以下操作：
+
+. 克隆此策略。
+. 从策略克隆中删除 ILM 规则。
+. 保存、模拟并激活新策略，以确保对象按预期受到保护。
+. 转到删除当前在非活动策略中使用的 ILM 规则的步骤。
+
+
+要删除当前在非活动策略中使用的 ILM 规则，请执行以下操作：
+
+. 选择非活动策略。
+. 从策略中删除 ILM 规则，或<<remove-ilm-policy,删除此策略>>。
+. 转到删除当前未使用的 ILM 规则的步骤。
+
+
+要删除当前未使用的 ILM 规则：
+
+. 选择 *ILM* > *规则*。
+. 确认您要删除的规则未在任何策略中使用。
+. 如果要删除的规则未使用，请选择该规则，然后选择*操作* > *删除*。您可以选择多个规则并同时删除所有规则。
+. 选择*是*以确认要删除 ILM 规则。
+
+
+
+
+[[view-ilm-metrics]]
+== 查看 ILM 指标
+
+您可以查看 ILM 的指标，例如队列中的对象数和评估率。您可以监控这些指标以确定系统性能。队列较大或评估率较高可能表明系统无法跟上载入速率、客户端应用程序的负载过大，或者存在某种异常情况。
+
+.步骤
+. 选择*Dashboard* > *ILM*。
++
+
+NOTE: 由于可以自定义控制面板，因此 ILM 选项卡可能不可用。
+
+. 监控 ILM 选项卡上的指标。
++
+您可以选择问号 image:icon_nms_question.png["问号图标"] 以查看 ILM 选项卡上各项目的说明。
+
++
+image:ilm_metrics_on_dashboard.png["Grid Manager 仪表板上的 ILM 指标"]
+
+

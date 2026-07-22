@@ -1,0 +1,455 @@
+---
+permalink: admin/use-s3-setup-wizard-steps.html 
+sidebar: sidebar 
+keywords: FabricPool and S3 setup wizard, object storage system, S3 application 
+summary: 您可以使用 S3 设置向导将 StorageGRID 配置为 S3 应用程序的对象存储系统。 
+---
+= 访问并完成 StorageGRID 中的 S3 设置向导
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 S3 设置向导将 StorageGRID 配置为与 S3 应用程序一起使用。设置向导提供应用程序访问 StorageGRID 存储桶和保存对象所需的值。
+
+.开始之前
+* 您有 link:admin-group-permissions.html["root 访问权限"]。
+* 您已查阅link:use-s3-setup-wizard.html["注意事项和要求"]以使用向导。
+
+
+
+
+[[access-the-wizard]]
+== 访问此向导
+
+.步骤
+. 使用 link:web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+. 如果仪表板上出现 *FabricPool and S3 setup wizard* 横幅，请选择横幅中的链接。如果横幅不再出现，请从 Grid Manager 中的标题栏中选择帮助图标，然后选择 *FabricPool and S3 setup wizard*。
++
+image:help_menu.png["帮助菜单"]
+
+. 在 FabricPool 和 S3 设置向导页面的 S3 应用程序部分，选择*立即配置*。
+
+
+
+
+[[step-1-of-6-configure-ha-group]]
+== 步骤 1/6：配置 HA 组
+
+HA 组是一组节点，每个节点都包含 StorageGRID 负载平衡器服务。HA 组可以包含网关节点、管理节点或两者。
+
+您可以使用 HA 组来帮助保持 S3 数据连接可用。如果 HA 组中的活动接口出现故障，备份接口可以管理工作负载，对 S3 操作的影响很小。
+
+有关此任务的详细信息，请参见 link:managing-high-availability-groups.html["管理高可用性组"]。
+
+.步骤
+. 如果您计划使用外部负载均衡器，则无需创建 HA 组。选择 *跳过此步骤* 并转到 <<步骤 2/6：配置负载均衡器端点>>。
+. 要使用 StorageGRID 负载均衡器，您可以创建新的 HA 组或使用现有的 HA 组。
++
+[role="tabbed-block"]
+====
+.创建 HA 组
+--
+.. 要创建新的HA组，请选择*创建HA组*。
+.. 对于*输入详细信息*步骤，请填写以下字段。
++
+[cols="1a,2a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+HA 组名称
+ a| 
+此 HA 组的唯一显示名称。
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+此 HA 组的描述。
+
+|===
+.. 对于*添加接口*步骤，请选择要在此 HA 组中使用的节点接口。
++
+${post_edited_translations.segment}
+
++
+您可以选择一个或多个节点，但每个节点只能选择一个接口。
+
+.. 对于*Prioritize interfaces*步骤，请确定此 HA 组的主接口和任何备份接口。
++
+拖动行以更改*优先级顺序*列中的值。
+
++
+列表中的第一个接口是 Primary 接口。除非发生故障，否则 Primary 接口为活动接口。
+
++
+如果 HA 组包含多个接口，并且活动接口发生故障，则虚拟 IP（VIP）地址按优先级顺序移动到第一个备份接口。如果该接口出现故障，VIP 地址将移动到下一个备份接口，依此类推。故障解决后，VIP 地址将移回可用的最高优先级接口。
+
+.. 对于*输入 IP 地址*步骤，请填写以下字段。
++
+[cols="1a,2a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+子网 CIDR
+ a| 
+CIDR 表示法中 VIP 子网的地址 — IPv4 地址后跟斜杠和子网长度（0-32）。
+
+网络地址不得设置任何主机位。例如， `192.16.0.0/22`。
+
+
+
+ a| 
+网关 IP 地址（可选）
+ a| 
+如果用于访问 StorageGRID 的 S3 IP 地址与 StorageGRID VIP 地址不在同一子网中，请输入 StorageGRID VIP 本地网关 IP 地址。本地网关 IP 地址必须在 VIP 子网内。
+
+
+
+ a| 
+虚拟 IP 地址
+ a| 
+为 HA 组中的活动接口输入至少一个且不超过十个 VIP 地址。所有 VIP 地址必须在 VIP 子网内。
+
+必须至少有一个地址为 IPv4。或者，您可以指定其他 IPv4 和 IPv6 地址。
+
+|===
+.. 选择*创建HA组*，然后选择*完成*返回S3设置向导。
+.. 选择*继续*转到负载平衡器步骤。
+
+
+--
+.使用现有 HA 组
+--
+.. 要使用现有 HA 组，请从*选择 HA 组*中选择 HA 组名称。
+.. 选择*继续*转到负载平衡器步骤。
+
+
+--
+====
+
+
+
+
+[[step-2-of-6-configure-load-balancer-endpoint]]
+== 步骤 2/6：配置负载均衡器端点
+
+StorageGRID 使用负载均衡器管理来自客户端应用程序的工作负载。负载均衡可最大限度地提高跨多个存储节点的速度和连接容量。
+
+您可以使用 StorageGRID 负载平衡器服务，该服务存在于所有网关和管理节点上，也可以连接到外部（第三方）负载平衡器。建议使用 StorageGRID 负载平衡器。
+
+有关此任务的详细信息，请参见 link:managing-load-balancing.html["负载平衡注意事项"]。
+
+要使用 StorageGRID 负载均衡器服务，请选择 *StorageGRID load balancer* 选项卡，然后创建或选择要使用的负载均衡器端点。要使用外部负载均衡器，请选择 *External load balancer* 选项卡，并提供有关已配置系统的详细信息。
+
+[role="tabbed-block"]
+====
+.创建端点
+--
+.步骤
+. 要创建负载均衡器端点，请选择*Create endpoint*。
+. 对于*输入端点详细信息*步骤，请填写以下字段。
++
+[cols="1a,2a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+名称
+ a| 
+终结点的描述性名称。
+
+
+
+ a| 
+端口
+ a| 
+要用于负载平衡的 StorageGRID 端口。对于您创建的第一个端点，此字段默认为 10433，但您可以输入任何未使用的外部端口。如果输入 80 或 443，则仅在网关节点上配置端点，因为这些端口在管理节点上保留。
+
+*注意：* 不允许使用其他网格服务使用的端口。请参阅 link:../network/internal-grid-node-communications.html#storagegrid-internal-ports["StorageGRID 内部端口"]。
+
+
+
+ a| 
+客户端类型
+ a| 
+必须是 *S3*。
+
+
+
+ a| 
+网络协议
+ a| 
+选择 *HTTPS*。
+
+*注意*：支持在不使用 TLS 加密的情况下与 StorageGRID 通信，但不建议这样做。
+
+|===
+. 对于*选择绑定模式*步骤，指定绑定模式。绑定模式控制使用任何 IP 地址或使用特定 IP 地址和网络接口访问端点的方式。
++
+[cols="1a,3a"]
+|===
+| 模式 | 问题描述 
+
+
+ a| 
+全局(默认)
+ a| 
+客户端可以使用任何网关节点或管理节点的 IP 地址、任何网络上的任何 HA 组的虚拟 IP (VIP) 地址或相应的 FQDN 来访问端点。
+
+除非需要限制此端点的可访问性，否则请使用*全局*设置（默认）。
+
+
+
+ a| 
+HA 组的虚拟 IP
+ a| 
+客户端必须使用 HA 组的虚拟 IP 地址（或相应的 FQDN）来访问此端点。
+
+具有此绑定模式的端点都可以使用相同的端口号，只要您为端点选择的 HA 组不重叠即可。
+
+
+
+ a| 
+节点接口
+ a| 
+${post_edited_translations.segment}
+
+
+
+ a| 
+节点类型
+ a| 
+根据您选择的节点类型，客户端必须使用任何管理节点的 IP 地址（或相应的 FQDN）或任何网关节点的 IP 地址（或相应的 FQDN）来访问此端点。
+
+|===
+. 对于租户访问步骤，请选择以下选项之一：
++
+[cols="1a,2a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+允许所有租户（默认）
+ a| 
+所有租户帐户都可以使用此端点来访问其存储区。
+
+
+
+ a| 
+允许选定的租户
+ a| 
+只有选定租户帐户可以使用此端点访问其存储桶。
+
+
+
+ a| 
+阻止选定租户
+ a| 
+选定的租户帐户无法使用此端点来访问其存储桶。所有其他租户都可以使用此端点。
+
+|===
+. 对于*附加证书*步骤，请选择以下选项之一：
++
+[cols="1a,2a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+上传证书（推荐）
+ a| 
+使用此选项可上传 CA 签名的服务器证书、证书私钥和可选的 CA 捆绑包。
+
+
+
+ a| 
+生成证书
+ a| 
+使用此选项可生成自签名证书。有关要输入内容的详细信息，请参见 link:configuring-load-balancer-endpoints.html["配置负载平衡器端点"]。
+
+
+
+ a| 
+使用 StorageGRID S3 证书
+ a| 
+仅当已上传或生成 StorageGRID 全局证书的自定义版本时，才使用此选项。有关详细信息，请参见 link:configuring-custom-server-certificate-for-storage-node.html["配置 S3 API 证书"]。
+
+|===
+. 选择*完成*返回 S3 设置向导。
+. 选择*继续*转到租户和存储桶步骤。
+
+
+
+NOTE: 对端点证书的更改可能需要长达 15 分钟才能应用于所有节点。
+
+--
+.使用现有负载平衡器端点
+--
+.步骤
+. 要使用现有端点，请从*选择负载均衡器端点*中选择其名称。
+. 选择*继续*转到租户和存储桶步骤。
+
+
+--
+.使用外部负载均衡器
+--
+.步骤
+. 要使用外部负载平衡器，请完成以下字段。
++
+[cols="1a,2a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+FQDN
+ a| 
+外部负载平衡器的完全限定域名(FQDN)。
+
+
+
+ a| 
+端口
+ a| 
+S3 应用程序将用于连接到外部负载均衡器的端口号。
+
+
+
+ a| 
+证书
+ a| 
+复制外部负载均衡器的服务器证书并将其粘贴到此字段中。
+
+|===
+. 选择*继续*转到租户和存储桶步骤。
+
+
+--
+====
+
+
+[[step-3-of-6-create-tenant-and-bucket]]
+== 步骤 3/6：创建租户和存储区
+
+租户是可以使用 S3 应用程序在 StorageGRID 中存储和检索对象的实体。每个租户都有自己的用户、访问密钥、存储桶、对象和一组特定的功能。
+
+存储区是用于存储租户的对象和对象元数据的容器。虽然租户可能有很多存储区，但此向导可帮助您以最快捷、最简单的方式创建租户和存储区。如果稍后需要添加存储区或设置选项，可以使用 Tenant Manager。
+
+有关此任务的详细信息，请参见 link:creating-tenant-account.html["创建租户帐户"] 和 link:../tenant/creating-s3-bucket.html["创建 S3 存储桶"]。
+
+.步骤
+. 输入租户帐户的名称。
++
+租户名称不必是唯一的。创建租户帐户时，它将收到一个唯一的数字帐户 ID。
+
+. 根据您的 StorageGRID 系统使用 link:using-identity-federation.html["身份联合"]、link:how-sso-works.html["单点登录 (SSO)"] 还是同时使用两者，定义租户帐户的根访问权限。
++
+[cols="1a,2a"]
+|===
+| 选项 | 执行此操作 
+
+
+ a| 
+如果未启用身份联合
+ a| 
+指定以本地 root 用户身份登录租户时使用的密码。
+
+
+
+ a| 
+如果启用了身份联合
+ a| 
+.. 选择现有联合组，以便为租户提供 link:../tenant/tenant-management-permissions.html["root 访问权限"]。
+.. （可选）指定以本地 root 用户身份登录租户时使用的密码。
+
+
+
+
+ a| 
+如果已启用身份联合和单一登录(SSO)
+ a| 
+选择现有联合组，使其拥有 link:../tenant/tenant-management-permissions.html["root 访问权限"] 租户权限。没有本地用户可以登录。
+
+|===
+. 如果要向导为 root 用户创建访问密钥 ID 和秘密访问密钥，请选择 *Create root user S3 access key automatically*。
++
+如果租户的唯一用户是 root 用户，请选择此选项。如果其他用户将使用此租户，link:../tenant/index.html["使用租户管理器"]以配置密钥和权限。
+
+. 如果要立即为此租户创建存储桶，请选择*Create bucket for this tenant*。
++
+
+TIP: 如果为网格启用了 S3 对象锁定，则此步骤中创建的存储桶未启用 S3 对象锁定。如果需要为此 S3 应用程序使用 S3 对象锁定存储桶，请不要选择立即创建存储桶。请改用 Tenant Manager link:../tenant/creating-s3-bucket.html["创建存储桶"] 稍后执行此操作。
+
++
+.. 输入 S3 应用程序将使用的存储桶的名称。例如， `s3-bucket`。
++
+创建存储桶后，您无法更改存储桶名称。
+
+.. 选择此存储桶的*区域*。
++
+使用默认区域(`us-east-1`），除非您希望将来使用 ILM 根据存储桶的区域筛选对象。
+
+
+
+. 选择*创建并继续*。
+
+
+
+
+[[download-datastep-4-of-6-download-data]]
+== [[download-data]]步骤 4/6：下载数据
+
+在下载数据步骤中，您可以下载一个或两个文件来保存刚刚配置的详细信息。
+
+.步骤
+. 如果您选择了*自动创建 root 用户 S3 访问密钥*，请执行以下一项或两项操作：
++
+** 选择*下载访问密钥*以下载包含租户帐户名称、访问密钥 ID 和机密访问密钥的 `.csv`文件。
+** 选择复制图标（image:icon_tenant_copy_url.png["复制图标"]）将访问密钥 ID 和秘密访问密钥复制到剪贴板。
+
+
+. 选择*下载配置值*以下载包含负载平衡器端点、租户、存储桶和 root 用户设置的 `.txt`文件。
+. 请将此信息保存到安全位置。
++
+
+CAUTION: 在复制两个访问密钥之前，请不要关闭此页面。关闭此页面后，密钥将不可用。请务必将此信息保存在安全的位置，因为它可用于从 StorageGRID 系统获取数据。
+
+. 如果出现提示，请选中复选框以确认已下载或复制密钥。
+. 选择 *Continue* 转到 ILM 规则和策略步骤。
+
+
+
+
+[[step-5-of-6-review-ilm-rule-and-ilm-policy-for-s3]]
+== 第 5 步，共 6 步：查看 S3 的 ILM 规则和 ILM 策略
+
+信息生命周期管理 (ILM) 规则控制 StorageGRID 系统中所有对象的放置、持续时间和接收行为。StorageGRID 附带的 ILM 策略会生成所有对象的两个复制副本。在您激活至少一项新策略之前，此策略有效。
+
+.步骤
+. 查看页面上提供的信息。
+. 如果要为属于新租户或存储区的对象添加特定说明，请创建新规则和新策略。请参阅link:../ilm/access-create-ilm-rule-wizard.html["创建 ILM 规则"]和link:../ilm/ilm-policy-overview.html["使用 ILM 策略"]。
+. 选择*我已查看这些步骤并了解需要执行的操作*。
+. 选中复选框表示您了解下一步该怎么做。
+. 选择*继续*前往*摘要*。
+
+
+
+
+[[step-6-of-6-review-summary]]
+== 第6步（共6步）：查看摘要
+
+.步骤
+. 查看摘要。
+. 记下后续步骤中的详细信息，其中描述了连接到 S3 客户端之前可能需要的其他配置。例如，选择 *Sign in as root* 会将您转至租户管理器，您可以在其中添加租户用户、创建其他存储桶并更新存储桶设置。
+. 选择 *Finish*。
+. 使用从 StorageGRID 下载的文件或手动获取的值配置应用程序。
+

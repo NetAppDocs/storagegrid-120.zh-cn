@@ -1,0 +1,64 @@
+---
+permalink: s3/upload-part.html 
+sidebar: sidebar 
+keywords: s3 UploadPart operation 
+summary: UploadPart 操作用于在对象的分段上传中上传一个分段。 
+---
+= StorageGRID 中 S3 UploadPart 操作支持和不支持的请求标头
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+UploadPart 操作用于在对象的分段上传中上传一个分段。
+
+
+
+[[supported-request-headers]]
+== 支持的请求标头
+
+支持以下请求标头：
+
+* `x-amz-checksum-sha256`
+* `Content-Length`
+* `Content-MD5`
+
+
+
+
+[[request-headers-for-server-side-encryption]]
+== 服务器端加密的请求标头
+
+如果为 CreateMultipartUpload 请求指定了 SSE-C 加密，则还必须在每个 UploadPart 请求中包含以下请求标头：
+
+* `x-amz-server-side-encryption-customer-algorithm`：指定 `AES256`。
+* `x-amz-server-side-encryption-customer-key`：指定在 CreateMultipartUpload 请求中提供的相同加密密钥。
+* `x-amz-server-side-encryption-customer-key-MD5`：指定您在 CreateMultipartUpload 请求中提供的相同 MD5 摘要。
+
+
+
+CAUTION: 您提供的加密密钥绝不会被存储。如果丢失加密密钥，则会丢失相应的对象。在使用客户提供的密钥保护对象数据之前，请查看 link:using-server-side-encryption.html["${post_edited_translations.segment}"] 中的注意事项。
+
+如果在 CreateMultipartUpload 请求期间指定了 SHA-256 校验和，则还必须在每个 UploadPart 请求中包含以下请求标头：
+
+* `x-amz-checksum-sha256`：指定此部件的 SHA-256 校验和。
+
+
+
+
+[[unsupported-request-headers]]
+== 不支持的请求标头
+
+不支持以下请求标头：
+
+* `x-amz-sdk-checksum-algorithm`
+* `x-amz-trailer`
+
+
+
+
+[[versioning]]
+== 版本控制
+
+多部分上传由单独的操作组成，用于启动上传、列出上传、上传部分、组装上传的部分和完成上传。执行 CompleteMultipartUpload 操作时将创建对象（如果适用，还会进行版本控制）。

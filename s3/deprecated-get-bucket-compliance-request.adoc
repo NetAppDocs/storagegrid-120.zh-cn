@@ -1,0 +1,98 @@
+---
+permalink: s3/deprecated-get-bucket-compliance-request.html 
+sidebar: sidebar 
+keywords: S3 REST API, S3 operations, deprecated GET compliance requests 
+summary: GET Bucket 合规性请求已弃用。但是，您可以继续使用此请求来确定当前对现有旧版兼容存储桶有效的合规性设置。 
+---
+= StorageGRID 中已弃用的 GET Bucket compliance 请求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+GET Bucket 合规性请求已弃用。但是，您可以继续使用此请求来确定当前对现有旧版兼容存储桶有效的合规性设置。
+
+[NOTE]
+====
+以前的 StorageGRID 版本中提供的 StorageGRID 合规性功能已被弃用，并已被 S3 Object Lock 所取代。有关更多详细信息，请参见以下内容：
+
+* link:../s3/use-s3-api-for-s3-object-lock.html["使用 S3 REST API 配置 S3 对象锁定"]
+* https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/StorageGRID/How_to_manage_legacy_Compliant_buckets_in_StorageGRID_11.5["NetApp 知识库：如何在 StorageGRID 11.5 中管理旧版兼容存储桶"^]
+
+
+====
+要完成此操作，您必须具有 s3:GetBucketCompliance 权限，或者是账户根用户。
+
+
+
+[[request-example]]
+== 请求示例
+
+此示例请求允许您确定名为 `mybucket`的存储桶的合规性设置。
+
+[listing, subs="specialcharacters,quotes"]
+----
+GET /mybucket/?x-ntap-sg-compliance HTTP/1.1
+Date: _date_
+Authorization: _authorization string_
+Host: _host_
+----
+
+
+[[response-example]]
+== 响应示例
+
+在响应 XML 中， `<SGCompliance>`列出了存储桶的有效合规性设置。此示例响应显示存储桶的合规性设置，其中每个对象将保留一年（525,600 分钟），从对象被载入网格时开始计算。此存储桶当前没有合法保留。每个对象将在一年后自动删除。
+
+[listing, subs="specialcharacters,quotes"]
+----
+HTTP/1.1 200 OK
+Date: _date_
+Connection: _connection_
+Server: StorageGRID/11.1.0
+x-amz-request-id: _request ID_
+Content-Length: _length_
+Content-Type: application/xml
+
+<SGCompliance>
+  <RetentionPeriodMinutes>525600</RetentionPeriodMinutes>
+  <LegalHold>false</LegalHold>
+  <AutoDelete>true</AutoDelete>
+</SGCompliance>
+----
+[cols="1a,2a"]
+|===
+| 名称 | 问题描述 
+
+
+ a| 
+RetentionPeriodMinutes
+ a| 
+添加到此存储桶的对象的保留期长度，以分钟为单位。保留期从对象载入网格时开始计算。
+
+
+
+ a| 
+LegalHold
+ a| 
+* True：此存储桶当前处于合法冻结状态。在解除法律保留之前，无法删除此存储桶中的对象，即使其保留期已过。
+* 错误：此存储桶当前未处于合法冻结状态。此存储桶中的对象可以在其保留期到期时删除。
+
+
+
+
+ a| 
+AutoDelete
+ a| 
+* True：此存储桶中的对象将在其保留期到期时自动删除，除非存储桶处于合法冻结状态。
+* 错误：当保留期到期时，不会自动删除此存储桶中的对象。如果需要删除这些对象，则必须手动删除它们。
+
+
+|===
+
+
+[[error-responses]]
+== 错误响应
+
+如果存储桶未创建为合规，则响应的 HTTP 状态代码为 `404 Not Found`，S3 错误代码为 `XNoSuchBucketCompliance`。

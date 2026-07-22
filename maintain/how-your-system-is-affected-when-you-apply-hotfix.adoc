@@ -1,0 +1,59 @@
+---
+permalink: maintain/how-your-system-is-affected-when-you-apply-hotfix.html 
+sidebar: sidebar 
+keywords: storagegrid, hotfix 
+summary: 您必须了解应用修补程序时 StorageGRID 系统将受到何种影响。 
+---
+= 应用修补程序时如何影响 StorageGRID
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须了解应用修补程序时 StorageGRID 系统将受到何种影响。
+
+
+
+[[storagegrid-hotfixes-are-non-disruptive]]
+== StorageGRID 修补程序是无中断的
+
+StorageGRID 系统可以在整个热修复过程中从客户端应用程序提取和检索数据。如果批准相同类型的所有节点进行热修复（例如，存储节点），则节点将逐个关闭，因此不会出现所有网格节点或特定类型的所有网格节点不可用的情况。
+
+为确保持续可用，请确保您的 ILM 策略包含指定存储每个对象的多个副本的规则。您还必须确保将所有外部 S3 客户端配置为向以下之一发送请求：
+
+* 高可用性 (HA) 组虚拟 IP 地址
+* 高可用性第三方负载均衡器
+* 每个客户端的多个网关节点
+* 每个客户端有多个存储节点
+
+
+
+
+[[client-applications-might-experience-short-term-disruptions]]
+== 客户端应用程序可能会遇到短期中断
+
+StorageGRID 系统可以在整个修补程序过程中从客户端应用程序提取和检索数据；但是，如果修补程序需要在这些节点上重新启动服务，则与单个网关节点或存储节点的客户端连接可能会暂时中断。在修补程序过程完成并在单个节点上恢复服务后，连接将恢复。
+
+如果在短时间内断开连接是不可接受的，您可能需要安排停机时间来应用修补程序。您可以使用选择性审批来安排更新某些节点的时间。
+
+
+NOTE: 您可以使用多个网关和高可用性 (HA) 组在修补程序过程中提供自动故障转移。请参阅 link:../admin/configure-high-availability-group.html["配置高可用性组"] 的说明。
+
+
+
+[[alerts-and-snmp-notifications-might-be-triggered]]
+== 可能会触发警报和 SNMP 通知
+
+当服务重新启动以及 StorageGRID 系统作为混合版本环境运行时（某些网格节点运行早期版本，而其他网格节点已升级到更高版本），可能会触发警报和 SNMP 通知。一般来说，这些警报和通知将在修补程序完成时清除。
+
+
+
+[[configuration-changes-are-restricted]]
+== 配置更改受限
+
+将修补程序应用于 StorageGRID 时：
+
+* 在将修补程序应用于所有节点之前，请勿进行任何网格配置更改（例如，指定网格网络子网或批准挂起的网格节点）。
+* 在将修补程序应用于所有节点之前，请勿更新 ILM 配置。
+

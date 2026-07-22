@@ -1,0 +1,63 @@
+---
+permalink: ilm/data-protection-options-for-ingest.html 
+sidebar: sidebar 
+keywords: ingest options, balanced ingest, strict ingest, dual-commit ingest 
+summary: 在创建 ILM 规则时，可以通过指定 Dual commit、Strict 或 Balanced 来在接收时保护对象。 
+---
+= StorageGRID 中的 ILM 摄取选项
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在创建 ILM 规则时，您可以指定在接收时保护对象的三个选项之一：双重提交、严格或平衡。
+
+根据您的选择，StorageGRID 会生成临时副本并将对象排队以便稍后进行 ILM 评估，或者使用同步放置并立即生成副本以满足 ILM 要求。
+
+
+
+[[flowchart-of-ingest-options]]
+== 摄取选项流程图
+
+流程图显示了当对象与使用三种采集选项之一的 ILM 规则匹配时会发生什么。
+
+image:ingest_object_lifecycle.png["显示每个摄取选项如何发生对象摄取的图表"]
+
+
+
+[[dual-commit]]
+== 双提交
+
+当您选择双提交选项时，StorageGRID 立即在两个不同的存储节点上生成临时对象副本，并向客户端返回"摄取成功"消息。对象将排队等待 ILM 评估，稍后会创建符合规则放置说明的副本。如果在双提交后无法立即处理 ILM 策略，则站点丢失保护可能需要一段时间才能实现。
+
+在以下任一情况下使用 Dual commit 选项：
+
+* 您正在使用多站点 ILM 规则，客户端摄取延迟是您的主要考虑因素。使用 Dual commit 时，必须确保您的网格可以执行创建和删除双提交副本（如果它们不满足 ILM）的额外工作。具体而言：
++
+** 网格上的负载必须足够低，以防止 ILM 积压。
+** 网格必须具有多余的硬件资源（IOPS、CPU、内存、网络带宽等）。
+
+
+* 您正在使用多站点 ILM 规则，站点之间的 WAN 连接通常具有高延迟或有限的带宽。在这种情况下，使用双提交选项可以帮助防止客户端超时。在选择双提交选项之前，应使用真实的工作负载测试客户端应用程序。
+
+
+
+
+[[balanced-default]]
+== 平衡（默认）
+
+当您选择平衡选项时，StorageGRID 也会在摄取时使用同步放置，并立即生成规则放置说明中指定的所有副本。与 Strict 选项相比，如果 StorageGRID 无法立即生成所有副本，则使用 Dual commit。如果 ILM 策略在多个站点上使用放置，并且无法实现即时站点丢失保护，则会触发 *ILM placement unachievable* 警报。
+
+使用"平衡"选项，实现数据保护、网格性能和摄取成功的最佳组合。平衡是 Create ILM rule 向导中的默认选项。
+
+
+
+[[strict]]
+== 严格
+
+选择"严格"选项时，StorageGRID 使用同步放置，并立即生成规则放置说明中指定的所有对象副本。如果 StorageGRID 无法创建所有副本（例如，因为所需的存储位置暂时不可用），则导入失败。客户端必须重试此操作。
+
+如果您有操作或监管要求，需要立即将对象仅存储在 ILM 规则中规定的位置，请使用严格选项。例如，为了满足监管要求，您可能需要使用严格选项和位置约束高级过滤器，以确保对象永远不会存储在某些数据中心。
+
+请参阅 link:example-5-ilm-rules-and-policy-for-strict-ingest-behavior.html["示例 5：严格摄取行为的 ILM 规则和策略"]。

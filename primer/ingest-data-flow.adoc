@@ -1,0 +1,32 @@
+---
+permalink: primer/ingest-data-flow.html 
+sidebar: sidebar 
+keywords: StorageGRID, object data, ingest 
+summary: 摄取或保存操作由客户端和 StorageGRID 系统之间定义的数据流组成。 
+---
+= StorageGRID 如何处理对象摄取
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+摄取或保存操作由客户端和 StorageGRID 系统之间定义的数据流组成。
+
+
+
+[[data-flow]]
+== 数据流
+
+当客户端将对象载入 StorageGRID 系统时，存储节点上的 LDR 服务将处理该请求并将元数据和数据存储到磁盘。
+
+image:ingest_data_flow.png["通过同步放置摄入"]
+
+. 客户端应用程序创建对象，并通过 HTTP PUT 请求将其发送到 StorageGRID 系统。
+. 根据系统的 ILM 策略评估该对象。
+. LDR 服务将对象数据保存为复制副本或纠删编码副本。（图表显示了将复制副本存储到磁盘的简化版本。）
+. LDR 服务将对象元数据发送到元数据存储。
+. 元数据存储将对象元数据保存到磁盘。
+. 元数据存储将对象元数据的副本传播到其他存储节点。这些副本也会保存到磁盘。
+. LDR 服务向客户端返回 HTTP 200 OK 响应，确认对象已被接收。
+

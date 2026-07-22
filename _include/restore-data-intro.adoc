@@ -1,0 +1,89 @@
+= 我应该使用哪个程序？
+:allow-uri-read: 
+
+
+
+
+[[which-procedure-should-i-use]]
+== 我应该使用哪个程序？
+
+尽可能使用网格管理器中的*卷恢复*页面恢复对象数据。
+
+* 如果卷列在*维护* > *卷还原* > *要还原的节点*中，请使用 link:../maintain/restoring-volume.html["Grid Manager 中的卷恢复页面"] 还原对象数据。
+* 如果卷未在*维护* > *卷恢复* > *要恢复的节点*中列出，请按照以下步骤使用 `repair-data`脚本恢复对象数据。
++
+如果恢复的存储节点包含的卷少于其要替换的节点，则必须使用 `repair-data`脚本。
+
+
+
+
+NOTE: 修复数据脚本已弃用，将在未来版本中删除。如有可能，请使用 link:../maintain/restoring-volume.html["Grid Manager 中的卷恢复过程"]。
+
+
+
+[[use-the-repair-data-script-to-restore-object-data]]
+== 使用 `repair-data`脚本还原对象数据
+
+.开始之前
+* 您已确认恢复的存储节点在网格管理器中的*节点* > *概览*选项卡上的连接状态为*已连接* image:icon_alert_green_checkmark.png["图标警报绿色复选标记"]。
+
+
+.关于此任务
+可以从其他存储节点或云存储池还原对象数据，前提是网格的 ILM 规则已配置为使对象副本可用。
+
+请注意以下事项：
+
+* 如果将 ILM 规则配置为仅存储一个复制副本，并且该副本存在于出现故障的存储卷上，则将无法恢复该对象。
+* 如果对象的唯一剩余副本位于云存储池中，则 StorageGRID 必须向云存储池端点发出多个请求以还原对象数据。在执行此程序之前，请联系技术支持以获得有关估计恢复时间范围和相关费用的帮助。
+
+
+
+
+[[about-the-repair-data-script]]
+== 关于 `repair-data`脚本
+
+要还原对象数据，请运行 `repair-data`脚本。此脚本将启动还原对象数据的过程，并与 ILM 扫描配合使用，以确保满足 ILM 规则。
+
+选择下面的*复制数据*或*擦除编码 (EC) 数据*，以了解  `repair-data` 脚本的不同选项，具体取决于您是还原复制数据还是擦除编码数据。如果需要还原两种类型的数据，则必须运行两组命令。
+
+
+NOTE: 有关 `repair-data`脚本的详细信息，请从主管理节点的命令行输入 `repair-data --help`。
+
+
+NOTE: 修复数据脚本已弃用，将在未来版本中删除。如有可能，请使用 link:../maintain/restoring-volume.html["Grid Manager 中的卷恢复过程"]。
+
+[role="tabbed-block"]
+====
+.已复制数据
+--
+根据需要修复整个节点还是仅修复节点上的某些卷，有两个命令可用于恢复复制的数据：
+
+`repair-data start-replicated-node-repair`
+
+`repair-data start-replicated-volume-repair`
+
+您可以使用此命令跟踪复制数据的修复：
+
+`repair-data show-replicated-repair-status`
+
+--
+.纠删码 (EC) 数据
+--
+根据需要修复整个节点还是仅修复节点上的某些卷，有两个命令可用于恢复擦除编码的数据：
+
+`repair-data start-ec-node-repair`
+
+`repair-data start-ec-volume-repair`
+
+您可以使用以下命令跟踪纠删码数据的修复：
+
+`repair-data show-ec-repair-status`
+
+
+NOTE: 在某些存储节点脱机时，可以开始修复擦除编码的数据。但是，如果无法计算所有擦除编码数据，则无法完成修复。修复将在所有节点可用后完成。
+
+
+NOTE: EC 修复作业会暂时保留大量存储空间。可能会触发存储警报，但修复完成后警报将自动解除。如果没有足够的存储空间用于预留，EC 修复作业将失败。EC 修复作业完成后，无论作业成功还是失败，存储预留都将释放。
+
+--
+====

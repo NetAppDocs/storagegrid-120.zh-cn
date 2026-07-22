@@ -1,0 +1,61 @@
+---
+permalink: primer/index.html 
+sidebar: sidebar 
+keywords: StorageGRID, grid primer, what is storagegrid, storagegrid basics 
+summary: NetApp StorageGRID 是一个软件定义的对象存储套件，支持公共、私有和混合多云环境中的各种用例。StorageGRID 为 Amazon S3 API 提供本机支持，并提供行业领先的创新，例如自动化生命周期管理，以经济高效地长期存储、保护和保存非结构化数据。 
+---
+= 什么是 StorageGRID？
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NetApp® StorageGRID® 是一个软件定义的对象存储套件，支持公共、私有和混合多云环境中的各种用例。StorageGRID 为 Amazon S3 API 提供本机支持，并提供行业领先的创新，例如自动化生命周期管理，以经济高效地长期存储、保护和保存非结构化数据。
+
+StorageGRID 为大规模非结构化数据提供安全、持久的存储。集成的元数据驱动生命周期管理策略可优化数据在其整个生命周期中的位置。内容在适当的时间放置在适当的位置和适当的存储层，以降低成本。
+
+StorageGRID由地理位置分散的冗余异构节点组成，可与现有和下一代客户端应用程序集成。
+
+image:storagegrid_system_diagram.png["具有多个客户端的图像"]
+
+
+NOTE: 已删除对存档节点的支持。通过 S3 API 将对象从存档节点移动到外部存档存储系统的功能已被 link:../ilm/what-cloud-storage-pool-is.html["ILM Cloud Storage Pools"] 取代，后者提供了更多功能。
+
+
+
+[[storagegrid-benefits]]
+== StorageGRID 的优势
+
+StorageGRID 系统的优点包括以下几点：
+
+* 可大规模扩展且易于使用的地理分布式非结构化数据存储库。
+* Amazon Web Services Simple Storage Service (S3) 标准对象存储协议。
+* 已启用混合云。基于策略的信息生命周期管理 (ILM) 将对象存储到公共云，包括 Amazon Web Services (AWS) 和 Microsoft Azure。StorageGRID 平台服务支持存储到公共云的对象的内容复制、事件通知和元数据搜索。
+* 灵活的数据保护，确保持久性和可用性。可以使用复制和分层纠删码来保护数据。静态和传输中数据验证可确保长期保留的完整性。
+* 动态数据生命周期管理，帮助管理存储成本。您可以创建 ILM 规则，在对象级别管理数据生命周期，自定义数据本地性、持久性、性能、成本和保留时间。
+* 数据存储和某些管理功能的高可用性，集成负载均衡，以优化 StorageGRID 资源的数据负载。
+* 支持多个存储租户帐户，以按不同实体隔离存储在系统上的对象。
+* 用于监控 StorageGRID 系统运行状况的众多工具，包括全面的警报系统、图形仪表板以及所有节点和站点的详细状态。
+* 支持基于软件或硬件的部署。您可以在以下任意位置部署 StorageGRID：
++
+** 在 VMware 中运行的虚拟机。
+** Linux 主机上的容器引擎。
+** StorageGRID 工程设计的设备。
++
+*** 存储设备提供对象存储。
+*** 服务设备提供网格管理和负载平衡服务。
+
+
+
+
+* 符合本规定的相关存储要求：
++
+** 美国证券交易委员会 (SEC) 在 17 CFR § 240.17a-4(f) 中，监管交易所成员、经纪人或交易商。
+** 金融业监管局（FINRA）规则 4511(c)，该规则遵循 SEC 规则 17a-4(f) 的格式和媒体要求。
+** 商品期货交易委员会（CFTC）在条例 17 CFR § 1.31(c)-(d) 中，规范商品期货交易。
+
+
+* 无中断升级和维护操作。在升级、扩展、停用和维护过程中保持对内容的访问。
+* 联合身份管理。与 Active Directory、OpenLDAP 或 Oracle Directory Service 集成以进行用户身份验证。支持使用安全断言标记语言 2.0 (SAML 2.0) 标准的单点登录 (SSO)，以在 StorageGRID 和 Active Directory Federation Services (AD FS) 之间交换身份验证和授权数据。
+

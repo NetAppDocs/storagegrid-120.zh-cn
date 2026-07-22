@@ -1,0 +1,23 @@
+---
+permalink: maintain/recovering-storagegrid-appliance-storage-node.html 
+sidebar: sidebar 
+keywords: recover, appliance storage node failure, workflow 
+summary: 无论是从系统驱动器丢失还是仅从存储卷丢失中恢复，恢复出现故障的 StorageGRID 设备存储节点的过程都是相同的。 
+---
+= 恢复 StorageGRID 设备存储节点的警告
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+无论是从系统驱动器丢失还是仅从存储卷丢失中恢复，恢复出现故障的 StorageGRID 设备存储节点的过程都是相同的。
+
+
+CAUTION: 如果多个存储节点出现故障（或处于脱机状态），请与技术支持联系。请勿执行以下恢复过程。可能会发生数据丢失。有关详细信息，请参阅 link:how-site-recovery-is-performed-by-technical-support.html["技术支持如何恢复站点"]。
+
+
+CAUTION: 如果将 ILM 规则配置为仅存储一个复制副本，并且该副本存在于出现故障的存储卷上，则您将无法恢复该对象。
+
+
+NOTE: 有关硬件维护程序，例如更换控制器或重新安装 SANtricity 操作系统，请参见 https://docs.netapp.com/us-en/storagegrid-appliances/commonhardware/index.html["您的存储设备的维护说明"^]。

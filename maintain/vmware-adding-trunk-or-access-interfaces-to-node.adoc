@@ -1,0 +1,61 @@
+---
+permalink: maintain/vmware-adding-trunk-or-access-interfaces-to-node.html 
+sidebar: sidebar 
+keywords: add extra interface to node, access interface, VM interface 
+summary: 安装虚拟机节点后，可以向虚拟机节点添加额外的中继或访问接口。您添加的接口将显示在 VLAN 接口页面和 HA 组页面上。 
+---
+= 向 StorageGRID 中的 VMware 节点添加中继或访问接口
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在安装节点后将中继或访问接口添加到 VM 节点。您添加的接口将显示在 VLAN 接口页面和 HA 组页面上。
+
+.开始之前
+* 您可以访问 link:../swnodes/index.html["在您的 VMware 平台上安装 StorageGRID"] 的说明。
+* 您有管理节点和网关节点 VMware 虚拟机。
+* 您的网络子网未用作网格、管理员或客户端网络。
+* 您拥有  `Passwords.txt` 文件。
+* 您有 link:../admin/admin-group-permissions.html["特定访问权限"]。
+
+
+
+CAUTION: 在软件升级、恢复过程或扩展过程处于活动状态时，请勿尝试将接口添加到节点。
+
+.关于此任务
+在安装节点后，使用以下步骤将一个或多个额外接口添加到 VMware 节点。例如，您可能希望将中继接口添加到管理节点或网关节点，以便可以使用 VLAN 接口隔离属于不同应用程序或租户的流量。或者，您可能需要添加要在高可用性 (HA) 组中使用的访问接口。
+
+如果添加中继接口，则必须在 StorageGRID 中配置 VLAN 接口。如果添加接入接口，则可以将该接口直接添加到 HA 组，无需配置 VLAN 接口。
+
+添加接口时，节点可能暂时不可用。
+
+.步骤
+. 在 vCenter 中，将新的网络适配器（类型为 VMXNET3）添加到管理节点和网关节点 VM。选中*已连接*和*开机时连接*复选框。
++
+image:vcenter.png["vCenter"]
+
+. 使用 SSH 登录到管理节点或网关节点。
+. 使用 `ip link show`确认检测到新的网络接口 ens256。
++
+[listing]
+----
+ip link show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc mq state UP mode DEFAULT group default qlen 1000
+    link/ether 00:50:56:a0:4e:5b brd ff:ff:ff:ff:ff:ff
+3: eth1: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    link/ether 00:50:56:a0:fa:ce brd ff:ff:ff:ff:ff:ff
+4: eth2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc mq state UP mode DEFAULT group default qlen 1000
+    link/ether 00:50:56:a0:d6:87 brd ff:ff:ff:ff:ff:ff
+5: ens256: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq master ens256vrf state UP mode DEFAULT group default qlen 1000
+    link/ether 00:50:56:a0:ea:88 brd ff:ff:ff:ff:ff:ff
+----
+
+
+.完成后
+* 如果添加了一个或多个中继接口，请转到 link:../admin/configure-vlan-interfaces.html["配置 VLAN 接口"] 为每个新的父接口配置一个或多个 VLAN 接口。
+* 如果添加了一个或多个访问接口，请转到 link:../admin/configure-high-availability-group.html["配置高可用性组"] 将新接口直接添加到 HA 组。
+

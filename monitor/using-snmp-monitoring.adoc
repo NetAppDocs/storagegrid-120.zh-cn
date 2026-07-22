@@ -1,0 +1,125 @@
+---
+permalink: monitor/using-snmp-monitoring.html 
+sidebar: sidebar 
+keywords: snmp, monitoring 
+summary: '如果要使用简单网络管理协议 (SNMP) 监控 StorageGRID，必须配置 StorageGRID 附带的 SNMP 代理。' 
+---
+= 在 StorageGRID 中使用 SNMP 监控
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要使用简单网络管理协议 (SNMP) 监控 StorageGRID，必须配置 StorageGRID 附带的 SNMP 代理。
+
+* link:configuring-snmp-agent.html["配置 SNMP 代理"]
+* link:updating-snmp-agent.html["更新 SNMP 代理"]
+
+
+
+
+[[capabilities]]
+== 功能
+
+每个 StorageGRID 节点都运行提供 MIB 的 SNMP 代理或守护程序。StorageGRID MIB 包含警报的表和通知定义。MIB 还包含系统描述信息，例如每个节点的平台和型号。每个 StorageGRID 节点还支持 MIB-II 对象的子集。
+
+
+NOTE: 如果您想在网格节点上下载 MIB 文件，请参阅 link:access-snmp-mib.html["访问 MIB 文件"]。
+
+最初，在所有节点上禁用 SNMP。配置 SNMP 代理时，所有 StorageGRID 节点都会收到相同的配置。
+
+StorageGRID SNMP 代理支持所有三个版本的 SNMP 协议。它为查询提供只读 MIB 访问权限，并可向管理系统发送两种类型的事件驱动通知：
+
+陷阱:: 陷阱是由 SNMP 代理发送的通知，不需要管理系统的确认。陷阱用于通知管理系统 StorageGRID 中发生的事件，例如触发警报。
++
+--
+所有三个版本的 SNMP 均支持陷阱。
+
+--
+通知:: Inform 类似于陷阱，但需要管理系统确认。如果 SNMP 代理在一定时间内没有收到确认，它会重新发送 inform，直到收到确认或达到最大重试值。
++
+--
+SNMPv2c 和 SNMPv3 支持 Inform。
+
+--
+
+
+在以下情况下会发送陷阱和通知消息：
+
+* 在任何严重程度下都会触发默认或自定义警报。要抑制警报的 SNMP 通知，您必须link:silencing-alert-notifications.html["配置静默"]为警报。警报通知由link:../primer/what-admin-node-is.html["首选发件人管理节点"]发送。
++
+每个警报都会根据警报的严重性级别映射到三种陷阱类型之一：activeMinorAlert、activeMajorAlert 和 activeCriticalAlert。有关可触发这些陷阱的警报列表，请参见 link:alerts-reference.html["警报参考"]。
+
+
+
+
+
+[[snmp-version-support]]
+== SNMP 版本支持
+
+该表提供了每个 SNMP 版本支持内容的高级摘要。
+
+[cols="1a,2a,2a,2a"]
+|===
+|  | SNMPv1 | SNMPv2c | SNMPv3 
+
+
+ a| 
+查询
+
+（GET 和 GETNEXT）
+ a| 
+只读 MIB 查询
+ a| 
+只读 MIB 查询
+ a| 
+只读 MIB 查询
+
+
+
+ a| 
+查询身份验证
+ a| 
+社区字符串
+ a| 
+社区字符串
+ a| 
+基于用户的安全模型(USM)用户
+
+
+
+ a| 
+通知
+
+（TRAP 和 INFORM）
+ a| 
+仅限陷阱
+ a| 
+陷阱和通知
+ a| 
+陷阱和通知
+
+
+
+ a| 
+通知身份验证
+ a| 
+每个陷阱目标的默认陷阱社区或自定义社区字符串
+ a| 
+每个陷阱目标的默认陷阱社区或自定义社区字符串
+ a| 
+每个陷阱目的地的 USM 用户
+
+|===
+
+
+[[limitations]]
+== 限制
+
+* StorageGRID 支持只读 MIB 访问。不支持读写访问。
+* 网格中的所有节点都接受相同的配置。
+* SNMPv3：StorageGRID 不支持传输支持模式 (TSM)。
+* SNMPv3：唯一支持的身份验证协议是 SHA (HMAC-SHA-96)。
+* SNMPv3：唯一支持的隐私协议是 AES。
+

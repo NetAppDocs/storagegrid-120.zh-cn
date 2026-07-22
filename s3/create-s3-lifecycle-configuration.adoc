@@ -1,0 +1,180 @@
+---
+permalink: s3/create-s3-lifecycle-configuration.html 
+sidebar: sidebar 
+keywords: s3 lifecycle, object deletion, bucket 
+summary: 您可以创建 S3 生命周期配置，以控制何时从 StorageGRID 系统中删除特定对象。 
+---
+= 了解 StorageGRID 的 S3 生命周期配置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以创建 S3 生命周期配置，以控制何时从 StorageGRID 系统中删除特定对象。
+
+本节中的简单示例说明了 S3 生命周期配置如何控制从特定 S3 存储桶删除（过期）某些对象的时间。本节中的示例仅用于说明目的。有关创建 S3 生命周期配置的完整详细信息，请参阅 https://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html["Amazon Simple Storage Service 用户指南：对象生命周期管理"^]。请注意，StorageGRID 仅支持 Expiration 操作；不支持 Transition 操作。
+
+
+
+[[what-lifecycle-configuration-is]]
+== 什么是生命周期配置
+
+生命周期配置是应用于特定 S3 存储桶中的对象的一组规则。每个规则都指定受影响的对象以及这些对象何时过期（在特定日期或若干天后）。
+
+StorageGRID 在生命周期配置中最多支持 1,000 个生命周期规则。每个规则可以包含以下 XML 元素：
+
+* 过期：当达到指定日期或从摄取对象时起达到指定天数时，删除对象。
+* NoncurrentVersionExpiration：当对象变为非当前版本后，达到指定天数时删除该对象。
+* 筛选（前缀、标签）
+* 状态
+* ID
+
+
+每个对象都遵循 S3 存储桶生命周期或 ILM 策略的保留设置。配置 S3 存储桶生命周期后，生命周期到期操作将覆盖与存储桶生命周期筛选器匹配的对象的 ILM 策略。与存储桶生命周期筛选器不匹配的对象使用 ILM 策略的保留设置。如果对象与存储桶生命周期筛选器匹配，并且未明确指定过期操作，则不会使用 ILM 策略的保留设置，这意味着对象版本将永久保留。请参阅 link:../ilm/example-8-priorities-for-s3-bucket-lifecycle-and-ilm-policy.html["S3 存储桶生命周期和 ILM 策略的示例优先级"]。
+
+因此，即使ILM规则中的放置指令仍然适用于对象，也可能从网格中删除对象。或者，即使在针对对象的任何ILM放置指令失效后，也可能会将对象保留在网格上。有关详细信息，请参阅 link:../ilm/how-ilm-operates-throughout-objects-life.html["ILM在对象整个生命周期中的运作方式"]。
+
+
+NOTE: Bucket 生命周期配置可用于已启用 S3 Object Lock 的 Bucket，但旧版兼容 Bucket 不支持 Bucket 生命周期配置。
+
+StorageGRID 支持使用以下存储桶操作来管理生命周期配置：
+
+* DeleteBucketLifecycle
+* GetBucketLifecycleConfiguration
+* PutBucketLifecycleConfiguration
+
+
+
+
+[[create-lifecycle-configuration]]
+== 创建生命周期配置
+
+创建生命周期配置的第一步是创建包含一个或多个规则的 JSON 文件。例如，此 JSON 文件包括三个规则，如下所示：
+
+. 规则 1 仅适用于匹配前缀 `category1`/且 `key2`值为 `tag2`的对象。该 `Expiration`参数指定与筛选器匹配的对象将于 2020 年 8 月 22 日午夜到期。
+. 规则2仅适用于匹配前缀 `category2`/的对象。该 `Expiration`参数指定与筛选器匹配的对象将在摄入后100天过期。
++
+
+CAUTION: 指定天数的规则与摄取对象的时间有关。如果当前日期超过摄取日期加上天数，则某些对象可能会在应用生命周期配置后立即从存储桶中删除。
+
+. 规则3仅适用于与前缀 `category3`/匹配的对象。该 `Expiration`参数指定匹配对象的任何非当前版本将在其变为非当前版本后50天过期。
+
+
+[listing]
+----
+{
+	"Rules": [
+        {
+		    "ID": "rule1",
+			"Filter": {
+                "And": {
+                    "Prefix": "category1/",
+                    "Tags": [
+                        {
+                            "Key": "key2",
+							"Value": "tag2"
+                        }
+                    ]
+                }
+            },
+			"Expiration": {
+                "Date": "2020-08-22T00:00:00Z"
+            },
+            "Status": "Enabled"
+        },
+		{
+            "ID": "rule2",
+			"Filter": {
+                "Prefix": "category2/"
+            },
+			"Expiration": {
+                "Days": 100
+            },
+            "Status": "Enabled"
+        },
+		{
+            "ID": "rule3",
+			"Filter": {
+                "Prefix": "category3/"
+            },
+			"NoncurrentVersionExpiration": {
+                "NoncurrentDays": 50
+            },
+            "Status": "Enabled"
+        }
+    ]
+}
+----
+
+
+[[apply-lifecycle-configuration-to-bucket]]
+== 将生命周期配置应用于存储桶
+
+创建生命周期配置文件后，您可以通过发出 PutBucketLifecycleConfiguration 请求将其应用到存储桶。
+
+此请求将示例文件中的生命周期配置应用于名为 `testbucket`的存储桶中的对象。
+
+[listing]
+----
+aws s3api --endpoint-url <StorageGRID endpoint> put-bucket-lifecycle-configuration
+--bucket testbucket --lifecycle-configuration file://bktjson.json
+----
+要验证生命周期配置是否已成功应用于存储桶，请发出 GetBucketLifecycleConfiguration 请求。例如：
+
+[listing]
+----
+aws s3api --endpoint-url <StorageGRID endpoint> get-bucket-lifecycle-configuration
+ --bucket testbucket
+----
+成功的响应会列出您刚刚应用的生命周期配置。
+
+
+
+[[validate-that-bucket-lifecycle-expiration-applies-to-object]]
+== 验证存储桶生命周期过期是否适用于对象
+
+您可以确定在发出 PutObject、HeadObject 或 GetObject 请求时，生命周期配置中的过期规则是否适用于特定对象。如果规则适用，则响应包含一个 `Expiration`参数，该参数指示对象何时过期以及匹配了哪个过期规则。
+
+
+NOTE: 由于存储桶生命周期会覆盖 ILM，因此 `expiry-date`显示的是对象将被删除的实际日期。有关详细信息，请参见link:../ilm/how-object-retention-is-determined.html["如何确定对象保留"]。
+
+例如，此 PutObject 请求于 2020 年 6 月 22 日发出，并将对象放入 `testbucket`存储桶中。
+
+[listing]
+----
+aws s3api --endpoint-url <StorageGRID endpoint> put-object
+--bucket testbucket --key obj2test2 --body bktjson.json
+----
+成功响应指示对象将在 100 天后（2020 年 10 月 1 日）过期，并且它与生命周期配置的规则 2 匹配。
+
+[listing, subs="specialcharacters,quotes"]
+----
+{
+      *"Expiration": "expiry-date=\"Thu, 01 Oct 2020 09:07:49 GMT\", rule-id=\"rule2\"",
+      "ETag": "\"9762f8a803bc34f5340579d4446076f7\""
+}
+----
+例如，此 HeadObject 请求用于获取 testbucket 存储桶中相同对象的元数据。
+
+[listing]
+----
+aws s3api --endpoint-url <StorageGRID endpoint> head-object
+--bucket testbucket --key obj2test2
+----
+成功响应包括对象的元数据，并指示对象将在 100 天后过期，且与规则 2 匹配。
+
+[listing, subs="specialcharacters,quotes"]
+----
+{
+      "AcceptRanges": "bytes",
+      *"Expiration": "expiry-date=\"Thu, 01 Oct 2020 09:07:48 GMT\", rule-id=\"rule2\"",
+      "LastModified": "2020-06-23T09:07:48+00:00",
+      "ContentLength": 921,
+      "ETag": "\"9762f8a803bc34f5340579d4446076f7\""
+      "ContentType": "binary/octet-stream",
+      "Metadata": {}
+}
+----
+
+NOTE: 对于启用了版本控制的存储桶， `x-amz-expiration` 响应标头仅适用于当前版本的对象。

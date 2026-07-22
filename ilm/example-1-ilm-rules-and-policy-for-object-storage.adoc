@@ -1,0 +1,128 @@
+---
+permalink: ilm/example-1-ilm-rules-and-policy-for-object-storage.html 
+sidebar: sidebar 
+keywords: example ILM rule, information lifecycle rule examples 
+summary: 您可以使用以下示例规则和策略作为定义 ILM 策略的起点，以满足对象保护和保留要求。 
+---
+= StorageGRID 中基本对象保护和保留的 ILM 规则和策略
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用以下示例规则和策略作为定义 ILM 策略的起点，以满足对象保护和保留要求。
+
+
+CAUTION: 以下 ILM 规则和策略只是示例。配置 ILM 规则的方法有很多。在激活新策略之前，请对其进行模拟，以确认其将按预期工作，以防止内容丢失。
+
+
+
+[[ilm-rule-1-for-example-1-copy-object-data-to-two-sites]]
+== ILM 规则 1（示例 1）：将对象数据复制到两个站点
+
+此示例 ILM 规则将对象数据复制至两个站点中的存储池。
+
+[cols="1a,2a"]
+|===
+| 规则定义 | 示例值 
+
+
+ a| 
+单站点存储池
+ a| 
+两个存储池，每个都包含不同的站点，分别命名为 Site 1 和 Site 2。
+
+
+
+ a| 
+规则名称
+ a| 
+两个副本两个站点
+
+
+
+ a| 
+参考时间
+ a| 
+采集时间
+
+
+
+ a| 
+展示位置
+ a| 
+从第 0 天起永久在站点 1 保留一份复制副本，在站点 2 保留一份复制副本。
+
+|===
+保留图的规则分析部分指出：
+
+* StorageGRID 站点丢失保护将在此规则的持续时间内适用。
+* 此规则处理的对象不会被 ILM 删除。
+
+
+image:ilm_rule_two_copies_two_data_centers.png["ILM 规则 1（示例 1）：将对象数据复制到两个站点"]
+
+
+
+[[ilm-rule-2-for-example-1-erasure-coding-profile-with-bucket-matching]]
+== ILM 规则 2（示例 1）：具有存储桶匹配的纠删码配置文件
+
+此示例 ILM 规则使用纠删码配置文件和 S3 存储桶来确定对象的存储位置和存储时间。
+
+[cols="1a,2a"]
+|===
+| 规则定义 | 示例值 
+
+
+ a| 
+具有多个站点的存储池
+ a| 
+* 跨三个站点（站点 1、2、3）的一个存储池
+* 使用 6+3 纠删码方案
+
+
+
+
+ a| 
+规则名称
+ a| 
+S3 存储桶 finance-records
+
+
+
+ a| 
+参考时间
+ a| 
+采集时间
+
+
+
+ a| 
+展示位置
+ a| 
+对于 S3 存储桶中名为 finance-records 的对象，在纠删编码配置文件指定的池中创建一个纠删编码副本。永久保留此副本。
+
+|===
+image:ilm_rule_ec_for_s3_bucket_finance_records.png["ILM 规则 2（示例 1）：具有存储桶匹配的纠删码配置文件"]
+
+
+
+[[ilm-policy-for-example-1]]
+== 示例 1 的 ILM 策略
+
+实际上，大多数 ILM 策略都很简单，即使 StorageGRID 系统允许您设计精密而复杂的 ILM 策略。
+
+多站点网格的典型 ILM 策略可能包括以下 ILM 规则：
+
+* 在载入时，将属于名为  `finance-records` 的 S3 存储桶的所有对象存储在包含三个站点的存储池中。使用 6+3 纠删码。
+* 如果对象与第一个 ILM 规则不匹配，请使用策略的默认 ILM 规则 Two Copies Two Data Centers 在站点 1 中存储该对象的一个副本，在站点 2 中存储该对象的一个副本。
++
+image:policy_1_configured_policy.png["示例 1 的 ILM 策略"]
+
+
+
+.相关信息
+* link:ilm-policy-overview.html["使用 ILM 策略"]
+* link:creating-ilm-policy.html["创建 ILM 策略"]
+

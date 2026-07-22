@@ -1,0 +1,321 @@
+---
+permalink: admin/configure-sso.html 
+sidebar: sidebar 
+keywords: use sandbox mode for sso, how to test single sign-on 
+summary: '您可以按照配置 SSO 向导并进入沙盒模式来配置和测试单点登录 (SSO)，然后再为所有 StorageGRID 用户启用它。启用 SSO 后，您可以在需要更改或重新测试配置时返回沙盒模式。' 
+---
+= 在 StorageGRID 中配置 SSO
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以按照配置 SSO 向导并进入沙盒模式来配置和测试单点登录 (SSO)，然后再为所有 StorageGRID 用户启用它。启用 SSO 后，您可以在需要更改或重新测试配置时返回沙盒模式。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["root 访问权限"]。
+* 您已为 StorageGRID 系统配置身份联合。
+* 对于身份联合 *LDAP 服务类型*，已根据计划使用的 SSO 身份提供程序选择 Active Directory 或 Entra ID。
++
+[cols="1a,1a"]
+|===
+| 已配置的LDAP服务类型 | SSO 身份提供程序的选项 
+
+
+ a| 
+Active Directory 联合身份验证服务 (AD FS)
+ a| 
+** Active Directory
+** Entra ID
+** PingFederate
+
+
+
+
+ a| 
+Entra ID
+ a| 
+Entra ID
+
+|===
+
+
+.关于此任务
+启用 SSO 并且用户尝试登录管理节点时，StorageGRID 将向 SSO 身份提供程序发送身份验证请求。反过来，SSO 身份提供程序将向 StorageGRID 发回身份验证响应，指示身份验证请求是否成功。对于成功的请求：
+
+* Active Directory 或 PingFederate 的响应中包含该用户的通用唯一标识符 (UUID)。
+* 来自 Entra ID 的响应包括用户主体名称 (UPN)。
+
+
+${post_edited_translations.segment}
+
+. 在 StorageGRID 中配置设置。
+. 使用 SSO 身份提供程序的软件为每个管理节点创建信赖方信任 (AD FS)、企业应用程序 (Entra ID) 或服务提供商 (PingFederate)。
+. 返回 StorageGRID 以启用 SSO。
+
+
+沙箱模式便于您进行这种反复配置，并在启用 SSO 之前测试所有设置。在使用沙箱模式时，用户无法使用 SSO 登录。
+
+
+
+[[access-the-wizard]]
+== 访问此向导
+
+.步骤
+. 选择 *配置* > *访问控制* > *单点登录*。此时将显示“单点登录”页面。
++
+
+NOTE: 如果禁用了"配置 SSO 设置"按钮，请确认已将身份提供程序配置为联合身份源。请参阅 link:requirements-for-sso.html["单点登录的要求和注意事项"]。
+
+. 选择*配置 SSO 设置*。此时将显示提供标识提供程序详细信息页面。
+
+
+
+
+[[provide-identity-provider-details]]
+== 提供标识提供程序详细信息
+
+.步骤
+. 从下拉列表中选择 *SSO 类型*。
+. 如果选择 Active Directory 作为 SSO 类型，请输入身份提供程序的*联合身份验证服务名称*，与 Active Directory 联合身份验证服务 (AD FS) 中显示的完全相同。
++
+
+NOTE: 要查找联合身份验证服务名称，请转到 Windows Server Manager。选择 *Tools* > *AD FS Management*。从操作菜单中，选择 *Edit Federation Service Properties*。联合身份验证服务名称显示在第二个字段中。
+
+. 指定当身份提供商响应 StorageGRID 请求发送 SSO 配置信息时，将使用哪个 TLS 证书来保护连接。
++
+** *Use operating system CA certificate*：使用操作系统上安装的默认 CA 证书来保护连接。
+** *使用自定义 CA 证书*：使用自定义 CA 证书来保护连接。
++
+如果选择此设置，请复制自定义证书的文本，并将其粘贴到 *CA Certificate* 文本框中。
+
+** *不使用 TLS*：不使用 TLS 证书来保护连接。
++
+
+CAUTION: 如果更改 CA 证书，请立即 link:../maintain/starting-or-restarting-service.html["在 Admin Nodes 上重新启动 mgmt-api 服务"] 并测试是否能成功登录 Grid Manager。
+
+
+
+. 选择*继续*。此时将显示"提供信赖方标识符"页面。
+
+
+
+
+[[enter-sandbox-modeprovide-relying-party-identifier]]
+== [[enter-sandbox-mode]]提供依赖方标识符
+
+. 根据您选择的 SSO 类型，填写"提供信赖方标识符"页面上的字段。
++
+[role="tabbed-block"]
+====
+.Active Directory
+--
+.. 指定 StorageGRID 的*依赖方标识符*。此值控制您在 AD FS 中为每个依赖方信任使用的名称。
++
+*** 例如，如果您的网格只有一个管理节点，并且您预计将来不会添加更多管理节点，请输入 `SG`或 `StorageGRID`。
+*** 如果您的网格包含多个管理节点，请在标识符中包含字符串 `[HOSTNAME]`。例如， `SG-[HOSTNAME]`。包含此字符串后，系统将生成一个表，根据节点的主机名显示网格中每个管理节点的依赖方标识符。
++
+
+NOTE: 您必须为 StorageGRID 系统中的每个管理节点创建一个依赖方信任。为每个管理节点创建依赖方信任可确保用户能够安全地登录和退出任何管理节点。
+
+
+
+.. 选择*保存并进入沙盒模式*。
+
+
+--
+.Entra ID
+--
+.. 在企业应用程序部分，为 StorageGRID 指定*企业应用程序名称*。此值控制您在 Entra ID 中为每个企业应用程序使用的名称。
++
+*** 例如，如果您的网格只有一个管理节点，并且您预计将来不会添加更多管理节点，请输入 `SG`或 `StorageGRID`。
+*** 如果网格包含多个管理节点，请在标识符中包含字符串 `[HOSTNAME]`。例如， `SG-[HOSTNAME]`。包含此字符串后，系统将生成一个表，根据节点的主机名显示系统中每个管理节点的企业应用程序名称。
++
+
+NOTE: 您必须为 StorageGRID 系统中的每个管理节点创建一个企业应用程序。为每个管理节点提供企业应用程序可确保用户可以安全地登录和退出任何管理节点。
+
+
+
+.. 按照link:../admin/creating-enterprise-application-entra-id.html["在 Entra ID 中创建企业应用程序"]中的步骤为表中列出的每个管理节点创建企业应用程序。
+.. 从 Entra ID 复制每个企业应用程序的联合元数据 URL。然后，将此 URL 粘贴到 StorageGRID 中对应的*联合元数据 URL* 字段中。
+.. 复制并粘贴所有管理节点的联合元数据 URL 后，请选择*保存并进入沙盒模式*。
+
+
+--
+.PingFederate
+--
+.. 在服务提供商 (SP) 部分，指定 StorageGRID 的 *SP 连接 ID*。此值控制您在 PingFederate 中为每个 SP 连接使用的名称。
++
+*** 例如，如果您的网格只有一个管理节点，并且您预计将来不会添加更多管理节点，请输入 `SG`或 `StorageGRID`。
+*** 如果您的网格包含多个管理节点，请在标识符中包含字符串 `[HOSTNAME]`。例如， `SG-[HOSTNAME]`。包含此字符串后，系统将生成一个表，根据节点的主机名显示系统中每个管理节点的 SP 连接 ID。
++
+
+NOTE: 您必须为 StorageGRID 系统中的每个管理节点创建 SP 连接。为每个管理节点建立 SP 连接可确保用户能够安全地登录和退出任何管理节点。
+
+
+
+.. 在*联合元数据 URL* 字段中为每个管理节点指定联合元数据 URL。
++
+使用以下格式：
+
++
+[listing]
+----
+https://<Federation Service Name>:<port>/pf/federation_metadata.ping?PartnerSpId=<SP Connection ID>
+----
+.. 选择*保存并进入沙盒模式*。
+
+
+--
+====
+
+
+
+
+[[configure-relying-party-trusts-enterprise-applications-or-sp-connections]]
+== 配置依赖方信任、企业应用程序或 SP 连接
+
+保存配置并进入沙盒模式后，您可以完成并测试所选 SSO 类型的配置。
+
+StorageGRID 可以根据需要保持沙盒模式。但是，只有联合用户和本地用户才能登录。
+
+[role="tabbed-block"]
+====
+.Active Directory
+--
+.步骤
+. 转至 Active Directory Federation Services (AD FS)。
+. 使用"配置 SSO"页面上表格中显示的每个依赖方标识符，为 StorageGRID 创建一个或多个依赖方信任。
++
+必须为表中显示的每个管理节点创建一个信任。
+
++
+有关说明，请转到 link:../admin/creating-relying-party-trusts-in-ad-fs.html["在 AD FS 中创建依赖方信任"]。
+
+
+
+--
+.Entra ID
+--
+.步骤
+. 从当前登录的管理节点的单一登录页面中，选择按钮以下载并保存 SAML 元数据。
+. 然后，对于网格中的任何其他管理节点，重复以下步骤：
++
+.. 登录到该节点。
+.. 选择*配置* > *访问控制* > *单点登录*。
+.. 下载并保存该节点的 SAML 元数据。
+
+
+. 转到 Azure 门户。
+. 按照 link:../admin/creating-enterprise-application-entra-id.html["在 Entra ID 中创建企业应用程序"] 中的步骤，将每个管理节点的 SAML 元数据文件上传到其相应的 Entra ID 企业应用程序中。
+
+
+--
+.PingFederate
+--
+.步骤
+. 从当前登录的管理节点的单一登录页面中，选择按钮以下载并保存 SAML 元数据。
+. 然后，对于网格中的任何其他管理节点，重复以下步骤：
++
+.. 登录到该节点。
+.. 选择*配置* > *访问控制* > *单点登录*。
+.. 下载并保存该节点的 SAML 元数据。
+
+
+. 转至 PingFederate。
+. link:../admin/creating-sp-connection-ping.html["为 StorageGRID 创建一个或多个服务提供商 (SP) 连接"]。使用每个管理节点的 SP 连接 ID（显示在配置 SSO 页面上的表格中）以及为该管理节点下载的 SAML 元数据。
++
+您必须为表中显示的每个管理节点创建一个 SP 连接。
+
+
+
+--
+====
+
+
+[[test-ssotest-configuration]]
+== [[test-sso]]测试配置
+
+在对整个 StorageGRID 系统强制使用单点登录之前，请确认已为每个管理节点正确配置了单点登录和单点注销。
+
+[role="tabbed-block"]
+====
+.Active Directory
+--
+.步骤
+. 在 Configure SSO 页面中，找到向导 Test configuration 步骤中的链接。
++
+URL 派生自您在 *Federation service name* 字段中输入的值。
+
+. 选择链接，或将 URL 复制并粘贴到浏览器中，以访问身份提供商的登录页面。
+. 要确认您可以使用 SSO 登录 StorageGRID，请选择 *登录以下站点之一*，为主管理节点选择依赖方标识符，然后选择 *登录*。
+. 请输入您的联合用户名和密码。
++
+** 如果 SSO 登录和注销操作成功，则会显示一条成功消息。
+** 如果 SSO 操作不成功，系统将显示一条错误消息。请修复该问题，清除浏览器的 Cookie，然后重试。
+
+
+. 重复这些步骤以验证网格中每个管理节点的 SSO 连接。
+
+
+--
+.Entra ID
+--
+.步骤
+. 转到 Azure 门户中的"单一登录"页面。
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
++
+** 如果 SSO 登录和注销操作成功，则会显示一条成功消息。
+** 如果 SSO 操作不成功，系统将显示一条错误消息。请修复该问题，清除浏览器的 Cookie，然后重试。
+
+
+. 重复这些步骤以验证网格中每个管理节点的 SSO 连接。
+
+
+--
+.PingFederate
+--
+.步骤
+. ${post_edited_translations.segment}
++
+一次选择并测试一个链接。
+
+. ${post_edited_translations.segment}
++
+** 如果 SSO 登录和注销操作成功，则会显示一条成功消息。
+** 如果 SSO 操作不成功，系统将显示一条错误消息。请修复该问题，清除浏览器的 Cookie，然后重试。
+
+
+. ${post_edited_translations.segment}
++
+${post_edited_translations.segment}
+
+
+
+--
+====
+
+
+[[enable-single-sign-on]]
+== 启用单点登录
+
+确认可以使用 SSO 登录每个管理节点后，就可以为整个 StorageGRID 系统启用 SSO。
+
+
+TIP: 启用 SSO 后，所有用户都必须使用 SSO 访问网格管理器、租户管理器、网格管理 API 和租户管理 API。本地用户无法再访问 StorageGRID。
+
+.步骤
+. 从配置 SSO 向导的测试配置步骤中，选择 *Enable SSO*。
+. 查看警告消息，然后选择*启用 SSO*。
++
+单点登录现已启用。此时将显示单一登录页面，其中包含刚刚配置的 SSO 的详细信息。
+
+. 要编辑配置，请选择*编辑*。
+. 要禁用单点登录，请选择 *Disable SSO*。
+
+
+
+TIP: 如果您使用 Azure 门户，并且从用于访问 Entra ID 的同一台计算机访问 StorageGRID，请确保 Azure 门户用户也是已授权的 StorageGRID 用户（已导入到 StorageGRID 的联合组中的用户），或者在尝试登录 StorageGRID 之前先退出 Azure 门户。

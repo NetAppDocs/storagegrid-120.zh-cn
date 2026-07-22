@@ -1,0 +1,20 @@
+---
+permalink: maintain/all-node-types-replacing-linux-node.html 
+sidebar: sidebar 
+keywords: replace linux node 
+summary: 如果故障要求您部署一个或多个新的物理或虚拟主机，或在现有主机上重新安装 Linux，请在恢复网格节点之前部署和配置替换主机。此过程是所有类型网格节点的网格节点恢复过程的一个步骤。 
+---
+= 替换 StorageGRID 中的 Linux 节点
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果故障要求您部署一个或多个新的物理或虚拟主机，或在现有主机上重新安装 Linux，请在恢复网格节点之前部署和配置替换主机。此过程是所有类型网格节点的网格节点恢复过程的一个步骤。
+
+"Linux"是指 Red Hat® Enterprise Linux® (RHEL)、Ubuntu® 或 Debian® 部署。有关受支持版本的列表，请参见 https://imt.netapp.com/matrix/#welcome["NetApp 互操作性矩阵工具 (IMT)"^]。
+
+此过程仅作为恢复基于软件的存储节点、主管理节点或非主管理节点或网关节点过程中的一个步骤执行。无论您要恢复的网格节点类型如何，这些步骤都是相同的。
+
+如果一个物理或虚拟 Linux 主机上托管了多个网格节点，则可以按任何顺序恢复这些网格节点。但是，如果存在主 Admin Node，则先恢复主 Admin Node 可以防止其他网格节点在尝试联系主 Admin Node 以注册恢复时发生停滞。

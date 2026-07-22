@@ -1,0 +1,30 @@
+---
+permalink: audit/event-specific-data.html 
+sidebar: sidebar 
+keywords: audit message, event, shea, s3 head 
+summary: 审核日志中的每个审核消息都记录特定于系统事件的数据。 
+---
+= StorageGRID 审核消息中的事件特定数据
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+审核日志中的每个审核消息都记录特定于系统事件的数据。
+
+在用于标识消息本身的起始 `[AUDT:`容器之后，下一组属性将提供有关审计消息所描述的事件或操作的信息。以下示例中突出显示了这些属性：
+
+[listing, subs="+quotes"]
+----
+2018-12-05T08:24:45.921845 [AUDT: *\[RSLT\(FC32\):SUCS\]*
+*\[TIME\(UI64\):11454\]\[SAIP\(IPAD\):"10.224.0.100"\]\[S3AI\(CSTR\):"60025621595611246499"\]*
+*\[SACC\(CSTR\):"account"\]\[S3AK\(CSTR\):"SGKH4_Nc8SO1H6w3w0nCOFCGgk__E6dYzKlumRsKJA=="\]*
+*\[SUSR\(CSTR\):"urn:sgws:identity::60025621595611246499:root"\]*
+*\[SBAI\(CSTR\):"60025621595611246499"\]\[SBAC\(CSTR\):"account"\]\[S3BK\(CSTR\):"bucket"\]*
+*\[S3KY\(CSTR\):"object"\]\[CBID\(UI64\):0xCC128B9B9E428347\]*
+*\[UUID\(CSTR\):"B975D2CE-E4DA-4D14-8A23-1CB4B83F2CD8"\]\[CSIZ\(UI64\):30720\]*[AVER(UI32):10]
+\[ATIM(UI64):1543998285921845]\[ATYP\(FC32\):SHEA\][ANID(UI32):12281045][AMID(FC32):S3RQ]
+\[ATID(UI64):15552417629170647261]]
+----
+The `ATYP` 元素（在示例中带下划线）标识生成消息的事件。此示例消息包括link:shea-s3-head.html["SHEA"]消息代码（[ATYP(FC32):SHEA]），表示它是由成功的 S3 HEAD 请求生成的。

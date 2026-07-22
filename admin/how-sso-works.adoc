@@ -1,0 +1,129 @@
+---
+permalink: admin/how-sso-works.html 
+sidebar: sidebar 
+keywords: single sign on, sso, SAML 
+summary: '启用单一登录(SSO)后，只有在使用组织实施的 SSO 登录过程对其凭据进行授权的情况下，用户才能访问 Grid Manager、Tenant Manager、Grid Management API 或 Tenant Management API。本地用户无法登录 StorageGRID。' 
+---
+= 了解 StorageGRID SSO
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+启用单点登录(SSO)后，只有在使用组织实施的SSO登录过程对其凭据进行授权的情况下，用户才能访问网格管理器、租户管理器、网格管理API或租户管理API。本地用户无法登录StorageGRID。
+
+StorageGRID 系统支持使用安全断言标记语言 2.0 (SAML 2.0) 标准的单点登录 (SSO)。
+
+在启用单点登录 (SSO) 之前，请查看启用 SSO 时 StorageGRID 登录和注销流程如何受到影响。
+
+
+
+[[sign-in-when-sso-is-enabled]]
+== 启用 SSO 时登录
+
+启用 SSO 并登录 StorageGRID 后，系统会将您重定向到组织的 SSO 页面以验证您的凭据。
+
+.步骤
+. 在 Web 浏览器中输入任何 StorageGRID 管理节点的完全限定域名或 IP 地址。
++
+此时将显示 StorageGRID 登录页面。
+
++
+** 如果这是您第一次在此浏览器上访问该 URL，系统会提示您输入帐户 ID。
+** 如果您以前访问过 Grid Manager 或 Tenant Manager，系统会提示您选择最近的帐户或输入帐户 ID。
++
+
+NOTE: 当您输入租户帐户的完整 URL（即，完全限定的域名或 IP 地址，后跟 `/?accountId=_20-digit-account-id_`）时，不会显示 StorageGRID 登录页面。相反，系统会立即将您重定向到组织的 SSO 登录页面，您可以在此处 <<signin_sso,使用 SSO 凭据登录>>。
+
+
+
+. 指示是要访问网格管理器还是租户管理器：
++
+** 要访问 Grid Manager，请将 *Account ID* 字段留空，输入 *0* 作为帐户 ID，或者在最近的帐户列表中显示时选择 *Grid Manager*。
+** 要访问租户管理器，请输入 20 位租户帐户 ID，或者按名称选择一个租户（如果它显示在最近的帐户列表中）。
+
+
+. 选择*登录*
++
+StorageGRID 将您重定向到组织的 SSO 登录页面。例如：
+
+. [[signin_sso]]使用您的 SSO 凭据登录。
++
+如果您的SSO凭据正确：
+
++
+.. 身份提供程序 (IdP) 向 StorageGRID 提供身份验证响应。
+.. StorageGRID 验证身份验证响应。
+.. 如果响应有效，并且您属于具有 StorageGRID 访问权限的联合组，则您将登录到 Grid Manager 或 Tenant Manager，具体取决于您选择的帐户。
++
+
+NOTE: 如果无法访问服务帐户，只要您是属于具有 StorageGRID 访问权限的联合组的现有用户，您仍然可以登录。
+
+
+
+. 如果您有足够的权限，也可以选择访问其他管理节点，或访问 Grid Manager 或 Tenant Manager。
++
+您无需重新输入 SSO 凭据。
+
+
+
+
+
+[[sign-out-when-sso-is-enabled]]
+== 启用 SSO 时注销
+
+为 StorageGRID 启用 SSO 后，注销时会发生什么情况取决于您登录的内容和注销位置。
+
+.步骤
+. 在用户界面的右上角找到*注销*链接。
+. 选择*退出*。
++
+此时将显示 StorageGRID 登录页面。*最近的帐户*下拉列表已更新，包括 *Grid Manager* 或租户的名称，以便将来可以更快地访问这些用户界面。
+
++
+
+TIP: 下表汇总了使用单个浏览器会话时注销会发生的情况。如果您已跨多个浏览器会话登录 StorageGRID，则必须分别从所有浏览器会话中注销。
+
++
+[cols="1a,1a,1a"]
+|===
+| 如果您已登录到…… | 然后您退出…… | 您已退出…… 
+
+
+ a| 
+一个或多个管理节点上的 Grid Manager
+ a| 
+任何管理节点上的 Grid Manager
+ a| 
+所有管理节点上的 Grid Manager
+
+*注意：* 如果您将 Entra ID 用于 SSO，则可能需要几分钟时间才能从所有管理节点中注销。
+
+
+
+ a| 
+一个或多个管理节点上的租户管理器
+ a| 
+任何管理节点上的租户管理器
+ a| 
+所有管理节点上的租户管理器
+
+
+
+ a| 
+网格管理器和租户管理器
+ a| 
+Grid Manager
+ a| 
+仅网格管理器。您还必须注销租户管理器才能注销 SSO。
+
+
+
+ a| 
+租户管理器
+ a| 
+仅限租户管理器。您还必须注销 Grid Manager 才能注销 SSO。
+
+|===
+

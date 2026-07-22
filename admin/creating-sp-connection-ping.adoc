@@ -1,0 +1,237 @@
+---
+permalink: admin/creating-sp-connection-ping.html 
+sidebar: sidebar 
+keywords: service provider, sp connection, pingfederate, ping, single sign on, sso 
+summary: '您使用 PingFederate 为系统中的每个管理节点创建服务提供商 (SP) 连接。为了加快此过程，您将从 StorageGRID 导入 SAML 元数据。' 
+---
+= 在 PingFederate 中为 StorageGRID 创建服务提供商连接
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用 PingFederate 为系统中的每个管理节点创建服务提供商 (SP) 连接。为了加快此过程，您将从 StorageGRID 导入 SAML 元数据。
+
+.开始之前
+* 您已为 StorageGRID 配置单点登录，并选择 *Ping Federate* 作为 SSO 类型。
+* 您在 Grid Manager 中拥有 link:../admin/configure-sso.html#enter-sandbox-mode["已进入沙盒模式"]。
+* 您拥有系统内每个管理节点的 *SP 连接 ID*。您可以在“配置 SSO”页面上的管理节点详细信息表中找到这些值。
+* ${post_edited_translations.segment}
+* 您有在 PingFederate 服务器中创建 SP 连接的经验。
+* 您有 https://docs.pingidentity.com/pingfederate/latest/administrators_reference_guide/pf_administrators_reference_guide.html["${post_edited_translations.segment}"^] for PingFederate Server。PingFederate 文档提供了详细的分步说明和解释。
+* 您有 link:../admin/admin-group-permissions.html["${post_edited_translations.segment}"] for PingFederate Server。
+
+
+.关于此任务
+这些说明概述了如何将 PingFederate Server 10.3 版本配置为 StorageGRID 的 SSO 提供程序。如果您使用的是其他版本的 PingFederate，则可能需要调整 these 说明。有关您所用版本的详细说明，请参阅 PingFederate Server 文档。
+
+
+
+[[complete-prerequisites-in-pingfederate]]
+== 在 PingFederate 中完成先决条件
+
+在创建用于 StorageGRID 的 SP 连接之前，您必须完成 PingFederate 中的先决条件任务。在配置 SP 连接时，您将使用这些先决条件中的信息。
+
+
+
+[[create-data-storedata-store]]
+=== ${post_edited_translations.segment}
+
+如果尚未创建，请创建一个数据存储以将 PingFederate 连接到 AD FS LDAP 服务器。使用您在 StorageGRID 中 link:../admin/using-identity-federation.html["${post_edited_translations.segment}"] 时使用的值。
+
+* *类型*：目录 (LDAP)
+* *LDAP Type*：Active Directory
+* ${post_edited_translations.segment}
+
+
+
+
+[[create-password-credential-validatorpassword-validator]]
+=== 创建密码凭据验证器[[password-validator]]
+
+如果尚未创建，请创建密码凭据验证器。
+
+* *类型*：LDAP 用户名密码凭据验证器
+* *数据存储*：选择您创建的数据存储。
+* ${post_edited_translations.segment}
+* *搜索过滤器*: sAMAccountName=${username}
+* ${post_edited_translations.segment}
+
+
+
+
+[[create-idp-adapter-instanceadapter-instance]]
+=== ${post_edited_translations.segment}
+
+如果尚未创建，请创建一个 IdP 适配器实例。
+
+.步骤
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
+. 选择您创建的 <<password-validator,密码凭据验证器>>。
+. ${post_edited_translations.segment}
+. 选择 *Save*。
+
+
+
+
+[[create-or-import-signing-certificatesigning-certificate]]
+=== 创建或导入签名证书[[signing-certificate]]
+
+如果尚未创建或导入签名证书，请先执行此操作。
+
+.步骤
+. 转到 *Security* > *Signing & Decryption Keys & Certificates*。
+. 创建或导入签名证书。
+
+
+
+
+[[create-an-sp-connection-in-pingfederate]]
+== 在 PingFederate 中创建 SP 连接
+
+在 PingFederate 中创建 SP 连接时，您需要导入从 StorageGRID 为管理节点下载的 SAML 元数据。元数据文件包含许多您需要的特定值。
+
+
+TIP: 必须为 StorageGRID 系统中的每个管理节点创建 SP 连接，以便用户可以安全地登录和退出任何节点。使用以下说明创建第一个 SP 连接。然后，转到<<${post_edited_translations.segment}>>以创建您需要的任何其他连接。
+
+
+
+[[choose-sp-connection-type]]
+=== 选择 SP 连接类型
+
+.步骤
+. 转到*应用程序* > *集成* > *SP Connections*。
+. 选择*创建连接*。
+. 选择*不要为此连接使用模板*。
+. 选择 *Browser SSO Profiles* 和 *SAML 2.0* 作为协议。
+
+
+
+
+[[import-sp-metadata]]
+=== 导入 SP 元数据
+
+.步骤
+. 在"导入元数据"选项卡上，选择*文件*。
+. 选择您从管理节点的"配置 SSO"页面下载的 SAML 元数据文件。
+. 查看元数据摘要以及"常规信息"选项卡上提供的信息。
++
+合作伙伴的实体 ID 和连接名称设置为 StorageGRID SP 连接 ID。（例如，10.96.105.200-DC1-ADM1-105-200）。基本 URL 是 StorageGRID 管理节点的 IP。
+
+. 选择 *Next*。
+
+
+
+
+[[configure-idp-browser-sso]]
+=== 配置 IdP 浏览器 SSO
+
+.步骤
+. 在浏览器 SSO 选项卡中，选择 *Configure Browser SSO*。
+. 在 SAML 配置文件选项卡上，选择 *SP-initiated SSO*、*SP-initial SLO*、*IdP-initiated SSO* 和 *IdP-initiated SLO* 选项。
+. 选择 *Next*。
+. 在 Assertion Lifetime 选项卡上，不做任何更改。
+. 在断言创建选项卡上，选择*Configure Assertion Creation*。
++
+.. 在身份映射选项卡上，选择*Standard*。
+.. 在 Attribute Contract 选项卡上，使用 *SAML_SUBJECT* 作为 Attribute Contract 和导入的未指定名称格式。
+
+
+. 对于 Extend the Contract，选择 *Delete* 以删除未使用的 `urn:oid`。
+
+
+
+
+[[map-adapter-instance]]
+=== 映射适配器实例
+
+.步骤
+. ${post_edited_translations.segment}
+. 在适配器实例选项卡上，选择您创建的 <<adapter-instance,适配器实例>>。
+. 在"映射方法"选项卡上，选择*从数据存储中检索其他属性*。
+. 在"属性源和用户查找"选项卡上，选择*添加属性源*。
+. 在"数据存储"选项卡上，提供说明并选择您添加的 <<data-store,数据存储>>。
+. 在"LDAP 目录搜索"选项卡上：
++
+** 输入 *Base DN*，它应与您在 StorageGRID 中为 LDAP 服务器输入的值完全匹配。
+** 对于搜索范围，选择*Subtree*。
+** 对于根对象类，搜索并添加以下任一属性：*objectGUID* 或 *userPrincipalName*。
+
+
+. 在 LDAP 二进制属性编码类型选项卡上，为 *objectGUID* 属性选择 *Base64*。
+. 在 LDAP 筛选器选项卡上，输入 *sAMAccountName=${username}*。
+. 在 Attribute Contract Fulfillment（属性合同履行）选项卡上，从 Source（来源）下拉菜单中选择 *LDAP（属性）*，然后从 Value（值）下拉菜单中选择 *objectGUID* 或 *userPrincipalName*。
+. 查看并保存属性源。
+. 在 Failsave Attribute Source 选项卡上，选择 *Abort the SSO Transaction*。
+. 查看摘要并选择*完成*。
+. 选择*完成*。
+
+
+
+
+[[configure-protocol-settings]]
+=== 配置协议设置
+
+.步骤
+. 在 *SP Connection* > *Browser SSO* > *Protocol Settings* 选项卡上，选择 *Configure Protocol Settings*。
+. 在 Assertion Consumer Service URL 选项卡上，接受从 StorageGRID SAML 元数据导入的默认值（绑定为 *POST*，端点 URL 为 `/api/saml-response`）。
+. 在 SLO Service URLs 选项卡上，接受从 StorageGRID SAML 元数据导入的默认值（绑定为 *REDIRECT*，端点 URL 为 `/api/saml-logout`。
+. 在 Allowable SAML Bindings 选项卡上，清除 *ARTIFACT* 和 *SOAP*。只需要 *POST* 和 *REDIRECT*。
+. 在 Signature Policy（签名策略）选项卡上，保留 *Require Authn Requests to be Signed*（要求对身份验证请求进行签名）和 *Always Sign Assertion*（始终对断言进行签名）复选框处于选中状态。
+. 在加密策略选项卡上，选择*None*。
+. 查看摘要并选择*完成*以保存协议设置。
+. 查看摘要并选择*完成*以保存浏览器 SSO 设置。
+
+
+
+
+[[configure-credentials]]
+=== 配置凭据
+
+.步骤
+. 在 SP Connection 选项卡中，选择 *Credentials*。
+. 在凭据选项卡中，选择 *配置凭据*。
+. 选择您创建或导入的 <<signing-certificate,签名证书>>。
+. 选择*下一步*转到*管理签名验证设置*。
++
+.. 在信任模型选项卡上，选择*Unanchored*。
+.. ${post_edited_translations.segment}
+
+
+. ${post_edited_translations.segment}
+
+
+
+
+[[create-additional-sp-connections]]
+=== ${post_edited_translations.segment}
+
+您可以复制第一个 SP 连接，以为网格中的每个管理节点创建所需的 SP 连接。您需要为每个副本上传新的元数据。
+
+
+NOTE: ${post_edited_translations.segment}
+
+.步骤
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
+. 选择与管理节点对应的元数据文件：
++
+.. ${post_edited_translations.segment}
+.. ${post_edited_translations.segment}
+.. 选择 *Next*。
+.. 选择 *Save*。
+
+
+. 解决由于未使用的属性导致的错误：
++
+.. 选择新连接。
+.. 选择 *Configure Browser SSO > Configure Assertion Creation > Attribute Contract*。
+.. 删除 *urn:oid* 的条目。
+.. 选择 *Save*。
+
+
+

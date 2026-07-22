@@ -1,0 +1,50 @@
+---
+permalink: s3/get-bucket-last-access-time-request.html 
+sidebar: sidebar 
+keywords: S3 REST API, S3 operations, GET last access time request 
+summary: 通过获取存储区上次访问时间请求，您可以确定是否为单个存储区启用或禁用上次访问时间更新。 
+---
+= 使用 GET Bucket 上次访问时间请求检索 StorageGRID 中的存储桶上次访问时间状态
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过获取存储区上次访问时间请求，您可以确定是否为单个存储区启用或禁用上次访问时间更新。
+
+您必须具有 s3:GetBucketLastAccessTime 权限，或者是 account root，才能完成此操作。
+
+
+
+[[request-example]]
+== 请求示例
+
+[listing, subs="specialcharacters,quotes"]
+----
+GET /bucket?x-ntap-sg-lastaccesstime HTTP/1.1
+Date: _date_
+Authorization: _authorization string_
+Host: _host_
+----
+
+
+[[response-example]]
+== 响应示例
+
+此示例显示已为存储区启用上次访问时间更新。
+
+[listing]
+----
+HTTP/1.1 200 OK
+Date: Sat, 29 Nov 2015 01:02:18 GMT
+Connection: CLOSE
+Server: StorageGRID/10.3.0
+x-amz-request-id: 12345
+Content-Length: 127
+Content-Type: application/xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<LastAccessTime xmlns="http://s3.storagegrid.com/doc/2015-02-01/">enabled
+</LastAccessTime>
+----

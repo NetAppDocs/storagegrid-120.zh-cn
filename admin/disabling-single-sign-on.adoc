@@ -1,0 +1,33 @@
+---
+permalink: admin/disabling-single-sign-on.html 
+sidebar: sidebar 
+keywords: disable sso, disable single sign on 
+summary: '如果您不再需要使用单点登录 (SSO) 功能，可以将其禁用。您必须先禁用单点登录，然后才能禁用身份联合。' 
+---
+= 在 StorageGRID 中禁用 SSO
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您不再需要使用单点登录 (SSO) 功能，可以将其禁用。您必须先禁用单点登录，然后才能禁用身份联合。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["特定访问权限"]。
+
+
+.步骤
+. 选择*配置* > *访问控制* > *单点登录*。
++
+此时将显示单一登录页面。
+
+. 选择*禁用 SSO*。
+. ${post_edited_translations.segment}
++
+${post_edited_translations.segment}
+
+
+
+${post_edited_translations.segment}

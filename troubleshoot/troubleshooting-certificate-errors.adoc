@@ -1,0 +1,55 @@
+---
+permalink: troubleshoot/troubleshooting-certificate-errors.html 
+sidebar: sidebar 
+keywords: how to troubleshoot certificate errors 
+summary: 如果您在尝试使用 Web 浏览器、S3 客户端或外部监控工具连接到 StorageGRID 时看到安全或证书问题，您应该检查证书。 
+---
+= 对 StorageGRID 中的证书错误进行故障排除
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您在尝试使用 Web 浏览器、S3 客户端或外部监控工具连接到 StorageGRID 时看到安全或证书问题，您应该检查证书。
+
+.关于此任务
+当您尝试使用 Grid Manager、Grid Management API、Tenant Manager 或 Tenant Management API 连接到 StorageGRID 时，证书错误可能会导致问题。当您尝试使用 S3 客户端或外部监控工具进行连接时，也可能会发生证书错误。
+
+如果使用域名而不是 IP 地址访问 Grid Manager 或 Tenant Manager，则浏览器将显示证书错误，如果发生以下任一情况，则无法选择绕过：
+
+* 您的自定义管理界面证书已过期。
+* 将自定义管理接口证书还原为默认服务器证书。
+
+
+自定义管理接口证书过期时出现证书错误的示例如下所示：
+
+image:certificate_error.png["证书错误示例"]
+
+为了确保操作不会因服务器证书失效而中断，当服务器证书即将过期时，会触发 *Expiration of server certificate for Management Interface* 警报。
+
+当您使用客户端证书进行外部 Prometheus 集成时，证书错误可能是由 StorageGRID 管理接口证书或客户端证书引起的。*证书页面上配置的客户端证书过期*警报在客户端证书即将过期时触发。
+
+.步骤
+如果您收到有关过期证书的警报通知，请访问证书详细信息：。选择 *Configuration* > *Security* > *Certificates*，然后选择 link:../admin/using-storagegrid-security-certificates.html#access-security-certificates["选择相应的证书选项卡"]。
+
+. 检查证书的有效期。+ 某些 Web 浏览器和 S3 客户端不接受有效期超过 398 天的证书。
+. 如果证书已过期或即将过期，请上传或生成新证书。
++
+** 有关服务器证书，请参见 link:../admin/configuring-custom-server-certificate-for-grid-manager-tenant-manager.html#add-a-custom-management-interface-certificate["为 Grid Manager 和 Tenant Manager 配置自定义服务器证书"] 的步骤。
+** 有关客户端证书，请参见 link:../admin/configuring-administrator-client-certificates.html["配置客户端证书"] 的步骤。
+
+
+. 对于服务器证书错误，请尝试下列选项之一或两者：
++
+** 确保已填充证书的使用者备用名称 (SAN)，并且 SAN 与要连接到的节点的 IP 地址或主机名匹配。
+** 如果要使用域名连接到 StorageGRID：
++
+... 输入管理节点的 IP 地址，而不是域名，以绕过连接错误并访问 Grid Manager。
+... 从网格管理器中，选择*配置* > *安全* > *证书*，然后 link:../admin/using-storagegrid-security-certificates.html#access-security-certificates["选择相应的证书选项卡"] 安装新的自定义证书或继续使用默认证书。
+... 在管理 StorageGRID 的说明中，请参见 link:../admin/configuring-custom-server-certificate-for-grid-manager-tenant-manager.html#add-a-custom-management-interface-certificate["为 Grid Manager 和 Tenant Manager 配置自定义服务器证书"] 的步骤。
+
+
+
+
+

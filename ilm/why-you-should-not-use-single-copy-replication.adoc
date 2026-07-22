@@ -1,0 +1,29 @@
+---
+permalink: ilm/why-you-should-not-use-single-copy-replication.html 
+sidebar: sidebar 
+keywords: dual commit, single commit, number of copies for replication 
+summary: 在创建 ILM 规则以创建复制副本时，应始终在放置说明中为任何时间段指定至少两个副本。 
+---
+= StorageGRID 中单副本复制的风险
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在创建 ILM 规则以创建复制副本时，应始终在放置说明中为任何时间段指定至少两个副本。
+
+
+NOTE: 请勿使用在任何时间段仅创建一个复制副本的 ILM 规则。如果仅存在一个对象的复制副本，则如果存储节点出现故障或出现重大错误，该对象将丢失。在升级等维护过程中，您还会暂时失去对对象的访问权限。
+
+在以下示例中，Make 1 Copy ILM 规则指定将对象的一个复制副本放入包含三个存储节点的存储池中。当接收到与此规则匹配的对象时，StorageGRID 仅在一个存储节点上放置一个副本。
+
+image:ilm_replication_make_1_copy.png["ILM 复制制作 1 个副本"]
+
+当 ILM 规则仅创建对象的一个复制副本时，当存储节点不可用时，该对象将变得不可访问。在此示例中，每当 Storage Node 2 脱机时（例如在升级或其他维护过程中），您将暂时失去对对象 AAA 的访问权限。如果 Storage Node 2 出现故障，您将完全丢失对象 AAA。
+
+image:ilm_replication_make_1_copy_sn_fails.png["ILM Replication Make 1 Copy SN Fails"]
+
+为避免丢失对象数据，应始终至少制作要通过复制保护的所有对象的两个副本。如果存在两个或多个副本，则即使一个 Storage Node 出现故障或脱机，您仍然可以访问该对象。
+
+image:ilm_replication_make_2_copies_sn_fails.png["ILM 复制创建 2 个副本 SN 失败"]

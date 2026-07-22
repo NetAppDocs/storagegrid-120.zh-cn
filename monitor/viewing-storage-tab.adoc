@@ -1,0 +1,40 @@
+---
+permalink: monitor/viewing-storage-tab.html 
+sidebar: sidebar 
+keywords: storage tab 
+summary: '"存储"选项卡汇总了存储可用性和其他存储指标。' 
+---
+= 查看 StorageGRID Storage 选项卡
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+"存储"选项卡汇总了存储可用性和其他存储指标。
+
+"存储"选项卡适用于所有节点、每个站点和整个网格。
+
+
+
+[[storage-used-graphs]]
+== 存储使用图表
+
+对于存储节点、每个站点和整个网格，"存储"选项卡包括显示对象数据和对象元数据随时间推移所用存储量的图形。
+
+
+NOTE: 当节点未连接到网格时，例如在升级或断开连接状态下，某些指标可能不可用或被排除在站点和网格总计之外。节点重新连接到网格后，等待几分钟以使值稳定。
+
+image:nodes_storage_node_storage_tab.png["节点 > 存储节点 > 存储选项卡"]
+
+
+
+[[disk-devices-volumes-and-object-stores-tables]]
+== 磁盘设备、卷和对象存储表
+
+对于所有节点，存储选项卡包含节点上磁盘设备和卷的详细信息。对于存储节点，对象存储表提供了有关每个存储卷的信息。
+
+image:nodes_page_storage_tables.png["节点页面存储表"]
+
+.相关信息
+link:monitoring-storage-capacity.html["监控存储容量"]

@@ -1,0 +1,62 @@
+---
+permalink: harden/hardening-guideline-for-server-certificates.html 
+sidebar: sidebar 
+keywords: StorageGRID, hardening guidelines, certificates 
+summary: 您应该替换在安装过程中创建的默认证书，并为 TLS 和 SSH 连接选择适当的安全策略。 
+---
+= StorageGRID 中 TLS 和 SSH 的强化准则
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您应该控制 SSH 访问，替换默认 TLS 证书，并为 TLS 和 SSH 连接选择适当的安全策略。
+
+
+
+[[hardening-guidelines-for-certificates]]
+== 证书的强化准则
+
+应将安装过程中创建的默认证书替换为您自己的自定义证书。
+
+对于许多组织来说，StorageGRID Web 访问的自签名数字证书不符合其信息安全策略。在生产系统上，应安装 CA 签名的数字证书以用于验证 StorageGRID。
+
+具体来说，您应该使用自定义服务器证书，而不是以下默认证书：
+
+* *管理接口证书*：用于保护对 Grid Manager、Tenant Manager、Grid Management API 和 Tenant Management API 的访问。
+* *S3 API 证书*：用于保护对存储节点和网关节点的访问，S3 客户端应用程序使用这些节点上传和下载对象数据。
+
+
+有关详细信息和说明，请参见 link:../admin/using-storagegrid-security-certificates.html["管理安全证书"]。
+
+
+NOTE: StorageGRID 单独管理用于负载均衡器端点的证书。要配置负载均衡器证书，请参见 link:../admin/configuring-load-balancer-endpoints.html["配置负载平衡器端点"]。
+
+使用自定义服务器证书时，请遵循以下准则：
+
+* 证书应具有与 StorageGRID 的 DNS 条目匹配的 `_subjectAltName_`。有关详细信息，请参见 https://tools.ietf.org/html/rfc5280#section-4.2.1.6["RFC 5280：PKIX 证书和 CRL 配置文件"^]中的第 4.2.1.6 节"使用者备用名称"。
+* 尽可能避免使用通配符证书。此准则的一个例外是 S3 虚拟托管样式端点的证书，如果事先不知道存储桶名称，则需要使用通配符。
+* 当您必须在证书中使用通配符时，您应该采取其他步骤来降低风险。使用通配符模式（如 `*.s3.example.com`），并且不要为其他应用程序使用 `s3.example.com`后缀。此模式也适用于路径样式的 S3 访问，例如 `dc1-s1.s3.example.com/mybucket`。
+* 将证书到期时间设置为较短（例如 2 个月），并使用 Grid Management API 自动进行证书轮换。这对于通配符证书尤其重要。
+
+
+此外，客户端在与 StorageGRID 通信时应使用严格的主机名检查。
+
+
+
+[[hardening-guidelines-for-tls-and-ssh-policy]]
+== TLS 和 SSH 策略的强化准则
+
+您可以选择一个安全策略，以确定使用哪些协议和密码与客户端应用程序建立安全的 TLS 连接，以及与内部 StorageGRID 服务建立安全的 SSH 连接。
+
+安全策略控制 TLS 和 SSH 如何加密传输中的数据。作为最佳做法，应禁用应用程序兼容性不需要的加密选项。使用默认的 Modern 策略，除非您的系统需要符合 Common Criteria、符合 FIPS 140-2，或者您需要使用其他密码
+
+有关详细信息和说明，请参见 link:../admin/manage-tls-ssh-policy.html["管理 TLS 和 SSH 策略"]。
+
+
+
+[[manage-external-ssh-access]]
+== 管理外部 SSH 访问
+
+为增强系统安全性，默认情况下会阻止外部 SSH 访问。仅在需要执行需要入站 SSH 访问的任务（如故障排除）时才启用 SSH 访问。有关详细信息和说明，请参阅 link:../admin/manage-external-ssh-access.html["管理外部 SSH 访问"]。

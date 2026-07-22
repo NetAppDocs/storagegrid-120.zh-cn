@@ -1,0 +1,181 @@
+---
+permalink: ilm/managing-objects-with-s3-object-lock.html 
+sidebar: sidebar 
+keywords: s3 object lock, manage objects with object lock 
+summary: 作为网格管理员，您可以为 StorageGRID 系统启用 S3 对象锁定，并实施合规的 ILM 策略，以帮助确保特定 S3 存储桶中的对象在指定时间内不会被删除或覆盖。 
+---
+= S3 对象锁定如何保护 StorageGRID 中的对象
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+作为网格管理员，您可以为 StorageGRID 系统启用 S3 对象锁定，并实施合规的 ILM 策略，以帮助确保特定 S3 存储桶中的对象在指定时间内不会被删除或覆盖。
+
+
+
+[[what-is-s3-object-lock]]
+== 什么是 S3 Object Lock？
+
+${post_edited_translations.segment}
+
+当为 StorageGRID 系统启用全局 S3 对象锁定设置时，S3 租户帐户可以创建启用或未启用 S3 对象锁定的存储桶。如果存储桶已启用 S3 对象锁定，则需要存储桶版本控制，并会自动启用。
+
+*没有 S3 Object Lock 的存储桶*只能包含未指定保留设置的对象。所有已载入的对象均不具有保留设置。
+
+*具有 S3 对象锁定的存储桶*可以包含具有或不具有 S3 客户端应用程序指定的保留设置的对象。已摄取的某些对象将具有保留设置。
+
+*配置了 S3 Object Lock 和默认保留的存储桶*可以包含已指定保留设置的已上传对象以及未指定保留设置的新对象。新对象将使用默认设置，因为尚未在对象级别配置保留设置。
+
+实际上，配置默认保留后，所有新摄入的对象都将具有保留设置。没有对象保留设置的现有对象不受影响。
+
+
+
+[[retention-modes]]
+=== 保留模式
+
+StorageGRID S3 Object Lock 功能支持两种保留模式，以对对象应用不同级别的保护。这些模式与 Amazon S3 保留模式等效。
+
+* ${post_edited_translations.segment}
++
+** 在达到其保留截止日期之前，无法删除此对象。
+** 对象的保留截止日期可以延长，但不能缩短。
+** 在达到该日期之前，无法删除对象的 retain-until-date。
+
+
+* ${post_edited_translations.segment}
++
+** 具有特殊权限的用户可以在请求中使用旁路标头来修改某些保留设置。
+** 这些用户可以在达到保留截止日期之前删除对象版本。
+** 这些用户可以增加、减少或删除对象的保留截止日期。
+
+
+
+
+
+
+[[retention-settings-for-object-versions]]
+=== ${post_edited_translations.segment}
+
+${post_edited_translations.segment}
+
+* ${post_edited_translations.segment}
+* *Retain-until-date*：如果对象版本的 retain-until-date 在将来，则可以检索该对象，但不能将其删除。
+* *诉讼保留*：对对象版本应用诉讼保留会立即锁定该对象。例如，您可能需要对与调查或法律纠纷相关的对象进行诉讼保留。诉讼保留没有过期日期，而是会一直保持有效，直到被显式删除。诉讼保留独立于保留截止日期。
++
+
+NOTE: 如果对象处于合法冻结状态，则无论其保留模式如何，任何人都无法删除该对象。
+
++
+有关对象设置的详细信息，请参见 link:../s3/use-s3-api-for-s3-object-lock.html["使用 S3 REST API 配置 S3 对象锁定"]。
+
+
+
+
+
+[[default-retention-setting-for-buckets]]
+=== ${post_edited_translations.segment}
+
+如果在启用 S3 对象锁定的情况下创建了存储桶，则用户可以选择为存储桶指定以下默认设置：
+
+* ${post_edited_translations.segment}
+* ${post_edited_translations.segment}
+
+
+默认存储桶设置仅适用于没有自己的保留设置的新对象。添加或更改这些默认设置时，现有存储桶对象不受影响。
+
+请参见 link:../tenant/creating-s3-bucket.html["${post_edited_translations.segment}"] 和 link:../tenant/update-default-retention-settings.html["更新 S3 对象锁定默认保留"]。
+
+
+
+[[comparing-s3-object-lock-to-legacy-compliance]]
+== 将 S3 对象锁定与传统合规性进行比较
+
+S3 对象锁定取代了早期 StorageGRID 版本中提供的合规性功能。由于 S3 对象锁定功能符合 Amazon S3 要求，因此它弃用了专有的 StorageGRID 合规性功能，该功能现在称为"旧版合规性"。
+
+
+NOTE: 全局合规性设置已弃用。如果使用以前版本的 StorageGRID 启用了此设置，则会自动启用 S3 对象锁定设置。您可以继续使用 StorageGRID 来管理现有兼容存储桶的设置；但是，您无法创建新的兼容存储桶。有关详细信息，请参见 https://kb.netapp.com/Advice_and_Troubleshooting/Hybrid_Cloud_Infrastructure/StorageGRID/How_to_manage_legacy_Compliant_buckets_in_StorageGRID_11.5["NetApp 知识库：如何在 StorageGRID 11.5 中管理旧版兼容存储桶"^]。
+
+如果您在以前版本的 StorageGRID 中使用了旧版合规性功能，请参见下表，了解它与 StorageGRID 中的 S3 对象锁定功能的比较。
+
+[cols="1a,1a,1a"]
+|===
+|  | S3 对象锁定 | 合规性（旧版） 
+
+
+ a| 
+如何在全球范围内启用此功能？
+ a| 
+在网格管理器中，选择 *Configuration* > *System* > *S3 Object Lock*。
+ a| 
+不再支持。
+
+
+
+ a| 
+如何为存储桶启用此功能？
+ a| 
+用户必须在使用 Tenant Manager、租户管理 API 或 S3 REST API 创建新存储桶时启用 S3 对象锁定。
+ a| 
+不再支持。
+
+
+
+ a| 
+是否支持存储区版本控制？
+ a| 
+是的。存储区版本控制为必填字段，当为存储区启用 S3 Object Lock 时会自动启用。
+ a| 
+目标卷
+
+
+
+ a| 
+如何设置对象保留？
+ a| 
+用户可以为每个对象版本设置保留截止日期，也可以为每个存储桶设置默认保留期限。
+ a| 
+用户必须为整个存储桶设置保留期。保留期适用于存储桶中的所有对象。
+
+
+
+ a| 
+是否可以更改保留期限？
+ a| 
+* 在合规模式下，对象版本的保留截止日期可以延长，但不能缩短。
+* 在治理模式下，具有特殊权限的用户可以减少甚至删除对象的保留设置。
+
+ a| 
+存储桶的保留期限可以增加，但不能减少。
+
+
+
+ a| 
+法律保留在哪里受到控制？
+ a| 
+用户可以对存储桶中的任何对象版本进行法律冻结或解除法律冻结。
+ a| 
+合法冻结放置在存储桶上，并影响存储桶中的所有对象。
+
+
+
+ a| 
+何时可以删除对象？
+ a| 
+* 在合规模式下，可以在达到保留截止日期后删除对象版本，前提是对象未处于合法持有状态。
+* 在治理模式下，具有特殊权限的用户可以在达到保留截止日期之前删除对象，前提是该对象未处于合法持有状态。
+
+ a| 
+在保留期到期后，假设存储桶未处于合法冻结状态，则可以删除对象。对象可以自动或手动删除。
+
+
+
+ a| 
+是否支持存储桶生命周期配置？
+ a| 
+是
+ a| 
+否
+
+|===

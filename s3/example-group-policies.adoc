@@ -1,0 +1,112 @@
+---
+permalink: s3/example-group-policies.html 
+sidebar: sidebar 
+keywords: group policy examples 
+summary: 使用本节中的示例为组构建 StorageGRID 访问策略。 
+---
+= StorageGRID S3 REST API 组策略示例
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用本节中的示例为组构建 StorageGRID 访问策略。
+
+组策略指定策略附加到的组的访问权限。策略中没有 `Principal`元素，因为它是隐式的。组策略使用 Tenant Manager 或 API 进行配置。
+
+
+
+[[example-set-group-policy-using-tenant-manager]]
+== 示例：使用 Tenant Manager 设置组策略
+
+在租户管理器中添加或编辑组时，可以选择组策略来确定此组的成员将具有哪些 S3 访问权限。请参阅link:../tenant/creating-groups-for-s3-tenant.html["为 S3 租户创建组"]。
+
+* *无 S3 访问权限*：默认选项。此组中的用户无权访问 S3 资源，除非使用存储桶策略授予访问权限。如果选择此选项，默认情况下只有 root 用户才能访问 S3 资源。
+* *只读访问权限*：此组中的用户对 S3 资源具有只读访问权限。例如，此组中的用户可以列出对象并读取对象数据、元数据和标签。选择此选项后，只读组策略的 JSON 字符串将显示在文本框中。您无法编辑此字符串。
+* *完全访问权限*：此组中的用户具有对 S3 资源（包括存储桶）的完全访问权限。选择此选项时，文本框中将显示完全访问组策略的 JSON 字符串。您无法编辑此字符串。
+* *Ransomware Mitigation*：此示例策略适用于此租户的所有存储桶。此组中的用户可以执行常见操作，但不能从已启用对象版本控制的存储桶中永久删除对象。
++
+拥有"管理所有存储桶"权限的租户管理器用户可以覆盖此组策略。将"管理所有存储桶"权限限制为受信任的用户，并在可用的情况下使用多因素身份验证 (MFA)。
+
+* *自定义*：组中的用户将获得您在文本框中指定的权限。
+
+
+
+
+[[example-allow-group-full-access-to-all-buckets]]
+== 示例：允许组完全访问所有存储桶
+
+在此示例中，除非存储桶策略明确拒绝，否则允许组的所有成员完全访问租户帐户拥有的所有存储桶。
+
+[listing]
+----
+{
+  "Statement": [
+    {
+      "Action": "s3:*",
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::*"
+    }
+  ]
+}
+----
+
+
+[[example-allow-group-read-only-access-to-all-buckets]]
+== 示例：允许组只读访问所有存储桶
+
+在此示例中，除非存储桶策略明确拒绝，否则组的所有成员都对 S3 资源具有只读访问权限。例如，此组中的用户可以列出对象并读取对象数据、元数据和标记。
+
+[listing]
+----
+{
+  "Statement": [
+    {
+      "Sid": "AllowGroupReadOnlyAccess",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListAllMyBuckets",
+        "s3:ListBucket",
+        "s3:ListBucketVersions",
+        "s3:GetObject",
+        "s3:GetObjectTagging",
+        "s3:GetObjectVersion",
+        "s3:GetObjectVersionTagging"
+      ],
+      "Resource": "arn:aws:s3:::*"
+    }
+  ]
+}
+----
+
+
+[[example-allow-group-members-full-access-to-only-their-folder-in-a-bucket]]
+== 示例：仅允许组成员完全访问存储桶中的"文件夹"
+
+在此示例中，组中的成员仅被允许在指定存储桶中列出和访问其特定文件夹（密钥前缀）。请注意，在确定这些文件夹的隐私时，应考虑其他组策略和存储桶策略的访问权限。
+
+[listing]
+----
+{
+  "Statement": [
+    {
+      "Sid": "AllowListBucketOfASpecificUserPrefix",
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::department-bucket",
+      "Condition": {
+        "StringLike": {
+          "s3:prefix": "${aws:username}/*"
+        }
+      }
+    },
+    {
+      "Sid": "AllowUserSpecificActionsOnlyInTheSpecificUserPrefix",
+      "Effect": "Allow",
+      "Action": "s3:*Object",
+      "Resource": "arn:aws:s3:::department-bucket/${aws:username}/*"
+    }
+  ]
+}
+----

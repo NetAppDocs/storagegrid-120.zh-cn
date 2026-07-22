@@ -1,0 +1,78 @@
+---
+permalink: expand/index.html 
+sidebar: sidebar 
+keywords: expand grid, StorageGRID 
+summary: 您可以扩展 StorageGRID 系统的容量或功能，而不会中断系统运行。 
+---
+= 了解如何扩展 StorageGRID 系统
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+了解如何扩展 StorageGRID 系统以在不中断操作的情况下增加容量或功能。可以将存储卷添加到现有存储节点、将新网格节点添加到现有站点或添加新站点。
+
+在扩展网格节点之前，您必须确认没有数据修复作业处于活动状态。如果任何修复失败，您必须重新启动这些修复，并在执行停用或扩展操作之前等待其完成。请参阅 link:../maintain/checking-data-repair-jobs.html["检查数据修复作业"]。
+
+通过 StorageGRID 扩展，您可以添加：
+
+* 存储卷到存储节点
+* 向现有站点添加新网格节点
+* 全新站点
+
+
+执行扩展的原因决定了必须添加的每种类型的新节点数以及这些新节点的位置。例如，如果您正在执行扩展以增加存储容量、添加元数据容量或添加冗余或新功能，则存在不同的节点要求。
+
+按照您正在执行的扩展类型的步骤进行操作：
+
+[role="tabbed-block"]
+====
+.添加网格节点
+--
+. 按照 link:adding-grid-nodes-to-existing-site-or-adding-new-site.html["向现有站点添加网格节点"] 的步骤进行操作。
+. link:updating-subnets-for-grid-network.html["更新子网"]。
+. 部署网格节点：
++
+** link:deploying-new-grid-nodes.html#appliances-deploying-storage-gateway-or-non-primary-admin-nodes["设备"]
+** link:deploying-new-grid-nodes.html#vmware-deploy-grid-nodes["VMware"]
+** link:deploying-new-grid-nodes.html#linux-deploy-grid-nodes["Linux"]
+
+
+
+
+
+NOTE: "Linux"是指 RHEL、Ubuntu 或 Debian 部署。有关受支持版本的列表，请参见 https://imt.netapp.com/matrix/#welcome["NetApp 互操作性矩阵工具 (IMT)"^]。
+
+. link:performing-expansion.html["执行扩展"]。
+. link:configuring-expanded-storagegrid-system.html["配置扩展系统"]。
+
+
+--
+.添加存储卷
+--
+按照 link:adding-storage-volumes-to-storage-nodes.html["将存储卷添加到存储节点"] 的步骤进行操作。
+
+--
+.添加新站点
+--
+. 按照 link:adding-grid-nodes-to-existing-site-or-adding-new-site.html["添加新站点"] 的步骤进行操作。
+. link:updating-subnets-for-grid-network.html["更新子网"]。
+. 部署网格节点：
++
+** link:deploying-new-grid-nodes.html#appliances-deploying-storage-gateway-or-non-primary-admin-nodes["设备"]
+** link:deploying-new-grid-nodes.html#vmware-deploy-grid-nodes["VMware"]
+** link:deploying-new-grid-nodes.html#linux-deploy-grid-nodes["Linux"]
+
+
+
+
+
+NOTE: "Linux"是指 RHEL、Ubuntu 或 Debian 部署。有关受支持版本的列表，请参见 https://imt.netapp.com/matrix/#welcome["NetApp 互操作性矩阵工具 (IMT)"^]。
+
+. link:performing-expansion.html["执行扩展"]。
+. link:configuring-expanded-storagegrid-system.html["配置扩展系统"]。
+
+
+--
+====

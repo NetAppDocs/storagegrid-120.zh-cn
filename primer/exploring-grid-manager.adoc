@@ -1,0 +1,274 @@
+---
+permalink: primer/exploring-grid-manager.html 
+sidebar: sidebar 
+keywords: StorageGRID, what is the grid manager, grid manager dashboard 
+summary: 网格管理器是基于浏览器的图形界面，允许您配置、管理和监控 StorageGRID 系统。 
+---
+= 浏览 StorageGRID 网格管理器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+网格管理器是基于浏览器的图形界面，允许您配置、管理和监控 StorageGRID 系统。
+
+
+NOTE: 网格管理器随每个版本更新，可能与此页面上的示例屏幕截图不匹配。
+
+登录到网格管理器时，您正在连接到管理节点。每个 StorageGRID 系统包括一个主管理节点和任意数量的非主管理节点。您可以连接到任何管理节点，每个管理节点都会显示 StorageGRID 系统的类似视图。
+
+您可以使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 访问网格管理器。
+
+
+
+[[grid-manager-dashboard]]
+== Grid Manager 仪表板
+
+首次登录 Grid Manager 时，您可以使用仪表板一link:../monitor/viewing-dashboard.html["监控系统活动"]目了然。
+
+仪表板包含有关系统运行状况和性能、存储使用、ILM 流程、S3 操作以及网格中节点的信息。您可以 link:../monitor/viewing-dashboard.html["配置仪表板"] 从包含有效监控系统所需信息的卡片集合中进行选择。
+
+image:grid_manager_dashboard_and_menu.png["Grid Manager 中的仪表板"]
+
+有关每张卡上显示的信息的说明，请选择该卡的帮助图标 image:icon_nms_question.png["问号图标"]。
+
+
+
+[[search-field]]
+== 搜索字段
+
+标题栏中的*搜索*字段允许您快速导航到 Grid Manager 中的特定页面。例如，您可以输入 *km* 来访问密钥管理服务器 (KMS) 页面。
+
+您可以使用*搜索*在网格管理器的侧边栏以及配置、维护和支持菜单中查找条目。您还可以按名称搜索网格节点和租户帐户等项目。
+
+
+
+[[help-menu]]
+== 帮助菜单
+
+帮助菜单 image:icon-help-menu-bar.png["菜单栏上的帮助图标"] 提供对以下内容的访问：
+
+* link:../fabricpool/use-fabricpool-setup-wizard.html["FabricPool"] 和 link:../admin/use-s3-setup-wizard.html["S3 设置"] 向导
+* 当前版本的 StorageGRID 文档网站
+* link:../admin/using-grid-management-api.html["API 文档"]
+* 有关当前安装的 StorageGRID 版本的信息
+
+
+
+
+[[alerts-menu]]
+== 警报菜单
+
+警报菜单提供了一个易于使用的界面，用于检测、评估和解决 StorageGRID 操作期间可能发生的问题。
+
+通过"提醒"菜单，您可以执行以下操作 link:../monitor/managing-alerts.html["管理警报"]：
+
+* 查看当前警报
+* 查看已解决的警报
+* 配置静默以抑制警报通知
+* 为触发警报的条件定义警报规则
+* 配置警报通知的电子邮件服务器
+
+
+
+
+[[nodes-page]]
+== 节点页面
+
+link:../monitor/viewing-nodes-page.html["节点页面"] 显示有关整个网格、网格中的每个站点以及站点上的每个节点的信息。要查看特定站点或节点的信息，请选择该站点或节点。
+
+
+
+[[tenants-page]]
+== ${post_edited_translations.segment}
+
+The link:../admin/managing-tenants.html["${post_edited_translations.segment}"] 允许您为您的 StorageGRID 系统 link:../tenant/index.html["创建和监控存储租户帐户"]。您必须至少创建一个租户帐户，以指定可以存储和检索对象的人员及其可用的功能。
+
+租户页面还提供每个租户的使用情况详细信息，包括使用的存储空间量和对象数。如果在创建租户时设置了配额，则可以看到该配额的使用量。
+
+
+
+[[ilm-menu]]
+== ILM 菜单
+
+link:using-information-lifecycle-management.html["ILM 菜单"] 允许您 link:../ilm/index.html["配置信息生命周期管理(ILM)规则和策略"] 控制数据持久性和可用性。您还可以输入对象标识符以查看该对象的元数据。
+
+在 ILM 菜单中，您可以查看和管理 ILM：
+
+* 规则
+* 策略
+* 策略标签
+* 存储池
+* 存储级别
+* 地区
+* 对象元数据查找
+
+
+
+
+[[configuration-menu]]
+== 配置菜单
+
+通过配置菜单，您可以指定网络设置、安全设置、系统设置、监控选项和访问控制选项。
+
+
+
+[[network-tasks]]
+=== 网络任务
+
+网络任务包括：
+
+* link:../admin/managing-high-availability-groups.html["管理高可用性组"]
+* link:../admin/managing-load-balancing.html["管理负载平衡器端点"]
+* link:../admin/configuring-s3-api-endpoint-domain-names.html["配置 S3 端点域名"]
+* link:../admin/managing-traffic-classification-policies.html["${post_edited_translations.segment}"]
+* link:../admin/configure-vlan-interfaces.html["配置 VLAN 接口"]
+* link:../admin/enable-cross-origin-resource-sharing-for-management-interface.html["${post_edited_translations.segment}"]
+
+
+
+
+[[security-tasks]]
+=== 安全任务
+
+安全任务包括：
+
+* link:../admin/using-storagegrid-security-certificates.html["管理安全证书"]
+* link:../admin/manage-firewall-controls.html["管理内部防火墙控制"]
+* link:../admin/kms-configuring.html["配置密钥管理服务器"]
+* 配置安全设置，包括 link:../admin/manage-tls-ssh-policy.html["TLS和SSH策略"]、link:../admin/changing-network-options-object-encryption.html["网络和对象安全选项"]、link:../admin/changing-browser-session-timeout-interface.html["界面安全设置"] 和 link:../admin/manage-external-ssh-access.html["SSH 访问选项"]
+* 配置 link:../admin/configuring-storage-proxy-settings.html["存储代理"] 或 link:../admin/configuring-admin-proxy-settings.html["管理员代理"] 的设置
+
+
+
+
+[[system-tasks]]
+=== 系统任务
+
+系统任务包括：
+
+* 使用 link:../admin/grid-federation-overview.html["网格联盟"] 在两个 StorageGRID 系统之间克隆租户帐户信息和复制对象数据
+* 或者，启用 link:../admin/configuring-stored-object-compression.html["压缩存储的对象"] 选项
+* 或者，配置 link:../s3/consistency.html["默认存储桶一致性设置"]
+* link:../ilm/managing-objects-with-s3-object-lock.html["管理 S3 对象锁定"]
+* 了解存储设置，例如 link:../admin/what-storage-volume-watermarks-are.html["存储卷水印"]
+* link:../ilm/manage-erasure-coding-profiles.html["管理擦除编码配置文件"]
+
+
+
+
+[[monitoring-tasks]]
+=== 监控任务
+
+监控任务包括：
+
+* link:../monitor/configure-log-management.html["配置日志管理"]
+* link:../monitor/using-snmp-monitoring.html["使用 SNMP 监控"]
+
+
+
+
+[[access-control-tasks]]
+=== 访问控制任务
+
+访问控制任务包括：
+
+* link:../admin/managing-admin-groups.html["管理管理员组"]
+* link:../admin/managing-users.html["管理管理员用户"]
+* 更改 link:../admin/changing-provisioning-passphrase.html["配置密码短语"] 或 link:../admin/change-node-console-password.html["节点控制台密码"]
+* link:../admin/using-identity-federation.html["${post_edited_translations.segment}"]
+* link:../admin/how-sso-works.html["配置 SSO"]
+
+
+
+
+[[maintenance-menu]]
+== 维护菜单
+
+通过"维护"菜单，您可以执行维护任务、系统维护和网络维护。
+
+
+
+[[tasks]]
+=== Tasks
+
+维护任务包括：
+
+* link:../maintain/decommission-procedure.html["停用操作"] 删除未使用的网格节点和站点
+* link:../expand/index.html["扩展操作"] 添加新网格节点和站点
+* link:../maintain/warnings-and-considerations-for-grid-node-recovery.html["网格节点恢复过程"] 替换故障节点并还原数据
+* link:../maintain/rename-grid-site-node-overview.html["重命名过程"] 更改网格、站点和节点的显示名称
+* link:../troubleshoot/verifying-object-integrity.html["对象存在性检查操作"] 验证对象数据是否存在（但不验证其正确性）
+* 执行link:../maintain/rolling-reboot-procedure.html["滚动重新启动"]以重新启动多个网格节点
+* link:../maintain/restoring-volume.html["卷还原操作"]
+
+
+
+
+[[system]]
+=== 系统
+
+您可以执行的系统维护任务包括：
+
+* link:../admin/viewing-storagegrid-license-information.html["查看 StorageGRID 许可证信息"] 或 link:../admin/updating-storagegrid-license-information.html["更新许可证信息"]
+* 正在生成并下载 link:../maintain/downloading-recovery-package.html["恢复包"]
+* 在选定设备上执行 StorageGRID 软件更新，包括软件升级、热修复和 SANtricity 操作系统软件更新
++
+** link:../upgrade/index.html["升级过程"]
+** link:../maintain/storagegrid-hotfix-procedure.html["修补程序过程"]
+** https://docs.netapp.com/us-en/storagegrid-appliances/sg6000/upgrading-santricity-os-on-storage-controllers-using-grid-manager-sg6000.html["使用 Grid Manager 升级 SG6000 存储控制器上的 SANtricity 操作系统"^]
+** https://docs.netapp.com/us-en/storagegrid-appliances/sg5700/upgrading-santricity-os-on-storage-controllers-using-grid-manager-sg5700.html["使用 Grid Manager 升级 SG5700 存储控制器上的 SANtricity 操作系统"^]
+
+
+
+
+
+
+[[network]]
+=== 网络
+
+您可以执行的网络维护任务包括：
+
+* link:../maintain/configuring-dns-servers.html["配置 DNS 服务器"]
+* link:../maintain/updating-subnets-for-grid-network.html["更新网格网络子网"]
+* link:../maintain/configuring-ntp-servers.html["管理 NTP 服务器"]
+
+
+
+
+[[support-menu]]
+== 支持菜单
+
+"支持"菜单提供了帮助技术支持分析和排除系统故障的选项。
+
+
+
+[[tools]]
+=== 工具
+
+在"支持"菜单的"工具"部分，您可以：
+
+* link:../admin/configure-autosupport-grid-manager.html["配置 AutoSupport"]
+* link:../monitor/running-diagnostics.html["运行诊断"] 关于网格的当前状态
+* link:../monitor/collecting-log-files-and-system-data.html["收集日志文件和系统数据"]
+* link:../monitor/reviewing-support-metrics.html["查看支持指标"]
++
+
+NOTE: *指标*选项中提供的工具旨在供技术支持人员使用。这些工具中的某些功能和菜单项故意设置为不可用。
+
+
+
+
+
+[[other]]
+=== 其他
+
+在"支持"菜单的"其他"部分，您可以：
+
+* 配置 link:../monitor/manage-io-prioritization.html["I/O 优先级"]
+* 配置 link:../admin/configure-autosupport-grid-manager.html["AutoSupport 电子邮件设置（旧版）"]
+* 管理 link:../admin/manage-link-costs.html["链路成本"]
+* 查看节点服务 ID
+* 管理 link:../admin/what-storage-volume-watermarks-are.html["存储水印"]
+

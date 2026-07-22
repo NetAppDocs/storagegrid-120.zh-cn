@@ -1,0 +1,54 @@
+---
+permalink: audit/client-read-audit-messages.html 
+sidebar: sidebar 
+keywords: storagegrid, audit, message, messages, client read, S3SL, SGET, SHEA, WGET, WHEA, S3 
+summary: 当 S3 客户端应用程序请求检索对象时，将记录客户端读取审核消息。 
+---
+= StorageGRID 中客户端读取操作的审核消息
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当 S3 客户端应用程序请求检索对象时，将记录客户端读取审核消息。
+
+[cols="1a,3a,1a,1a"]
+|===
+| 代码 | 问题描述 | 使用者 | 请参见 
+
+
+ a| 
+S3SL
+ a| 
+S3 Select 请求：记录 S3 Select 请求返回到客户端后的完成情况。S3SL 消息可以包括错误消息和错误代码详细信息。请求可能未成功。
+ a| 
+S3客户端
+ a| 
+link:s3-select-request.html["S3SL: S3 Select 请求"]
+
+
+
+ a| 
+SGET
+ a| 
+S3 GET：记录成功的事务以检索对象或列出存储桶中的对象。
+
+*注意：* 如果事务在子资源上操作，则审核消息将包括字段 S3SR。
+ a| 
+S3客户端
+ a| 
+link:sget-s3-get.html["SGET：S3 GET"]
+
+
+
+ a| 
+SHEA
+ a| 
+S3 HEAD：记录成功的事务以检查对象或存储桶是否存在。
+ a| 
+S3客户端
+ a| 
+link:shea-s3-head.html["SHEA: S3 HEAD"]
+
+|===

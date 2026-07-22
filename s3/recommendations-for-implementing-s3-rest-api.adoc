@@ -1,0 +1,64 @@
+---
+permalink: s3/recommendations-for-implementing-s3-rest-api.html 
+sidebar: sidebar 
+keywords: implement s3 rest api 
+summary: 在实施与 StorageGRID 配合使用的 S3 REST API 时，应遵循以下建议。 
+---
+= 使用 StorageGRID 实施 S3 REST API 的建议
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在实施与 StorageGRID 配合使用的 S3 REST API 时，应遵循以下建议。
+
+
+
+[[recommendations-for-heads-to-non-existent-objects]]
+== 针对不存在对象的 HEAD 建议
+
+如果您的应用程序定期检查对象是否存在于您不希望对象实际存在的路径上，则应使用"可用"link:consistency.html["一致性"]。例如，如果您的应用程序在 PUT 某个位置之前对该位置执行 HEAD 操作，则应使用"可用"一致性。
+
+否则，如果 HEAD 操作未找到对象，当同一站点上的两个或多个存储节点不可用或无法访问远程站点时，您可能会收到大量 500 内部服务器错误。
+
+您可以使用link:put-bucket-consistency-request.html["PUT Bucket 一致性"]请求为每个存储桶设置"可用"一致性，也可以在单个 API 操作的请求标头中指定一致性。
+
+
+
+[[recommendations-for-object-keys]]
+== 对象键的建议
+
+根据首次创建存储桶的时间，遵循以下有关对象键名称的建议。
+
+.在 StorageGRID 11.4 或更早版本中创建的存储桶
+* 请勿将随机值用作对象键的前四个字符。这与之前 AWS 对密钥前缀的建议形成鲜明对比。而是使用非随机、非唯一的前缀，例如 `image`。
+* 如果您确实遵循以前的 AWS 建议，在密钥前缀中使用随机和唯一字符，请使用目录名称作为对象密钥的前缀。也就是说，使用此格式：
++
+`mybucket/mydir/f8e3-image3132.jpg`
+
++
+代替此格式：
+
++
+`mybucket/f8e3-image3132.jpg`
+
+
+
+.在 StorageGRID 11.4 或更高版本中创建的存储桶
+不需要限制对象键名称以满足性能最佳实践。在大多数情况下，您可以为对象键名称的前四个字符使用随机值。
+
+
+TIP: 一个例外是 S3 工作负载在短时间内连续删除所有对象。为了最大限度地减少此用例的性能影响，请每隔几千个对象更改密钥名称的前导部分，例如日期。例如，假设 S3 客户端通常每秒写入 2,000 个对象，而 ILM 或存储桶生命周期策略会在三天后删除所有对象。为了最大限度地减少对性能的影响，您可以使用以下模式命名键： `/mybucket/mydir/_yyyymmddhhmmss_-_random_UUID_.jpg`
+
+
+
+[[recommendations-for-range-reads]]
+== "范围读取"的建议
+
+如果启用了link:../admin/configuring-stored-object-compression.html["用于压缩存储对象的全局选项"]，S3 客户端应用程序应避免执行指定返回字节范围的 GetObject 操作。这些"范围读取"操作效率低下，因为 StorageGRID 必须有效地解压缩对象才能访问所请求的字节。从非常大的对象请求小范围字节的 GetObject 操作效率尤其低下；例如，从 50 GB 压缩对象读取 10 MB 范围是低效的。
+
+如果从压缩对象读取范围，则客户端请求可能会超时。
+
+
+NOTE: 如果需要压缩对象，并且客户端应用程序必须使用范围读取，请增加应用程序的读取超时时间。

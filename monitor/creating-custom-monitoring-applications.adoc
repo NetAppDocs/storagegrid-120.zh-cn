@@ -1,0 +1,22 @@
+---
+permalink: monitor/creating-custom-monitoring-applications.html 
+sidebar: sidebar 
+keywords: custom monitoring, monitoring, dashboard 
+summary: 您可以使用网格管理 API 中提供的 StorageGRID 指标构建自定义监控应用程序和仪表板。 
+---
+= 为 StorageGRID 创建自定义监控应用程序
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用网格管理 API 中提供的 StorageGRID 指标构建自定义监控应用程序和仪表板。
+
+如果要监视未显示在网格管理器现有页面上的指标，或者如果要为 StorageGRID 创建自定义信息板，则可以使用网格管理 API 查询 StorageGRID 指标。
+
+您还可以使用外部监控工具（如 Grafana）直接访问 Prometheus 指标。使用外部工具需要上传或生成管理客户端证书，以允许 StorageGRID 对该工具进行身份验证以确保安全。请参阅 link:../admin/index.html["管理 StorageGRID 的说明"]。
+
+要查看指标 API 操作，包括可用指标的完整列表，请转到 Grid Manager。在页面顶端，选择帮助图标，然后选择 *API documentation* > *metrics*。 image:help_api_docs_metrics.png["帮助 API 文档指标部分"]
+
+有关如何实现自定义监控应用程序的详细信息不在本文档的讨论范围之内。

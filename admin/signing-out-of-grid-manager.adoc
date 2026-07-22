@@ -1,0 +1,47 @@
+---
+permalink: admin/signing-out-of-grid-manager.html 
+sidebar: sidebar 
+keywords: grid manager, sign on, log out 
+summary: 完成 Grid Manager 的操作后，您必须退出登录，以确保未经授权的用户无法访问 StorageGRID 系统。根据浏览器的 Cookie 设置，关闭浏览器可能不会使您退出系统。 
+---
+= 从 StorageGRID Grid Manager 中注销
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用完 Grid Manager 后，必须注销以确保未经授权的用户无法访问 StorageGRID 系统。根据浏览器 Cookie 设置，关闭浏览器可能不会使您退出系统。
+
+.步骤
+. ${post_edited_translations.segment}
++
+image:sign_out.png["${post_edited_translations.segment}"]
+
+. 选择*退出*。
++
+[cols="1a,2a"]
+|===
+| 选项 | 问题描述 
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+${post_edited_translations.segment}
+
+此时将显示网格管理器登录页面。
+
+*注意：* 如果您登录了多个管理节点，则必须注销每个节点。
+
+
+
+ a| 
+已启用 SSO
+ a| 
+您已从正在访问的所有管理节点中登出。此时将显示 StorageGRID 登录页面。*Grid Manager* 已作为默认值列在 *Recent Accounts* 下拉列表中，且 *Account ID* 字段显示为 0。
+
+*注意：* 如果启用了 SSO，并且您也登录到租户管理器，则还必须 link:../tenant/signing-out-of-tenant-manager.html["从租户帐户中注销"] 到 link:how-sso-works.html["${post_edited_translations.segment}"]。
+
+|===
+

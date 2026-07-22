@@ -1,0 +1,72 @@
+---
+permalink: primer/copy-management.html 
+sidebar: sidebar 
+keywords: StorageGRID, object data, ilm policy, ilm rules, replicated copy, replication, erasure-coded copy, ec, cloud storage pool 
+summary: 对象数据由活动 ILM 策略及其 ILM 规则管理。ILM 规则生成复制或纠删编码的副本，以防止对象数据丢失。 
+---
+= StorageGRID 如何管理对象副本
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+对象数据由活动 ILM 策略和相关 ILM 规则管理。ILM 规则生成复制或纠删编码的副本，以防止对象数据丢失。
+
+在对象生命周期的不同时间，可能需要不同类型或位置的对象副本。系统会定期评估 ILM 规则，以确保按要求放置对象。
+
+对象数据由 LDR 服务管理。
+
+
+
+[[content-protection-replication]]
+== 内容保护：复制
+
+如果 ILM 规则的内容放置指令需要对象数据的复制副本，则由构成已配置存储池的存储节点制作副本并将其存储到磁盘。
+
+LDR服务中的ILM引擎控制复制，并确保在正确的位置和正确的时间内存储正确数量的副本。
+
+image:replication_data_flow.png["显示周围文本中描述的过程的图表"]
+
+. ILM 引擎查询 ADC 服务，以确定 ILM 规则指定的存储池中的最佳目标 LDR 服务。然后，它向该 LDR 服务发送命令以启动复制。
+. 目标 LDR 服务向 ADC 服务查询最佳源位置。然后，它向源 LDR 服务发送复制请求。
+. 源 LDR 服务将副本发送到目标 LDR 服务。
+. 目标 LDR 服务通知 ILM 引擎已存储对象数据。
+. ILM 引擎使用对象位置元数据更新元数据存储。
+
+
+
+
+[[content-protection-erasure-coding]]
+== 内容保护：纠删码
+
+如果 ILM 规则包括制作对象数据的纠删编码副本的指令，则适用的纠删编码方案将对象数据分解为数据和奇偶校验片段，并将这些片段分布在纠删编码配置文件中配置的 Storage Nodes 上。
+
+ILM 引擎是 LDR 服务的组成部分，它控制纠删码并确保将纠删码配置文件应用于对象数据。
+
+image:erasure_coding_data_flow.png["擦除编码数据流"]
+
+. ILM 引擎查询 ADC 服务以确定哪个 DDS 服务可以最好地执行纠删码操作。确定后，ILM 引擎向该服务发送"启动"请求。
+. DDS 服务指示 LDR 对对象数据进行纠删码编码。
+. 源 LDR 服务将副本发送到选择用于纠删码的 LDR 服务。
+. 在创建适当数量的奇偶校验和数据片段后，LDR 服务将这些片段分布在构成纠删码配置文件存储池的存储节点（块服务）上。
+. LDR 服务通知 ILM 引擎，确认已成功分发对象数据。
+. ILM 引擎使用对象位置元数据更新元数据存储。
+
+
+
+
+[[content-protection-cloud-storage-pool]]
+== 内容保护：云存储池
+
+如果 ILM 规则的内容放置说明要求将对象数据的复制副本存储在云存储池中，则对象数据将复制到为云存储池指定的外部 S3 存储桶或 Azure Blob 存储容器。
+
+作为 LDR 服务组件的 ILM 引擎和 Data Mover 服务控制对象向云存储池的移动。
+
+image:cloud_storage_pool_data_flow.png["云存储池数据流"]
+
+. ILM 引擎选择一个数据移动器服务以复制到云存储池。
+. Data Mover 服务将对象数据发送至云存储池。
+. Data Mover 服务通知 ILM 引擎已存储对象数据。
+. ILM 引擎使用对象位置元数据更新元数据存储。
+

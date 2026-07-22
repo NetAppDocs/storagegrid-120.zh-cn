@@ -1,0 +1,171 @@
+---
+permalink: monitor/access-snmp-mib.html 
+sidebar: sidebar 
+keywords: mib, snmp, monitoring 
+summary: MIB 文件包含有关网格中节点的托管资源和服务属性的定义和信息。您可以访问定义 StorageGRID 对象和通知的 MIB 文件。这些文件对于监控网格非常有用。 
+---
+= 访问 StorageGRID MIB 文件
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+MIB 文件包含有关网格中节点的托管资源和服务属性的定义和信息。您可以访问定义 StorageGRID 对象和通知的 MIB 文件。这些文件对于监控网格非常有用。
+
+有关 SNMP 和 MIB 文件的详细信息，请参见link:using-snmp-monitoring.html["使用 SNMP 监控"]。
+
+
+
+[[access-mib-files]]
+== 访问 MIB 文件
+
+按照下面的步骤访问 MIB 文件。
+
+.步骤
+. 选择*配置* > *监控* > *SNMP代理*。
+. 在 SNMP 代理页上，选择要下载的文件：
++
+** *NETAPP-STORAGEGRID-MIB.txt*：定义在所有管理节点上可访问的警报表和通知（陷阱）。
+** *ES-NETAPP-06-MIB.mib*：定义基于 E-Series 设备的对象和通知。
+** *MIB_1_10.zip*：定义具有 BMC 接口的设备的对象和通知。
++
+
+TIP: 您还可以访问任何 StorageGRID 节点上以下位置的 MIB 文件： `/usr/share/snmp/mibs`
+
+
+
+. 从 MIB 文件中提取 StorageGRID OID：
++
+.. 获取 StorageGRID MIB 根的 OID：
++
+`root@user-adm1:~ # snmptranslate -On -IR storagegrid`
+
++
+结果： `.1.3.6.1.4.1.789.28669` (`28669` 始终是 StorageGRID 的 OID）
+
+.. 在整个树中对 StorageGRID OID 执行 Grep 操作（使用 `paste`连接行）：
++
+`root@user-adm1:~ # snmptranslate -Tso | paste -d " " - - | grep 28669`
+
++
+
+TIP: 该 `snmptranslate`命令有许多选项，可用于探索 MIB。此命令可在任何 StorageGRID 节点上使用。
+
+
+
+
+
+
+
+[[mib-file-contents]]
+== MIB 文件内容
+
+所有对象都在 StorageGRID OID 下。
+
+[cols="1a,1a,2a"]
+|===
+| 对象名称 | 对象ID (OID) | 问题描述 
+
+
+| .iso.org.dod.internet.+ private.enterprises.+ netapp.storagegrid | .1.3.6.1.4.1.789.28669  a| 
+NetApp StorageGRID 实体的 MIB 模块。
+
+|===
+
+
+[[mib-objects]]
+== MIB 对象
+
+[cols="1a,1a,1a,1a,1a,2a"]
+|===
+| 对象名称 | 对象ID (OID) | 类型 | 访问 | MIB 模块 | 问题描述 
+
+
+| activeAlertCount | .1.3.6.1.4.1.+ 789.28669.1.3  a| 
+Integer32
+ a| 
+只读
+ a| 
+NETAPP-STORAGEGRID-MIB
+ a| 
+activeAlertTable 中的活动警报数。
+
+
+
+| activeAlertTable | .1.3.6.1.4.1.+ 789.28669.1.4  a| 
+ActiveAlertEntry 的序列
+ a| 
+不可访问
+ a| 
+NETAPP-STORAGEGRID-MIB
+ a| 
+StorageGRID 中活动警报的表格。
+
+
+
+| activeAlertEntry | .1.3.6.1.4.1.+ 789.28669.1.4.1  a| 
+序列
+ a| 
+不可访问
+ a| 
+NETAPP-STORAGEGRID-MIB
+ a| 
+单个 StorageGRID 警报，按警报 ID 编制索引。
+
+
+
+| activeAlertId | .1.3.6.1.4.1.+ 789.28669.1.4.1.1  a| 
+八位字节字符串
+ a| 
+只读
+ a| 
+NETAPP-STORAGEGRID-MIB
+ a| 
+警报的 ID。仅在当前活动警报集中唯一。
+
+
+
+| activeAlertName | .1.3.6.1.4.1.+ 789.28669.1.4.1.2  a| 
+八位字节字符串
+ a| 
+只读
+ a| 
+NETAPP-STORAGEGRID-MIB
+ a| 
+警报的名称。
+
+
+
+| activeAlertInstance | .1.3.6.1.4.1.+ 789.28669.1.4.1.3  a| 
+八位字节字符串
+ a| 
+只读
+ a| 
+NETAPP-STORAGEGRID-MIB
+ a| 
+生成警报的实体的名称，通常是节点名称。
+
+
+
+| activeAlertSeverity | .1.3.6.1.4.1.+ 789.28669.1.4.1.4  a| 
+八位字节字符串
+ a| 
+只读
+ a| 
+NETAPP-STORAGEGRID-MIB
+ a| 
+警报的严重程度。
+
+
+
+| activeAlertStartTime | .1.3.6.1.4.1.+ 789.28669.1.4.1.5  a| 
+日期和时间
+ a| 
+只读
+ a| 
+NETAPP-STORAGEGRID-MIB
+ a| 
+触发警报的时间。
+
+|===

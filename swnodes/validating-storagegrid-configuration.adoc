@@ -1,0 +1,37 @@
+---
+permalink: swnodes/validating-storagegrid-configuration.html 
+sidebar: sidebar 
+keywords: how to validate StorageGRID configuration 
+summary: 在 /etc/storagegrid/nodes 中为每个 StorageGRID 节点创建配置文件后，必须验证这些文件的内容。 
+---
+= 在 Linux 上验证 StorageGRID 配置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 `/etc/storagegrid/nodes`中为每个 StorageGRID 节点创建配置文件后，必须验证这些文件的内容。
+
+
+NOTE: "Linux"是指 RHEL、Ubuntu 或 Debian 部署。有关受支持版本的列表，请参见 https://imt.netapp.com/matrix/#welcome["NetApp 互操作性矩阵工具 (IMT)"^]。
+
+要验证配置文件的内容，请在每台主机上运行以下命令：
+
+[listing]
+----
+sudo storagegrid node validate all
+----
+如果文件正确，输出将为每个配置文件显示 *PASSED*，如示例中所示。
+
+
+NOTE: 在仅元数据节点上仅使用一个 LUN 时，您可能会收到可以忽略的警告消息。
+
+image:rhel_node_configuration_file_output.gif["本图四周的文字提供了相关说明。"]
+
+
+TIP: 对于自动安装，您可以使用 `-q`或 `--quiet`选项（在 `storagegrid`命令中，例如 `storagegrid --quiet...`）来抑制此输出。如果抑制输出，则当检测到任何配置警告或错误时，命令将返回非零退出值。
+
+如果配置文件不正确，问题将显示为 *WARNING* 和 *ERROR*，如示例中所示。如果发现任何配置错误，您必须在继续安装之前更正它们。
+
+image:rhel_node_configuration_file_output_with_errors.gif["本图四周的文字提供了相关说明。"]

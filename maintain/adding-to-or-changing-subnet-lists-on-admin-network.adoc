@@ -1,0 +1,166 @@
+---
+permalink: maintain/adding-to-or-changing-subnet-lists-on-admin-network.html 
+sidebar: sidebar 
+keywords: storagegrid, subnet list, admin network 
+summary: 您可以在一个或多个节点的管理网络子网列表中添加、删除或更改子网。 
+---
+= 在 StorageGRID 中添加或更改管理网络上的子网列表
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在一个或多个节点的管理网络子网列表中添加、删除或更改子网。
+
+.开始之前
+* 您拥有  `Passwords.txt` 文件。
+
+
+您可以向管理网络子网列表上的所有节点添加、删除或更改子网。
+
+[NOTE]
+====
+对于任何节点的网格网络、管理网络或客户端网络，请勿使用包含以下 IPv4 地址的子网：
+
+* 192,168,130,101
+* 192,168,130,121
+* 192,168,131,101
+* 192,168,131,121
+* 192,168,130,102
+* 192,168,130,122
+* 192,168,131,102
+* 192,168,131,122
+* 198.51.100.2
+* 198.51.100.4
+
+
+例如，对于任何节点的网格网络、管理网络或客户端网络，请不要使用以下子网范围：
+
+* 192.168.130.0/24，因为此子网范围包含 IP 地址 192.168.130.101 和 192.168.130.102
+* 192.168.131.0/24，因为此子网范围包含 IP 地址 192.168.131.101 和 192.168.131.102
+* ${post_edited_translations.segment}
+
+
+====
+.步骤
+. 默认情况下会阻止外部 SSH 访问。如有需要，link:../admin/manage-external-ssh-access.html["暂时允许访问"]。
+. ${post_edited_translations.segment}
++
+.. 输入以下命令： `ssh admin@_primary_Admin_Node_IP_`
+.. 输入 `Passwords.txt`文件中列出的密码。
+.. 输入以下命令切换到 root： `su -`
+.. 输入 `Passwords.txt`文件中列出的密码。
+
+
++
+以 root 身份登录时，提示符将从 `$`更改为 `#`。
+
+. 通过输入以下命令启动 Change IP 工具： `change-ip`
+. 在提示符处输入配置密码。
++
+此时将显示主菜单。
+
++
+image:change_ip_tool_main_menu.png["屏幕截图显示更改 IP 工具的欢迎屏幕"]
+
+. 可选地，限制对其执行操作的网络/节点。从以下选项中选择一项：
++
+** 如果要筛选要在其上执行操作的特定节点，请通过选择 *1* 来选择要编辑的节点。选择以下选项之一：
++
+*** *1*：单个节点（按名称选择）
+*** *2*：单个节点（按站点选择，然后按名称选择）
+*** *3*：单个节点（按当前 IP 选择）
+*** *4*：站点中的所有节点
+*** *5*：网格中的所有节点
+*** *0*：返回
+
+
+** 允许"all"保持选中状态。选择完成后，将显示主菜单屏幕。所选节点字段反映了您的新选择，现在所选的所有操作将仅在此项目上执行。
+
+
+. 在主菜单上，选择编辑管理网络子网的选项（选项 *3*）。
+. 选择下列选项之一：
++
+--
+** 通过输入以下命令添加子网： `add CIDR`
+** 输入以下命令删除子网： `del CIDR`
+** 通过输入此命令设置子网列表： `set CIDR`
+
+
+--
++
+--
+
+NOTE: 对于所有命令，您可以使用以下格式输入多个地址： `add CIDR, CIDR`
+
+示例： `add 172.14.0.0/16, 172.15.0.0/16, 172.16.0.0/16`
+
+
+TIP: 您可以使用"向上箭头"将以前键入的值调用到当前输入提示，然后在必要时对其进行编辑，从而减少所需的键入量。
+
+下面的示例输入显示了将子网添加到管理网络子网列表：
+
+image:change_ip_tool_aesl_sample_input.gif["更改 ip 工具 aesl 示例"]
+
+--
+. 准备就绪后，输入 *q* 返回主菜单屏幕。您的更改将被保留，直到清除或应用。
++
+
+NOTE: 如果您在步骤 3 中选择了任何"所有"节点选择模式，请按 *Enter*（无 *q*）进入列表中的下一个节点。
+
+. 选择下列选项之一：
++
+** 选择选项 *5* 以显示输出中的编辑，该输出经过隔离，仅显示已更改的项目。更改以绿色（添加）或红色（删除）突出显示，如下面的示例输出所示：
++
+image:change_ip_tool_aesl_sample_output.png["周围文本描述的屏幕截图"]
+
+** 选择选项 *6* 以在显示完整配置的输出中显示编辑。更改以绿色（添加）或红色（删除）突出显示。*注意：* 某些终端模拟器可能会使用删除线格式显示添加和删除。
++
+当您尝试更改子网列表时，将显示以下消息：
+
++
+[listing]
+----
+CAUTION: The Admin Network subnet list on the node might contain /32 subnets derived from automatically applied routes that aren't persistent. Host routes (/32 subnets) are applied automatically if the IP addresses provided for external services such as NTP or DNS aren't reachable using default StorageGRID routing, but are reachable using a different interface and gateway. Making and applying changes to the subnet list will make all automatically applied subnets persistent. If you don't want that to happen, delete the unwanted subnets before applying changes. If you know that all /32 subnets in the list were added intentionally, you can ignore this caution.
+----
++
+如果您没有专门为网络分配 NTP 和 DNS 服务器子网，StorageGRID 会自动为连接创建主机路由 (/32)。例如，如果您希望有一个 /16 或 /24 路由用于到 DNS 或 NTP 服务器的出站连接，则应删除自动创建的 /32 路由并添加所需的路由。如果不删除自动创建的主机路由，则在对子网列表应用任何更改后，它将保持不变。
+
+
+
++
+
+NOTE: 虽然您可以使用这些自动发现的主机路由，但通常应手动配置 DNS 和 NTP 路由以确保连接。
+
+. 选择选项 *7* 以验证所有暂存更改。
++
+此验证可确保遵守网格、管理员和客户端网络的规则，例如使用重叠的子网。
+
+. （可选）选择选项 *8* 以保存所有暂存的更改，稍后返回继续进行更改。
++
+此选项用于退出 Change IP 工具并稍后重新启动，而不会丢失任何未应用的更改。
+
+. 执行以下操作之一：
++
+** 如果要清除所有更改而不保存或应用新的网络配置，请选择选项 *9*。
+** 如果您已准备好应用更改并设置新的网络配置，请选择选项 *10*。在配置期间，输出将显示应用更新时的状态，如以下示例输出所示：
++
+[listing]
+----
+Generating new grid networking description file...
+
+Running provisioning...
+
+Updating grid network configuration on Name
+----
+
+
+. 从 Grid Manager 下载新的恢复包。
++
+.. 选择*维护* > *系统* > *恢复包*。
+.. 输入配置密码。
+
+
+. 如果已允许外部 SSH 访问，请在完成向子网列表中添加或更改子网列表时link:../admin/manage-external-ssh-access.html["阻止访问"]。
+

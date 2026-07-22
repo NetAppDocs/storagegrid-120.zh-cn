@@ -1,0 +1,48 @@
+---
+permalink: fabricpool/best-practices-ilm.html 
+sidebar: sidebar 
+keywords: FabricPool, StorageGRID, best practices, ILM, information lifecycle management, ILM rule, ILM policy, erasure-coding, replication 
+summary: '如果使用 FabricPool 将数据分层到 StorageGRID，则必须了解对 FabricPool 数据使用 StorageGRID 信息生命周期管理 (ILM) 的要求。' 
+---
+= 使用 StorageGRID ILM 处理 FabricPool 数据的最佳实践
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果使用 FabricPool 将数据分层到 StorageGRID，则必须了解对 FabricPool 数据使用 StorageGRID 信息生命周期管理 (ILM) 的要求。
+
+
+CAUTION: FabricPool 不了解 StorageGRID ILM 规则或策略。如果 StorageGRID ILM 策略配置错误，可能会发生数据丢失。有关详细信息，请参见 link:../ilm/what-ilm-rule-is.html["${post_edited_translations.segment}"] 和 link:../ilm/creating-ilm-policy.html["创建 ILM 策略"]。
+
+
+
+[[guidelines-for-using-ilm-with-fabricpool]]
+== 将 ILM 与 FabricPool 结合使用的准则
+
+使用 FabricPool 设置向导时，向导会自动为您创建的每个 S3 存储桶创建一个新的 ILM 规则，并将该规则添加到非活动策略中。系统会提示您激活该策略。自动创建的规则遵循推荐的最佳实践：它在单个站点上使用 2+1 纠删码。
+
+如果要手动配置 StorageGRID 而不是使用 FabricPool 设置向导，请查看这些指南，以确保您的 ILM 规则和 ILM 策略适合 FabricPool 数据和业务要求。您可能需要创建新规则并更新有效的 ILM 策略，以符合这些准则。
+
+* 您可以使用复制和擦除编码规则的任意组合来保护云层数据。
++
+推荐的最佳做法是在站点内使用 2+1 纠删码，以实现经济高效的数据保护。纠删码使用更多的 CPU，但提供的存储容量明显少于复制。4+1 和 6+1 方案使用的容量少于 2+1 方案。但是，如果在网格扩展期间需要添加存储节点，则 4+1 和 6+1 方案的灵活性较低。有关详细信息，请参见 link:../expand/adding-storage-capacity-for-erasure-coded-objects.html["为纠删码对象添加存储容量"]。
+
+* 应用于 FabricPool 数据的每个规则必须使用纠删码，或者必须至少创建两个复制副本。
++
+
+CAUTION: 在任何时间段只创建一个复制副本的 ILM 规则会使数据面临永久丢失的风险。如果对象只有一个复制副本，则当存储节点发生故障或出现重大错误时，该对象将丢失。在升级等维护过程中，您还会暂时失去对对象的访问权限。
+
+* 如果需要link:remove-fabricpool-data.html["从 StorageGRID 中删除 FabricPool 数据"]，请使用 ONTAP 检索 FabricPool 卷的所有数据并将其提升到性能层。
++
+
+CAUTION: 为避免数据丢失，请不要使用将过期或删除 FabricPool 云层数据的 ILM 规则。将每个 ILM 规则中的保留期设置为*永久*，以确保 FabricPool 对象不会被 StorageGRID ILM 删除。
+
+* 不要创建将FabricPool云层数据从存储桶中移动到其他位置的规则。您不能使用云存储池将FabricPool数据移动到另一个对象存储。
++
+
+NOTE: 不支持将云存储池与 FabricPool 结合使用，因为从云存储池目标检索对象会增加延迟。
+
+* 从 ONTAP 9.8 开始，您可以选择创建对象标签来帮助对分层数据进行分类和排序，以便于管理。例如，您只能在附加到 StorageGRID 的 FabricPool 卷上设置标记。然后，在 StorageGRID 中创建 ILM 规则时，您可以使用对象标记高级筛选器来选择和放置此数据。
+

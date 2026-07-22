@@ -1,0 +1,57 @@
+---
+permalink: tenant/use-s3-console.html 
+sidebar: sidebar 
+keywords: how to use s3 console 
+summary: 您可以使用 S3 Console 查看和管理 S3 存储桶中的对象。 
+---
+= 在 StorageGRID 中使用 S3 Console
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 S3 Console 查看和管理 S3 存储桶中的对象。
+
+S3 Console 允许您：
+
+* 上传、下载、重命名、复制、移动和删除对象
+* 查看、还原、下载和删除对象版本
+* 按前缀搜索对象
+* 管理对象标记
+* 查看对象元数据
+* 查看、创建、重命名、复制、移动和删除文件夹
+
+
+[NOTE]
+====
+S3 控制台为最常见的情况提供了更好的用户体验。它并非旨在在所有情况下取代 CLI 或 API 操作。
+
+如果使用 S3 Console 导致操作耗时过长（例如几分钟或几小时），请考虑：
+
+* 减少所选对象的数量
+* 使用非图形（API 或 CLI）方法访问您的数据
+
+
+====
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到租户管理器。
+* 如果要管理对象，则属于具有根访问权限的用户组。或者，您属于具有"使用 S3 控制台"选项卡权限以及"查看所有存储区"权限或"管理所有存储区"权限的用户组。请参阅 link:tenant-management-permissions.html["租户管理权限"]。
+* 已为用户配置 S3 组或存储桶策略。请参阅 link:../s3/use-access-policies.html["使用存储区和组访问策略"]。
+* 您知道用户的访问密钥 ID 和秘密访问密钥。或者，您有一个包含此信息的  `.csv` 文件。请参见 link:creating-your-own-s3-access-keys.html["创建访问密钥的说明"]。
+
+
+.步骤
+. 选择*存储* > *存储桶* > *_存储桶名称_*。
+. 选择 S3 Console 选项卡。
+. 将访问密钥 ID 和秘密访问密钥粘贴到字段中。否则，请选择 *Upload access keys* 并选择您的 `.csv`文件。
+. 选择*登录*。
+. 此时将显示存储桶对象表。您可以根据需要管理对象。
+
+
+.追加信息
+* *按前缀搜索*：前缀搜索功能仅搜索相对于当前文件夹以特定单词开头的对象。搜索不包括在其他位置包含该单词的对象。此规则也适用于文件夹中的对象。例如，搜索 `folder1/folder2/somefile-`将返回 `folder1/folder2/`文件夹中以单词 `somefile-`开头的对象。
+* *拖放*：您可以将文件从计算机的文件管理器拖放到 S3 Console。但是，您无法上传文件夹。
+* *文件夹上的操作*：移动、复制或重命名文件夹时，文件夹中的所有对象一次更新一个，这可能需要时间。
+* *禁用存储区版本控制时永久删除*：在禁用版本控制的情况下覆盖或删除存储区中的对象时，操作是永久性的。请参阅 link:changing-bucket-versioning.html["更改存储区的对象版本控制"]。
+

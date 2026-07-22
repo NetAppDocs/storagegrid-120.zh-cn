@@ -1,0 +1,43 @@
+---
+permalink: ilm/create-ilm-rule-select-ingest-behavior.html 
+sidebar: sidebar 
+keywords: ilm rule step 3, define ingest behavior 
+summary: 创建 ILM 规则向导的第 3 步（选择摄取行为）允许您选择在摄取时如何保护此规则筛选的对象。 
+---
+= 选择 StorageGRID ILM 规则的接收行为
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过创建 ILM 规则向导的*选择摄取行为*步骤，您可以选择在摄取时如何保护此规则筛选的对象。
+
+.关于此任务
+StorageGRID 可以制作临时副本并将对象排队以供后续进行 ILM 评估，也可以立即制作副本以满足规则的放置说明。
+
+.步骤
+. 选择要使用的 link:data-protection-options-for-ingest.html["载入行为"]。
++
+有关详细信息，请参见 link:advantages-disadvantages-of-ingest-options.html["载入选项的优点、缺点和限制"]。
+
++
+[NOTE]
+====
+如果规则使用以下位置之一，则无法使用"平衡"或"严格"选项：
+
+** 第 0 天的云存储池
+** 当规则使用用户定义的创建时间作为参考时间时，云存储池
+
+
+请参阅 link:example-5-ilm-rules-and-policy-for-strict-ingest-behavior.html["示例 5：严格摄取行为的 ILM 规则和策略"]。
+
+====
+. 选择 *Create*。
++
+已创建 ILM 规则。在将规则添加到 link:creating-ilm-policy.html["ILM 策略"] 并激活该策略之前，该规则不会处于活动状态。
+
++
+要查看规则的详细信息，请在 ILM 规则页面上选择规则的名称。
+
+

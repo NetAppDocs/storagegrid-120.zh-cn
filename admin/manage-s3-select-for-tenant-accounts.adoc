@@ -1,0 +1,82 @@
+---
+permalink: admin/manage-s3-select-for-tenant-accounts.html 
+sidebar: sidebar 
+keywords: s3 select, selectobjectcontent, best practices, object format, s3 select requirements 
+summary: 您可以允许某些 S3 租户使用 S3 Select 对单个对象发出 SelectObjectContent 请求。 
+---
+= 管理 StorageGRID 中租户帐户的 S3 Select
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以允许某些 S3 租户使用 S3 Select 对单个对象发出 SelectObjectContent 请求。
+
+S3 Select 提供了一种有效的方法来搜索大量数据，而无需部署数据库和相关资源来启用搜索。它还降低了检索数据的成本和延迟。
+
+
+
+[[what-is-s3-select]]
+== 什么是 S3 Select？
+
+S3 Select 允许 S3 客户端使用 SelectObjectContent 请求来过滤和检索对象中所需的数据。StorageGRID 的 S3 Select 实现包括 S3 Select 命令和功能的子集。
+
+
+
+[[considerations-and-requirements-for-using-s3-select]]
+== 使用 S3 Select 的注意事项和要求
+
+
+
+[[grid-administration-requirements]]
+=== Grid 管理要求
+
+网格管理员必须授予租户 S3 Select 能力。在 link:creating-tenant-account.html["创建租户"] 或 link:editing-tenant-account.html["编辑租户"] 时，选择 *Allow S3 Select*。
+
+
+
+[[object-format-requirements]]
+=== 对象格式要求
+
+要查询的对象必须采用以下格式之一：
+
+* *CSV*。可以按原样使用或压缩到 GZIP 或 BZIP2 存档中。
+* *Parquet*。Parquet 对象的其他要求：
++
+** S3 Select 仅支持使用 GZIP 或 Snappy 的列压缩。S3 Select 不支持 Parquet 对象的全对象压缩。
+** S3 Select 不支持 Parquet 输出。必须将输出格式指定为 CSV 或 JSON。
+** 最大未压缩行组大小为 512 MB。
+** 您必须使用在对象架构中指定的数据类型。
+** 不能使用 INTERVAL、JSON、LIST、TIME 或 UUID 逻辑类型。
+
+
+
+
+
+
+[[endpoint-requirements]]
+=== 终结点要求
+
+必须将 SelectObjectContent 请求发送至 link:configuring-load-balancer-endpoints.html["StorageGRID 负载平衡器端点"]。
+
+端点使用的管理节点和网关节点必须是以下选项之一：
+
+* 服务设备节点
+* 基于VMware的软件节点
+* 运行启用了 cgroup v2 的内核的裸机节点
+
+
+
+
+[[general-considerations]]
+=== 一般注意事项
+
+无法将查询直接发送到存储节点。
+
+
+CAUTION: SelectObjectContent 请求可能会降低所有 S3 客户端和所有租户的负载均衡器性能。仅在需要时启用此功能，并且仅适用于受信任的租户。
+
+请参阅link:../s3/use-s3-select.html["使用 S3 Select 的说明"]。
+
+要查看 S3 Select 操作随时间变化的link:../monitor/reviewing-support-metrics.html["Grafana 图表"]，请在网格管理器中选择 *支持* > *工具* > *指标*。

@@ -1,0 +1,100 @@
+---
+permalink: maintain/identifying-and-unmounting-failed-storage-volumes.html 
+sidebar: sidebar 
+keywords: storagegrid, storage volume, failed storage volume, unmount failed volume 
+summary: 在恢复存储卷发生故障的存储节点时，必须识别并卸载发生故障的卷。您必须确认在恢复过程中仅对发生故障的存储卷进行重新格式化。 
+---
+= 识别并卸载 StorageGRID 中的故障存储卷
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在恢复存储卷发生故障的存储节点时，必须识别并卸载发生故障的卷。您必须确认在恢复过程中仅对发生故障的存储卷进行重新格式化。
+
+.开始之前
+您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+
+.关于此任务
+您应该尽快恢复出现故障的存储卷。
+
+恢复过程的第一步是检测已分离、需要卸载或有 I/O 错误的卷。如果故障卷仍处于连接状态，但文件系统存在随机损坏，则系统可能无法检测到磁盘未使用或未分配部分中的任何损坏。
+
+
+NOTE: 在执行手动步骤来恢复卷之前，必须完成此过程，例如添加或重新连接磁盘、停止节点、启动节点或重新启动。否则，运行 `reformat_storage_block_devices.rb`脚本时可能会遇到文件系统错误，导致脚本挂起或失败。
+
+
+NOTE: 修复硬件并正确连接磁盘，然后再运行 `reboot`命令。
+
+
+CAUTION: 仔细识别出现故障的存储卷。您将使用此信息来验证哪些卷必须重新格式化。重新格式化卷后，无法恢复卷上的数据。
+
+要恢复发生故障的存储卷，需要知道发生故障的存储卷的设备名称及其卷 ID。
+
+在安装时，为每个存储设备分配一个文件系统通用唯一标识符 (UUID)，并使用分配的文件系统 UUID 将其挂载到存储节点上的 rangedb 目录。文件系统 UUID 和 rangedb 目录列于 `/etc/fstab`文件中。挂载点、设备名称和卷大小显示在 Grid Manager 中。
+
+.步骤
+. 完成以下步骤来记录发生故障的存储卷及其设备名称：
++
+.. 选择 *Nodes* > *_site_* > *_failed Storage Node_* > *Storage*。
+.. 向下滚动以找到 Volumes 表和 Object stores 表，并记录状态为 Unknown 或 Offline 的每个卷的以下信息。
++
+*** 从卷表中，记录挂载点、设备和大小。
+*** 在Object stores表中，记录 `object_store_ID`。
++
+The `object_store_ID` 是发生故障的存储卷的 ID。例如，对于 ID 为 0000 的对象存储，在命令中指定 `0`。
+
+
+
+
+
+. 登录到出现故障的存储节点：
++
+.. 输入以下命令： `ssh admin@_grid_node_IP_`
+.. 输入 `Passwords.txt`文件中列出的密码。
+.. 输入以下命令切换到 root： `su -`
+.. 输入 `Passwords.txt`文件中列出的密码。
++
+以 root 身份登录时，提示符将从 `$`更改为 `#`。
+
+
+
+. 运行以下脚本以卸载出现故障的存储卷：
++
+`sn-unmount-volume object_store_ID`
+
+. 如果出现提示，请按 *y* 停止依赖于存储卷 0 的 Cassandra 服务。
++
+
+NOTE: 如果 Cassandra 服务已停止，则不会提示您。仅停止卷 0 的 Cassandra 服务。
+
++
+[listing]
+----
+root@Storage-180:~/var/local/tmp/storage~ # sn-unmount-volume 0
+Services depending on storage volume 0 (cassandra) aren't down.
+Services depending on storage volume 0 must be stopped before running this script.
+Stop services that require storage volume 0 [y/N]? y
+Shutting down services that require storage volume 0.
+Services requiring storage volume 0 stopped.
+Unmounting /var/local/rangedb/0
+/var/local/rangedb/0 is unmounted.
+----
++
+几秒钟后，卷已卸载。系统将显示消息，指示流程的每个步骤。最后一条消息指示卷已卸载。
+
+. 如果由于卷繁忙而无法卸载，可以使用 `--use-umountof`选项强制卸载：
++
+
+NOTE: 使用 `--use-umountof`选项强制卸载可能会导致使用卷的进程或服务出现意外行为或崩溃。
+
++
+[listing]
+----
+root@Storage-180:~ # sn-unmount-volume --use-umountof /var/local/rangedb/2
+Unmounting /var/local/rangedb/2 using umountof
+/var/local/rangedb/2 is unmounted.
+Informing LDR service of changes to storage volumes
+----
+

@@ -1,0 +1,78 @@
+= 
+:allow-uri-read: 
+
+
+[role="tabbed-block"]
+====
+.已复制数据
+--
+* 要获得已复制修复的估计完成百分比，请将 `show-replicated-repair-status`选项添加到 repair-data 命令中。
++
+`repair-data show-replicated-repair-status`
+
+* 要确定维修是否已完成：
++
+.. 选择*节点* > *_正在修复的存储节点_* > *ILM*。
+.. 查看"评估"部分中的属性。修复完成后，*等待 - 所有*属性指示 0 个对象。
+
+
+* 要更详细地监控修复过程：
++
+.. 选择 *Nodes*。
+.. 选择 *_网格名称_* > *ILM*。
+.. 将光标放在 ILM 队列图上，以查看 *扫描速率（对象/秒）* 属性的值，该属性是扫描网格中的对象并将其排入 ILM 队列的速率。
+.. 在 ILM 队列部分，查看以下属性：
++
+*** *扫描周期 - 估计*：完成所有对象的完整 ILM 扫描的预计时间。
++
+完全扫描并不能保证已将 ILM 应用于所有对象。
+
+*** *尝试修复*：针对被认为是高风险的复制数据尝试的对象修复操作的总数。高风险对象是具有剩余一个副本的任何对象，无论是由 ILM 策略指定还是由于丢失副本。每次存储节点尝试修复高风险对象时，此计数都会增加。如果网格变得繁忙，则优先处理高风险 ILM 修复。
++
+如果修复后复制失败，相同的对象修复可能会再次增加。+ 当您监控存储节点卷恢复的进度时，这些属性非常有用。如果尝试修复的次数已停止增加，并且已完成完全扫描，则修复可能已完成。
+
+
+
+.. 或者，为 `storagegrid_ilm_scan_period_estimated_minutes`和 `storagegrid_ilm_repairs_attempted`提交 Prometheus 查询。
+
+
+
+
+--
+.纠删码 (EC) 数据
+--
+要监控擦除编码数据的修复并重试可能失败的任何请求，请执行以下操作：
+
+. 确定擦除编码数据修复的状态：
++
+** 选择 *Support* > *Tools* > *Metrics* 以查看当前作业的预计完成时间和完成百分比。然后，在 Grafana 部分中选择 *EC Overview*。查看 *Grid EC Job Estimated Time to Completion* 和 *Grid EC Job Percentage Completed* 仪表板。
+** 使用此命令可查看特定 `repair-data`操作的状态：
++
+`repair-data show-ec-repair-status --repair-id repair ID`
+
+** 使用此命令可列出所有维修：
++
+`repair-data show-ec-repair-status`
+
++
+输出列出了所有以前和当前正在运行的修复的信息，包括 `repair ID`。
+
+
+
+. 如果输出显示修复操作失败，请使用 `--repair-id`选项重试修复。
++
+此命令使用修复 ID 6949309319275667690 重试失败的节点修复：
+
++
+`repair-data start-ec-node-repair --repair-id 6949309319275667690`
+
++
+此命令使用修复 ID 6949309319275667690 重试失败的卷修复：
+
++
+`repair-data start-ec-volume-repair --repair-id 6949309319275667690`
+
+
+
+--
+====

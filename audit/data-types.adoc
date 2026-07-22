@@ -1,0 +1,61 @@
+---
+permalink: audit/data-types.html 
+sidebar: sidebar 
+keywords: storagegrid, audit, message, data, types, UI32, UI64, FC32, IPAD, CSTR, IPAD 
+summary: 不同的数据类型用于在审核消息中存储信息。 
+---
+= StorageGRID 审核消息中的数据类型
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+不同的数据类型用于在审核消息中存储信息。
+
+[cols="1a,4a"]
+|===
+| 类型 | 问题描述 
+
+
+ a| 
+UI32
+ a| 
+无符号长整数（32位）；它可以存储数字 0 到 4,294,967,295。
+
+
+
+ a| 
+UI64
+ a| 
+无符号双长整数（64 位）；它可以存储 0 到 18,446,744,073,709,551,615 的数字。
+
+
+
+ a| 
+FC32
+ a| 
+四字符常量；32 位无符号整数值，表示为四个 ASCII 字符，例如"ABCD"。
+
+
+
+ a| 
+IPAD
+ a| 
+用于 IP 地址。
+
+
+
+ a| 
+CSTR
+ a| 
+可变长度的 UTF-8 字符数组。字符可以使用以下约定进行转义：
+
+* 反斜杠为\\。
+* 回车符为 \r。
+* 双引号为\ʺ。
+* 换行符（新行）为 \n。
+* 字符可以替换为其十六进制等效字符（格式为 \xHH，其中 HH 是表示该字符的十六进制值）。
+
+
+|===

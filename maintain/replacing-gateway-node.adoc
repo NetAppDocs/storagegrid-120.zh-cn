@@ -1,0 +1,49 @@
+---
+permalink: maintain/replacing-gateway-node.html 
+sidebar: sidebar 
+keywords: storagegrid, recover, replace gateway node, replacing gateway node 
+summary: 您可以将故障网关节点替换为在同一物理或虚拟硬件上运行的网关节点，也可以将在 VMware 或 Linux 主机上运行的网关节点替换为服务设备上托管的网关节点。 
+---
+= 替换 StorageGRID 网关节点
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以将故障网关节点替换为在同一物理或虚拟硬件上运行的网关节点，也可以将在 VMware 或 Linux 主机上运行的网关节点替换为服务设备上托管的网关节点。
+
+您必须遵循的节点替换过程取决于替换节点将使用哪个平台。完成节点替换过程（适用于所有节点类型）后，该过程将引导您进行下一步的网关节点恢复。
+
+[cols="1a,2a"]
+|===
+| 更换平台 | 操作步骤 
+
+
+ a| 
+VMware
+ a| 
+link:all-node-types-replacing-vmware-node.html["替换 VMware 节点"]
+
+
+
+ a| 
+Linux
+ a| 
+link:all-node-types-replacing-linux-node.html["替换 Linux 节点"]
+
+
+
+ a| 
+服务设备
+ a| 
+link:replacing-failed-node-with-services-appliance.html["替换服务设备"]
+
+
+
+ a| 
+OpenStack
+ a| 
+NetApp 提供的用于 OpenStack 的虚拟机磁盘文件和脚本不再支持恢复操作。如果需要恢复在 OpenStack 部署中运行的节点，请下载适用于您的 Linux 操作系统的文件。然后，按照 link:all-node-types-replacing-linux-node.html["更换 Linux 节点"] 的程序进行操作。
+
+|===

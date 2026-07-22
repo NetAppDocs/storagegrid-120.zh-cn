@@ -1,0 +1,87 @@
+---
+permalink: admin/increasing-metadata-reserved-space-setting.html 
+sidebar: sidebar 
+keywords: increase metadata reserved space setting 
+summary: 如果存储节点满足 RAM 和可用空间的特定要求，或许可以增加元数据保留空间系统设置。 
+---
+= 增加 StorageGRID 中的 Metadata Reserved Space 设置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果存储节点满足 RAM 和可用空间的特定要求，或许可以增加元数据保留空间系统设置。
+
+.您需要什么
+* 您已使用 link:web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["Root 访问权限或其他网格配置权限"]。
+
+
+.关于此任务
+您或许可以手动将系统范围的元数据保留空间设置增加到 8 TB。
+
+仅当以下两个条件均为真时，才能增加系统范围元数据保留空间设置的值：
+
+* 您系统中任何站点的存储节点均具有 128 GB 或更多 RAM。
+* 系统中任何站点的存储节点在存储卷 0 上都有足够的可用空间。
+
+
+请注意，如果增加此设置，将同时减少所有存储节点存储卷 0 上对象存储的可用空间。为此，您可能希望根据预期的对象元数据要求，将元数据保留空间设置为小于 8 TB 的值。
+
+
+NOTE: 一般来说，最好使用较高的值，而不是较低的值。如果"元数据保留空间"设置太大，可以稍后将其减小。相反，如果稍后增加值，系统可能需要移动对象数据以释放空间。
+
+有关元数据保留空间设置如何影响特定存储节点上对象元数据存储的允许空间的详细说明，请参见 link:managing-object-metadata-storage.html["管理对象元数据存储"]。
+
+.步骤
+. 确定当前元数据保留空间设置。
++
+.. 选择*配置* > *系统* > *存储设置*。
+.. 请注意*元数据保留空间*的值。
+
+
+. 确保每个存储节点的存储卷 0 上有足够的可用空间来增加此值。
++
+.. 选择 *Nodes*。
+.. 选择网格中的第一个存储节点。
+.. 选择Storage选项卡。
+.. 在卷部分，找到 */var/local/rangedb/0* 条目。
+.. 确认可用值等于或大于要使用的新值与当前元数据保留空间值之间的差值。
++
+${post_edited_translations.segment}
+
+.. ${post_edited_translations.segment}
++
+*** 如果一个或多个 Storage Node 没有足够的可用空间，则无法增加 Metadata Reserved Space 值。请勿继续执行此步骤。
+*** ${post_edited_translations.segment}
+
+
+
+
+. ${post_edited_translations.segment}
++
+.. 选择 *Nodes*。
+.. 选择网格中的第一个存储节点。
+.. ${post_edited_translations.segment}
+.. 将光标悬停在内存使用情况图表上。确保 *总内存* 至少为 128 GB。
+.. ${post_edited_translations.segment}
++
+*** 如果一个或多个存储节点没有足够的可用总内存，则无法增加元数据保留空间值。请勿继续此过程。
+*** ${post_edited_translations.segment}
+
+
+
+
+. ${post_edited_translations.segment}
++
+.. 选择*配置* > *系统* > *存储设置*。
+.. ${post_edited_translations.segment}
+.. ${post_edited_translations.segment}
++
+${post_edited_translations.segment}
+
+.. 选择 *Save*。
+
+
+

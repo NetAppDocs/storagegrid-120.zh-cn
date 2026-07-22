@@ -1,0 +1,63 @@
+---
+permalink: ilm/guidelines-for-creating-storage-pools.html 
+sidebar: sidebar 
+keywords: storage pool guidelines 
+summary: 配置和使用存储池，通过跨多个站点分布数据来防止数据丢失。复制副本和纠删编码副本需要不同的存储池配置。 
+---
+= StorageGRID 中的存储池配置准则
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+配置和使用存储池，通过跨多个站点分布数据来防止数据丢失。复制副本和纠删编码副本需要不同的存储池配置。
+
+请参阅 link:using-multiple-storage-pools-for-cross-site-replication.html["使用复制和擦除编码启用站点丢失保护的示例"]。
+
+
+
+[[guidelines-for-all-storage-pools]]
+== 所有存储池的指南
+
+* 尽可能简化存储池配置。不要创建过多的存储池。
+* 创建具有尽可能多节点的存储池。每个存储池应包含两个或多个节点。如果节点变得不可用，则节点不足的存储池可能会导致 ILM 积压。
+* 避免创建或使用重叠的存储池（包含一个或多个相同的节点）。如果存储池重叠，则可能在同一节点上保存多个对象数据副本。
+* 一般来说，请勿使用 All Storage Nodes 存储池（StorageGRID 11.6 及更低版本）或 All Sites 站点。这些项目会自动更新，以包含您在扩展中添加的任何新站点，这可能不是您想要的行为。
+
+
+
+
+[[guidelines-for-storage-pools-used-for-replicated-copies]]
+== 用于复制副本的存储池指南
+
+* 对于使用 link:what-replication-is.html["replication"] 的站点丢失保护，请在 link:create-ilm-rule-define-placements.html["每个 ILM 规则的放置说明"] 中指定一个或多个特定于站点的存储池。
++
+在 StorageGRID 安装期间，系统会自动为每个站点创建一个存储池。
+
++
+为每个站点使用存储池可确保复制的对象副本准确放置在您期望的位置（例如，每个站点上的每个对象都有一个副本，以实现站点丢失保护）。
+
+* 如果在扩展中添加站点，请创建仅包含新站点的新存储池。然后，link:working-with-ilm-rules-and-ilm-policies.html#edit-an-ilm-rule["更新 ILM 规则"]以控制新站点上存储的对象。
+* 如果副本数量小于存储池数量，系统将分发副本以平衡池之间的磁盘使用情况。
+* 如果存储池重叠（包含相同的存储节点），则对象的所有副本可能仅保存在一个站点。您必须确保所选存储池不包含相同的存储节点。
+
+
+
+
+[[guidelines-for-storage-pools-used-for-erasure-coded-copies]]
+== 用于纠删码副本的存储池指南
+
+* 对于使用 link:what-erasure-coding-is.html["擦除编码"] 的站点丢失保护，请创建由至少三个站点组成的存储池。如果存储池仅包含两个站点，则无法将该存储池用于纠删编码。对于具有两个站点的存储池，没有可用的纠删编码方案。
+* 存储池中包含的存储节点和站点数决定哪些 link:what-erasure-coding-schemes-are.html["纠删码方案"] 可用。
+* 如果可能，存储池应包括超过所选纠删码方案所需的最小存储节点数。例如，如果您使用 6+3 纠删码方案，则必须至少有 9 个存储节点。但是，建议每个站点至少有一个额外的存储节点。
+* 尽可能均匀地在站点之间分配存储节点。例如，要支持 6+3 纠删码方案，请配置一个在三个站点至少包含三个存储节点的存储池。
+* 如果您有高吞吐量要求，且站点之间的网络延迟大于 100 毫秒，则不建议使用包含多个站点的存储池。随着延迟的增加，由于 TCP 网络吞吐量的降低，StorageGRID 可以创建、放置和检索对象片段的速率会急剧下降。
++
+吞吐量的降低会影响对象摄取和检索的最大可实现速率（当选择 Balanced 或 Strict 作为摄取行为时），或可能导致 ILM 队列积压（当选择 Dual commit 作为摄取行为时）。请参阅 link:what-ilm-rule-is.html#ilm-rule-ingest-behavior["ILM 规则载入行为"]。
+
++
+
+NOTE: 如果您的网格仅包括一个站点，则无法在纠删码配置文件中使用所有存储节点存储池（StorageGRID 11.6 及更早版本）或所有站点站点。此行为可防止在添加第二个站点时配置文件变得无效。
+
+

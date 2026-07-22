@@ -1,0 +1,119 @@
+---
+permalink: upgrade/how-your-system-is-affected-during-upgrade.html 
+sidebar: sidebar 
+keywords: upgrade, firmware, appliance, alert 
+summary: 了解升级期间 StorageGRID 系统将如何受到影响。 
+---
+= StorageGRID 升级对系统的影响
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+了解升级期间 StorageGRID 系统将如何受到影响。
+
+
+
+[[external-ssh-access-is-allowed-until-upgrade-completes]]
+== 在升级完成之前，允许外部 SSH 访问
+
+升级期间允许外部 SSH 访问。升级完成后，默认情况下会阻止外部 SSH 访问。升级后，您可以使用 *Grid Manager* > *Security Settings* 页面上的 *Block SSH* 选项卡link:../admin/manage-external-ssh-access.html["管理外部 SSH 访问"]。网格节点之间的 SSH 访问不受影响。
+
+
+
+[[storagegrid-upgrades-are-non-disruptive]]
+== StorageGRID 升级无中断
+
+StorageGRID 系统可以在整个升级过程中从客户端应用程序中提取和检索数据。如果您批准相同类型的所有节点进行升级（例如，存储节点），则这些节点将一次关闭一个，因此不会出现特定类型的所有网格节点或所有网格节点不可用的情况。
+
+为确保持续可用，请确保您的 ILM 策略包含指定存储每个对象的多个副本的规则。您还必须确保将所有外部 S3 客户端配置为向以下之一发送请求：
+
+* 高可用性 (HA) 组虚拟 IP 地址
+* 高可用性第三方负载均衡器
+* 每个客户端的多个网关节点
+* 每个客户端有多个存储节点
+
+
+
+
+[[client-applications-might-experience-short-term-disruptions]]
+== 客户端应用程序可能会遇到短期中断
+
+StorageGRID 系统可以在整个升级过程中从客户端应用程序中获取和检索数据；但是，如果升级需要在这些节点上重新启动服务，则可能暂时中断与单个网关节点或存储节点的客户端连接。升级过程完成并在单个节点上恢复服务后，将恢复连接。
+
+如果短时间内断开连接不可接受，您可能需要安排停机时间来应用升级。您可以使用选择性审批来安排特定节点的更新时间。
+
+
+NOTE: 您可以使用多个网关和高可用性 (HA) 组在升级过程中提供自动故障转移。请参阅 link:../admin/configure-high-availability-group.html["配置高可用性组"] 的说明。
+
+
+
+[[background-repairs-wont-run-on-grids-with-mixed-version-nodes]]
+== 后台修复不会在具有混合版本节点的网格上运行
+
+当网格包含混合版本节点时，升级期间不会运行后台修复。在升级完成之前，不会修复站点中断期间出现的任何不一致性。
+
+
+
+[[appliance-firmware-is-upgraded]]
+== 设备固件已升级
+
+在 StorageGRID 12.0 升级期间：
+
+* 所有 StorageGRID 设备节点都会自动升级到 StorageGRID Appliance Installer 固件版本 12.0。
+* SG6060 和 SGF6024 设备自动升级为 BIOS 固件版本 3B08.EX 和 BMC 固件版本 4.01.07。
+* SG100 和 SG1000 设备会自动升级到 BIOS 固件版本 3B13.EC 和 BMC 固件版本 4.75.07。
+* SGF6112、SG6160、SG110 和 SG1100 设备自动升级为 BIOS 固件版本 3A14.QD 和 BMC 固件版本 3.19.07。
+
+
+
+
+[[ilm-policies-are-handled-differently-according-to-their-status]]
+== ILM 策略根据其状态进行不同的处理
+
+* 升级后，活动策略将保持不变。
+* 升级时仅保留最近 10 个历史策略。
+* 如果存在建议的策略，该策略将在升级过程中被删除。
+
+
+
+
+[[alerts-might-be-triggered]]
+== 可能会触发警报
+
+当服务启动和停止以及 StorageGRID 系统作为混合版本环境运行时（某些网格节点运行早期版本，而其他网格节点已升级到更高版本），可能会触发警报。升级完成后可能会触发其他警报。
+
+例如，当服务停止时，您可能会看到 *Unable to communicate with node* 警报，或者当某些节点已升级到 StorageGRID 12.0 但其他节点仍在运行 StorageGRID 11.9 时，您可能会看到 *Cassandra communication error* 警报。通常，升级完成后这些警报将会清除。
+
+升级到 StorageGRID 12.0 期间，当存储节点停止时，可能会触发 *ILM placement unachievable* 警报。升级完成后，此警报可能会持续 1 天。
+
+升级完成后，您可以通过从 Grid Manager 仪表板中选择*最近解决的警报*或*当前警报*来查看任何与升级相关的警报。
+
+
+
+[[configuration-changes-are-restricted]]
+== 配置更改受限
+
+
+NOTE: 此列表特别适用于从 StorageGRID 11.9 升级到 StorageGRID 12.0 的情况。如果要升级到其他 StorageGRID 版本，请参阅该版本升级说明中的受限更改列表。
+
+直到*启用新功能*任务完成：
+
+* 不要进行任何网格配置更改。
+* 请勿启用或禁用任何新功能。
+* 不要更新 ILM 配置。否则，您可能会遇到不一致和意外的 ILM 行为。
+* 请勿应用修补程序或恢复网格节点。
++
+
+NOTE: 如果在升级过程中需要恢复节点，请与技术支持联系。
+
+* 升级到 StorageGRID 12.0 时，不应管理 HA 组、VLAN 接口或负载平衡器端点。
+* 在升级到 StorageGRID 12.0 完成之前，请勿删除任何 HA 组。其他 HA 组中的虚拟 IP 地址可能无法访问。
+
+
+直到*最终升级步骤*任务完成：
+
+* 请勿执行扩展过程。
+* 请勿执行停用过程。
+

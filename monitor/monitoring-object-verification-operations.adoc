@@ -1,0 +1,70 @@
+---
+permalink: monitor/monitoring-object-verification-operations.html 
+sidebar: sidebar 
+keywords: object, verification 
+summary: StorageGRID 系统可以验证存储节点上对象数据的完整性，检查损坏和丢失的对象。 
+---
+= 监控 StorageGRID 中的对象验证操作
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+StorageGRID 系统可以验证存储节点上对象数据的完整性，检查损坏和丢失的对象。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["维护或 root 访问权限"]。
+
+
+.关于此任务
+两个 link:../troubleshoot/verifying-object-integrity.html["验证流程"] 协同工作以确保数据完整性：
+
+* *后台验证*自动运行，持续检查对象数据的正确性。
++
+后台验证会自动并持续检查所有存储节点，以确定是否存在已复制和擦除编码的对象数据的损坏副本。如果发现问题，StorageGRID 系统会自动尝试从存储在系统其他位置的副本中替换损坏的对象数据。后台验证不对云存储池中的对象运行。
+
++
+
+NOTE: 如果系统检测到无法自动更正的损坏对象，则会触发*检测到未识别的损坏对象*警报。
+
+* *对象存在性检查*可以由用户触发，以更快地验证对象数据的存在性（尽管不是正确性）。
++
+对象存在性检查验证对象和纠删码片段的所有预期复制副本是否存在于存储节点上。对象存在性检查提供了一种验证存储设备完整性的方法，特别是在最近的硬件问题可能影响数据完整性的情况下。
+
+
+
+您应定期查看后台验证和对象存在性检查的结果。立即调查任何损坏或丢失的对象数据实例，以确定根本原因。
+
+.步骤
+. 请查看后台验证结果：
++
+.. 选择*节点* > *_存储节点_* > *对象*。
+.. 检查验证结果：
++
+*** 要检查复制对象数据验证，请查看验证部分中的属性。
++
+image:nodes_storage_node_object_verification.png["节点 > 存储节点 > 对象 > 验证"]
+
+*** 要检查擦除编码片段验证，请选择*_存储节点_* > *ILM*，然后查看擦除编码验证部分中的属性。
++
+image:nodes_storage_node_ilm_ec_verification.png["节点 > 存储节点 > ILM > EC 验证"]
+
++
+选择属性名称旁边的问号 image:icon_nms_question.png["问号"] 以显示帮助文本。
+
+
+
+
+
+. 查看对象存在性检查作业的结果：
++
+.. 选择*维护* > *对象存在性检查* > *作业历史记录*。
+.. 扫描检测到的缺失对象副本列。如果任何作业导致 100 个或更多对象副本丢失，并且已触发*可能丢失的对象*警报，请联系技术支持。
++
+image:oec_job_history.png["对象存在性检查作业历史记录"]
+
+
+
+

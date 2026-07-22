@@ -1,0 +1,29 @@
+---
+permalink: maintain/understanding-adc-service-quorum.html 
+sidebar: sidebar 
+keywords: storagegrid, recover, adc, adc quorum 
+summary: '如果在停用后剩余的管理域控制器(ADC)服务太少，则可能无法停用站点上的某些存储节点。' 
+---
+= 什么是 StorageGRID ADC 仲裁？
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果在停用后剩余的管理域控制器(ADC)服务太少，则可能无法停用站点上的某些存储节点。
+
+在某些存储节点上找到的 ADC 服务维护网格拓扑信息并向网格提供配置服务。StorageGRID 系统要求每个站点在任何时候都提供 ADC 服务的仲裁数量。
+
+如果删除节点将导致不再满足 ADC 仲裁，则无法停用存储节点。为了在停用期间满足 ADC 法定数量，每个站点必须至少有三个存储节点具有 ADC 服务。如果站点有三个以上具有 ADC 服务的存储节点，则这些节点中的大多数节点在停用后必须保持可用： `((0.5 * _Storage Nodes with ADC_) + 1)`
+
+
+CAUTION: 在包含基于软件的仅元数据节点的网格中停用存储节点时，请谨慎操作。如果取消配置为同时存储对象和元数据的所有节点，则存储对象的功能将从网格中删除。有关仅元数据存储节点的详细信息，请参见 link:../primer/what-storage-node-is.html#types-of-storage-nodes["存储节点类型"]。
+
+例如，假设一个站点当前包含六个带有 ADC 服务的存储节点，并且您要停用三个存储节点。由于 ADC 仲裁要求，您必须完成以下两个停用程序：
+
+* 在第一个停用过程中，您必须确保四个具有 ADC 服务的存储节点保持可用： `((0.5 * 6) + 1)`。这意味着您最初只能停用两个存储节点。
+* 在第二个停用过程中，您可以删除第三个存储节点，因为 ADC 仲裁现在只需要三个 ADC 服务即可保持可用： `((0.5 * 4) + 1)`。
+
+
+如果需要停用 Storage Node，可以通过link:../release-notes/changes-to-grid-management-api.html#new-private-endpoints-for-move-adc["将 ADC 服务移至同一站点上的其他存储节点"]或在link:../expand/index.html["扩展"]中添加新的 Storage Node 并指定其应具有 ADC 服务来继续满足 ADC 仲裁要求。然后，可以在不影响仲裁的情况下停用现有 Storage Node。

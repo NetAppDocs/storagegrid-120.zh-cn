@@ -1,0 +1,22 @@
+---
+permalink: tenant/managing-s3-access-keys.html 
+sidebar: sidebar 
+keywords: how to manage s3 access key 
+summary: S3 租户帐户的每个用户都必须有一个访问密钥，才能在 StorageGRID 系统中存储和检索对象。访问密钥由访问密钥 ID 和秘密访问密钥组成。 
+---
+= 管理 StorageGRID 中的 S3 访问密钥
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+S3 租户帐户的每个用户都必须有一个访问密钥，才能在 StorageGRID 系统中存储和检索对象。访问密钥由访问密钥 ID 和秘密访问密钥组成。
+
+S3 访问密钥可以按以下方式管理：
+
+* 拥有*管理您自己的 S3 凭据*权限的用户可以创建或删除自己的 S3 访问密钥。
+* 拥有 *Root access* 权限的用户可以管理 S3 根帐户和所有其他用户的访问密钥。根访问密钥为租户提供对所有存储桶和对象的完全访问权限，除非存储桶策略明确禁用。
+
+
+StorageGRID 支持签名版本 2 和签名版本 4 身份验证。除非存储桶策略明确启用，否则不允许跨账户访问。

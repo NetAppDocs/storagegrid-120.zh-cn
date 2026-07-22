@@ -1,0 +1,40 @@
+---
+permalink: audit/srem-object-store-remove.html 
+sidebar: sidebar 
+keywords: storagegrid, audit, message, SREM, Object Store Remove 
+summary: 当内容从永久存储中删除且无法再通过常规 API 访问时，将发出此消息。 
+---
+= StorageGRID 中对象存储删除的 SREM 审核消息
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当内容从永久存储中删除且无法再通过常规 API 访问时，将发出此消息。
+
+[cols="1a,1a,4a"]
+|===
+| 代码 | 字段 | 问题描述 
+
+
+ a| 
+CBID
+ a| 
+内容块标识符
+ a| 
+从永久存储中删除的内容块的唯一标识符。
+
+
+
+ a| 
+RSLT
+ a| 
+结果代码
+ a| 
+指示内容删除操作的结果。唯一定义的值是：
+
+SUCS：已从永久存储中删除内容
+
+|===
+此审核消息表示给定的内容块已从节点中删除，无法再直接请求。该消息可用于跟踪系统内已删除内容的流动。

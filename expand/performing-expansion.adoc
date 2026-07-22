@@ -1,0 +1,221 @@
+---
+permalink: expand/performing-expansion.html 
+sidebar: sidebar 
+keywords: expand, expansion procedure, StorageGRID 
+summary: 执行扩展时，新网格节点将添加到现有 StorageGRID 部署中。 
+---
+= 执行 StorageGRID 扩展
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+执行扩展时，新网格节点将添加到现有 StorageGRID 部署中。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有配置密码短语。
+* 您已部署此扩展中添加的所有网格节点。
+* 您有 link:../admin/admin-group-permissions.html["维护或 root 访问权限"]。
+* 如果要添加存储节点，则表示已确认在恢复过程中执行的所有数据修复操作均已完成。请参阅 link:../maintain/checking-data-repair-jobs.html["检查数据修复作业"]。
+* 如果要添加存储节点，并且要为这些节点分配自定义存储等级，则已有link:../ilm/creating-and-assigning-storage-grades.html["创建了自定义存储等级"]。您还具有 Root 访问权限，或者同时具有维护权限和 ILM 权限。
+* 如果您要添加新站点，则表示您已查看并更新了 ILM 规则。您必须确保在扩展完成之前不会将对象副本存储到新站点。例如，如果规则使用默认存储池（*All Storage Nodes*），则必须 link:../ilm/creating-storage-pool.html["创建一个新存储池"] 仅包含现有存储节点，并 link:../ilm/working-with-ilm-rules-and-ilm-policies.html["更新 ILM 规则"] 以及 ILM 策略才能使用该新存储池。否则，一旦该站点的第一个节点处于活动状态，对象将被复制到新站点。
+
+
+.关于此任务
+执行扩展包括以下主要用户任务：
+
+. 配置扩展。
+. 开始扩展。
+. 下载新的恢复包文件。
+. 监控扩展步骤和阶段，直到安装和配置所有新节点并启动所有服务。
++
+
+CAUTION: 某些扩展步骤和阶段在大型网格上运行可能需要大量时间。例如，如果 Cassandra 数据库为空，则将 Cassandra 流式传输到新存储节点可能只需几分钟。但是，如果 Cassandra 数据库包含大量对象元数据，则此阶段可能需要几个小时或更长时间。在"扩展 Cassandra 集群"或"启动 Cassandra 和流式传输数据"阶段，请勿重新启动任何存储节点。
+
+
+
+.步骤
+. 选择*维护* > *任务* > *扩展*。
++
+此时将显示网格扩展页面。"挂起节点"部分列出了已准备好添加的节点。
+
++
+image:grid_expansion_page.png["显示网格扩展页面的屏幕截图"]
+
+. ${post_edited_translations.segment}
++
+${post_edited_translations.segment}
+
+. ${post_edited_translations.segment}
++
+** ${post_edited_translations.segment}
+** 如果要将一个或多个节点添加到现有站点，请选择*Existing*。
+
+
+. 选择 *Save*。
+. ${post_edited_translations.segment}
++
+${post_edited_translations.segment}
+
++
+image:grid_node_details.png["${post_edited_translations.segment}"]
+
++
+
+NOTE: ${post_edited_translations.segment}
+
+. ${post_edited_translations.segment}
++
+.. ${post_edited_translations.segment}
+.. ${post_edited_translations.segment}
++
+此时将显示网格节点配置表单。
+
+.. 根据需要，修改常规设置：
++
+[cols="1a,2a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+站点
+ a| 
+网格节点将要关联的站点的名称。如果您要添加多个节点，请务必为每个节点选择正确的站点。如果您要添加新站点，则所有节点都将添加到该新站点。
+
+
+
+ a| 
+名称
+ a| 
+节点的系统名称。系统名称是 StorageGRID 内部操作所必需的，且无法更改。
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+*** *数据和元数据*（"组合"）：对象数据和元数据存储节点
+*** ${post_edited_translations.segment}
+*** ${post_edited_translations.segment}
+
+
+
+
+ a| 
+NTP 角色
+ a| 
+网格节点的网络时间协议(NTP)角色：
+
+*** 选择 *Automatic*（默认）以自动将 NTP 角色分配给该节点。主角色将分配给管理节点、具有 ADC 服务的存储节点、网关节点以及具有非静态 IP 地址的任何网格节点。客户端角色将分配给所有其他网格节点。
+*** 选择 *Primary* 以手动向节点分配主 NTP 角色。每个站点应至少有两个节点具有主角色，以便为外部时间源提供冗余系统访问。
+*** ${post_edited_translations.segment}
+
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+此存储节点是否将运行管理域控制器 (ADC) 服务。ADC 服务用于跟踪网格服务的位置和可用性。每个站点上至少有三个存储节点必须包含 ADC 服务。
+
+*** 如果您要替换的存储节点包含 ADC 服务，请选择 *Yes*。因为如果保留的 ADC 服务过少，您将无法退役存储节点，所以此设置可确保在删除旧服务之前，新的 ADC 服务已可用。
+*** 您可以 link:../maintain/move-adc-service.html["${post_edited_translations.segment}"] 以确保满足 ADC 服务仲裁。
+*** 选择*自动*，让系统确定此节点是否需要 ADC 服务。
+
+
+了解有关 link:../maintain/understanding-adc-service-quorum.html["${post_edited_translations.segment}"] 的信息。
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+${post_edited_translations.segment}
+
+${post_edited_translations.segment}
+
+|===
+.. ${post_edited_translations.segment}
++
+*** *IPv4 地址 (CIDR)*：网络接口的 CIDR 网络地址。例如：172.16.10.100/24
++
+
+NOTE: 如果您在批准节点时发现节点在网格网络上具有重复的 IP 地址，则必须取消扩展，重新部署具有非重复 IP 的虚拟机或设备，然后重新启动扩展。
+
+*** *Gateway*：网格节点的默认网关。例如：172.16.10.1
+*** *子网（CIDR）*：管理网络的一个或多个子网。
+
+
+.. 选择 *Save*。
++
+已批准的网格节点将移至"已批准的节点"列表。
+
++
+*** 要修改已批准网格节点的属性，请选择其单选按钮，然后选择*编辑*。
+*** 要将已批准的网格节点移回"待定节点"列表，请选择其单选按钮，然后选择*Reset*。
+*** 要永久删除已批准的网格节点，请关闭该节点的电源。然后，选择其单选按钮，并选择 *Remove*。
+
+
+.. 对要审批的每个挂起的网格节点重复这些步骤。
++
+
+NOTE: 如果可能，您应该批准所有待处理的网格注释并执行单次扩展。如果您执行多个小型扩展，则需要更多时间。
+
+
+
+. 批准所有网格节点后，输入*配置密码*，然后选择*扩展*。
++
+几分钟后，此页面将更新以显示扩展过程的状态。当影响单个网格节点的任务正在进行时，"网格节点状态"部分将列出每个网格节点的当前状态。
+
++
+
+NOTE: 在新设备的"安装网格节点"步骤中，StorageGRID Appliance Installer 显示安装从阶段 3 移动到阶段 4，完成安装。阶段 4 完成后，控制器将重新启动。
+
++
+
+NOTE: 站点扩展包括为新站点配置 Cassandra 的额外任务。
+
+. *下载恢复包*链接出现后，请立即下载恢复包文件。
++
+在对 StorageGRID 系统进行网格拓扑更改后，您必须尽快下载恢复包文件的更新副本。恢复包文件允许您在发生故障时恢复系统。
+
++
+.. ${post_edited_translations.segment}
+.. ${post_edited_translations.segment}
+.. 下载完成后，打开  `.zip` 文件并确认您可以访问其中的内容，包括  `Passwords.txt` 文件。
+.. 将下载的恢复包文件 (`.zip`) 复制到两个安全、可靠且独立的位置。
++
+
+CAUTION: 必须保护恢复包文件，因为它包含可用于从 StorageGRID 系统获取数据的加密密钥和密码。
+
+
+
+. 如果要将存储节点添加到现有站点或添加站点，请监视在新网格节点上启动服务时发生的 Cassandra 阶段。
++
+
+CAUTION: 在"扩展 Cassandra 集群"或"启动 Cassandra 和流数据"阶段期间，请勿重新启动任何存储节点。对于每个新的存储节点，这些阶段可能需要数小时才能完成，特别是在现有存储节点包含大量对象元数据的情况下。
+
++
+[role="tabbed-block"]
+====
+.添加存储节点
+--
+如果要将存储节点添加到现有站点，请查看"启动 Cassandra 和流数据"状态消息中显示的百分比。
+
+此百分比根据可用的 Cassandra 数据总量和已写入新节点的数据量来估计 Cassandra 流式传输操作的完成程度。
+
+--
+.${post_edited_translations.segment}
+--
+如果您要添加新站点，请使用  `nodetool status` 监控 Cassandra 流式传输的进度，并查看在“正在扩展 Cassandra 集群”阶段已将多少元数据复制到新站点。新站点上的总数据负载应在当前站点总负载的 20% 左右。
+
+--
+====
+. 继续监控扩展，直到所有任务完成并且 *Configure Expansion* 按钮重新出现。
+
+
+.完成后
+根据添加的网格节点类型，执行其他集成和配置步骤。请参阅 link:configuring-expanded-storagegrid-system.html["扩展后的配置步骤"]。

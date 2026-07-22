@@ -1,0 +1,29 @@
+---
+section: upgrade
+title: 升级 StorageGRID 软件
+entries:
+- title: 升级之前
+  pdf-filename: 升级 StorageGRID 软件
+  url: "/upgrade/index.html"
+- title: 规划和准备升级
+  entries:
+  - title: 估计完成升级的时间
+    url: "/upgrade/estimating-time-to-complete-upgrade.html"
+  - title: 升级过程中对系统的影响
+    url: "/upgrade/how-your-system-is-affected-during-upgrade.html"
+  - title: 验证已安装的 StorageGRID 版本
+    url: "/upgrade/verifying-installed-version-of-storagegrid.html"
+  - title: 获取所需材料
+    url: "/upgrade/obtaining-required-materials-for-software-upgrade.html"
+  - title: 检查系统
+    url: "/upgrade/checking-systems-condition-before-upgrading-software.html"
+- title: 升级软件
+  entries:
+  - title: 升级快速入门
+    url: "/upgrade/upgrade-workflow.html"
+  - title: Linux：下载并安装 RPM 或 DEB 软件包
+    url: "/upgrade/linux-installing-rpm-or-deb-package-on-all-hosts.html"
+  - title: 执行升级
+    url: "/upgrade/performing-upgrade.html"
+- title: 升级问题疑难解答
+  url: "/upgrade/troubleshooting-upgrade-issues.html"

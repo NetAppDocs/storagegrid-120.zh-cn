@@ -1,0 +1,48 @@
+---
+permalink: maintain/downloading-hotfix-file.html 
+sidebar: sidebar 
+keywords: storagegrid, hotfix, download 
+summary: 必须先下载修补程序文件，然后才能应用修补程序。 
+---
+= 下载 StorageGRID 修补程序文件
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+必须先下载修补程序文件，然后才能应用修补程序。
+
+.步骤
+. 转至 https://mysupport.netapp.com/site/products/all/details/storagegrid/downloads-tab["NetApp 下载：StorageGRID"^]。
+. 选择*可用软件*下的向下箭头可查看可供下载的修补程序列表。
++
+
+NOTE: 修补程序文件版本的格式为：11.4__.x.y__。
+
+. 查看更新中包含的更改。
++
+
+NOTE: 如果只是link:configuring-replacement-primary-admin-node.html["恢复了主管理节点"]并且需要应用修补程序，请选择安装在其他网格节点上的相同修补程序版本。
+
++
+.. 选择要下载的修补程序版本，然后选择 *Go*。
+.. 使用您 NetApp 帐户的用户名和密码登录。
+.. 阅读并接受最终用户许可协议。
++
+此时将显示所选版本的下载页面。
+
+.. 下载修补程序 `readme.txt`文件以查看修补程序中包含的更改摘要。
+
+
+. 选择修补程序的下载按钮，然后保存文件。
++
+
+NOTE: 请勿更改此文件的名称。
+
++
+
+NOTE: 如果使用的是 macOS 设备，修补程序文件可能会自动保存为 `.txt`文件。如果是，则必须重命名该文件，去掉 `.txt`扩展名。
+
+. 选择下载位置，然后选择*保存*。
+

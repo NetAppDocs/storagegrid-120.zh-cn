@@ -1,0 +1,46 @@
+---
+permalink: ilm/editing-storage-pool.html 
+sidebar: sidebar 
+keywords: edit storage pool 
+summary: 您可以编辑存储池以更改其名称或更新站点和存储等级。 
+---
+= 在 StorageGRID 中编辑存储池
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以编辑存储池以更改其名称或更新站点和存储等级。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["特定访问权限"]。
+* 您已审阅 link:guidelines-for-creating-storage-pools.html["创建存储池的准则"]。
+* 如果您计划编辑活动 ILM 策略中的规则所使用的存储池，则已考虑您的更改将如何影响对象数据放置。
+
+
+.关于此任务
+如果要将新站点或存储级别添加到活动 ILM 策略中使用的存储池，请注意，新站点或存储级别中的存储节点不会自动使用。要强制 StorageGRID 使用新站点或存储级别，您必须在保存编辑的存储池后激活新的 ILM 策略。
+
+.步骤
+. 选择 *ILM* > *存储池*。
+. 选中要编辑的存储池的复选框。
++
+您无法编辑所有存储节点存储池（StorageGRID 11.6 及更早版本）。
+
+. 选择*编辑*。
+. 根据需要更改存储池名称。
+. 根据需要，选择其他站点和存储层级。
++
+如果存储池用于纠删码配置文件，并且更改会导致纠删码方案无效，则无法更改站点或存储等级。例如，如果纠删码配置文件中使用的存储池当前仅包含一个站点的存储等级，则无法使用两个站点的存储等级，因为更改会使纠删码方案无效。
+
++
+
+CAUTION: 在现有存储池中添加或删除站点不会移动任何现有的擦除编码数据。如果要从站点移动现有数据，则必须创建新的存储池和 EC 配置文件以重新编码数据。
+
+. 选择 *Save*。
+
+
+.完成后
+如果将新站点或存储级别添加到活动 ILM 策略中使用的存储池，请激活新的 ILM 策略，以强制 StorageGRID 使用新站点或存储级别。例如，克隆现有的 ILM 策略，然后激活克隆。请参阅 link:working-with-ilm-rules-and-ilm-policies.html["使用ILM规则和ILM策略"]。

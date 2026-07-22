@@ -1,0 +1,219 @@
+---
+permalink: tenant/considerations-for-platform-services.html 
+sidebar: sidebar 
+keywords: considerations for using platform services 
+summary: 在实施平台服务之前，请查看使用这些服务的概述和注意事项。 
+---
+= 了解 StorageGRID 的平台服务
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在实施平台服务之前，请查看使用这些服务的概述和注意事项。
+
+有关 S3 的信息，请参见 link:../s3/index.html["使用 S3 REST API"]。
+
+
+
+[[overview-of-platform-services]]
+== 平台服务概述
+
+StorageGRID 平台服务允许您将 S3 对象和对象元数据的事件通知和副本发送到外部目标，从而帮助您实施混合云策略。
+
+由于平台服务的目标位置通常位于 StorageGRID 部署的外部，因此平台服务为您提供了使用外部存储资源、通知服务以及数据搜索或分析服务所带来的强大功能和灵活性。
+
+可以为单个 S3 存储桶配置任何平台服务组合。例如，您可以在 StorageGRID S3 存储桶上同时配置 link:../tenant/understanding-cloudmirror-replication-service.html["CloudMirror 服务"] 和 link:../tenant/understanding-notifications-for-buckets.html["通知"]，以便将特定对象镜像到 Amazon Simple Storage Service (S3)，同时向第三方监控应用程序发送有关此类对象的通知，以帮助您跟踪 AWS 费用。
+
+
+TIP: 必须由 StorageGRID 管理员使用 Grid Manager 或网格管理 API 为每个租户帐户启用平台服务。
+
+
+
+[[how-platform-services-are-configured]]
+== 平台服务的配置方式
+
+平台服务与使用 link:configuring-platform-services-endpoints.html["租户管理器"] 或 link:understanding-tenant-management-api.html["租户管理 API"] 配置的外部端点进行通信。每个端点代表一个外部目标，例如 StorageGRID S3 存储桶、Amazon Web Services 存储桶、Amazon SNS 主题、webhook 端点或本地、AWS 或其他地方托管的 Elasticsearch 集群。
+
+创建外部端点后，您可以通过将 XML 配置添加到存储桶来为存储桶启用平台服务。XML 配置用于标识存储桶应操作的对象、存储桶应执行的操作以及存储桶应用于该服务的端点。
+
+必须为要配置的每个平台服务添加单独的 XML 配置。例如：
+
+* 如果要将密钥以  `/images` 开头的所有对象复制到 Amazon S3 存储桶，则必须将复制配置添加到源存储桶。
+* 如果还希望在这些对象存储到存储桶时发送通知，则必须添加通知配置。
+* 如果要为这些对象的元数据编制索引，则必须添加用于实现搜索集成的元数据通知配置。
+
+
+配置XML的格式由用于实现StorageGRID平台服务的S3 REST API控制：
+
+[cols="1a,2a,1a"]
+|===
+| 平台服务 | S3 REST API | 请参阅 
+
+
+ a| 
+CloudMirror 复制
+ a| 
+* GetBucketReplication
+* PutBucketReplication
+
+ a| 
+* link:configuring-cloudmirror-replication.html["CloudMirror 复制"]
+* link:../s3/operations-on-buckets.html["${post_edited_translations.segment}"]
+
+
+
+
+ a| 
+通知
+ a| 
+* GetBucketNotificationConfiguration
+* PutBucketNotificationConfiguration
+
+ a| 
+* link:configuring-event-notifications.html["通知"]
+* link:../s3/operations-on-buckets.html["${post_edited_translations.segment}"]
+
+
+
+
+ a| 
+搜索集成
+ a| 
+* 获取 Bucket 元数据通知配置
+* PUT Bucket 元数据通知配置
+
+ a| 
+* link:configuring-search-integration-service.html["搜索集成"]
+* link:../s3/custom-operations-on-buckets.html["StorageGRID 自定义操作"]
+
+
+|===
+
+
+[[considerations-for-using-platform-services]]
+== 使用平台服务的注意事项
+
+[cols="1a,3a"]
+|===
+| 注意事项 | 详细信息 
+
+
+ a| 
+目标端点监控
+ a| 
+您必须监控每个目标端点的可用性。如果与目标端点的连接长时间断开，并且存在大量积压请求，则向 StorageGRID 发出的其他客户端请求（例如 PUT 请求）将失败。当端点可访问时，必须重试这些失败的请求。
+
+
+
+ a| 
+目标端点限制
+ a| 
+如果发送 S3 请求的速率超过了目标端点接收请求的速率，StorageGRID 软件可能会限制该存储桶的传入请求。只有当存在等待发送到目标端点的积压请求时，才会发生限制。
+
+唯一可见的影响是传入的 S3 请求需要更长的时间才能执行。如果您开始检测到性能明显变慢，则应降低摄入速率或使用容量更高的端点。如果积压的请求继续增加，客户端 S3 操作（例如 PUT 请求）最终将失败。
+
+CloudMirror 请求更有可能受到目标端点性能的影响，因为这些请求通常涉及比搜索集成或事件通知请求更多的数据传输。
+
+
+
+ a| 
+排序保证
+ a| 
+StorageGRID 保证站点内对象的操作顺序。只要针对对象的所有操作都在同一站点内，最终对象状态（用于复制）将始终等于 StorageGRID 中的状态。
+
+当跨 StorageGRID 站点进行操作时，StorageGRID 会尽力对请求进行排序。例如，如果最初将对象写入站点 A，然后在站点 B 覆盖同一对象，则 CloudMirror 复制到目标存储桶的最终对象不能保证是较新的对象。
+
+
+
+ a| 
+ILM 驱动的对象删除
+ a| 
+为了匹配 AWS CRR 和 Amazon Simple Notification Service 的删除行为，当源存储桶中的对象因 StorageGRID ILM 规则而被删除时，不会发送 CloudMirror 和事件通知请求。例如，如果 ILM 规则在 14 天后删除对象，则不会发送任何 CloudMirror 或事件通知请求。
+
+相比之下，当由于 ILM 而删除对象时，会发送搜索集成请求。
+
+
+
+ a| 
+使用 Kafka 端点
+ a| 
+对于 Kafka 端点，不支持 Mutual TLS。因此，如果您在 Kafka 代理配置中将 `ssl.client.auth`设置为 `required`，则可能会导致 Kafka 端点配置问题。
+
+Kafka 端点的身份验证使用以下身份验证类型。这些类型与用于验证其他端点（例如 Amazon SNS）的类型不同，需要用户名和密码凭据。
+
+* SASL/PLAIN
+* SASL/SCRAM-SHA-256
+* SASL/SCRAM-SHA-512
+
+
+*注意：* 配置的存储代理设置不适用于 Kafka 平台服务端点。
+
+|===
+
+
+[[considerations-for-using-cloudmirror-replication-service]]
+== 使用 CloudMirror 复制服务的注意事项
+
+[cols="1a,3a"]
+|===
+| 注意事项 | 详细信息 
+
+
+ a| 
+复制状态
+ a| 
+StorageGRID 不支持 `x-amz-replication-status`标头。
+
+
+
+ a| 
+对象大小
+ a| 
+CloudMirror 复制服务可以复制到目标存储桶的对象的最大大小为 5 TiB，与最大_支持的_对象大小相同。
+
+*注意*：单次 PutObject 操作的最大_推荐_大小为 5 GiB（5,368,709,120 字节）。如果您的对象大于 5 GiB，请改用分段上传。
+
+
+
+ a| 
+存储区版本控制和版本 ID
+ a| 
+如果 StorageGRID 中的源 S3 存储桶已启用版本控制，则还应为目标存储桶启用版本控制。
+
+使用版本控制时，请注意，由于 S3 协议的限制，目标存储桶中对象版本的排序是尽力而为的，CloudMirror 服务不对此提供保证。
+
+*注意*：StorageGRID 中源存储桶的版本 ID 与目标存储桶的版本 ID 无关。
+
+
+
+ a| 
+对象版本标记
+ a| 
+由于 S3 协议的限制，CloudMirror 服务不会复制提供版本 ID 的任何 PutObjectTagging 或 DeleteObjectTagging 请求。由于源和目标的版本 ID 不相关，因此无法确保对特定版本 ID 的标记更新会被复制。
+
+相比之下，CloudMirror 服务会复制未指定版本 ID 的 PutObjectTagging 请求或 DeleteObjectTagging 请求。这些请求更新最新密钥的标签（如果存储桶已启用版本控制，则为最新版本）。带有标记的正常摄取（而非标记更新）也会被复制。
+
+
+
+ a| 
+多部分上传和 `ETag`值
+ a| 
+当镜像使用分段上传方式上传的对象时，CloudMirror 服务不会保留各个分段。因此，镜像对象的 `ETag`值将与原始对象的 `ETag`值不同。
+
+
+
+ a| 
+使用 SSE-C 加密的对象（使用客户提供的密钥进行服务器端加密）
+ a| 
+CloudMirror 服务不支持使用 SSE-C 加密的对象。如果尝试将对象接收到源存储桶以进行 CloudMirror 复制，并且请求包含 SSE-C 请求标头，则操作将失败。
+
+
+
+ a| 
+已启用 S3 对象锁定的存储桶
+ a| 
+启用了 S3 Object Lock 的源存储桶或目标存储桶不支持复制。
+
+|===

@@ -1,0 +1,49 @@
+---
+permalink: monitor/disabling-alert-rules.html 
+sidebar: sidebar 
+keywords: how to disable alert rules, how to remove a custom alert rule 
+summary: 您可以更改默认或自定义警报规则的启用/禁用状态。 
+---
+= 在 StorageGRID 中禁用警报规则
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以更改默认或自定义警报规则的启用/禁用状态。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["管理警报或 Root 访问权限"]。
+
+
+.关于此任务
+禁用警报规则时，不会计算其表达式，也不会触发警报。
+
+
+CAUTION: 一般来说，不建议禁用默认警报规则。如果警报规则被禁用，您可能无法检测到潜在问题，直到该问题阻止关键操作完成。
+
+.步骤
+. 选择*Alerts* > *Rules*。
++
+此时将显示警报规则页面。
+
+. 选择要禁用或启用的警报规则的单选按钮。
+. 选择*编辑规则*。
++
+此时将显示"编辑规则"对话框。
+
+. 选中或清除*已启用*复选框，以确定当前是否已启用此警报规则。
++
+如果已禁用警报规则，则不会计算其表达式，也不会触发警报。
+
++
+
+NOTE: 如果禁用当前警报的警报规则，则必须等待几分钟，该警报才不再显示为活动警报。
+
+. 选择 *Save*。
++
+*已禁用*显示在*状态*列中。
+
+

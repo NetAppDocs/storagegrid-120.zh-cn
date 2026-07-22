@@ -1,0 +1,89 @@
+---
+permalink: admin/manage-link-costs.html 
+sidebar: sidebar 
+keywords: link cost, site latency, manage link costs, prioritize sites 
+summary: 链接成本允许您在存在两个或多个数据中心站点时优先考虑哪个数据中心站点提供所请求的服务。您可以调整链接成本以反映站点之间的延迟。 
+---
+= 在 StorageGRID 中管理链路成本
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+链接成本允许您在存在两个或多个数据中心站点时优先考虑哪个数据中心站点提供所请求的服务。您可以调整链接成本以反映站点之间的延迟。
+
+
+
+[[what-are-link-costs]]
+== 什么是链路开销？
+
+* 链接成本用于优先考虑使用哪个对象副本来完成对象检索。
+* 链接成本由 Grid Management API 和 Tenant Management API 用于确定要使用的内部 StorageGRID 服务。
+* 链路开销由管理节点和网关节点上的负载平衡器服务用于引导客户端连接。请参阅 link:../admin/managing-load-balancing.html["负载平衡注意事项"]。
+
+
+该图显示了在站点之间配置链接成本的三个站点网格：
+
+image:link_costs.gif["数据中心之间链路成本的概念图"]
+
+* 管理节点和网关节点上的负载平衡器服务将客户端连接均匀分布到同一数据中心站点上的所有存储节点以及链路开销为 0 的任何数据中心站点。
++
+在本示例中，数据中心站点 1 (DC1) 的网关节点将客户端连接均匀分布到 DC1 的存储节点和 DC2 的存储节点。DC3 的网关节点仅将客户端连接发送到 DC3 的存储节点。
+
+* 当检索作为多个复制副本存在的对象时，StorageGRID 会检索链路成本最低的数据中心的副本。
++
+在该示例中，如果 DC2 处的客户端应用程序检索存储在 DC1 和 DC3 处的对象，则将从 DC1 检索该对象，因为从 DC1 到 DC2 的链路开销为 0，低于从 DC3 到 DC2 的链路开销 (25)。
+
+
+
+链路成本是任意相对数，没有特定的计量单位。例如，链路成本 50 不如链路成本 25 优先使用。下表显示了常用的链路成本。
+
+[cols="1a,1a,2a"]
+|===
+| 链路 | 链路成本 | 说明 
+
+
+ a| 
+物理数据中心站点之间
+ a| 
+25 (默认)
+ a| 
+通过 WAN 链路连接的数据中心。
+
+
+
+ a| 
+位于同一物理位置的逻辑数据中心站点之间
+ a| 
+0
+ a| 
+位于同一物理建筑物或园区内、通过 LAN 连接的逻辑数据中心。
+
+|===
+
+
+[[update-link-costs]]
+== 更新链接费用
+
+您可以更新数据中心站点之间的链接成本，以反映站点之间的延迟。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["其他网格配置权限"]。
+
+
+.步骤
+. 选择*支持* > *其他* > *链接费用*。
++
+image:configuring_link_costs.png["链路成本"]
+
+. 在*链接源*下选择一个站点，并在*链接目的地*下输入一个介于 0 到 100 之间的成本值。
++
+如果来源与目的地相同，则无法更改链接成本。
+
++
+要取消更改，请选择image:nms_revert.gif["${post_edited_translations.segment}"]*Revert*。
+
+. 选择*应用更改*。
+

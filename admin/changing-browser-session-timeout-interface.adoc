@@ -1,0 +1,70 @@
+---
+permalink: admin/changing-browser-session-timeout-interface.html 
+sidebar: sidebar 
+keywords: security, browser inactivity timeout, management API stack track 
+summary: 通过界面安全设置，可以控制用户在超过指定时间内处于非活动状态时是否自动注销，以及 API 错误响应中是否包含堆栈跟踪。 
+---
+= 更改 StorageGRID 接口安全设置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过界面安全设置，可以控制用户在超过指定时间内处于非活动状态时是否自动注销，以及 API 错误响应中是否包含堆栈跟踪。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["root 访问权限"]。
+
+
+.关于此任务
+*安全设置*页面包括*浏览器非活动超时*和*管理 API 堆栈跟踪*设置。
+
+浏览器非活动超时:: 指示在用户注销之前，用户的浏览器可以处于非活动状态的时间长度。默认时间为 15 分钟。
++
+--
+浏览器非活动超时也受以下因素控制：
+
+* 一个单独的、不可配置的 StorageGRID 计时器，用于系统安全。每个用户的身份验证令牌在用户登录后 16 小时过期。当用户的身份验证过期时，即使浏览器非活动超时已禁用或尚未达到浏览器超时的值，该用户也会自动注销。要续订令牌，用户必须重新登录。
+* 身份提供程序的超时设置，假设已为 StorageGRID 启用单点登录 (SSO)。
++
+如果启用了 SSO 并且用户的浏览器超时，则用户必须重新输入其 SSO 凭据才能再次访问 StorageGRID。请参阅 link:how-sso-works.html["SSO 的工作原理"]。
+
+
+
+--
+管理 API 堆栈跟踪:: 控制是否在 Grid Manager 和 Tenant Manager API 错误响应中返回堆栈跟踪。
++
+--
+此选项默认处于禁用状态，但您可能希望为测试环境启用此功能。一般来说，您应在生产环境中禁用堆栈跟踪，以避免在发生 API 错误时泄露内部软件详细信息。
+
+--
+
+
+.步骤
+. 选择*配置* > *安全* > *安全设置*。
+. 选择*界面*选项卡。
+. 要更改浏览器非活动超时的设置，请执行以下操作：
++
+.. 展开折叠面板。
+.. 要更改超时时间段，请指定一个介于 60 秒和 7 天之间的值。默认超时时间为 15 分钟。
+.. 要禁用此功能，请取消选中该复选框。
+.. 选择 *Save*。
++
+此新设置不会影响当前登录的用户。要使新的超时设置生效，用户必须重新登录或刷新浏览器。
+
+
+
+. 要更改 Management API 堆栈跟踪的设置，请执行以下操作：
++
+.. 展开折叠面板。
+.. 选中复选框以在 Grid Manager 和 Tenant Manager API 错误响应中返回堆栈跟踪。
++
+
+CAUTION: 在生产环境中禁用堆栈跟踪，以避免在发生 API 错误时泄露内部软件详细信息。
+
+.. 选择 *Save*。
+
+
+

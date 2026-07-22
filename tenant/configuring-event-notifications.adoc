@@ -1,0 +1,135 @@
+---
+permalink: tenant/configuring-event-notifications.html 
+sidebar: sidebar 
+keywords: how to configure event notifications, bucket notification 
+summary: 您可以通过创建通知配置 XML 并使用 Tenant Manager 将 XML 应用于存储桶来启用存储桶的通知。 
+---
+= 在 StorageGRID 中配置事件通知
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过创建通知配置 XML 并使用 Tenant Manager 将 XML 应用于存储桶来启用存储桶的通知。
+
+.开始之前
+* StorageGRID 管理员已为您的租户帐户启用平台服务。
+* 您已创建一个存储桶作为通知源。
+* 您打算用作事件通知目标的端点已经存在，并且您有它的 URN。
+* 您属于具有 link:tenant-management-permissions.html["管理所有存储桶或根访问权限"] 的用户组。使用租户管理器配置存储桶时，这些权限将覆盖组或存储桶策略中的权限设置。
+
+
+.关于此任务
+通过将通知配置 XML 与源存储桶关联来配置事件通知。通知配置 XML 遵循用于配置存储桶通知的 S3 约定，将目标 Amazon SNS 主题、Kafka 主题或 webhook 端点指定为端点的 URN。
+
+有关事件通知及其配置方法的一般信息，请参见 https://docs.aws.amazon.com/s3/["Amazon 文档"^]。有关 StorageGRID 实现 S3 存储桶通知配置 API 的信息，请参见link:../s3/index.html["实现 S3 客户端应用程序的说明"]。
+
+为存储桶配置事件通知时，请注意以下要求和特征：
+
+* 创建和应用有效的通知配置 XML 时，它必须为每个目标使用事件通知端点的 URN。
+* 虽然可以在启用 S3 Object Lock 的存储桶上配置事件通知，但通知消息中不会包含对象的 S3 Object Lock 元数据（包括保留截止日期和法律冻结状态）。
+* 配置事件通知后，每当源存储桶中的对象发生指定事件时，都会生成一个通知，并将其发送到用作目标的 Amazon SNS 主题、Kafka 主题或 webhook 终结点。
+* 如果为包含对象的存储桶启用事件通知，则仅针对保存通知配置后执行的操作发送通知。
+
+
+.步骤
+. 为源存储桶启用通知：
++
+** 使用文本编辑器创建启用事件通知所需的通知配置 XML，如 S3 通知 API 中所指定。
+** 配置 XML 时，请使用事件通知端点的 URN 作为目标主题。
++
+[listing]
+----
+<NotificationConfiguration>
+  <TopicConfiguration>
+     <Id>Image-created</Id>
+     <Filter>
+        <S3Key>
+          <FilterRule>
+            <Name>prefix</Name>
+            <Value>images/</Value>
+          </FilterRule>
+        </S3Key>
+    </Filter>
+    <Topic>arn:aws:sns:us-east-1:050340950352:sgws-topic</Topic>
+    <Event>s3:ObjectCreated:*</Event>
+   </TopicConfiguration>
+ </NotificationConfiguration>
+----
+
+
+. 在租户管理器中，选择 *STORAGE (S3)* > *Buckets*。
+. 选择源存储桶的名称。
++
+此时将显示存储区详细信息页面。
+
+. 选择*平台服务* > *事件通知*。
+. 选中*启用事件通知*复选框。
+. 将通知配置 XML 粘贴到文本框中，然后选择*保存更改*。
++
+
+NOTE: 平台服务必须由 StorageGRID 管理员使用 Grid Manager 或 Grid Management API 为每个租户帐户启用。如果保存配置 XML 时发生错误，请联系您的 StorageGRID 管理员。
+
+. 确认事件通知配置正确：
++
+.. 对源存储桶中满足配置 XML 中所配置的通知触发条件的对象执行操作。
++
+在该示例中，每当使用 `images/`前缀创建对象时，都会发送事件通知。
+
+.. 确认通知已发送到目标 Amazon SNS 主题、Kafka 主题或 Webhook 端点。
++
+例如，如果您的目标主题托管在 Amazon SNS 上，则可以将服务配置为在通知发送时向您发送电子邮件。
+
++
+[listing]
+----
+{
+   "Records":[
+      {
+         "eventVersion":"2.0",
+         "eventSource":"sgws:s3",
+         "eventTime":"2017-08-08T23:52:38Z",
+         "eventName":"ObjectCreated:Put",
+         "userIdentity":{
+            "principalId":"1111111111111111111"
+         },
+         "requestParameters":{
+            "sourceIPAddress":"193.51.100.20"
+         },
+         "responseElements":{
+            "x-amz-request-id":"122047343"
+         },
+         "s3":{
+            "s3SchemaVersion":"1.0",
+            "configurationId":"Image-created",
+            "bucket":{
+               "name":"test1",
+               "ownerIdentity":{
+                  "principalId":"1111111111111111111"
+               },
+               "arn":"arn:sgws:s3:::test1"
+            },
+            "object":{
+               "key":"images/cat.jpg",
+               "size":0,
+               "eTag":"d41d8cd98f00b204e9800998ecf8427e",
+               "sequencer":"14D90402421461C7"
+            }
+         }
+      }
+   ]
+}
+----
++
+如果在目标主题处收到通知，则表示您已成功为 StorageGRID 通知配置了源存储桶。
+
+
+
+
+
+.相关信息
+* link:understanding-notifications-for-buckets.html["了解存储区的通知"]
+* link:../s3/index.html["使用 S3 REST API"]
+* link:creating-platform-services-endpoint.html["创建平台服务端点"]
+

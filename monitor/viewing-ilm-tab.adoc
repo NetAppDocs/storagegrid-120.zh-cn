@@ -1,0 +1,25 @@
+---
+permalink: monitor/viewing-ilm-tab.html 
+sidebar: sidebar 
+keywords: ilm tab 
+summary: 'ILM 选项卡提供有关信息生命周期管理 (ILM) 操作的信息。' 
+---
+= 查看 StorageGRID ILM 选项卡
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ILM 选项卡提供有关信息生命周期管理 (ILM) 操作的信息。
+
+将显示每个存储节点、每个站点和整个网格的 ILM 选项卡。对于每个站点和网格，ILM 选项卡显示一段时间内 ILM 队列的图形。对于网格，此选项卡还提供完成所有对象的完整 ILM 扫描的估计时间。
+
+对于存储节点，ILM 选项卡提供有关纠删码对象的 ILM 评估和后台验证的详细信息。
+
+image:nodes_page_ilm_tab.png["节点页面 ILM 选项卡"]
+
+.相关信息
+* link:monitoring-information-lifecycle-management.html["监控信息生命周期管理"]
+* link:../admin/index.html["管理 StorageGRID"]
+

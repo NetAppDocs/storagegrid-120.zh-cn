@@ -1,0 +1,33 @@
+---
+permalink: maintain/checking-systems-condition-before-applying-hotfix.html 
+sidebar: sidebar 
+keywords: storagegrid, hotfix 
+summary: 您必须确认系统已准备好容纳修补程序。 
+---
+= 在应用 StorageGRID 修补程序之前检查系统状况
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须确认系统已准备好容纳修补程序。
+
+. 使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+. 如果可能，请确保系统运行正常，并且所有网格节点都已连接到网格。
++
+连接的节点在"节点"页面上有绿色复选标记 image:icon_alert_green_checkmark.png["图标警报绿色复选标记"]。
+
+. 如果可能，请检查并解决任何当前警报。
+. 确保没有其他维护程序正在进行中，例如升级、恢复、扩展或停用程序。
++
+在应用修补程序之前，应等待任何活动的维护过程完成。
+
++
+当另一个维护过程正在运行时，您无法应用 StorageGRID 修补程序。例如，您无法在停用、扩展或恢复过程运行时应用修补程序。
+
++
+
+NOTE: 如果是节点或站点link:pausing-and-resuming-decommission-process-for-storage-nodes.html["停用过程已暂停"]，则可以安全地应用修补程序。此外，您可以在 StorageGRID 升级过程的最后阶段应用修补程序。请参阅link:../upgrade/index.html["升级 StorageGRID 软件"]的说明。
+
+

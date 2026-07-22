@@ -1,0 +1,57 @@
+---
+permalink: troubleshoot/confirming-object-data-locations.html 
+sidebar: sidebar 
+keywords: how to confirm object location, object metadata lookup 
+summary: 根据问题的不同，您可能需要确认对象数据的存储位置。例如，您可能需要验证 ILM 策略是否按预期执行，以及对象数据是否存储在预期位置。 
+---
+= 确认 StorageGRID 中的对象数据位置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+根据问题的不同，您可能需要link:../audit/object-ingest-transactions.html["确认对象数据存储的位置"]。例如，您可能需要验证 ILM 策略是否按预期执行，以及对象数据是否按预期存储。
+
+.开始之前
+* 您必须有一个对象标识符，该标识符可以是以下之一：
++
+** *UUID*：对象的通用唯一标识符。请输入全大写的 UUID。
+** *CBID*：对象在 StorageGRID 中的唯一标识符。您可以从审核日志中获取对象的 CBID。输入全大写的 CBID。
+** *S3 存储桶和对象密钥*：当通过 link:../s3/operations-on-objects.html["S3 接口"] 接收对象时，客户端应用程序使用存储桶和对象密钥组合来存储和识别对象。
+
+
+
+
+.步骤
+. 选择 *ILM* > *对象元数据查找*。
+. 在*标识符*字段中键入对象的标识符。
++
+您可以输入UUID、CBID或S3存储桶/对象密钥。
+
+. 如果要查找对象的特定版本，请输入版本 ID（可选）。
++
+image:object_lookup.png["对象查找页面"]
+
+. 选择*查找*。
++
+link:../ilm/verifying-ilm-policy-with-object-metadata-lookup.html["对象元数据查找结果"] 显示。此页面列出以下类型的信息：
+
++
+** 系统元数据，包括对象 ID (UUID)、版本 ID（可选）、对象名称、容器名称、租户帐户名称或 ID、对象的逻辑大小、对象首次创建的日期和时间以及对象上次修改的日期和时间。
+** 与对象关联的任何自定义用户元数据键值对。
+** 对于 S3 对象，与对象关联的任何对象标记键值对。
+** 对于复制的对象副本，每个副本的当前存储位置。
+** 对于擦除编码的对象副本，每个片段的当前存储位置。
+** 对于云存储池中的对象副本，对象的位置，包括外部存储桶的名称和对象的唯一标识符。
+** 对于分段对象和多部分对象，包括分段标识符和数据大小的对象分段列表。对于超过 100 个段的对象，仅显示前 100 个段。
+** 未处理的内部存储格式中的所有对象元数据。此原始元数据包括不保证在各版本之间持续存在的内部系统元数据。
++
+以下示例显示了存储为两个复制副本的 S3 测试对象的对象元数据查找结果。
+
+
+
++
+image:object_lookup_results.png["对象查找结果"]
+
+

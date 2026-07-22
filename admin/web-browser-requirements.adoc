@@ -1,0 +1,60 @@
+---
+permalink: admin/web-browser-requirements.html 
+sidebar: sidebar 
+keywords: web browser requirements, supported browser, chrome, edge, firefox 
+summary: 您必须使用受支持的网络浏览器。 
+---
+= StorageGRID 的 Web 浏览器要求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须使用受支持的网络浏览器。
+
+[cols="2a,2a"]
+|===
+| Web 浏览器 | 支持的最低版本 
+
+
+ a| 
+Google Chrome
+ a| 
+138
+
+
+
+ a| 
+Microsoft Edge
+ a| 
+138
+
+
+
+ a| 
+Mozilla Firefox
+ a| 
+140
+
+|===
+将浏览器窗口设置为建议的宽度。
+
+[cols="3a,1a"]
+|===
+| 浏览器宽度 | 像素 
+
+
+ a| 
+最低
+ a| 
+1024
+
+
+
+ a| 
+最优
+ a| 
+1280
+
+|===

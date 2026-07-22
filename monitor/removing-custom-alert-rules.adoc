@@ -1,0 +1,38 @@
+---
+permalink: monitor/removing-custom-alert-rules.html 
+sidebar: sidebar 
+keywords: how to disable alert rules, how to remove a custom alert rule 
+summary: 如果不想再使用自定义提醒规则，则可以将其删除。 
+---
+= 删除 StorageGRID 中的自定义警报规则
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果不想再使用自定义提醒规则，则可以将其删除。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["管理警报或 Root 访问权限"]。
+
+
+.步骤
+. 选择*Alerts* > *Rules*。
++
+此时将显示警报规则页面。
+
+. 选择要删除的自定义警报规则的单选按钮。
++
+您无法删除默认提醒规则。
+
+. 选择*删除自定义规则*。
++
+此时将显示确认对话框。
+
+. 选择*确定*删除警报规则。
++
+警报的所有活动实例将在 10 分钟内解决。
+
+

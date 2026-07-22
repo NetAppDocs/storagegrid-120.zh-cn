@@ -1,0 +1,79 @@
+---
+permalink: monitor/view-alert-rules.html 
+sidebar: sidebar 
+keywords: how to manage alert rules 
+summary: 警报规则定义了触发特定警报的条件。StorageGRID 包括一组默认警报规则，您可以按原样使用或修改，也可以创建自定义警报规则。 
+---
+= 查看 StorageGRID 警报规则
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+警报规则定义了触发 link:alerts-reference.html["特定警报"] 的条件。StorageGRID 包括一组默认警报规则，您可以按原样使用或修改，也可以创建自定义警报规则。
+
+您可以查看所有默认和自定义警报规则的列表，以了解触发每个警报的条件，并查看是否禁用了任何警报。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["管理警报或 Root 访问权限"]。
+* 或者，您已观看视频：
++
+.警报概述
+video::2eea81c5-8323-417f-b0a0-b1ff008506c1[panopto]
+
+
+.步骤
+. 选择*Alerts* > *Rules*。
++
+此时将显示警报规则页面。
+
++
+image:alert_rules_page.png["警报规则页面"]
+
+. 查看警报规则表中的信息：
++
+[cols="1a,3a"]
+|===
+| 列标头 | 问题描述 
+
+
+ a| 
+名称
+ a| 
+警报规则的唯一名称和说明。自定义警报规则排在前面，其次是默认警报规则。警报规则名称是电子邮件通知的主题。
+
+
+
+ a| 
+条件
+ a| 
+用于确定何时触发此警报的 Prometheus 表达式。可以在以下一个或多个严重程度级别触发警报，但不需要每个严重程度的条件。
+
+** *严重* image:icon_alert_red_critical.png["图标警报红色严重"]：存在已停止 StorageGRID 节点或服务正常操作的异常情况。您必须立即解决根本问题。如果问题未得到解决，可能会导致服务中断和数据丢失。
+** *重大* image:icon_alert_orange_major.png["图标警报橙色主要"]：存在影响当前操作或接近严重警报阈值的异常情况。您应该调查重大警报并解决任何潜在问题，以确保异常情况不会阻止 StorageGRID 节点或服务的正常运行。
+** *轻微* image:icon_alert_yellow_minor.png["图标警报黄色轻微"]：系统正常运行，但存在异常情况，如果继续运行，可能会影响系统的运行能力。您应该监控并解决未自行清除的轻微警报，以确保它们不会导致更严重的问题。
+
+
+
+
+ a| 
+类型
+ a| 
+警报规则的类型：
+
+** *默认*：系统提供的警报规则。您可以禁用默认警报规则或编辑默认警报规则的条件和持续时间。您无法删除默认警报规则。
+** *默认**：包含已编辑条件或持续时间的默认警报规则。根据需要，您可以轻松地将修改后的条件还原为原始默认值。
+** *Custom*：您创建的警报规则。您可以禁用、编辑和删除自定义警报规则。
+
+
+
+
+ a| 
+状态
+ a| 
+当前是启用还是禁用此警报规则。未评估禁用警报规则的条件，因此不会触发警报。
+
+|===
+

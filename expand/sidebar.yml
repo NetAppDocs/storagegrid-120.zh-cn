@@ -1,0 +1,62 @@
+---
+section: expand
+title: 扩展网格
+url: "/landing-expand/index.html"
+entries:
+- title: 了解扩展
+  pdf-filename: 扩展 StorageGRID 系统
+  url: "/expand/index.html"
+- title: 扩张计划
+  entries:
+  - title: 复制数据的扩展规划
+    url: "/expand/adding-storage-capacity-for-replicated-objects.html"
+  - title: 纠删码数据的扩展规划
+    url: "/expand/adding-storage-capacity-for-erasure-coded-objects.html"
+  - title: 了解扩展后的纠删码重新平衡
+    url: "/expand/considerations-for-rebalancing-erasure-coded-data.html"
+- title: 扩展准则
+  entries:
+  - title: "${post_edited_translations.segment}"
+    url: "/expand/guidelines-for-adding-object-capacity.html"
+  - title: 添加元数据容量的指南
+    url: "/expand/adding-metadata-capacity.html"
+  - title: 添加网格节点的指南
+    url: "/expand/adding-grid-nodes-to-add-capabilities.html"
+  - title: 添加新站点的指南
+    url: "/expand/adding-new-site.html"
+- title: 准备扩展
+  url: "/expand/gather-required-materials.html"
+- title: 添加网格节点或站点
+  entries:
+  - title: 工作流程摘要
+    url: "/expand/adding-grid-nodes-to-existing-site-or-adding-new-site.html"
+  - title: 向网格网络添加或更新子网
+    url: "/expand/updating-subnets-for-grid-network.html"
+  - title: 部署新网格节点
+    url: "/expand/deploying-new-grid-nodes.html"
+  - title: 执行扩展
+    url: "/expand/performing-expansion.html"
+- title: 添加存储卷
+  entries:
+  - title: 将存储卷添加到存储节点
+    url: "/expand/adding-storage-volumes-to-storage-nodes.html"
+  - title: 为 VMware 添加存储卷
+    url: "/expand/vmware-adding-storage-volumes-to-storage-node.html"
+  - title: 为 Linux 添加直连或 SAN 卷
+    url: "/expand/linux-adding-direct-attached-or-san-volumes-to-storage-node.html"
+- title: 配置扩展系统
+  entries:
+  - title: 配置新添加的节点和站点
+    url: "/expand/configuring-expanded-storagegrid-system.html"
+  - title: 验证存储节点处于活动状态
+    url: "/expand/verifying-storage-node-is-active.html"
+  - title: 复制管理节点数据库
+    url: "/expand/copying-admin-node-database.html"
+  - title: 复制 Prometheus 指标
+    url: "/expand/copying-prometheus-metrics.html"
+  - title: 复制审核日志
+    url: "/expand/copying-audit-logs.html"
+  - title: 重新平衡擦除编码的数据
+    url: "/expand/rebalancing-erasure-coded-data-after-adding-storage-nodes.html"
+- title: 对扩展错误进行故障排除
+  url: "/expand/contacting-technical-support.html"

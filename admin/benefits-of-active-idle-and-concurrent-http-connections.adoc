@@ -1,0 +1,103 @@
+---
+permalink: admin/benefits-of-active-idle-and-concurrent-http-connections.html 
+sidebar: sidebar 
+keywords: active http connection benefits, idle http connection benefits, concurrent http connection benefits 
+summary: 如何配置 HTTP 连接可能会影响 StorageGRID 系统的性能。配置因 HTTP 连接是活动还是空闲，或者有多个并发连接而异。 
+---
+= StorageGRID 中活动、空闲和并发 HTTP 连接的优势
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如何配置 HTTP 连接可能会影响 StorageGRID 系统的性能。配置因 HTTP 连接是活动还是空闲，或者有多个并发连接而异。
+
+您可以确定以下类型的 HTTP 连接的性能优势：
+
+* 空闲的 HTTP 连接
+* 活动的HTTP连接
+* 并发 HTTP 连接
+
+
+
+
+[[benefits-of-keeping-idle-http-connections-open]]
+== 保持空闲 HTTP 连接打开的优势
+
+当客户端应用程序空闲时，保持 HTTP 连接打开，以允许后续事务处理。保持空闲 HTTP 连接最长打开 10 分钟。StorageGRID 可能会自动关闭已打开且空闲超过 10 分钟的 HTTP 连接。
+
+开放和空闲的HTTP连接具有以下优势：
+
+* 从 StorageGRID 系统确定必须执行 HTTP 事务的时间到 StorageGRID 系统可以执行事务的时间，减少了延迟
++
+减少延迟是主要优势，特别是在建立 TCP/IP 和 TLS 连接所需的时间方面。
+
+* 通过使用先前执行的传输来启动 TCP/IP 慢启动算法，从而提高数据传输速率
+* 中断客户端应用程序和 StorageGRID 系统之间连接的几类故障情况的即时通知
+
+
+通过平衡慢启动优势和资源分配来决定保持空闲连接打开的时长。
+
+
+
+[[benefits-of-active-http-connections]]
+== 活动 HTTP 连接的优势
+
+对于直接到存储节点的连接，即使 HTTP 连接连续执行事务，也应将活动 HTTP 连接的持续时间限制为最多 10 分钟。
+
+确定连接应保持开放的最长持续时间，是连接持久性的优势与内部系统资源的理想分配之间的权衡。
+
+对于到存储节点的客户端连接，限制活动 HTTP 连接具有以下优点：
+
+* 实现整个 StorageGRID 系统的最佳负载平衡。
++
+随着时间的推移，随着负载平衡要求的变化，HTTP 连接可能不再是最佳连接。当客户端应用程序为每个事务建立单独的 HTTP 连接时，系统会执行最佳负载平衡，但此方法会抵消与持久连接相关的宝贵收益。
+
+* 允许客户端应用程序将 HTTP 事务定向到具有可用空间的 LDR 服务。
+* 允许启动维护程序。
++
+某些维护过程仅在所有正在进行的 HTTP 连接完成后才开始。
+
+
+
+对于与负载平衡器服务的客户端连接，限制打开连接的持续时间对于允许某些维护过程及时启动非常有用。如果客户端连接的持续时间不受限制，则活动连接可能需要几分钟才能自动终止。
+
+
+
+[[benefits-of-concurrent-http-connections]]
+== 并发 HTTP 连接的优势
+
+您应该保持与 StorageGRID 系统的多个 TCP/IP 连接处于打开状态，以实现并行性，从而提高性能。并行连接的最佳数量取决于多种因素。
+
+并发 HTTP 连接具有以下优势：
+
+* 减少延迟
++
+事务可以立即开始，而无需等待其他事务完成。
+
+* 提高吞吐量
++
+StorageGRID 系统可以执行并行事务并提高聚合事务吞吐量。
+
+
+
+客户端应用程序应建立多个 HTTP 连接。当客户端应用程序必须执行事务时，它可以选择并立即使用当前未处理事务的任何已建立的连接。
+
+每个 StorageGRID 系统的拓扑对于并发事务和连接具有不同的峰值吞吐量。峰值吞吐量取决于计算、网络、存储资源、WAN 链路以及 StorageGRID 系统支持的服务器、服务和应用程序的数量。
+
+StorageGRID 系统通常支持多个客户端应用程序。在确定最大并发连接数时，请记住这一点。如果客户端应用程序由多个软件实体组成，每个软件实体都建立到 StorageGRID 系统的连接，则将所有实体之间的连接数相加。在以下情况下，您可能需要调整最大并发连接数：
+
+* StorageGRID 系统的拓扑结构影响系统可以支持的并发事务和连接的最大数量。
+* 通过带宽有限的网络与 StorageGRID 系统交互的客户端应用程序可能必须降低并发程度，以确保在合理的时间内完成单个事务。
+* 当许多客户端应用程序共享 StorageGRID 系统时，您可能必须降低并发程度，以避免超出系统的限制。
+
+
+
+
+[[separation-of-http-connection-pools-for-read-and-write-operations]]
+== 用于读取和写入操作的 HTTP 连接池分离
+
+您可以使用单独的 HTTP 连接池进行读取和写入操作，并控制每个连接池的使用量。单独的 HTTP 连接池可让您更好地控制事务和平衡负载。
+
+客户端应用程序可以创建检索主导（读取）或存储主导（写入）的负载。通过为读取和写入事务使用单独的 HTTP 连接池，您可以调整每个池专用于读取或写入事务的比例。

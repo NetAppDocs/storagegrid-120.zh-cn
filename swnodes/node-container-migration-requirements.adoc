@@ -1,0 +1,72 @@
+---
+permalink: swnodes/node-container-migration-requirements.html 
+sidebar: sidebar 
+keywords: how to migrate a node 
+summary: 节点迁移功能允许您手动将节点从一个主机移动到另一个主机。通常，两台主机位于同一个物理数据中心。 
+---
+= Linux 的 StorageGRID 节点容器迁移要求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+节点迁移功能允许您手动将节点从一个主机移动到另一个主机。通常，两台主机位于同一个物理数据中心。
+
+
+NOTE: "Linux"是指 RHEL、Ubuntu 或 Debian 部署。有关受支持版本的列表，请参见 https://imt.netapp.com/matrix/#welcome["NetApp 互操作性矩阵工具 (IMT)"^]。
+
+节点迁移允许您执行物理主机维护，而不会中断网格操作。在使物理主机脱机之前，一次一个地将所有 StorageGRID 节点移动到另一个主机。迁移节点只需要每个节点短暂的停机时间，不应影响网格服务的运行或可用性。
+
+如果要使用 StorageGRID 节点迁移功能，则部署必须满足其他要求：
+
+* 在单个物理数据中心中跨主机的一致网络接口名称
+* StorageGRID 元数据和对象存储库卷的共享存储，可由单个物理数据中心中的所有主机访问。例如，您可以使用 NetApp E 系列存储阵列。
+
+
+如果使用虚拟主机，并且底层虚拟机监控程序层支持虚拟机迁移，则可能需要使用此功能，而不是 StorageGRID 中的节点迁移功能。在此情况下，您可以忽略这些附加要求。
+
+在执行迁移或虚拟机管理程序维护之前，请正常关闭节点。请参见 link:../maintain/shutting-down-grid-node.html["关闭网格节点"] 的说明。
+
+
+
+[[vmware-live-migration-not-supported]]
+== VMware Live Migration 不受支持
+
+在 VMware 虚拟机上执行裸机安装时，OpenStack 实时迁移和 VMware 实时 vMotion 会导致虚拟机时钟时间跳跃，不支持任何类型的网格节点。虽然很少见，但时钟时间不正确可能会导致数据丢失或配置更新丢失。
+
+支持冷迁移。在冷迁移中，在主机之间迁移之前关闭 StorageGRID 节点。请参阅 link:../maintain/shutting-down-grid-node.html["关闭网格节点"] 的说明。
+
+
+
+[[consistent-network-interface-names]]
+== 一致的网络接口名称
+
+要将节点从一台主机移动到另一台主机，StorageGRID 主机服务需要确信节点在当前位置所具有的外部网络连接可以在新位置复制。它通过在主机中使用一致的网络接口名称来获得这种信心。
+
+例如，假设在 Host1 上运行的 StorageGRID NodeA 已配置了以下接口映射：
+
+image:eth0_bond.gif["本图四周的文字提供了相关说明。"]
+
+箭头的左侧对应于从 StorageGRID 容器中查看的传统接口（即分别为网格、管理员和客户端网络接口）。箭头的右侧对应于提供这些网络的实际主机接口，它们是从属于相同物理接口绑定的三个 VLAN 接口。
+
+现在，假设您要将 NodeA 迁移到 Host2。如果 Host2 也具有名为 bond0.1001、bond0.1002 和 bond0.1003 的接口，则系统将允许移动，假设同名接口将在 Host2 上提供与在 Host1 上相同的连接。如果 Host2 没有相同名称的接口，则不允许移动。
+
+在多个主机之间实现一致的网络接口命名的方法有很多；有关一些示例，请参阅 link:configuring-host-network.html["配置主机网络"]。
+
+
+
+[[shared-storage]]
+== 共享存储
+
+为了实现快速、低开销的节点迁移，StorageGRID 节点迁移功能不会物理移动节点数据。相反，节点迁移作为一对导出和导入操作执行，如下所示：
+
+* 在"节点导出"操作中，从 HostA 上运行的节点容器中提取少量持久状态数据，并缓存在该节点的系统数据卷上。然后，HostA 上的节点容器被反实例化。
+* 在"节点导入"操作中，HostB 上使用与 HostA 上相同的网络接口和块存储映射的节点容器将被实例化。然后，将缓存的持久状态数据插入到新实例中。
+
+
+鉴于这种操作模式，必须可以从 HostA 和 HostB 访问节点的所有系统数据和对象存储卷，才能允许迁移并使其正常工作。此外，必须使用能够确保引用 HostA 和 HostB 上相同 LUN 的名称将其映射到节点。
+
+以下示例显示了 StorageGRID 存储节点的块设备映射的一个解决方案，其中 DM 多路径正在主机上使用，并且别名字段已用于 `/etc/multipath.conf`提供在所有主机上可用的一致、友好的块设备名称。
+
+image:block_device_mapping_rhel.gif["块设备映射"]

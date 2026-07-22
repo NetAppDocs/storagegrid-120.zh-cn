@@ -1,0 +1,160 @@
+---
+permalink: maintain/linux-migrating-grid-node-to-new-host.html 
+sidebar: sidebar 
+keywords: storagegrid, recover, linux, migrate node, migrating node, new host for node 
+summary: 您可以将一个或多个 StorageGRID 节点从一个 Linux 主机迁移到另一个 Linux 主机以执行主机维护，而不会影响网格的功能或可用性。 
+---
+= 将 StorageGRID 节点迁移到新的 Linux 主机
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以将一个或多个 StorageGRID 节点从一个 Linux 主机（_source host_）迁移到另一个 Linux 主机（_target host_），以执行主机维护，而不会影响网格的功能或可用性。
+
+例如，您可能需要迁移一个节点来执行操作系统修补和重新启动。
+
+.开始之前
+* 您已计划将 StorageGRID 部署包含迁移支持。请参阅 link:../swnodes/node-container-migration-requirements.html["节点容器迁移要求"]。
+* 目标主机已准备好用于 StorageGRID。
+* 共享存储用于所有每节点存储卷
+* 网络接口在不同主机之间具有一致的名称。
+
+
+[NOTE]
+====
+在生产部署中，不要在单个主机上运行多个存储节点。为每个存储节点使用专用主机可提供隔离的故障域。
+
+其他类型的节点，如管理节点或网关节点，可以部署在同一主机上。但是，如果您有多个相同类型的节点（例如两个网关节点），请不要在同一主机上安装所有实例。
+
+====
+
+
+[[export-node-from-source-host]]
+== 从源主机导出节点
+
+第一步，关闭网格节点并从源 Linux 主机导出。
+
+在_source host_上运行以下命令。
+
+.步骤
+. 获取当前在源主机上运行的所有节点的状态。
++
+`sudo storagegrid node status all`
+
++
+输出示例：
+
++
+[listing]
+----
+Name Config-State Run-State
+DC1-ADM1 Configured Running
+DC1-ARC1 Configured Running
+DC1-GW1 Configured Running
+DC1-S1 Configured Running
+DC1-S2 Configured Running
+DC1-S3 Configured Running
+----
+. 标识要迁移的节点的名称，如果其运行状态为正在运行，则将其停止。
++
+`sudo storagegrid node stop DC1-S3`
+
++
+输出示例：
+
++
+[listing]
+----
+Stopping node DC1-S3
+Waiting up to 630 seconds for node shutdown
+----
+. 从源主机导出该节点。
++
+`sudo storagegrid node export DC1-S3`
+
++
+输出示例：
+
++
+[listing]
+----
+Finished exporting node DC1-S3 to /dev/mapper/sgws-dc1-s3-var-local.
+Use 'storagegrid node import /dev/mapper/sgws-dc1-s3-var-local' if you
+want to import it again.
+----
+. 记下输出中建议的 `import`命令。
++
+下一步，您将在目标主机上运行此命令。
+
+
+
+
+
+[[import-node-on-target-host]]
+== 在目标主机上导入节点
+
+从源主机导出节点后，在目标主机上导入并验证该节点。验证确认该节点可以访问与源主机上相同的块存储和网络接口设备。
+
+在目标主机上运行以下命令。
+
+.步骤
+. 在目标主机上导入节点。
++
+`sudo storagegrid node import /dev/mapper/sgws-dc1-s3-var-local`
+
++
+输出示例：
+
++
+[listing]
+----
+Finished importing node DC1-S3 from /dev/mapper/sgws-dc1-s3-var-local.
+You should run 'storagegrid node validate DC1-S3'
+----
+. 验证新主机上的节点配置。
++
+`sudo storagegrid node validate DC1-S3`
+
++
+输出示例：
+
++
+[listing]
+----
+Confirming existence of node DC1-S3... PASSED
+Checking configuration file /etc/storagegrid/nodes/DC1-S3.conf for node DC1-S3... PASSED
+Checking for duplication of unique values... PASSED
+----
+. 如果出现任何验证错误，请在启动迁移的节点之前解决它们。
++
+有关故障排除信息，请参阅适用于您的 Linux 操作系统的 StorageGRID link:../swnodes/index.html["安装说明"]。
+
+
+
+
+
+[[start-migrated-node]]
+== 启动迁移节点
+
+验证迁移的节点后，您可以通过在目标主机上运行命令来启动节点。
+
+.步骤
+. 在新主机上启动节点。
++
+`sudo storagegrid node start DC1-S3`
+
+. 登录到网格管理器，并验证节点的状态是否为绿色且无警报。
++
+
+CAUTION: 验证节点的状态是否为绿色可确保已迁移的节点已完全重新启动并重新加入网格。如果状态不为绿色，请勿迁移任何其他节点，以免多个节点无法使用。
+
+. 如果您无法访问 Grid Manager，请等待 10 分钟，然后运行以下命令：
++
+`sudo storagegrid node status _node-name`
+
++
+确认迁移的节点的运行状态为 Running。
+
+

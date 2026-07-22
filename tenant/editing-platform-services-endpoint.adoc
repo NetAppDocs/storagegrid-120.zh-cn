@@ -1,0 +1,58 @@
+---
+permalink: tenant/editing-platform-services-endpoint.html 
+sidebar: sidebar 
+keywords: how to edit platform services endpoint 
+summary: 您可以编辑平台服务端点的配置来更改其名称、URI 或其他详细信息。例如，您可能需要更新过期的凭据或更改 URI 以指向用于故障转移的备份 Elasticsearch 索引。您无法更改平台服务端点的 URN。 
+---
+= 在 StorageGRID 中编辑平台服务端点
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以编辑平台服务端点的配置来更改其名称、URI 或其他详细信息。例如，您可能需要更新过期的凭据或更改 URI 以指向用于故障转移的备份 Elasticsearch 索引。您无法更改平台服务端点的 URN。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到租户管理器。
+* 您属于具有 link:tenant-management-permissions.html["管理端点或根访问权限"] 的用户组。
+
+
+.步骤
+. 选择 *STORAGE (S3)* > *Platform services endpoints*。
++
+此时将显示 Platform services endpoints 页面，并显示已配置的平台服务端点列表。
+
+. 选择要编辑的端点。
++
+此时将显示端点详细信息页面。
+
+. 选择*配置*。
+. 根据需要，更改端点的配置。
++
+
+NOTE: 无法在创建端点后更改端点的 URN。
+
++
+.. 要更改终结点的显示名称，请选择编辑图标 image:icon_edit_tm.png["编辑图标"]。
+.. 根据需要更改 URI。
+.. 根据需要更改身份验证类型。
++
+*** 对于访问密钥身份验证，请根据需要通过选择 *Edit S3 key* 并粘贴新的访问密钥 ID 和密钥来更改密钥。如果需要取消更改，请选择 *Revert S3 key edit*。
+*** 对于 CAP （C2S Access Portal）身份验证，更改临时凭据 URL 或可选的客户端私钥密码，并根据需要上传新的证书和密钥文件。
++
+
+NOTE: 客户端私钥必须采用 OpenSSL 加密格式或未加密的私钥格式。
+
+
+
+.. 根据需要，更改验证证书的方法。
+
+
+. 选择*测试并保存更改*。
++
+** 如果可以使用指定的凭据到达端点，则会显示成功消息。从每个站点的一个节点验证与端点的连接。
+** 如果端点验证失败，则会显示错误消息。修改端点以更正错误，然后选择*测试并保存更改*。
+
+
+

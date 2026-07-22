@@ -1,0 +1,41 @@
+---
+permalink: ilm/index.html 
+sidebar: sidebar 
+keywords: information lifecycle management overview, about information lifecycle management, ilm overview, about ilm 
+summary: '信息生命周期管理 (ILM) 策略中的信息生命周期管理 (ILM) 规则指示 StorageGRID 如何创建和分发对象数据的副本，以及如何随着时间的推移管理这些副本。' 
+---
+= 使用 ILM 在 StorageGRID 中管理对象
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+信息生命周期管理 (ILM) 策略中的信息生命周期管理 (ILM) 规则指示 StorageGRID 如何创建和分发对象数据的副本，以及如何随着时间的推移管理这些副本。
+
+
+
+[[about-these-instructions]]
+== ${post_edited_translations.segment}
+
+设计和实施 ILM 规则和策略需要仔细规划。您必须了解您的操作要求、StorageGRID 系统的拓扑结构、对象保护需求以及可用的存储类型。然后，您必须确定要如何复制、分发和存储不同类型的对象。
+
+${post_edited_translations.segment}
+
+* 了解 StorageGRID ILM，包括 link:how-ilm-operates-throughout-objects-life.html["ILM 在对象的整个生命周期中如何运作"]。
+* 了解如何配置 link:what-storage-pool-is.html["存储池"]、link:what-cloud-storage-pool-is.html["云存储池"] 和 link:what-ilm-rule-is.html["ILM规则"]。
+* 了解如何link:creating-ilm-policy.html["创建、模拟和激活 ILM 策略"]保护一个或多个站点的对象数据。
+* 了解如何 link:managing-objects-with-s3-object-lock.html["使用 S3 Object Lock 管理对象"]，这有助于确保特定 S3 存储桶中的对象在指定的时间内不会被删除或覆盖。
+
+
+
+
+[[learn-more]]
+== 了解更多
+
+如需了解更多信息，请查看以下视频：
+
+.ILM 规则概述
+video::9872d38f-80b3-4ad4-9f79-b1ff008760c7[panopto]
+.ILM策略概述
+video::e768d4da-da88-413c-bbaa-b1ff00874d10[panopto]

@@ -1,0 +1,216 @@
+---
+permalink: admin/grid-federation-manage-tenants.html 
+sidebar: sidebar 
+keywords: grid federation, manage tenant, use grid federation permission, remove permission, cross grid replication 
+summary: 您可以允许 S3 租户帐户在两个 StorageGRID 系统之间使用网格联合连接。当允许租户使用连接时，需要执行特殊步骤来编辑租户详细信息或永久删除租户使用连接的权限。 
+---
+= 管理 StorageGRID 网格联盟的允许租户
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以允许 S3 租户帐户在两个 StorageGRID 系统之间使用网格联合连接。当允许租户使用连接时，需要执行特殊步骤来编辑租户详细信息或永久删除租户使用连接的权限。
+
+.开始之前
+* 您使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到任一网格上的 Grid Manager。
+* 您拥有您登录的网格的 link:admin-group-permissions.html["root 访问权限"]。
+* 您有link:grid-federation-create-connection.html["已创建网格联合连接"]在两个网格之间。
+* 您已查看 link:grid-federation-what-is-account-clone.html["帐户克隆"] 和 link:grid-federation-what-is-cross-grid-replication.html["跨网格复制"] 的工作流程。
+* 根据需要，您已经为连接中的两个网格配置了单点登录 (SSO) 或标识联合。请参阅 link:grid-federation-what-is-account-clone.html["什么是帐户克隆"]。
+
+
+
+
+[[create-a-permitted-tenant]]
+== 创建允许的租户
+
+如果要允许新的或现有租户帐户使用网格联合连接进行帐户克隆和跨网格复制，请按照link:creating-tenant-account.html["创建一个新 S3 租户"]或link:editing-tenant-account.html["编辑租户帐户"]的一般说明进行操作，并注意以下事项：
+
+* 您可以从连接中的任一网格创建租户。创建租户的网格是_租户的源网格_。
+* 连接状态必须为*已连接*。
+* 当租户被创建或编辑以启用*使用网格联合连接*权限，然后保存在第一个网格上时，相同的租户将自动复制到另一个网格。租户复制到的网格是_租户的目标网格_。
+* 两个网格上的租户将拥有相同的 20 位帐户 ID、名称、描述、配额和权限。您可以选择使用 *Description* 字段帮助识别哪个是源租户，哪个是目标租户。例如，在 Grid 1 上创建的租户的此描述也将显示在复制到 Grid 2 的租户中："This tenant was created on Grid 1."
+* 出于安全原因，本地 root 用户的密码不会复制到目标网格。
++
+
+TIP: 在本地 root 用户可以登录到目标网格上的复制租户之前，该网格的网格管理员必须link:changing-password-for-tenant-local-root-user.html["更改本地 root 用户的密码"]。
+
+* 在两个网格上都有新的或已编辑的租户后，租户用户可以执行以下操作：
++
+** 从租户的源网格创建组和本地用户，这些组和本地用户会自动克隆到租户的目标网格。请参阅 link:../tenant/grid-federation-account-clone.html["克隆租户组和用户"]。
+** 创建新的 S3 访问密钥，可选择将其克隆到租户的目标网格。请参阅 link:../tenant/grid-federation-clone-keys-with-api.html["使用 API 克隆 S3 访问密钥"]。
+** 在连接中的两个网格上创建相同的存储桶，并启用单向或双向跨网格复制。请参见 link:../tenant/grid-federation-manage-cross-grid-replication.html["管理跨网格复制"]。
+
+
+
+
+
+
+[[view-a-permitted-tenant]]
+== 查看允许的租户
+
+您可以查看允许使用网格联合连接的租户的详细信息。
+
+.步骤
+. ${post_edited_translations.segment}
+. 从租户页面中，选择租户名称以查看租户详细信息页面。
++
+如果这是租户的源网格（即，如果租户是在此网格上创建的），则会出现一个横幅，提醒您租户已克隆到另一个网格。如果编辑或删除此租户，则您所做的更改将不会同步到其他网格。
+
++
+image:grid-federation-tenant-detail.png["租户详细信息页面中的网格联合选项卡"]
+
+. （可选）选择 *Grid federation* 选项卡以 link:../monitor/grid-federation-monitor-connections.html["监控网格联合连接"]。
+
+
+
+
+[[edit-a-permitted-tenant]]
+== 编辑允许的租户
+
+如果需要编辑具有*使用网格联合连接*权限的租户，请按照link:editing-tenant-account.html["编辑租户帐户"]的一般说明进行操作，并注意以下事项：
+
+* 如果租户具有*使用网格联合连接*权限，则可以从连接中的任一网格编辑租户详细信息。但是，您所做的任何更改都不会复制到其他网格。如果要使租户详细信息在网格之间保持同步，则必须在两个网格上进行相同的编辑。
+* 编辑租户时，无法清除*使用网格联合连接*权限。
+* ${post_edited_translations.segment}
+
+
+
+
+[[delete-a-permitted-tenant]]
+== ${post_edited_translations.segment}
+
+如果您需要删除具有 *Use grid federation connection* 权限的租户，请遵循 link:deleting-tenant-account.html["${post_edited_translations.segment}"] 的常规说明并注意以下事项：
+
+* ${post_edited_translations.segment}
+* 在目标网格上删除克隆的租户之前，必须删除目标网格上帐户的所有存储桶。
+* 如果删除原始租户或克隆的租户，则无法再将帐户用于跨网格复制。
+* 如果要删除源网格上的原始租户，则克隆到目标网格的任何租户组、用户或密钥都不会受到影响。您可以删除克隆的租户，也可以允许其管理自己的组、用户、访问密钥和存储区。
+* ${post_edited_translations.segment}
++
+为避免这些错误，请先删除租户使用网格联合连接的权限，然后再从此网格中删除租户。
+
+
+
+
+
+[[remove-grid-federation-connection-permissionremove-use-grid-federation-connection-permission]]
+== ${post_edited_translations.segment}
+
+${post_edited_translations.segment}
+
+image:grid-federation-remove-permission.png["删除网格联合连接的步骤"]
+
+在删除租户使用网格联合连接的权限之前，请注意以下事项：
+
+* 如果租户的任何存储桶启用了跨网格复制，则无法删除 *使用网格联盟连接* 权限。租户帐户必须先为其所有存储桶禁用跨网格复制。
+* 删除 *使用网格联盟连接* 权限不会删除已在网格之间复制的任何项目。例如，在删除租户权限时，两个网格上存在的任何租户用户、组和对象都不会从任何一个网格中删除。如果要删除这些项目，您必须手动从两个网格中将其删除。
+* 如果要使用相同的网格联合连接重新启用此权限，请先在目标网格上删除此租户；否则，重新启用此权限将导致错误。
+
+
+
+NOTE: 重新启用*使用网格联合连接*权限将使本地网格成为源网格，并触发克隆到选定网格联合连接指定的远程网格。如果远程网格上已存在租户帐户，则克隆将导致冲突错误。
+
+.开始之前
+* 您正在使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"]。
+* 您拥有两个网格的 link:admin-group-permissions.html["root 访问权限"]。
+
+
+
+
+[[disable-replication-for-tenant-buckets]]
+=== ${post_edited_translations.segment}
+
+${post_edited_translations.segment}
+
+.步骤
+. 从任一网格开始，从主管理节点登录到 Grid Manager。
+. 选择*配置* > *系统* > *网格联合*。
+. 选择连接名称以显示其详细信息。
+. ${post_edited_translations.segment}
+. 如果列出了该租户，请指示其针对连接中两个网格上的所有存储桶 link:../tenant/grid-federation-manage-cross-grid-replication.html["禁用跨网格复制"]。
++
+
+TIP: 如果任何租户存储桶启用了跨网格复制，则无法删除 *使用网格联盟连接* 权限。租户必须在两个网格上为其存储桶禁用跨网格复制。
+
+
+
+
+
+[[remove-permission-for-tenant]]
+=== ${post_edited_translations.segment}
+
+${post_edited_translations.segment}
+
+.步骤
+. 从主管理节点登录到网格管理器。
+. 从网格联合页面或租户页面中删除权限。
++
+[role="tabbed-block"]
+====
+.${post_edited_translations.segment}
+--
+.. 选择*配置* > *系统* > *网格联合*。
+.. ${post_edited_translations.segment}
+.. ${post_edited_translations.segment}
+.. ${post_edited_translations.segment}
+
+
+--
+.${post_edited_translations.segment}
+--
+.. ${post_edited_translations.segment}
+.. ${post_edited_translations.segment}
+.. ${post_edited_translations.segment}
+.. ${post_edited_translations.segment}
+
+
+--
+====
+. ${post_edited_translations.segment}
++
+** 如果可以删除该权限，您将返回到详情页面，并显示成功消息。此租户将无法再使用网格联盟连接。
+** 如果一个或多个租户存储桶仍启用了跨网格复制，则会显示错误。
++
+image:grid-federation-remove-permission-error.png["如果租户为存储桶启用了 CGR，则显示错误消息"]
+
++
+您可以执行以下操作之一：
+
++
+*** （推荐。）登录到租户管理器并禁用每个租户存储桶的复制。请参阅link:../tenant/grid-federation-manage-cross-grid-replication.html["管理跨网格复制"]。然后，重复这些步骤以删除 *Use grid connection* 权限。
+*** 强制删除权限。请参见下一节。
+
+
+
+
+. 转到另一个网格并重复这些步骤，以删除另一个网格上同一租户的权限。
+
+
+
+
+[[forceremovepermissionremove-the-permission-by-force]]
+== [[force_remove_permission]]强制删除权限
+
+如果需要，即使租户存储桶已启用跨网格复制，也可以强制删除租户使用网格联合连接的权限。
+
+在强制删除租户的权限之前，请注意 <<remove-grid-federation-connection-permission,删除权限>> 的一般注意事项以及以下其他注意事项：
+
+* 如果强制删除*使用网格联合连接*权限，则任何挂起复制到另一个网格（已摄取但尚未复制）的对象都将继续被复制。要防止这些进程中的对象到达目标存储桶，还必须删除租户在另一个网格上的权限。
+* ${post_edited_translations.segment}
+
+
+.步骤
+. 从主管理节点登录到网格管理器。
+. 选择*配置* > *系统* > *网格联合*。
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
+. 查看确认对话框中的警告，并选择*Force remove*。
++
+系统将显示成功消息。此租户将无法再使用网格联盟连接。
+
+. 根据需要，转到另一个网格并重复这些步骤，以强制删除另一个网格上相同租户帐户的权限。例如，您应该在另一个网格上重复这些步骤，以防止正在处理的对象到达目标存储桶。
+

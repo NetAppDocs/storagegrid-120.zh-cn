@@ -1,0 +1,279 @@
+---
+permalink: s3/use-s3-api-for-s3-object-lock.html 
+sidebar: sidebar 
+keywords: how to configure S3 object lock, object lock, default bucket retention, governance, compliance, retain-until-date, legal hold 
+summary: 如果为您的 StorageGRID 系统启用了全局 S3 对象锁定设置，则可以创建启用 S3 对象锁定的存储桶。您可以为每个存储桶指定默认保留，或为每个对象版本指定保留设置。 
+---
+= 使用 S3 REST API 配置 StorageGRID S3 对象锁定
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果为您的 StorageGRID 系统启用了全局 S3 对象锁定设置，则可以创建启用 S3 对象锁定的存储桶。您可以为每个存储桶指定默认保留，或为每个对象版本指定保留设置。
+
+
+
+[[how-to-enable-s3-object-lock-for-a-bucket]]
+== 如何为存储桶启用 S3 对象锁定
+
+如果为 StorageGRID 系统启用了全局 S3 对象锁定设置，则可以选择在创建每个存储桶时启用 S3 对象锁定。
+
+S3 Object Lock 是一个永久设置，只能在创建存储桶时启用。创建存储桶后，无法添加或禁用 S3 Object Lock。
+
+要为存储桶启用 S3 Object Lock，请使用以下任一方法：
+
+* 使用租户管理器创建存储桶。请参阅link:../tenant/creating-s3-bucket.html["创建 S3 存储桶"]。
+* 使用带有 `x-amz-bucket-object-lock-enabled`请求标头的 CreateBucket 请求创建存储桶。请参阅link:operations-on-buckets.html["${post_edited_translations.segment}"]。
+
+
+S3 Object Lock 需要存储桶版本控制，在创建存储桶时自动启用。您不能暂停存储桶的版本控制。请参阅 link:object-versioning.html["对象版本控制"]。
+
+
+
+[[default-retention-settings-for-a-bucket]]
+== 存储桶的默认保留设置
+
+当为存储桶启用 S3 Object Lock 时，您可以选择为存储桶启用默认保留，并指定默认保留模式和默认保留期限。
+
+
+
+[[default-retention-mode]]
+=== 默认保留模式
+
+* 在合规模式下：
++
+** 在达到其保留截止日期之前，无法删除此对象。
+** 对象的保留截止日期可以延长，但不能缩短。
+** 在达到该日期之前，无法删除对象的 retain-until-date。
+
+
+* 在治理模式下：
++
+** 具有 `s3:BypassGovernanceRetention`权限的用户可以使用 `x-amz-bypass-governance-retention: true`请求标头绕过保留设置。
+** 这些用户可以在达到保留截止日期之前删除对象版本。
+** 这些用户可以增加、减少或删除对象的保留截止日期。
+
+
+
+
+
+
+[[default-retention-period]]
+=== 默认保留期限
+
+每个存储桶可以具有以年或天为单位指定的默认保留期限。
+
+
+
+[[how-to-set-default-retention-for-a-bucket]]
+== 如何设置存储区的默认保留时间
+
+要设置存储区的默认保留，请使用以下任一方法：
+
+* 从租户管理器管理存储桶设置。请参阅 link:../tenant/creating-s3-bucket.html["${post_edited_translations.segment}"] 和 link:../tenant/update-default-retention-settings.html["更新 S3 对象锁定默认保留"]。
+* 向存储桶发出 PutObjectLockConfiguration 请求，以指定默认模式和默认天数或年数。
+
+
+
+
+[[putobjectlockconfiguration]]
+=== PutObjectLockConfiguration
+
+该 PutObjectLockConfiguration 请求允许您为启用了 S3 对象锁的存储桶设置和修改默认保留模式和默认保留期。您还可以删除以前配置的默认保留设置。
+
+将新对象版本接收到存储桶时，如果未指定 `x-amz-object-lock-mode`和 `x-amz-object-lock-retain-until-date`，则应用默认保留模式。如果未指定 `x-amz-object-lock-retain-until-date`，则使用默认保留期限来计算保留截止日期。
+
+如果在摄取对象版本后修改了默认保留期限，则对象版本的 retain-until-date 保持不变，不会使用新的默认保留期限重新计算。
+
+您必须具有 `s3:PutBucketObjectLockConfiguration`权限，或者是 account root，才能完成此操作。
+
+必须在 PUT 请求中指定 `Content-MD5`请求标头。
+
+
+
+==== 请求示例
+
+此示例为存储桶启用 S3 Object Lock，并将默认保留模式设置为 COMPLIANCE，将默认保留期限设置为 6 年。
+
+[listing, subs="specialcharacters,quotes"]
+----
+PUT /bucket?object-lock HTTP/1.1
+Accept-Encoding: identity
+Content-Length: 308
+Host: _host_
+Content-MD5: _request header_
+User-Agent: s3sign/1.0.0 requests/2.24.0 python/3.8.2
+X-Amz-Date: _date_
+X-Amz-Content-SHA256: _authorization-string_
+Authorization: _authorization-string_
+
+<ObjectLockConfiguration>
+    <ObjectLockEnabled>Enabled</ObjectLockEnabled>
+    <Rule>
+        <DefaultRetention>
+            <Mode>COMPLIANCE</Mode>
+            <Years>6</Years>
+        </DefaultRetention>
+    </Rule>
+</ObjectLockConfiguration>
+----
+
+
+[[how-to-determine-the-default-retention-for-a-bucket]]
+== 如何确定存储桶的默认保留时间
+
+要确定是否已为存储桶启用 S3 Object Lock 并查看默认保留模式和保留期限，请使用以下任一方法：
+
+* 在租户管理器中查看存储桶。请参阅link:../tenant/viewing-s3-bucket-details.html["查看 S3 存储桶"]。
+* 发出 GetObjectLockConfiguration 请求。
+
+
+
+
+[[getobjectlockconfiguration]]
+=== GetObjectLockConfiguration
+
+该 GetObjectLockConfiguration 请求允许您确定是否已为存储桶启用 S3 对象锁定，如果已启用，请查看是否为该存储桶配置了默认保留模式和保留期。
+
+将新对象版本载入存储桶时，如果未指定  `x-amz-object-lock-mode`，则应用默认保留模式。如果未指定  `x-amz-object-lock-retain-until-date`，则使用默认保留期限来计算保留截止日期。
+
+您必须具有  `s3:GetBucketObjectLockConfiguration` 权限或是账户根用户，才能完成此操作。
+
+
+
+==== 请求示例
+
+[listing, subs="specialcharacters,quotes"]
+----
+GET /bucket?object-lock HTTP/1.1
+Host: _host_
+Accept-Encoding: identity
+User-Agent: aws-cli/1.18.106 Python/3.8.2 Linux/4.4.0-18362-Microsoft botocore/1.17.29
+x-amz-date: _date_
+x-amz-content-sha256: _authorization-string_
+Authorization: _authorization-string_
+----
+
+
+==== 响应示例
+
+[listing]
+----
+HTTP/1.1 200 OK
+x-amz-id-2: iVmcB7OXXJRkRH1FiVq1151/T24gRfpwpuZrEG11Bb9ImOMAAe98oxSpXlknabA0LTvBYJpSIXk=
+x-amz-request-id: B34E94CACB2CEF6D
+Date: Fri, 04 Sep 2020 22:47:09 GMT
+Transfer-Encoding: chunked
+Server: AmazonS3
+
+<?xml version="1.0" encoding="UTF-8"?>
+<ObjectLockConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <ObjectLockEnabled>Enabled</ObjectLockEnabled>
+    <Rule>
+        <DefaultRetention>
+            <Mode>COMPLIANCE</Mode>
+            <Years>6</Years>
+        </DefaultRetention>
+    </Rule>
+</ObjectLockConfiguration>
+----
+
+
+[[how-to-specify-retention-settings-for-an-object]]
+== 如何指定对象的保留设置
+
+启用了 S3 Object Lock 的存储桶可以包含具有和不具有 S3 Object Lock 保留设置的对象的组合。
+
+对象级别保留设置使用 S3 REST API 指定。对象的保留设置将覆盖存储桶的任何默认保留设置。
+
+可以为每个对象指定以下设置：
+
+* *Retention mode*：COMPLIANCE 或 GOVERNANCE。
+* *Retain-until-date*：指定对象版本必须由 StorageGRID 保留多长时间的日期。
++
+** 在合规模式下，如果保留截止日期在未来，则可以检索对象，但不能对其进行修改或删除。保留截止日期可以延长，但不能缩短或删除。
+** 在 GOVERNANCE 模式下，具有特殊权限的用户可以绕过 retain-until-date 设置。他们可以在保留期结束之前删除对象版本。他们还可以增加、减少甚至取消 retain-until-date。
+
+
+* *法律冻结*：对对象版本应用法律冻结会立即锁定该对象。例如，您可能需要对与调查或法律纠纷相关的对象进行法律冻结。法律冻结没有到期日期，但在明确移除之前会一直存在。
++
+对象的法律冻结设置与保留模式和保留截止日期无关。如果对象版本处于法定冻结状态，任何人都无法删除该版本。
+
+
+
+要在将对象版本添加到存储桶时指定 S3 对象锁定设置，请发出 link:put-object.html["放置对象"]、link:put-object-copy.html["CopyObject"] 或 link:initiate-multipart-upload.html["CreateMultipartUpload"] 请求。
+
+可以使用以下项：
+
+* `x-amz-object-lock-mode`，可以是 COMPLIANCE 或 GOVERNANCE（区分大小写）。
++
+
+NOTE: 如果指定 `x-amz-object-lock-mode`，则还必须指定 `x-amz-object-lock-retain-until-date`。
+
+* `x-amz-object-lock-retain-until-date`
++
+** retain-until-date 值必须采用以下格式 `2020-08-10T21:46:00Z`。允许使用小数秒，但仅保留 3 位小数（精度为毫秒）。不允许使用其他 ISO 8601 格式。
+** 保留截止日期必须在未来。
+
+
+* `x-amz-object-lock-legal-hold`
++
+如果法律保留已开启（区分大小写），则对象将被置于法律保留状态。如果法律保留已关闭，则不会进行法律保留。任何其他值都会导致 400 Bad Request (InvalidArgument) 错误。
+
+
+
+如果使用以下任意请求标头，请留意以下限制：
+
+* 如果在 PutObject 请求中存在任何  `x-amz-object-lock-*` 请求标头，则必须提供  `Content-MD5` 请求标头。对于 CopyObject 或 CreateMultipartUpload，不需要  `Content-MD5`。
+* 如果存储桶未启用 S3 Object Lock 且存在 `x-amz-object-lock-*`请求标头，则返回 400 Bad Request (InvalidRequest) 错误。
+* PutObject 请求支持使用 `x-amz-storage-class: REDUCED_REDUNDANCY`来匹配 AWS 行为。但是，当对象被摄取到启用了 S3 对象锁定的存储桶中时，StorageGRID 将始终执行双提交摄取。
+* 后续的 GET 或 HeadObject 版本响应将包括标头 `x-amz-object-lock-mode`、 `x-amz-object-lock-retain-until-date` 和 `x-amz-object-lock-legal-hold`（如果已配置并且请求发送者具有正确的 `s3:Get*`权限）。
+
+
+您可以使用 `s3:object-lock-remaining-retention-days`策略条件键来限制对象的最短和最长允许保留期限。
+
+
+
+[[how-to-update-retention-settings-for-an-object]]
+== 如何更新对象的保留设置
+
+如果需要更新现有对象版本的法律保留或保留设置，可以执行以下对象子资源操作：
+
+* `PutObjectLegalHold`
++
+如果新的法定冻结值为 ON，则该对象将被置于法定冻结状态。如果法定冻结值为 OFF，则解除法定冻结。
+
+* `PutObjectRetention`
++
+** 模式值可以是 COMPLIANCE 或 GOVERNANCE（区分大小写）。
+** retain-until-date 值必须采用以下格式 `2020-08-10T21:46:00Z`。允许使用小数秒，但仅保留 3 位小数（精度为毫秒）。不允许使用其他 ISO 8601 格式。
+** 如果对象版本具有现有的 retain-until-date，则只能增加它。新值必须是将来的日期。
+
+
+
+
+
+
+[[how-to-use-governance-mode]]
+== 如何使用 GOVERNANCE 模式
+
+拥有 `s3:BypassGovernanceRetention`权限的用户可以绕过使用治理模式的对象的活动保留设置。任何 DELETE 或 PutObjectRetention 操作都必须包含 `x-amz-bypass-governance-retention:true`请求标头。这些用户可以执行以下附加操作：
+
+* 执行 DeleteObject 或 DeleteObjects 操作以在对象版本的保留期结束之前将其删除。
++
+处于合法保留状态的对象无法删除。必须关闭合法保留。
+
+* 在对象的保留期限到期之前，执行将对象版本的模式从 GOVERNANCE 更改为 COMPLIANCE 的 PutObjectRetention 操作。
++
+绝不允许将模式从 COMPLIANCE 更改为 GOVERNANCE。
+
+* 执行 PutObjectRetention 操作以增加、减少或删除对象版本的保留期限。
+
+
+.相关信息
+* link:../ilm/managing-objects-with-s3-object-lock.html["使用 S3 Object Lock 管理对象"]
+* link:../tenant/using-s3-object-lock.html["使用 S3 Object Lock 保留对象"]
+* https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html["Amazon Simple Storage Service 用户指南：锁定对象"^]
+

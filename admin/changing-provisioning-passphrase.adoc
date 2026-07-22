@@ -1,0 +1,47 @@
+---
+permalink: admin/changing-provisioning-passphrase.html 
+sidebar: sidebar 
+keywords: provisioning passphrase, change passphrase 
+summary: 使用此过程更改 StorageGRID 配置密码。恢复、扩展和维护程序需要此密码。此外，还需要此密码才能下载恢复包备份，其中包括 StorageGRID 系统的网格拓扑信息、网格节点控制台密码和加密密钥。 
+---
+= 更改 StorageGRID 配置密码
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用此过程更改 StorageGRID 配置密码。恢复、扩展和维护过程均需要此密码短语。下载恢复包备份时也需要此密码短语，恢复包备份中包含 StorageGRID 系统的网格拓扑信息、网格节点控制台密码和加密密钥。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* ${post_edited_translations.segment}
+* 您有当前的设置密码短语。
+
+
+.关于此任务
+许多安装和维护程序以及 link:../maintain/downloading-recovery-package.html["${post_edited_translations.segment}"] 都需要配置密码。配置密码未在  `Passwords.txt` 文件中列出。请务必记录配置密码并将其保存在安全的位置。
+
+.步骤
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
+. 输入新的密码短语。密码短语必须包含至少 8 个且不超过 32 个字符。密码短语区分大小写。
++
+
+CAUTION: 将配置密码短语存储在安全位置。这是安装、扩展和维护程序所必需的。
+
+. 重新输入新密码，然后选择*Save*。
++
+${post_edited_translations.segment}
+
++
+image:change_provisioning_passphrase_success.png["配置密码短语更改的成功消息"]
+
+. ${post_edited_translations.segment}
+. 输入新的配置密码短语以下载新的恢复包。
++
+
+CAUTION: 更改配置密码后，必须立即下载新的恢复包。恢复包文件允许您在发生故障时还原系统。
+
+

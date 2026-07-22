@@ -1,0 +1,33 @@
+---
+permalink: s3/list-multipart-uploads.html 
+sidebar: sidebar 
+keywords: ListMultipartUploads, uploads, multipart uploads, bucket 
+summary: ListMultipartUploads 操作列出存储桶正在进行的分段上传。 
+---
+= StorageGRID 中的 S3 ListMultipartUploads 操作和支持的参数
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ListMultipartUploads 操作列出存储桶正在进行的分段上传。
+
+支持以下请求参数：
+
+* `encoding-type`
+* `key-marker`
+* `max-uploads`
+* `prefix`
+* `upload-id-marker`
+* `Host`
+* `Date`
+* `Authorization`
+
+
+
+
+[[versioning]]
+== 版本控制
+
+多部分上传由单独的操作组成，用于启动上传、列出上传、上传部分、组装上传的部分和完成上传。执行 CompleteMultipartUpload 操作时将创建对象（如果适用，还会进行版本控制）。

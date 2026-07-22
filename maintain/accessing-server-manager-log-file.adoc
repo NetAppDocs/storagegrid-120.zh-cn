@@ -1,0 +1,71 @@
+---
+permalink: maintain/accessing-server-manager-log-file.html 
+sidebar: sidebar 
+keywords: storagegrid, server manager, log file 
+summary: 如果在使用 Server Manager 时出现问题，请检查其日志文件。 
+---
+= StorageGRID 中 Server Manager 故障排除
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果在使用 Server Manager 时出现问题，请检查其日志文件。
+
+与 Server Manager 相关的错误消息记录在 Server Manager 日志文件中，该日志文件位于： `/var/local/log/servermanager.log`
+
+检查此文件以获取有关故障的错误消息。如有需要，请将问题上报给技术支持。您可能需要将日志文件转发给技术支持。
+
+
+
+[[service-with-an-error-state]]
+== 具有错误状态的服务
+
+如果检测到服务已进入错误状态，请尝试重新启动该服务。
+
+.开始之前
+您拥有  `Passwords.txt` 文件。
+
+.关于此任务
+服务器管理器监视服务并重新启动任何意外停止的服务。如果服务失败，服务器管理器将尝试重新启动它。如果在五分钟内有三次尝试启动服务失败，则服务进入错误状态。服务器管理器不再尝试重新启动。
+
+.步骤
+. ${post_edited_translations.segment}
++
+.. 输入以下命令： `ssh admin@_grid_node_IP_`
+.. 输入 `Passwords.txt`文件中列出的密码。
+.. 输入以下命令切换到 root： `su -`
+.. 输入 `Passwords.txt`文件中列出的密码。
+
+
++
+以 root 身份登录时，提示符将从 `$`更改为 `#`。
+
+. 确认服务的错误状态： `service _servicename_ status`
++
+例如：
+
++
+[listing]
+----
+service ldr status
+----
++
+如果服务处于错误状态，则返回以下消息： `_servicename_ in error state`。例如：
+
++
+[listing]
+----
+ldr in error state
+----
++
+
+NOTE: 如果服务状态为 `disabled`，请参见link:using-donotstart-file.html["删除服务的 DoNotStart 文件"]的说明。
+
+. 尝试通过重新启动服务来删除错误状态： `service _servicename_ restart`
++
+如果服务无法重新启动，请与技术支持联系。
+
+. 从命令 shell 中注销： `exit`
+

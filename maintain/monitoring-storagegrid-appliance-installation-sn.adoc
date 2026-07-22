@@ -1,0 +1,42 @@
+---
+permalink: maintain/monitoring-storagegrid-appliance-installation-sn.html 
+sidebar: sidebar 
+keywords: storagegrid, recover, appliance 
+summary: StorageGRID 设备安装程序提供状态，直到安装完成为止。软件安装完成后，设备将重新启动。 
+---
+= 监控 StorageGRID 设备安装
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+StorageGRID 设备安装程序提供状态，直到安装完成为止。软件安装完成后，设备将重新启动。
+
+.步骤
+. 要监控安装进度，请单击菜单栏中的*Monitor Installation*。
++
+监视器安装页面显示安装进度。
+
++
+蓝色状态栏指示当前正在执行的任务。绿色状态栏表示已成功完成的任务。
+
++
+
+NOTE: 安装程序确保先前安装中完成的任务不会重新运行。如果重新运行安装，则任何不需要重新运行的任务都将显示为绿色状态栏和"已跳过"状态。
+
+. 请查看前两个安装阶段的进度。
++
+** *1.配置存储*
++
+在此阶段，安装程序将连接到存储控制器，清除任何现有配置，与 SANtricity 操作系统通信以配置卷，并配置主机设置。
+
+** *2.安装操作系统*
++
+在此阶段，安装程序会将 StorageGRID 的基本操作系统映像复制到设备。
+
+
+
+. 继续监控安装进度，直到 *Install StorageGRID* 阶段暂停，嵌入式控制台上出现一条消息，提示您使用 Grid Manager 在管理节点上批准此节点。
+. 转到 link:selecting-start-recovery-to-configure-appliance-storage-node.html["选择"开始恢复"以配置设备存储节点"]。
+

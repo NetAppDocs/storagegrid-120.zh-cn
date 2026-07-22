@@ -1,0 +1,60 @@
+---
+permalink: maintain/warnings-and-considerations-for-grid-node-recovery.html 
+sidebar: sidebar 
+keywords: storagegrid, recover, warning 
+summary: 如果网格节点发生故障，您必须尽快恢复它。在开始之前，必须查看节点恢复的所有警告和注意事项。 
+---
+= StorageGRID 节点恢复的警告和注意事项
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果网格节点发生故障，您必须尽快恢复它。在开始之前，必须查看节点恢复的所有警告和注意事项。
+
+
+CAUTION: StorageGRID 是一个由多个节点相互协作的分布式系统。不要使用磁盘快照来恢复网格节点。请参阅每种类型节点的恢复和维护过程。
+
+
+NOTE: 如果整个 StorageGRID 站点出现故障，请联系技术支持。技术支持将与您合作制定并执行站点恢复计划，以最大限度地提高恢复的数据量并满足您的业务目标。请参阅 link:how-site-recovery-is-performed-by-technical-support.html["技术支持如何恢复站点"]。
+
+尽快恢复故障网格节点的一些原因包括以下几点：
+
+* 出现故障的网格节点会降低系统和对象数据的冗余，使您在另一个节点出现故障时面临永久数据丢失的风险。
+* 发生故障的网格节点可能会影响日常运营的效率。
+* 发生故障的网格节点可能会降低您监控系统操作的能力。
+* 如果有严格的 ILM 规则，出现故障的网格节点可能会导致 500 内部服务器错误。
+* 如果不及时恢复网格节点，恢复时间可能会增加。例如，可能需要在恢复完成之前清除队列。
+
+
+始终遵循正在恢复的特定类型的网格节点的恢复过程。主管理节点或非主管理节点、网关节点、设备节点和存储节点的恢复过程各不相同。
+
+
+
+[[preconditions-for-recovering-grid-nodes]]
+== 恢复网格节点的先决条件
+
+在恢复网格节点时，假设满足以下所有条件：
+
+* 已更换和配置出现故障的物理或虚拟硬件。
+* 替换设备上的 StorageGRID 设备安装程序版本与您的 StorageGRID 系统的软件版本相匹配，如 https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/verifying-and-upgrading-storagegrid-appliance-installer-version.html["验证和升级 StorageGRID Appliance Installer 版本"^]中所述。
+* 如果要恢复主管理节点以外的网格节点，则要恢复的网格节点与管理恢复过程的管理节点之间存在连接。
+* 如果要恢复应用装置存储节点，则必须在应用装置安装期间指定与原始应用装置相同的存储类型（组合、仅元数据或仅数据）。如果指定不同的存储类型，则恢复将失败，并且需要使用指定的正确存储类型重新安装设备。
+
+
+
+
+[[order-of-node-recovery-if-a-server-hosting-more-than-one-grid-node-fails]]
+== 托管多个网格节点的服务器出现故障时节点恢复的顺序
+
+如果托管多个网格节点的服务器发生故障，则可以按任何顺序恢复节点。但是，如果发生故障的服务器托管主管理节点，则必须先恢复该节点。
+
+
+
+[[ip-addresses-for-recovered-nodes]]
+== 已恢复节点的 IP 地址
+
+请勿尝试使用当前分配给任何其他节点的 IP 地址恢复节点。部署新节点时，请使用故障节点的当前 IP 地址或未使用的 IP 地址。
+
+如果使用新 IP 地址部署新节点，然后恢复该节点，则新 IP 地址将继续用于恢复的节点。如果要还原到原始 IP 地址，请在恢复完成后使用"更改 IP"工具。

@@ -1,0 +1,51 @@
+---
+permalink: admin/controlling-storagegrid-access.html 
+sidebar: sidebar 
+keywords: administrator access, single sign on, sso, users, groups, client certificates, passwords, passphrase 
+summary: '您可以通过创建或导入组和用户并为每个组分配权限来控制谁可以访问 StorageGRID 以及用户可以执行哪些任务。也可以启用单点登录 (SSO)、创建客户端证书和更改网格密码。' 
+---
+= 控制 StorageGRID 访问
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过创建或导入组和用户并为每个组分配权限来控制谁可以访问 StorageGRID 以及用户可以执行哪些任务。也可以启用单点登录 (SSO)、创建客户端证书和更改网格密码。
+
+
+
+[[control-access-to-the-grid-manager]]
+== 控制对 Grid Manager 的访问
+
+您可以通过从身份联合服务导入组和用户，或通过设置本地组和本地用户来确定谁可以访问 Grid Manager 和网格管理 API。
+
+使用link:using-identity-federation.html["身份联合"]可以加快设置link:managing-admin-groups.html["groups"]和link:managing-users.html["用户"]的速度，并允许用户使用熟悉的凭据登录 StorageGRID。如果使用 Active Directory、OpenLDAP 或 Oracle Directory Server，则可以配置身份联合。
+
+
+NOTE: 如果要使用其他 LDAP v3 服务，请联系技术支持。
+
+您可以通过为每个组分配不同的link:admin-group-permissions.html["权限"]权限来确定每个用户可以执行哪些任务。例如，您可能希望一个组中的用户能够管理 ILM 规则，而另一个组中的用户能够执行维护任务。用户必须至少属于一个组才能访问系统。
+
+或者，您可以将组配置为只读。只读组中的用户只能查看设置和功能。他们无法在 Grid Manager 或 Grid Management API 中进行任何更改或执行任何操作。
+
+
+
+[[enable-single-sign-on]]
+== 启用单点登录
+
+StorageGRID 系统支持使用安全断言标记语言 2.0 (SAML 2.0) 标准的单点登录 (SSO)。在您link:how-sso-works.html["配置并启用 SSO"]之后，所有用户都必须通过外部身份提供程序的身份验证，然后才能访问 Grid Manager、Tenant Manager、网格管理 API 或租户管理 API。本地用户无法登录 StorageGRID。
+
+
+
+[[change-provisioning-passphrase]]
+== 更改配置密码短语
+
+许多安装和维护过程以及下载 StorageGRID 恢复包都需要配置密码。下载 StorageGRID 系统的网格拓扑信息和加密密钥的备份也需要密码。您可以根据需要link:changing-provisioning-passphrase.html["更改密码短语"]。
+
+
+
+[[change-node-console-passwords]]
+== 更改节点控制台密码
+
+网格中的每个节点都有一个节点控制台密码，您需要使用 SSH 以"admin"身份登录到节点，或通过 VM/物理控制台连接登录到 root 用户。根据需要，您可以link:change-node-console-password.html["更改节点控制台密码"]针对每个节点。

@@ -1,0 +1,232 @@
+---
+permalink: admin/configure-high-availability-group.html 
+sidebar: sidebar 
+keywords: how to configure high availability group, node priority order, failover 
+summary: '您可以配置高可用性(HA)组，以提供对管理节点或网关节点上服务的高可用性访问。' 
+---
+= 在 StorageGRID 中配置高可用性组
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以配置高可用性(HA)组，以提供对管理节点或网关节点上服务的高可用性访问。
+
+
+NOTE: ${post_edited_translations.segment}
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["root 访问权限"]。
+* 如果您计划在 HA 组中使用 VLAN 接口，则已创建 VLAN 接口。请参阅 link:../admin/configure-vlan-interfaces.html["配置 VLAN 接口"]。
+* ${post_edited_translations.segment}
++
+** *Linux（安装节点之前）*：link:../swnodes/creating-node-configuration-files.html["创建节点配置文件"]
+** *Linux（安装节点后）*：link:../maintain/linux-adding-trunk-or-access-interfaces-to-node.html["将中继或接入接口添加到节点"]
+** *VMware (安装节点后)*: link:../maintain/vmware-adding-trunk-or-access-interfaces-to-node.html["将中继或接入接口添加到节点"]
+
+
+
+
+
+NOTE: "Linux"是指 RHEL、Ubuntu 或 Debian 部署。有关受支持版本的列表，请参见 https://imt.netapp.com/matrix/#welcome["NetApp 互操作性矩阵工具 (IMT)"^]。
+
+
+
+[[create-a-high-availability-group]]
+== 创建高可用性组
+
+创建高可用性组时，可以选择一个或多个接口，并按优先级顺序对其进行组织。然后，将一个或多个 VIP 地址分配给该组。
+
+接口必须是网关节点或管理节点的接口，才能包含在 HA 组中。HA 组只能为任何给定节点使用一个接口；但是，同一节点的其他接口可以在其他 HA 组中使用。
+
+
+
+[[access-the-wizard]]
+=== 访问此向导
+
+.步骤
+. 选择*配置* > *网络* > *高可用性组*。
+. 选择 *Create*。
+
+
+
+
+[[enter-details-for-the-ha-group]]
+=== 输入HA组的详细信息
+
+.步骤
+. 为 HA 组提供唯一名称。
+. （可选）输入HA组的说明。
+. 选择 *Continue*。
+
+
+
+
+[[add-interfaces-to-the-ha-group]]
+=== 向 HA 组添加接口
+
+.步骤
+. ${post_edited_translations.segment}
++
+${post_edited_translations.segment}
+
++
+image:ha_group_add_interfaces.png["HA 组添加接口"]
+
++
+
+NOTE: ${post_edited_translations.segment}
+
++
+.接口选择指南
+** ${post_edited_translations.segment}
+** 您只能为节点选择一个接口。
+** 如果 HA 组用于管理节点服务（包括 Grid Manager 和 Tenant Manager）的 HA 保护，请仅选择管理节点上的接口。
+** ${post_edited_translations.segment}
+** 如果选择不同类型的节点上的接口，则会显示信息说明。系统会提醒您，如果发生故障转移，以前活动节点提供的服务可能在新活动节点上不可用。例如，备份网关节点无法为管理节点服务提供 HA 保护。同样，备份管理节点无法执行主管理节点可以提供的所有维护过程。
+** 如果无法选择接口，其复选框将被禁用。工具提示提供了更多信息。
++
+image:vlan_parent_interface_tooltip.png["VLAN接口工具提示"]
+
+** 如果接口的子网值或网关与另一个选定的接口冲突，则无法选择该接口。
+** 如果配置的接口没有静态 IP 地址，则无法选择该接口。
+
+
+. 选择 *Continue*。
+
+
+
+
+[[determine-the-priority-order]]
+=== 确定优先级顺序
+
+如果 HA 组包括多个接口，则可以确定哪个是主接口，哪个是备份（故障转移）接口。如果主接口出现故障，VIP 地址将移动到可用的最高优先级接口。如果该接口出现故障，VIP 地址将移动到下一个可用的最高优先级接口，依此类推。
+
+.步骤
+. 在*优先级顺序*列中拖动行以确定主接口和任何备份接口。
++
+列表中的第一个接口是 Primary 接口。除非发生故障，否则 Primary 接口为活动接口。
+
++
+image:ha_group_determine_failover.png["HA 组确定优先级顺序"]
+
++
+
+TIP: 如果 HA 组提供对 Grid Manager 的访问权限，则必须在主管理节点上选择一个接口作为主接口。某些维护程序只能从主管理节点执行。
+
+. 选择 *Continue*。
+
+
+
+
+[[enter-ip-addresses]]
+=== 输入 IP 地址
+
+.步骤
+. 在 *Subnet CIDR* 字段中，以 CIDR 表示法指定 VIP 子网——一个 IPv4 地址，后跟斜杠和子网长度（0-32）。
++
+网络地址不得设置任何主机位。例如， `192.16.0.0/22`。
+
++
+
+NOTE: ${post_edited_translations.segment}
+
++
+image:ha_group_select_virtual_ips.png["HA 组进入 VIP"]
+
+. 可选地，如果任何 S3 管理或租户客户端将从不同的子网访问这些 VIP 地址，请输入*网关 IP 地址*。网关地址必须在 VIP 子网内。
++
+客户端和管理员用户将使用此网关访问虚拟 IP 地址。
+
+. 为 HA 组中的活动接口输入至少一个且不超过十个 VIP 地址。所有 VIP 地址必须位于 VIP 子网内，并且所有地址都将在活动接口上同时处于活动状态。
++
+您必须至少提供一个 IPv4 地址。您也可以指定其他 IPv4 和 IPv6 地址。
+
+. 选择*创建HA组*并选择*完成*。
++
+已创建 HA 组，您现在可以使用已配置的虚拟 IP 地址。
+
+
+
+
+
+[[next-steps]]
+=== 后续步骤
+
+如果要使用此 HA 组进行负载平衡，请创建负载平衡器端点以确定端口和网络协议并附加任何所需的证书。请参阅 link:configuring-load-balancer-endpoints.html["配置负载平衡器端点"]。
+
+
+
+[[edit-a-high-availability-group]]
+== 编辑高可用性组
+
+您可以编辑高可用性(HA)组以更改其名称和描述、添加或删除接口、更改优先级顺序或添加或更新虚拟 IP 地址。
+
+例如，如果要删除与站点或节点停用过程中的选定接口关联的节点，则可能需要编辑 HA 组。
+
+.步骤
+. 选择*配置* > *网络* > *高可用性组*。
++
+高可用性组页面显示所有现有 HA 组。
+
+. 选中要编辑的 HA 组的复选框。
+. 根据您要更新的内容，执行以下操作之一：
++
+** 选择*操作* > *编辑虚拟 IP 地址*以添加或删除 VIP 地址。
+** 选择*操作* > *编辑 HA 组*以更新组的名称或描述、添加或删除接口、更改优先级顺序或添加或删除 VIP 地址。
+
+
+. 如果您选择了*编辑虚拟 IP 地址*：
++
+.. 更新HA组的虚拟IP地址。
+.. 选择 *Save*。
+.. 选择 *Finish*。
+
+
+. 如果选择 *Edit HA group*：
++
+.. （可选）更新组的名称或描述。
+.. （可选）选中或清除复选框以添加或删除接口。
++
+
+NOTE: 如果 HA 组提供对 Grid Manager 的访问权限，则必须在主管理节点上选择一个接口作为主接口。某些维护程序只能从主管理节点执行
+
+.. 可选操作：拖动行以更改此 HA 组的主接口和任何备份接口的优先级顺序。
+.. （可选）更新虚拟 IP 地址。
+.. 选择 *Save*，然后选择 *Finish*。
+
+
+
+
+
+
+[[remove-a-high-availability-group]]
+== 删除高可用性组
+
+您可以一次删除一个或多个高可用性 (HA) 组。
+
+
+TIP: 如果高可用性 (HA) 组已绑定到负载均衡器端点，则无法将其删除。要删除 HA 组，必须将其从使用该组的任何负载均衡器端点中移除。
+
+为了防止客户端中断，请在删除 HA 组之前更新任何受影响的 S3 客户端应用程序。更新每个客户端以使用另一个 IP 地址进行连接，例如，其他 HA 组的虚拟 IP 地址或在安装期间为接口配置的 IP 地址。
+
+.步骤
+. 选择*配置* > *网络* > *高可用性组*。
+. 查看要删除的每个 HA 组的*负载平衡器端点*列。如果列出了任何负载平衡器端点：
++
+.. ${post_edited_translations.segment}
+.. 选中端点的复选框。
+.. 选择*操作* > *编辑端点绑定模式*。
+.. ${post_edited_translations.segment}
+.. 选择 *Save changes*。
+
+
+. 如果未列出负载平衡器端点，请选中要删除的每个 HA 组的复选框。
+. 选择*操作* > *删除 HA 组*。
+. 查看消息并选择 *Delete HA group* 以确认您的选择。
++
+您选择的所有 HA 组均已删除。"高可用性组"页面上将显示绿色成功横幅。
+
+

@@ -1,0 +1,99 @@
+---
+permalink: fabricpool/creating-ha-group-for-fabricpool.html 
+sidebar: sidebar 
+keywords: fabricPool, StorageGRID, high availability group, HA group, create, creating, virtual IP, VIP, active interface, backup interface 
+summary: '在配置 StorageGRID 以与 FabricPool 配合使用时，您可以选择创建一个或多个高可用性 (HA) 组。HA 组是一组节点，每个节点都包含 StorageGRID 负载平衡器服务。HA 组可以包含网关节点、管理节点或两者。' 
+---
+= 在 StorageGRID 中为 FabricPool 创建高可用性 (HA) 组
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在配置 StorageGRID 以与 FabricPool 配合使用时，您可以选择创建一个或多个高可用性 (HA) 组。HA 组是一组节点，每个节点都包含 StorageGRID 负载平衡器服务。HA 组可以包含网关节点、管理节点或两者。
+
+您可以使用 HA 组来帮助保持 FabricPool 数据连接可用。HA 组使用虚拟 IP 地址 (VIP) 来提供对负载平衡器服务的高可用性访问。如果 HA 组中的活动接口出现故障，备份接口可以管理工作负载，对 FabricPool 操作的影响很小。
+
+有关此任务的详细信息，请参见link:../admin/managing-high-availability-groups.html["管理高可用性组"]。要使用 FabricPool 设置向导完成此任务，请转到link:use-fabricpool-setup-wizard-steps.html["访问并完成 FabricPool 设置向导"]。
+
+.开始之前
+* 您已审阅 link:best-practices-for-high-availability-groups.html["高可用性组的最佳实践"]。
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["root 访问权限"]。
+* 如果您计划使用 VLAN，则表示您已创建 VLAN 接口。请参阅 link:../admin/configure-vlan-interfaces.html["配置 VLAN 接口"]。
+
+
+.步骤
+. 选择*配置* > *网络* > *高可用性组*。
+. 选择 *Create*。
+. 对于*输入详细信息*步骤，请填写以下字段。
++
+[cols="1a,2a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+HA 组名称
+ a| 
+此 HA 组的唯一显示名称。
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+此 HA 组的描述。
+
+|===
+. 对于*添加接口*步骤，请选择要在此 HA 组中使用的节点接口。
++
+${post_edited_translations.segment}
+
++
+您可以选择一个或多个节点，但每个节点只能选择一个接口。
+
+. 对于*Prioritize interfaces*步骤，请确定此 HA 组的主接口和任何备份接口。
++
+拖动行以更改*优先级顺序*列中的值。
+
++
+列表中的第一个接口是 Primary 接口。除非发生故障，否则 Primary 接口为活动接口。
+
++
+如果 HA 组包含多个接口，并且活动接口发生故障，则虚拟 IP （VIP）地址按优先级顺序移动到第一个备份接口。如果该接口出现故障，VIP 地址将移动到下一个备份接口，依此类推。故障解决后，VIP 地址将移回可用的最高优先级接口。
+
+. 对于*输入 IP 地址*步骤，请填写以下字段。
++
+[cols="1a,2a"]
+|===
+| 字段 | 问题描述 
+
+
+ a| 
+子网 CIDR
+ a| 
+CIDR 表示法中 VIP 子网的地址——IPv4 地址后跟斜杠和子网长度（0-32）。
+
+网络地址不得设置任何主机位。例如， `192.16.0.0/22`。
+
+
+
+ a| 
+网关 IP 地址（可选）
+ a| 
+可选。如果用于访问 StorageGRID 的 ONTAP IP 地址与 StorageGRID VIP 地址不在同一子网中，请输入 StorageGRID VIP 本地网关 IP 地址。本地网关 IP 地址必须在 VIP 子网内。
+
+
+
+ a| 
+虚拟 IP 地址
+ a| 
+为 HA 组中的活动接口输入至少一个且不超过十个 VIP 地址。所有 VIP 地址必须在 VIP 子网内。
+
+必须至少有一个地址为 IPv4。或者，您可以指定其他 IPv4 和 IPv6 地址。
+
+|===
+. 选择 *Create HA group*，然后选择 *Finish*。
+

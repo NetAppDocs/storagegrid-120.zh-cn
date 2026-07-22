@@ -1,0 +1,46 @@
+---
+permalink: maintain/pausing-and-resuming-decommission-process-for-storage-nodes.html 
+sidebar: sidebar 
+keywords: how to pause decommission 
+summary: 如果需要执行第二个维护过程，可以在某些阶段暂停存储节点的停用过程。其他过程完成后，您可以恢复停用。 
+---
+= 暂停和恢复 StorageGRID 存储节点的停用过程
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果需要执行第二个维护过程，可以在某些阶段暂停存储节点的停用过程。其他过程完成后，您可以恢复停用。
+
+
+NOTE: 仅当达到 ILM 评估或纠删编码数据停用阶段时，才会启用*暂停*按钮；但是，ILM 评估（数据迁移）将继续在后台运行。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["维护或 root 访问权限"]。
+
+
+.步骤
+. 选择*维护* > *任务* > *停用*。
++
+此时将显示"停用"页面。
+
+. 选择*停用节点*。
++
+此时将显示 Decommission Nodes 页面。当停用过程达到以下任一阶段时，将启用*暂停*按钮。
+
++
+** 评估 ILM
+** 停用纠删码数据
+
+
+. 选择*暂停*以暂停此过程。
++
+当前阶段已暂停，*恢复*按钮已启用。
+
++
+image:decommission_nodes_procedure_paused.png["停用节点过程已暂停"]
+
+. 其他维护程序完成后，选择 *Resume* 以继续执行退役操作。
+

@@ -1,0 +1,31 @@
+---
+permalink: s3/delete-bucket-metadata-notification-configuration-request.html 
+sidebar: sidebar 
+keywords: S3 REST API, S3 operations, DELETE Bucket metadata notification configuration request 
+summary: 删除存储桶元数据通知配置请求用于通过删除配置 XML 来禁用单个存储桶的搜索集成服务。 
+---
+= 使用 StorageGRID 中的 DELETE Bucket 元数据通知配置请求禁用搜索集成服务
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+删除存储桶元数据通知配置请求用于通过删除配置 XML 来禁用单个存储桶的搜索集成服务。
+
+要完成此操作，您必须具有存储桶的 s3:DeleteBucketMetadataNotification 权限，或者是账户根用户。
+
+
+
+[[request-example]]
+== 请求示例
+
+此示例显示禁用存储区的搜索集成服务。
+
+[listing, subs="specialcharacters,quotes"]
+----
+DELETE /test1?x-ntap-sg-metadata-notification HTTP/1.1
+Date: _date_
+Authorization: _authorization string_
+Host: _host_
+----

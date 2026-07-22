@@ -1,0 +1,143 @@
+---
+permalink: admin/grid-federation-compare-cgr-to-cloudmirror.html 
+sidebar: sidebar 
+keywords: cross-grid replication, cloudmirror replication 
+summary: 开始使用网格联合时，请查看跨网格复制和 StorageGRID CloudMirror 复制服务之间的异同。 
+---
+= 比较 StorageGRID 中的跨网格复制和 CloudMirror 复制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+开始使用网格联合时，请查看 link:grid-federation-what-is-cross-grid-replication.html["跨网格复制"] 和 link:../tenant/understanding-cloudmirror-replication-service.html["StorageGRID CloudMirror 复制服务"] 之间的异同。
+
+
+NOTE: 您不能在通过跨网格复制所复制的存储桶上使用 CloudMirror，反之亦然。
+
+[cols="1a,3a,3a"]
+|===
+|  | 跨网格复制 | CloudMirror 复制服务 
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+一个 StorageGRID 系统充当灾难恢复系统。存储桶中的对象可以在网格之间进行单向或双向复制。
+ a| 
+使租户能够自动将对象从 StorageGRID （源）中的存储桶复制到外部 S3 存储桶（目标）。
+
+CloudMirror 复制会在独立的 S3 基础设施中创建对象的独立副本。此独立副本不作为备份使用，但通常会在云中进行进一步处理。
+
+
+
+ a| 
+它是如何设置的？
+ a| 
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
+
+ a| 
+. 租户用户通过使用租户管理器或 S3 API 定义 CloudMirror 端点（IP 地址、凭据等）来配置 CloudMirror 复制。
+. 该租户帐户拥有的任何存储桶均可配置为指向 CloudMirror 端点。
+
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+* ${post_edited_translations.segment}
+* 租户用户配置组、用户、密钥和存储区。
+
+ a| 
+通常是租户用户。
+
+
+
+ a| 
+${post_edited_translations.segment}
+ a| 
+${post_edited_translations.segment}
+ a| 
+* ${post_edited_translations.segment}
+* Google Cloud Platform (GCP)
+
+
+
+
+ a| 
+是否需要对象版本控制？
+ a| 
+是的，源和目标存储桶都必须启用对象版本控制。
+ a| 
+否，CloudMirror 复制支持源和目标上未版本化和版本化存储桶的任何组合。
+
+
+
+ a| 
+是什么原因导致对象移动到目标位置？
+ a| 
+将对象添加到启用了跨网格复制的存储桶时，将自动复制这些对象。
+ a| 
+将对象添加到已使用 CloudMirror 端点配置的存储桶时，将自动复制这些对象。在使用 CloudMirror 端点配置存储桶之前存在于源存储桶中的对象不会被复制，除非对其进行了修改。
+
+
+
+ a| 
+如何复制对象？
+ a| 
+跨网格复制创建版本控制对象，并将版本 ID 从源存储桶复制到目标存储桶。这样可以在两个网格中保持版本顺序一致。
+ a| 
+CloudMirror 复制不需要启用了版本控制的存储桶，因此 CloudMirror 只能维护一个站点内某个键的顺序。无法保证对不同站点上的对象的请求能维持顺序。
+
+
+
+ a| 
+如果无法复制对象，该怎么办？
+ a| 
+对象已排入复制队列，但受元数据存储限制的限制。
+ a| 
+对象已排入复制队列，但受平台服务限制（请参阅link:manage-platform-services-for-tenants.html["使用平台服务的建议"]）。
+
+
+
+ a| 
+对象的系统元数据是否已复制？
+ a| 
+是的，当对象被复制到另一个网格时，其系统元数据也会被复制。两个网格上的元数据完全相同。
+ a| 
+否，当对象复制到外部存储桶时，其系统元数据将被更新。元数据因位置而异，具体取决于摄取时间和独立 S3 基础设施的行为。
+
+
+
+ a| 
+如何检索对象？
+ a| 
+应用程序可以通过向任一网格上的存储桶发出请求来检索或读取对象。
+ a| 
+应用程序可以通过向 StorageGRID 或 S3 目标发出请求来检索或读取对象。例如，假设使用 CloudMirror 复制将对象镜像到合作伙伴组织。合作伙伴可以使用自己的应用程序直接从 S3 目标读取或更新对象。无需使用 StorageGRID。
+
+
+
+ a| 
+删除对象后会发生什么？
+ a| 
+* 包含版本 ID 的删除请求永远不会复制到目标网格。
+* 不包含版本 ID 的删除请求会向源存储桶添加删除标记，该标记可以选择性地复制到目标网格。
+* 如果跨网格复制仅配置为一个方向，则可以删除目标存储桶中的对象，而不会影响源。
+
+ a| 
+结果将根据源和目标存储桶的版本控制状态而有所不同（不需要相同）：
+
+* 如果两个存储桶都进行了版本控制，则删除请求将在两个位置添加删除标记。
+* 如果仅对源存储桶进行版本控制，则删除请求将向源添加删除标记，但不向目标添加删除标记。
+* 如果两个存储区均未进行版本控制，则删除请求将从源中删除对象，但不会从目标中删除对象。
+
+
+同样，可以删除目标存储桶中的对象，而不会影响源。
+
+|===

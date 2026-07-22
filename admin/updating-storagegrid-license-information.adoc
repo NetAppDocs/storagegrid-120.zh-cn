@@ -1,0 +1,31 @@
+---
+permalink: admin/updating-storagegrid-license-information.html 
+sidebar: sidebar 
+keywords: storagegrid license, update license, add storage capacity 
+summary: 您必须在许可证条款发生变化时随时更新 StorageGRID 系统的许可证信息。例如，如果您为网格购买了额外的存储容量，则必须更新许可证信息。 
+---
+= 更新 StorageGRID 许可证信息
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须在许可证条款发生变化时随时更新 StorageGRID 系统的许可证信息。例如，如果您为网格购买了额外的存储容量，则必须更新许可证信息。
+
+.开始之前
+* 您有一个新的许可证文件要应用到 StorageGRID 系统。
+* 您有 link:admin-group-permissions.html["特定访问权限"]。
+* 您有配置密码短语。
+
+
+.步骤
+. 选择*维护* > *系统* > *许可证*。
+. 在"更新许可证"部分，选择 *Browse*。
+. 找到并选择新的许可证文件(`.txt`）。
++
+新许可证文件已验证并显示。
+
+. 输入配置密码。
+. 选择 *Save*。
+

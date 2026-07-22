@@ -1,0 +1,205 @@
+---
+permalink: admin/configure-autosupport-grid-manager.html 
+sidebar: sidebar 
+keywords: how to configure autosupport, what is autosupport-on-demand 
+summary: 默认情况下，首次安装 StorageGRID 时会启用 StorageGRID AutoSupport 功能。但是，您必须在每个应用上配置硬件 AutoSupport。您可以根据需要更改 AutoSupport 配置。 
+---
+= 在 StorageGRID 中配置 AutoSupport
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+默认情况下，首次安装 StorageGRID 时会启用 StorageGRID AutoSupport 功能。但是，您必须在每个应用上配置硬件 AutoSupport。您可以根据需要更改 AutoSupport 配置。
+
+如果您要更改 StorageGRID AutoSupport 的配置，请仅在主管理节点上进行更改。您必须在每个应用装置上 <<autosupport-for-appliances,配置硬件 AutoSupport>>。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["root 访问权限"]。
+* 如果您将使用 HTTPS 发送 AutoSupport 软件包，则您已直接或link:configuring-admin-proxy-settings.html["使用代理服务器"]向主管理节点提供出站互联网访问权限（不需要入站连接）。
+* 如果在 StorageGRID AutoSupport 页面上选择了 HTTP，您需要 link:configuring-admin-proxy-settings.html["${post_edited_translations.segment}"] 将 AutoSupport 包作为 HTTPS 转发。NetApp 的 AutoSupport 服务器将拒绝使用 HTTP 发送的包。
+* 如果您要将 SMTP 用作 AutoSupport 包的协议，则您已配置了 SMTP 邮件服务器。
+
+
+.关于此任务
+您可以使用以下选项的任意组合向技术支持发送 AutoSupport 包：
+
+* *每周*：每周自动发送一次 AutoSupport 包。默认设置：已启用。
+* *事件触发*：每小时或在发生重大系统事件时自动发送 AutoSupport 包。默认设置：已启用。
+* *On Demand*：允许技术支持请求您的 StorageGRID 系统自动发送 AutoSupport 包，这在他们主动解决问题时非常有用（需要 HTTPS AutoSupport 传输协议）。默认设置：已禁用。
+* *用户触发*：随时手动发送 AutoSupport 包。
+* *日志收集*：link:../monitor/collecting-log-files-and-system-data.html["手动收集日志文件和系统数据并发送 AutoSupport 包"]。
+
+
+
+
+[[specify-protocol-for-autosupport-packagesspecify-the-protocol-for-autosupport-packages]]
+== [[specify-protocol-for-autosupport-packages]]指定 AutoSupport 包的协议
+
+您可以使用以下任一协议发送 AutoSupport 包：
+
+* *HTTPS*：这是新安装的默认和推荐设置。此协议使用端口 443。如果需要<<启用按需 AutoSupport,启用 AutoSupport 按需功能>>，必须使用 HTTPS。
+* *HTTP*：如果选择 HTTP，则必须配置代理服务器以将 AutoSupport 包作为 HTTPS 进行转发。NetApp 的 AutoSupport 服务器会拒绝使用 HTTP 发送的包。此协议使用端口 80。
+* *SMTP*：如果您希望通过电子邮件发送 AutoSupport 包，请使用此选项。
+
+
+您设置的协议用于发送所有类型的 AutoSupport 包。
+
+.步骤
+. 选择 *Support* > *Tools* > *AutoSupport* > *Settings*。
+. 选择要用于发送 AutoSupport 软件包的协议。
+. 如果选择了 *HTTPS*，请选择是否使用 NetApp 支持证书（TLS 证书）来保护与技术支持服务器的连接。
++
+** *验证证书*（默认）：确保 AutoSupport 包的传输是安全的。NetApp 支持证书已随 StorageGRID 软件一起安装。
+** *不验证证书*：仅当您有充分理由不使用证书验证时（例如证书出现临时问题时），才选择此选项。
+
+
+. 选择 * 保存 *。所有每周、用户触发和事件触发的包都会使用所选协议进行发送。
+
+
+
+
+[[disable-weekly-autosupport]]
+== 禁用每周 AutoSupport
+
+默认情况下，StorageGRID 系统配置为每周向技术支持发送一次 AutoSupport 软件包。
+
+要确定发送每周 AutoSupport 软件包的时间，请转到 *AutoSupport* > *结果* 选项卡。在 *每周 AutoSupport* 部分，查看 *下一个计划时间* 的值。
+
+您可以随时禁用每周 AutoSupport 软件包的自动发送功能。
+
+.步骤
+. 选择 *Support* > *Tools* > *AutoSupport* > *Settings*。
+. 清除*启用每周 AutoSupport* 复选框。
+. 选择 *Save*。
+
+
+
+
+[[disable-event-triggered-autosupport]]
+== 禁用事件触发的 AutoSupport
+
+默认情况下，StorageGRID 系统配置为每小时向技术支持发送一个 AutoSupport 包。
+
+您可以随时禁用事件触发的 AutoSupport。
+
+.步骤
+. 选择 *Support* > *Tools* > *AutoSupport* > *Settings*。
+. 清除*启用事件触发 AutoSupport* 复选框。
+. 选择 *Save*。
+
+
+
+
+[[enable-autosupport-on-demand]]
+== 启用按需 AutoSupport
+
+AutoSupport on Demand可以帮助解决技术支持正在积极处理的问题。
+
+默认情况下，AutoSupport on Demand 处于禁用状态。启用此功能后，技术支持人员可以请求您的 StorageGRID 系统自动发送 AutoSupport 软件包。技术支持人员还可以为 AutoSupport on Demand 查询设置轮询时间间隔。
+
+技术支持无法启用或禁用按需 AutoSupport。
+
+.步骤
+. 选择 *Support* > *Tools* > *AutoSupport* > *Settings*。
+. 为协议选择 *HTTPS*。
+. 选中*启用每周 AutoSupport* 复选框。
+. 选中*启用 AutoSupport 按需*复选框。
+. 选择 *Save*。
++
+AutoSupport on Demand 已启用，并且技术支持可以向 StorageGRID 发送 AutoSupport on Demand 请求。
+
+
+
+
+
+[[disable-checks-for-software-updates]]
+== 禁用软件更新检查
+
+默认情况下，StorageGRID 会联系 NetApp 以确定您的系统是否有可用的软件更新。如果有 StorageGRID 修补程序或新版本可用，新版本将显示在 StorageGRID 升级页面上。
+
+根据需要，您可以选择禁用软件更新检查。例如，如果您的系统没有 WAN 访问权限，则应禁用检查以避免下载错误。
+
+.步骤
+. 选择 *Support* > *Tools* > *AutoSupport* > *Settings*。
+. 清除*检查软件更新*复选框。
+. 选择 *Save*。
+
+
+
+
+[[add-an-additional-autosupport-destination]]
+== 添加其他 AutoSupport 目的地
+
+启用 AutoSupport 后，健康和状态包将发送给技术支持。您可以为所有 AutoSupport 软件包指定一个额外的目标。
+
+要验证或更改用于发送 AutoSupport 软件包的协议，请参见 <<specify-protocol-for-autosupport-packages,指定 AutoSupport 包的协议>> 中的说明。
+
+
+NOTE: 您不能使用 SMTP 协议将 AutoSupport 包发送到其他目标。
+
+.步骤
+. 选择 *Support* > *Tools* > *AutoSupport* > *Settings*。
+. 选择*启用其他 AutoSupport 目的地*。
+. 指定以下内容：
++
+主机名称:: 其他 AutoSupport 目标服务器的服务器主机名或 IP 地址。
++
+--
+
+NOTE: 您只能输入一个其他目的地。
+
+--
+端口:: 用于连接到其他 AutoSupport 目标服务器的端口。默认值为 HTTP 的端口 80 或 HTTPS 的端口 443。
+证书验证:: 是否使用 TLS 证书来保护与附加目标的连接。
++
+--
+** 选择*验证证书*以使用证书验证。
+** 选择*不验证证书*以在不进行证书验证的情况下发送您的 AutoSupport 软件包。
++
+仅当您有充分理由不使用证书验证时，例如证书暂时出现问题时，才选择此选项。
+
+
+
+--
+
+
+. 如果您选择了*验证证书*，请执行以下操作：
++
+.. 浏览到 CA 证书的位置。
+.. 上传 CA 证书文件。
++
+此时将显示CA证书元数据。
+
+
+
+. 选择 *Save*。
++
+所有未来的每周、事件触发和用户触发的 AutoSupport 软件包都将发送到其他目标。
+
+
+
+
+
+[[autosupport-for-appliancesconfigure-autosupport-for-appliances]]
+== [[autosupport-for-appliances]]为设备配置 AutoSupport
+
+AutoSupport for appliances 报告 StorageGRID 硬件问题，StorageGRID AutoSupport 报告 StorageGRID 软件问题，但有一个例外：对于 SGF6112，StorageGRID AutoSupport 报告硬件和软件问题。您必须在除 SGF6112 之外的每个设备上配置 AutoSupport，SGF6112 无需额外配置。AutoSupport 对于服务设备和存储设备的实现方式不同。
+
+您可以使用 SANtricity 为每个存储设备启用 AutoSupport。您可以在初始设备设置期间或安装设备后配置 SANtricity AutoSupport：
+
+* 对于 SG6000 和 SG5700 设备， https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/accessing-and-configuring-santricity-system-manager.html["在 SANtricity System Manager 中配置 AutoSupport"^]
+
+
+如果您在 link:../admin/sending-eseries-autosupport-messages-through-storagegrid.html["SANtricity System Manager"] 中配置通过代理传输 AutoSupport，则来自 E-Series 设备的 AutoSupport 包可以包含在 StorageGRID AutoSupport 中。
+
+StorageGRID AutoSupport 不报告硬件问题，例如 DIMM 或主机接口卡 (HIC) 故障。但是，某些组件故障可能会触发link:../monitor/alerts-reference.html["硬件警报"]。对于带有基板管理控制器 (BMC) 的 StorageGRID 设备，您可以配置电子邮件和 SNMP 陷阱以报告硬件故障：
+
+* https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/setting-up-email-notifications-for-alerts.html["为 BMC 警报设置电子邮件通知"^]
+* https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/configuring-snmp-settings-for-bmc.html["配置 BMC 的 SNMP 设置"^]
+
+
+.相关信息
+https://mysupport.netapp.com/site/global/dashboard["NetApp 支持"^]

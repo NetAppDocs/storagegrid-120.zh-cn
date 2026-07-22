@@ -1,0 +1,65 @@
+---
+permalink: primer/delete-data-flow.html 
+sidebar: sidebar 
+keywords: StorageGRID, object, delete, deletion, object lock, bucket lifecycle, expiration, ilm, placement instruction 
+summary: 当客户端或租户执行删除操作或当对象的生命周期到期时，所有对象副本将从 StorageGRID 系统中删除，从而触发其自动删除。对象删除有一个已定义的数据流。 
+---
+= StorageGRID 如何处理对象删除
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当客户端执行删除操作或对象的生命周期到期时，所有对象副本将从 StorageGRID 系统中删除，从而触发其自动删除。对象删除有一个已定义的数据流。
+
+
+
+[[deletion-hierarchy]]
+== 删除层次结构
+
+StorageGRID 提供了几种方法来控制何时保留或删除对象。对象可以通过客户端请求删除，也可以自动删除。StorageGRID 始终将任何 S3 对象锁定设置优先于客户端删除请求，而客户端删除请求又优先于 S3 存储桶生命周期和 ILM 放置指令。
+
+* *S3 Object Lock*：如果为网格启用了全局 S3 Object Lock 设置，则 S3 客户端可以创建启用了 S3 Object Lock 的存储桶，然后使用 S3 REST API 为添加到该存储桶的每个对象版本指定保留截止日期和法定保留设置。
++
+** 无法通过任何方法删除合法冻结的对象版本。
+** 在达到对象版本的 retain-until-date 之前，无法通过任何方法删除该版本。
+** 启用了 S3 Object Lock 的存储桶中的对象由 ILM "永久"保留。但是，在达到其 retain-until-date 后，可以通过客户端请求或存储桶生命周期到期来删除对象版本。
+** 如果 S3 客户端将默认的 retain-until-date 应用于存储桶，则无需为每个对象指定 retain-until-date。
+
+
+* *客户端删除请求*：S3 客户端可以发出删除对象请求。当客户端删除对象时，该对象的所有副本都将从 StorageGRID 系统中删除。
+* *删除存储桶中的对象*：租户管理器用户可以使用此选项从 StorageGRID 系统中永久删除所选存储桶中对象和对象版本的所有副本。
+* *S3 存储桶生命周期*：S3 客户端可以向其存储桶添加指定过期操作的生命周期配置。如果存在存储桶生命周期，则当满足过期操作中指定的日期或天数时，StorageGRID 会自动删除对象的所有副本，除非客户端先删除该对象。
+* *ILM 放置说明*：假设存储桶未启用 S3 Object Lock，且没有存储桶生命周期，当 ILM 规则中的最后一个时间段结束且未为该对象指定进一步的放置时，StorageGRID 会自动删除该对象。
++
+
+NOTE: 配置 S3 存储桶生命周期后，生命周期到期操作将覆盖与生命周期筛选器匹配的对象的 ILM 策略。因此，即使放置对象的所有 ILM 指令均已失效，对象仍可能保留在网格中。
+
+
+
+有关详细信息，请参见 link:../ilm/how-objects-are-deleted.html["如何删除对象"]。
+
+
+
+[[data-flow-for-client-deletes]]
+== 客户端删除的数据流
+
+image:delete_data_flow.png["客户端删除数据流"]
+
+. LDR 服务从客户端应用程序接收删除请求。
+. LDR 服务更新元数据存储，使对象在客户端请求中显示为已删除，并指示 ILM 引擎删除对象数据的所有副本。
+. 对象已从系统中删除。已更新元数据存储以删除对象元数据。
+
+
+
+
+[[data-flow-for-ilm-deletes]]
+== ILM 删除的数据流
+
+image:automatic_deletion_data_flow.png["自动删除数据流"]
+
+. ILM 引擎确定需要删除该对象。
+. ILM 引擎通知元数据存储。元数据存储更新对象元数据，使对象在客户端请求中看起来已删除。
+. ILM 引擎删除对象的所有副本。元数据存储已更新，以删除对象元数据。
+

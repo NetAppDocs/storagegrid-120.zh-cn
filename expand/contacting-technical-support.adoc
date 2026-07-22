@@ -1,0 +1,61 @@
+---
+permalink: expand/contacting-technical-support.html 
+sidebar: sidebar 
+keywords: troubleshoot expansion, contact technical support, StorageGRID 
+summary: ${post_edited_translations.segment} 
+---
+= ${post_edited_translations.segment}
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+${post_edited_translations.segment}
+
+在联系技术支持之前，请收集所需的日志文件以帮助进行故障排除。
+
+.步骤
+. 默认情况下会阻止外部 SSH 访问。如有需要，link:../admin/manage-external-ssh-access.html["暂时允许访问"]。
+. 连接到遇到故障的扩展节点：
++
+.. 输入以下命令：``ssh -p 8022 admin@_grid_node_IP_``
++
+端口 8022 是基本操作系统的 SSH 端口，而端口 22 是运行 StorageGRID 的容器引擎的 SSH 端口。
+
+.. 输入 `Passwords.txt`文件中列出的密码。
+.. 输入以下命令切换到 root： `su -`
+.. 输入 `Passwords.txt`文件中列出的密码。
+
+
++
+以 root 身份登录后，提示符将从 `$`更改为 `#`。
+
+. 根据安装达到的阶段，检索网格节点上可用的以下任意日志：
++
+[cols="1a,2a"]
+|===
+| 平台 | 日志 
+
+
+ a| 
+VMware
+ a| 
+** `/var/log/daemon.log`
+** `/var/log/storagegrid/daemon.log`
+** `/var/log/storagegrid/nodes/<node-name>.log`
+
+
+
+
+ a| 
+Linux
+ a| 
+** `/var/log/storagegrid/daemon.log`
+** `/etc/storagegrid/nodes/<node-name>.conf` （对于每个故障节点）
+** `/var/log/storagegrid/nodes/<node-name>.log` （对于每个失败的节点；可能不存在）
+
+
+|===
+. 如果您已允许外部 SSH 访问，请在完成任务后link:../admin/manage-external-ssh-access.html["阻止访问"]。
+

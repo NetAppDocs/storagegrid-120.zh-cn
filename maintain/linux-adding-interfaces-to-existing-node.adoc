@@ -1,0 +1,49 @@
+---
+permalink: maintain/linux-adding-interfaces-to-existing-node.html 
+sidebar: sidebar 
+keywords: add interfaces, add client network interface, add admin network interface 
+summary: 安装Linux节点后，使用以下步骤将管理网络或客户端网络上的接口添加到Linux节点。 
+---
+= 向 StorageGRID 中的 Linux 节点添加管理员或客户端接口
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+安装Linux节点后，使用以下步骤将管理网络或客户端网络上的接口添加到Linux节点。
+
+如果在安装过程中未在 Linux 主机上的节点配置文件中配置 ADMIN_NETWORK_TARGET 或 CLIENT_NETWORK_TARGET，请使用此过程添加接口。有关节点配置文件的详细信息，请参见 link:../swnodes/index.html["在基于软件的节点上安装 StorageGRID"]。
+
+您可以在托管需要新网络分配的节点的 Linux 服务器上执行此过程，而不是在节点内部。此过程仅将接口添加到节点；如果尝试指定任何其他网络参数，则会出现验证错误。
+
+要提供寻址信息，您必须使用更改 IP 工具。请参见 link:changing-nodes-network-configuration.html["更改节点网络配置"]。
+
+.步骤
+. 登录到托管该节点的 Linux 服务器。
+. 编辑节点配置文件： `/etc/storagegrid/nodes/_node-name_.conf`。
++
+
+NOTE: 请勿指定任何其他网络参数，否则将导致验证错误。
+
++
+.. 为新网络目标添加一个条目。例如：
++
+`CLIENT_NETWORK_TARGET = bond0.3206`
+
+.. 可选：为 MAC 地址添加一个条目。例如：
++
+`CLIENT_NETWORK_MAC = aa:57:61:07:ea:5c`
+
+
+
+. 运行节点验证命令：
++
+`sudo storagegrid node validate _node-name_`
+
+. 解决所有验证错误。
+. 运行node reload命令：
++
+`sudo storagegrid node reload _node-name_`
+
+

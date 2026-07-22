@@ -1,0 +1,140 @@
+---
+permalink: tenant/grid-federation-account-clone.html 
+sidebar: sidebar 
+keywords: account clone, cloning tenant, grid federation, cross-grid replication 
+summary: 如果创建或编辑租户以使用网格联合连接，则该租户将从一个 StorageGRID 系统（源租户）复制到另一个 StorageGRID 系统（副本租户）。租户复制后，添加到源租户的任何组和用户都将克隆到副本租户。 
+---
+= 在 StorageGRID 中克隆租户组和用户
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果创建或编辑租户以使用网格联合连接，则该租户将从一个 StorageGRID 系统（源租户）复制到另一个 StorageGRID 系统（副本租户）。租户复制后，添加到源租户的任何组和用户都将克隆到副本租户。
+
+最初创建租户的 StorageGRID 系统是租户的_源网格_。复制租户的 StorageGRID 系统是租户的_目标网格_。两个租户帐户具有相同的帐户 ID、名称、描述、存储配额和分配的权限，但目标租户最初没有 root 用户密码。有关详细信息，请参阅link:../admin/grid-federation-what-is-account-clone.html["什么是帐户克隆"]和link:../admin/grid-federation-manage-tenants.html["管理允许的租户"]。
+
+克隆租户帐户信息是存储桶对象 link:../admin/grid-federation-what-is-cross-grid-replication.html["跨网格复制"] 所必需的。在两个网格上拥有相同的租户组和用户，可确保您能够访问任一网格上的相应存储桶和对象。
+
+
+
+[[tenant-workflow-for-account-clone]]
+== 帐户克隆的租户工作流程
+
+如果您的租户帐户具有 *Use grid federation connection* 权限，请查看工作流程图以了解克隆组、用户和 S3 访问密钥所需执行的步骤。
+
+image:grid-federation-account-clone-workflow-tm.png["租户的帐户克隆工作流程。以下文本将介绍这些步骤。步骤如下文所述。"]
+
+工作流程中的主要步骤如下：
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png["一个"] 登录到租户
+[role="quick-margin-para"]
+登录到源网格（最初创建租户的网格）上的租户帐户。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["两个"] （可选）配置身份联合
+[role="quick-margin-para"]
+如果您的租户帐户具有使用联合组和用户的 *Use own identity source* 权限，请为源和目标租户帐户配置相同的身份源（使用相同的设置）。除非两个网格使用相同的身份源，否则无法克隆联合组和用户。有关说明，请参见 link:using-identity-federation.html["${post_edited_translations.segment}"]。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["三"] 创建组和用户
+[role="quick-margin-para"]
+创建组和用户时，始终从租户的源网格开始。添加新组时，StorageGRID 会自动将其克隆到目标网格。
+
+[role="quick-margin-list"]
+* 如果为整个 StorageGRID 系统或您的租户帐户配置了身份联合，link:creating-groups-for-s3-tenant.html["创建新租户组"]则可通过从身份源导入联合组来实现。
+
+
+[role="quick-margin-list"]
+* 如果您未使用身份联合，link:creating-groups-for-s3-tenant.html["创建新的本地组"]，然后 link:manage-users.html["创建本地用户"]。
+
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-4.png["四个"] 创建 S3 访问密钥
+[role="quick-margin-para"]
+您可以link:creating-your-own-s3-access-keys.html["创建自己的访问密钥"]或link:creating-another-users-s3-access-keys.html["创建其他用户的访问密钥"]在源网格或目标网格上访问该网格上的存储桶。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-5.png["五"] （可选）克隆 S3 访问密钥
+[role="quick-margin-para"]
+如果需要在两个网格上使用相同的访问密钥访问存储区，请在源网格上创建访问密钥，然后使用租户管理器 API 将它们手动克隆到目标网格。有关说明，请参见 link:../tenant/grid-federation-clone-keys-with-api.html["使用 API 克隆 S3 访问密钥"]。
+
+
+
+[[how-are-groups-users-and-s3-access-keys-cloned]]
+== 如何克隆组、用户和 S3 访问密钥？
+
+查看此部分，了解如何在租户源网格和租户目标网格之间克隆组、用户和 S3 访问密钥。
+
+
+
+[[local-groups-created-on-source-grid-are-cloned]]
+=== 在源网格上创建的本地组已克隆
+
+创建租户帐户并将其复制到目标网格后，StorageGRID 会自动将添加到租户源网格的任何本地组克隆到租户目标网格。
+
+原始组及其克隆都具有相同的访问模式、组权限和 S3 组策略。有关说明，请参见link:creating-groups-for-s3-tenant.html["为 S3 租户创建组"]。
+
+image:grid-federation-account-clone.png["显示本地组从源网格克隆到目标网格的图像"]
+
+
+NOTE: 在源网格上创建本地组时选择的任何用户在组克隆到目标网格时都不包括在内。为此，请不要在创建组时选择用户。而应在创建用户时选择该组。
+
+
+
+[[local-users-created-on-source-grid-are-cloned]]
+=== 在源网格上创建的本地用户已克隆
+
+在源网格上创建新的本地用户时，StorageGRID 会自动将该用户克隆到目标网格。原始用户及其克隆均具有相同的全名、用户名和*拒绝访问*设置。两个用户也都属于同一组。有关说明，请参见link:manage-users.html["管理用户"]。
+
+出于安全原因，本地用户密码不会克隆到目标网格。如果本地用户需要访问目标网格上的 Tenant Manager，则租户帐户的 root 用户必须在目标网格上为该用户添加密码。有关说明，请参见link:manage-users.html["管理用户"]。
+
+image:grid-federation-local-user-clone.png["显示本地用户从源网格克隆到目标网格的图片"]
+
+
+
+[[federated-groups-created-on-source-grid-are-cloned]]
+=== 在源网格上创建的联合组已克隆
+
+假设已满足将帐户克隆与 link:../admin/grid-federation-what-is-account-clone.html#account-clone-sso["单点登录"] 和 link:../admin/grid-federation-what-is-account-clone.html#account-clone-identity-federation["身份联合"] 结合使用的要求，则为源网格上的租户创建（导入）的联合组将自动克隆到目标网格上的租户。
+
+两个组具有相同的访问模式、组权限和 S3 组策略。
+
+为源租户创建联合组并将其克隆到目标租户后，联合用户可以在任一网格上登录到租户。
+
+image:grid-federation-federated-group-clone.png["显示联合组从源网格克隆到目标网格的图像"]
+
+
+
+[[s3-access-keys-can-be-manually-cloned]]
+=== 可以手动克隆 S3 访问密钥
+
+StorageGRID 不会自动克隆 S3 访问密钥，因为每个网格上使用不同的密钥可以提高安全性。
+
+要管理两个网格上的访问密钥，可以执行以下操作之一：
+
+* 如果不需要为每个网格使用相同的密钥，则可以在每个网格上link:creating-your-own-s3-access-keys.html["创建自己的访问密钥"]或link:creating-another-users-s3-access-keys.html["创建其他用户的访问密钥"]。
+* 如果需要在两个网格上使用相同的密钥，可以在源网格上创建密钥，然后使用 Tenant Manager API 手动link:../tenant/grid-federation-clone-keys-with-api.html["克隆密钥"]到目标网格。
+
+
+image:grid-federation-s3-access-key.png["显示 S3 访问密钥可以选择性地从源网格克隆到目标网格的图像"]
+
+
+NOTE: 当您为联合用户克隆 S3 访问密钥时，用户和 S3 访问密钥都将克隆到目标租户。
+
+
+
+[[groups-and-users-added-to-destination-grid-arent-cloned]]
+=== 添加到目标网格的组和用户不会被克隆
+
+克隆仅从租户的源网格到租户的目标网格。如果在租户的目标网格上创建或导入组和用户，StorageGRID 将不会将这些项目克隆回租户的源网格。
+
+image:grid-federation-account-not-cloned.png["显示目标网格上的详细信息未克隆到源网格的图像"]
+
+
+
+[[edited-or-deleted-groups-users-and-access-keys-arent-cloned]]
+=== 已编辑或已删除的组、用户和访问密钥不会被克隆
+
+只有在创建新组和用户时才会进行克隆。
+
+如果编辑或删除任一网格上的组、用户或访问键，则您所做的更改不会克隆到其他网格。
+
+image:grid-federation-account-clone-edit-delete.png["显示编辑或删除的详细信息未被克隆的图片"]

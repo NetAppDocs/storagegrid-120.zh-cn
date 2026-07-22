@@ -1,0 +1,71 @@
+---
+permalink: ilm/manage-ilm-policy-tags.html 
+sidebar: sidebar 
+keywords: ILM policy tag 
+summary: 您可以查看 ILM 策略标记详细信息、编辑标记或删除标记。 
+---
+= 管理 StorageGRID 中的 ILM 策略标签
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以查看 ILM 策略标记详细信息、编辑标记或删除标记。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["所需的访问权限"]。
+
+
+
+
+[[view-ilm-policy-tag-details]]
+== 查看 ILM 策略标记详细信息
+
+要查看标记的详细信息，请执行以下操作：
+
+. 选择 *ILM* > *策略标签*。
+. 从表中选择策略的名称。此时将显示标记的详细信息页面。
+. 在详细信息页面上，查看已分配策略的先前历史记录。
+. 选择策略即可查看该策略。
+
+
+
+
+[[edit-ilm-policy-tag]]
+== 编辑 ILM 策略标记
+
+
+NOTE: 标签名称和描述对租户可见。选择有助于租户在选择要分配给其存储桶的策略标签时做出明智决策的值。例如，如果分配的策略将在一段时间后删除对象，您可以在描述中说明这一点。请勿在这些字段中包含敏感信息。
+
+要编辑现有标记的说明，请执行以下操作：
+
+. 选择 *ILM* > *策略标签*。
+. 选择标签的复选框，然后选择*编辑*。
++
+或者，选择标签的名称。此时会显示标签的详细信息页面，您可以在该页面上选择*编辑*。
+
+. 根据需要更改标签描述
+. 选择 *Save*。
+
+
+
+
+[[remove-ilm-policy-tag]]
+== 删除 ILM 策略标记
+
+删除策略标记时，分配给该标记的任何存储桶都将应用默认策略。
+
+要删除标签：
+
+. 选择 *ILM* > *策略标签*。
+. 选择标签的复选框，然后选择*删除*。此时将显示一个确认对话框。
++
+或者，选择标签的名称。此时会显示标签的详细信息页面，您可以在该页面上选择 *Remove*。
+
+. 选择*是*删除标签。
+
+
+.相关信息
+link:creating-ilm-policy.html#activate-ilm-policy["了解如何创建 ILM 策略标记"]

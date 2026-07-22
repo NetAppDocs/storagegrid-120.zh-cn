@@ -1,0 +1,42 @@
+---
+permalink: admin/enable-cross-origin-resource-sharing-for-management-interface.html 
+sidebar: sidebar 
+keywords: how to configure cross-origin resource sharing, cors, management, api, domain 
+summary: '如果您希望使用管理 API 从其他域访问 StorageGRID 中的数据，可以为 StorageGRID 的管理 API 请求启用跨源资源共享 (CORS)。' 
+---
+= ${post_edited_translations.segment}
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+作为网格管理员，如果您希望使用管理 API 从其他域访问 StorageGRID 中的数据，则可以为向 StorageGRID 发出的管理 API 请求启用跨源资源共享 (CORS)。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* link:../tenant/tenant-management-permissions.html["root 访问权限"] 提供对所有 CORS 配置请求的访问。
+
+
+.关于此任务
+CORS 是一种安全机制，允许一个域中的客户端 Web 应用程序访问另一个不同域中的资源。例如，假设您要在域  `\http://www.example.com` 中为 StorageGRID 构建一个监控仪表板。通过在 StorageGRID 中为  `\http://www.example.com` 和 "Grid Manager" 启用 CORS，StorageGRID 域将响应来自  `\http://www.example.com` 的 Grid Management API 请求。
+
+带有 `application/json`的管理 API (mgmt-api) 请求或针对 `Content-Type`的 `multipart/formdata`请求支持 CORS。
+
+.步骤
+. 在 Grid Manager 中，转到 *CONFIGURATION* > *Network* > *Management interface CORS settings*。
+. 选择 *Grid Manager*、*Tenant Manager* 或这两个选项。
++
+** *Grid Manager*：为跨域 Grid Management API 请求启用 CORS。
+** ${post_edited_translations.segment}
+
+
+. 在 *Domains* 字段中输入其他域的 URL。
++
+如果要在 StorageGRID 中为多个域启用 CORS，请选择*添加其他域*。
+
+. 选择 *Save*。
+
+
+.相关信息
+link:../tenant/configuring-cross-origin-resource-sharing-for-buckets-and-objects.html["${post_edited_translations.segment}"]

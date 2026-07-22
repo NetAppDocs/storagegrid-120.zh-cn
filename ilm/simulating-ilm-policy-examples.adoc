@@ -1,0 +1,116 @@
+---
+permalink: ilm/simulating-ilm-policy-examples.html 
+sidebar: sidebar 
+keywords: simulate ilm policy 
+summary: ILM 策略模拟的示例为构建和修改环境模拟提供了指导。 
+---
+= StorageGRID 中的 ILM 策略模拟示例
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ILM 策略模拟的示例为构建和修改环境模拟提供了指导。
+
+
+
+[[example-1-verify-rules-when-simulating-an-ilm-policy]]
+== 示例 1：在模拟 ILM 策略时验证规则
+
+此示例描述了如何在模拟策略时验证规则。
+
+在此示例中，正在针对两个存储桶中的接收对象模拟 *Example ILM policy*。该策略包括以下三条规则：
+
+* 第一条规则，*Two copies, two years for bucket-a*，仅适用于 bucket-a 中的对象。
+* 第二条规则，*EC objects > 1 MB*，适用于所有存储桶，但会筛选大于 1 MB 的对象。
+* 第三条规则，*两份副本，两个数据中心*，是默认规则。它不包括任何筛选条件，也不使用非当前参考时间。
+
+
+模拟策略后，请确认每个对象都符合正确的规则。
+
+image:simulate_policy_screen.png["模拟策略结果"]
+
+在此示例中：
+
+* `bucket-a/bucket-a object.pdf` 正确匹配了第一条规则，该规则对  `bucket-a` 中的对象进行过滤。
+* `bucket-b/test object greater than 1 MB.pdf` 在 `bucket-b`中，因此它与第一条规则不匹配。相反，它与第二条规则正确匹配，该规则过滤大于 1 MB 的对象。
+* `bucket-b/test object less than 1 MB.pdf` 与前两个规则中的筛选器不匹配，因此将按默认规则放置，其中不包括筛选器。
+
+
+
+
+[[example-2-reorder-rules-when-simulating-an-ilm-policy]]
+== 示例 2：模拟 ILM 策略时重新排序规则
+
+此示例演示如何在模拟策略时重新排序规则以更改结果。
+
+在此示例中，正在模拟 *Demo* 策略。此策略旨在查找具有 series=x-men 用户元数据的对象，包括以下三个规则：
+
+* 第一条规则，*PNGs*，用于筛选以 `.png`结尾的键名。
+* 第二条规则 *X-men* 仅适用于租户 A 的对象，并筛选 `series=x-men`用户元数据。
+* 最后一个规则，*Two copies two data centers*，是默认规则，它匹配与前两个规则不匹配的任何对象。
+
+
+.步骤
+. 添加规则并保存策略后，选择 *Simulate*。
+. 在*对象*字段中，输入测试对象的 S3 存储桶/对象密钥，然后选择*模拟*。
++
+模拟结果显示， `Havok.png`对象与 *PNGs* 规则匹配。
+
++
+image:simulate_reorder_rules_pngs_result.png["示例 2：模拟 ILM 策略时的重新排序规则"]
+
++
+不过， `Havok.png`这是为了测试 *X-men* 规则。
+
+. 要解决此问题，请重新排序规则。
++
+.. 选择*完成*以关闭模拟 ILM 策略窗口。
+.. 选择*编辑*以编辑此策略。
+.. 将 *X-men* 规则拖到列表顶端。
+.. 选择 *Save*。
+
+
+. 选择*模拟*。
++
+先前测试的对象将根据更新的策略进行重新评估，并显示新的模拟结果。在示例中，"规则匹配"列显示 `Havok.png`对象现在按预期匹配 X-men 元数据规则。"上一个匹配"列显示 PNGs 规则与上一个模拟中的对象匹配。
+
++
+image:simulate_reorder_rules_correct_result.png["示例 2：模拟 ILM 策略时的重新排序规则"]
+
+
+
+
+
+[[example-3-correct-a-rule-when-simulating-an-ilm-policy]]
+== 示例 3：在模拟 ILM 策略时更正规则
+
+此示例演示如何模拟策略、更正策略中的规则并继续模拟。
+
+在此示例中，正在模拟 *Demo* 策略。此策略旨在查找具有 `series=x-men`用户元数据的对象。但是，在对 `Beast.jpg`对象模拟此策略时出现意外结果。该对象不是匹配 X-men 元数据规则，而是匹配默认规则 Two copies two data centers。
+
+image:simulate_results_for_object_wrong_metadata.png["示例 3：在模拟 ILM 策略时更正规则"]
+
+当测试对象与策略中的预期规则不匹配时，您必须检查策略中的每个规则并更正所有错误。
+
+.步骤
+. 选择*完成*关闭模拟策略对话框。在策略的详细信息页面上，选择*保留图*。然后根据需要选择每个规则的*展开所有*或*查看详细信息*。
+. 查看规则的租户帐户、参考时间和筛选条件。
++
+例如，假设 X 战警规则的元数据输入为"x-men01"，而不是"x-men"。
+
+. 要解决此错误，请按以下步骤更正规则：
++
+** 如果规则是策略的一部分，则可以克隆规则或从策略中删除规则，然后进行编辑。
+** 如果规则是活动策略的一部分，则必须克隆该规则。您无法从活动策略中编辑或删除规则。
+
+
+. 再次执行模拟。
++
+在此示例中，纠正后的 X-men 规则现在根据  `series=x-men` 用户元数据匹配  `Beast.jpg` 对象，符合预期。
+
++
+image:simulate_results_for_object_corrected_metadata.png["示例 3：在模拟 ILM 策略时更正规则"]
+
+

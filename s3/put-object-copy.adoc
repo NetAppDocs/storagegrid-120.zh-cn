@@ -1,0 +1,202 @@
+---
+permalink: s3/put-object-copy.html 
+sidebar: sidebar 
+keywords: put object copy, CopyObject 
+summary: 您可以使用 S3 CopyObject 请求创建已存储在 S3 中的对象的副本。CopyObject 操作等同于执行 GET 然后 PUT。 
+---
+= 使用 S3 CopyObject 请求在 StorageGRID 中创建对象副本
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 S3 CopyObject 请求创建已存储在 S3 中的对象的副本。CopyObject 操作与依次执行 GetObject 和 PutObject 相同。
+
+
+
+[[resolve-conflicts]]
+== 解决冲突
+
+冲突的客户端请求（例如两个客户端向同一密钥写入）将以"最新获胜"为原则进行解决。"最新获胜"评估的时间取决于 StorageGRID 系统何时完成给定请求，而不是 S3 客户端何时开始操作。
+
+
+
+[[object-size]]
+== 对象大小
+
+单次 PutObject 操作的最大_推荐_大小为 5 GiB（5,368,709,120 字节）。如果您的对象大于 5 GiB，请改用 link:operations-for-multipart-uploads.html["多部件上传"]。
+
+单次 PutObject 操作的最大_支持_大小为 5 TiB（5,497,558,138,880 字节）。
+
+
+NOTE: 如果您从 StorageGRID 11.6 或更早版本升级，则在尝试上传超过 5 GiB 的对象时，将触发 S3 PUT Object size too large 警报。如果您新安装了 StorageGRID 11.7 或 11.8，则在此情况下不会触发警报。但是，为了与 AWS S3 标准保持一致，未来版本的 StorageGRID 将不支持上传大于 5 GiB 的对象。
+
+
+
+[[utf-8-characters-in-user-metadata]]
+== 用户元数据中的 UTF-8 字符
+
+如果请求在用户定义元数据的键名或值中包含（未转义的） UTF-8 值，则 StorageGRID 行为未定义。
+
+StorageGRID不解析或解释用户定义元数据的键名或值中包含的转义的UTF-8字符。转义的UTF-8字符被视为ASCII字符：
+
+* 如果用户定义的元数据包含转义的 UTF-8 字符，则请求成功。
+* 如果键名或键值的解释值包含不可打印的字符，StorageGRID 不会返回 `x-amz-missing-meta`标头。
+
+
+
+
+[[supported-request-headers]]
+== 支持的请求标头
+
+支持以下请求标头：
+
+* `Content-Type`
+* `x-amz-copy-source`
+* `x-amz-copy-source-if-match`
+* `x-amz-copy-source-if-none-match`
+* `x-amz-copy-source-if-unmodified-since`
+* `x-amz-copy-source-if-modified-since`
+* `x-amz-meta-`，后跟包含用户定义元数据的名称-值对
+* `x-amz-metadata-directive`：默认值为 `COPY`，可让您复制对象和相关的元数据。
++
+您可以指定 `REPLACE`在复制对象时覆盖现有元数据，或更新对象元数据。
+
+* `x-amz-storage-class`
+* `x-amz-tagging-directive`：默认值为 `COPY`，可让您复制对象和所有标记。
++
+您可以指定 `REPLACE`在复制对象时覆盖现有标记，或更新标记。
+
+* S3 Object Lock 请求标头：
++
+** `x-amz-object-lock-mode`
+** `x-amz-object-lock-retain-until-date`
+** `x-amz-object-lock-legal-hold`
++
+如果在没有这些标头的情况下发出请求，则会使用存储桶默认保留设置来计算对象版本模式和 retain-until-date。请参阅 link:use-s3-api-for-s3-object-lock.html["使用 S3 REST API 配置 S3 对象锁定"]。
+
+
+
+* SSE 请求标头：
++
+** `x-amz-copy-source​-server-side​-encryption​-customer-algorithm`
+** `x-amz-copy-source​-server-side-encryption-customer-key`
+** `x-amz-copy-source​-server-side-encryption-customer-key-MD5`
+** `x-amz-server-side-encryption`
+** `x-amz-server-side-encryption-customer-key-MD5`
+** `x-amz-server-side-encryption-customer-key`
+** `x-amz-server-side-encryption-customer-algorithm`
++
+请参阅 <<服务器端加密的请求标头>>
+
+
+
+
+
+
+
+[[unsupported-request-headers]]
+== 不支持的请求标头
+
+不支持以下请求标头：
+
+* `Cache-Control`
+* `Content-Disposition`
+* `Content-Encoding`
+* `Content-Language`
+* `Expires`
+* `If-Match`
++
+ `If-Match header` 是可以接受的，但不起作用。
+
+* `If-None-Match`
++
+ `If-None-Match header` 是可以接受的，但不起作用。
+
+* `x-amz-checksum-algorithm`
++
+复制对象时，如果源对象具有校验和，则 StorageGRID 不会将该校验和值复制到新对象。无论您是否尝试在对象请求中使用 `x-amz-checksum-algorithm`，此行为均适用。
+
+* `x-amz-website-redirect-location`
+
+
+
+
+[[storage-class-options]]
+== 存储类选项
+
+支持 `x-amz-storage-class`请求标头，如果匹配的 ILM 规则使用 Dual commit 或 Balanced link:../ilm/data-protection-options-for-ingest.html["载入选项"]，则会影响 StorageGRID 创建的对象副本数。
+
+* `STANDARD`
++
+（默认值）当 ILM 规则使用双提交选项时，或当平衡选项回退到创建临时副本时，指定双提交接收操作。
+
+* `REDUCED_REDUNDANCY`
++
+当 ILM 规则使用双提交选项，或当平衡选项回退到创建临时副本时，指定单提交接收操作。
+
++
+
+NOTE: 如果要将对象接收到启用了 S3 对象锁定的存储桶中，则该 `REDUCED_REDUNDANCY`选项将被忽略。如果要将对象摄入旧版合规存储桶，则该 `REDUCED_REDUNDANCY`选项将返回错误。StorageGRID 将始终执行双提交摄取，以确保满足合规性要求。
+
+
+
+
+
+[[using-x-amz-copy-source-in-copyobject]]
+== 将 x-amz-copy-source 用于 CopyObject
+
+如果 `x-amz-copy-source`标头中指定的源存储桶和密钥与目标存储桶和密钥不同，则会将源对象数据的副本写入目标。
+
+如果源和目标匹配，并且 `x-amz-metadata-directive`标头指定为 `REPLACE`，则会使用请求中提供的元数据值更新对象的元数据。在此情况下，StorageGRID 不会重新载入对象。这有两个重要后果：
+
+* 您不能使用 CopyObject 对现有对象进行就地加密，也不能更改现有对象的就地加密。如果提供 `x-amz-server-side-encryption`标头或 `x-amz-server-side-encryption-customer-algorithm`标头，StorageGRID 将拒绝请求并返回 `XNotImplemented`。
+* 不使用匹配的 ILM 规则中指定的 Ingest Behavior 选项。当正常后台 ILM 流程重新评估 ILM 时，将对更新触发的对象放置进行任何更改。
++
+这意味着，如果 ILM 规则使用"严格"选项进行载入行为，则在无法进行所需的对象放置时（例如，因为新要求的位置不可用），不会采取任何措施。更新的对象将保留其当前位置，直到可以进行所需的放置为止。
+
+
+
+
+
+[[request-headers-for-server-side-encryption]]
+== 服务器端加密的请求标头
+
+如果您link:using-server-side-encryption.html["使用服务器端加密"]，则提供的请求标头取决于源对象是否已加密以及是否计划加密目标对象。
+
+* 如果使用客户提供的密钥(SSE-C)加密源对象，则必须在 CopyObject 请求中包含以下三个标头，以便可以解密然后复制对象：
++
+** `x-amz-copy-source​-server-side​-encryption​-customer-algorithm`：指定 `AES256`。
+** `x-amz-copy-source​-server-side-encryption-customer-key`：指定创建源对象时提供的加密密钥。
+** `x-amz-copy-source​-server-side-encryption-customer-key-MD5`：指定创建源对象时提供的 MD5 摘要。
+
+
+* 如果要使用您提供和管理的唯一密钥加密目标对象（副本），请包括以下三个标头：
++
+** `x-amz-server-side-encryption-customer-algorithm`：指定 `AES256`。
+** `x-amz-server-side-encryption-customer-key`: 为目标对象指定新的加密密钥。
+** `x-amz-server-side-encryption-customer-key-MD5`：指定新加密密钥的 MD5 摘要。
+
+
++
+
+CAUTION: 您提供的加密密钥绝不会被存储。如果丢失加密密钥，则会丢失相应的对象。在使用客户提供的密钥保护对象数据之前，请查看 link:using-server-side-encryption.html["使用服务器端加密"] 的注意事项。
+
+* 如果要使用由 StorageGRID 管理的唯一密钥（SSE）对目标对象（副本）进行加密，请在 CopyObject 请求中包含此标头：
++
+** `x-amz-server-side-encryption`
++
+
+NOTE: 该对象的 `server-side-encryption`值无法更新。请改为使用 `x-amz-metadata-directive`： `REPLACE`制作具有新 `server-side-encryption`值的副本。
+
+
+
+
+
+
+
+[[versioning]]
+== 版本控制
+
+如果源存储桶已进行版本控制，则可以使用 `x-amz-copy-source`标头复制对象的最新版本。若要复制对象的特定版本，必须使用 `versionId`子资源显式指定要复制的版本。如果对目标存储桶进行了版本控制，则在 `x-amz-version-id`响应标头中返回生成的版本。如果暂停目标存储桶的版本控制，则 `x-amz-version-id`返回 "null" 值。

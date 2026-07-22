@@ -1,0 +1,57 @@
+---
+permalink: tenant/configuring-platform-services-endpoints.html 
+sidebar: sidebar 
+keywords: how to configure platform services endpoint 
+summary: 必须至少将一个终结点配置为平台服务的目标，然后才能为存储桶配置平台服务。 
+---
+= 在 StorageGRID 中配置平台服务端点
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+必须至少将一个终结点配置为平台服务的目标，然后才能为存储桶配置平台服务。
+
+对平台服务的访问由 StorageGRID 管理员按租户启用。若要创建或使用平台服务终结点，您必须是其网络已配置为允许存储节点访问外部终结点资源的网格中具有管理终结点或根访问权限的租户用户。对于单个租户，最多可以配置 500 个平台服务终结点。有关详细信息，请联系您的 StorageGRID 管理员。
+
+
+
+[[what-is-a-platform-services-endpoint]]
+== 什么是平台服务端点？
+
+平台服务端点指定 StorageGRID 访问外部目标所需的信息。
+
+例如，如果要将对象从 StorageGRID 存储桶复制到 Amazon S3 存储桶，则需要创建一个平台服务端点，其中包含 StorageGRID 访问 Amazon 上目标存储桶所需的信息和凭据。
+
+每种类型的平台服务都需要自己的端点，因此必须为计划使用的每个平台服务至少配置一个端点。定义平台服务端点后，将端点的 URN 用作用于启用服务的配置 XML 中的目标。
+
+您可以使用同一个端点作为多个源存储桶的目标。例如，您可以配置多个源存储桶以将对象元数据发送到同一个搜索集成端点，以便对多个存储桶执行搜索。您还可以将源存储桶配置为使用多个端点作为目标，这使您能够执行多种操作，例如向一个 Amazon Simple Notification Service (Amazon SNS) 主题发送有关对象创建的通知，以及向第二个 Amazon SNS 主题发送有关对象删除的通知。
+
+
+
+[[endpoints-for-cloudmirror-replication]]
+== CloudMirror 复制的端点
+
+StorageGRID 支持表示 S3 存储桶的复制端点。这些存储桶可能托管在 Amazon Web Services、相同或远程 StorageGRID 部署或其他服务上。
+
+
+
+[[endpoints-for-notifications]]
+== 通知端点
+
+StorageGRID 支持 Amazon SNS、Kafka 和 webhook 端点。不支持 Simple Queue Service (SQS) 和 AWS Lambda 端点。
+
+对于 Kafka 端点，不支持 Mutual TLS。因此，如果您在 Kafka 代理配置中将 `ssl.client.auth`设置为 `required`，则可能会导致 Kafka 端点配置问题。
+
+
+
+[[endpoints-for-the-search-integration-service]]
+== 搜索集成服务的端点
+
+StorageGRID 支持表示 Elasticsearch 集群的搜索集成端点。这些 Elasticsearch 集群可以位于本地数据中心，也可以托管在 AWS 云或其他位置。
+
+搜索集成端点引用特定的 Elasticsearch 索引和类型。必须先在 Elasticsearch 中创建索引，然后再在 StorageGRID 中创建端点，否则端点创建将失败。在创建端点之前，无需创建类型。如果需要，StorageGRID 将在向端点发送对象元数据时创建该类型。
+
+.相关信息
+link:../admin/index.html["管理 StorageGRID"]

@@ -1,0 +1,207 @@
+---
+permalink: admin/grid-federation-retry-failed-replication.html 
+sidebar: sidebar 
+keywords: grid federation, troubleshoot 
+summary: 在解决跨网格复制永久故障警报后，您应确定是否有任何对象或删除标记未能复制到另一个网格。然后，您可以重新摄入这些对象，或使用 Grid Management API 重试复制。 
+---
+= 识别并重试失败的 StorageGRID 复制操作
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在解决“跨网格复制永久故障”警报后，您应该确定是否有任何对象或删除标记未能复制到另一个网格。然后，您可以重新摄入这些对象，或使用 Grid Management API 重试复制。
+
+*跨网格复制永久故障* 警报指示，由于需要用户干预才能解决的原因，无法在两个网格上的存储桶之间复制租户对象。此警报通常是由于对源存储桶或目标存储桶进行更改而导致的。有关详细信息，请参见 link:grid-federation-troubleshoot.html["对网格联合错误进行故障排除"]。
+
+
+
+[[determine-if-any-objects-failed-to-be-replicated]]
+== 确定是否有任何对象未能复制
+
+要确定是否有任何对象或删除标记未复制到其他网格，可以在审核日志中搜索 link:../audit/cgrr-cross-grid-replication-request.html["CGRR（跨网格复制请求）"] 消息。当 StorageGRID 无法将对象、多部分对象或删除标记复制到目标存储桶时，此消息将添加到日志中。
+
+您可以使用 link:../audit/using-audit-explain-tool.html["audit-explain 工具"] 将结果转换为更易于阅读的格式。
+
+.开始之前
+* ${post_edited_translations.segment}
+* 您拥有  `Passwords.txt` 文件。
+* 您知道主管理节点的 IP 地址。
+
+
+.步骤
+. ${post_edited_translations.segment}
++
+.. 输入以下命令： `ssh admin@_primary_Admin_Node_IP_`
+.. 输入 `Passwords.txt`文件中列出的密码。
+.. 输入以下命令切换到 root： `su -`
+.. 输入 `Passwords.txt`文件中列出的密码。
++
+以 root 身份登录时，提示符将从 `$`更改为 `#`。
+
+
+
+. ${post_edited_translations.segment}
++
+例如，此命令对过去 30 分钟内的所有 CGRR 消息执行 grep 操作，并使用 audit-explain 工具。
+
++
+`# awk -vdate=$(date -d "30 minutes ago" '+%Y-%m-%dT%H:%M:%S') '$1$2 >= date { print }' audit.log | grep CGRR | audit-explain`
+
++
+此命令的结果将类似于此示例，其中包含六个 CGRR 消息的条目。在该示例中，由于无法复制对象，因此所有跨网格复制请求都返回了一般错误。前三个错误为 "replicate object" 操作，后三个错误为 "replicate delete marker" 操作。
+
++
+[listing]
+----
+CGRR Cross-Grid Replication Request tenant:50736445269627437748 connection:447896B6-6F9C-4FB2-95EA-AEBF93A774E9 operation:"replicate object" bucket:bucket123 object:"audit-0" version:QjRBNDIzODAtNjQ3My0xMUVELTg2QjEtODJBMjAwQkI3NEM4 error:general error
+CGRR Cross-Grid Replication Request tenant:50736445269627437748 connection:447896B6-6F9C-4FB2-95EA-AEBF93A774E9 operation:"replicate object" bucket:bucket123 object:"audit-3" version:QjRDOTRCOUMtNjQ3My0xMUVELTkzM0YtOTg1MTAwQkI3NEM4 error:general error
+CGRR Cross-Grid Replication Request tenant:50736445269627437748 connection:447896B6-6F9C-4FB2-95EA-AEBF93A774E9 operation:"replicate delete marker" bucket:bucket123 object:"audit-1" version:NUQ0OEYxMDAtNjQ3NC0xMUVELTg2NjMtOTY5NzAwQkI3NEM4 error:general error
+CGRR Cross-Grid Replication Request tenant:50736445269627437748 connection:447896B6-6F9C-4FB2-95EA-AEBF93A774E9 operation:"replicate delete marker" bucket:bucket123 object:"audit-5" version:NUQ1ODUwQkUtNjQ3NC0xMUVELTg1NTItRDkwNzAwQkI3NEM4 error:general error
+----
++
+每个条目都包含以下信息：
+
++
+[cols="1a,2a"]
+|===
+| 字段 | 问题描述 
+
+
+| CGRR 跨网格复制请求  a| 
+请求的名称
+
+
+
+| 租户  a| 
+租户的账号 ID
+
+
+
+| 连接  a| 
+网格联合连接的 ID
+
+
+
+| operation  a| 
+正在尝试的复制操作类型：
+
+** 复制对象
+** 复制删除标记
+** 复制多部分对象
+
+
+
+
+| 存储分段  a| 
+存储桶名称
+
+
+
+| 对象  a| 
+${post_edited_translations.segment}
+
+
+
+| version  a| 
+${post_edited_translations.segment}
+
+
+
+| 错误  a| 
+错误类型。如果跨网格复制失败，则错误为 "General error"。
+
+|===
+
+
+
+
+[[retry-failed-replications]]
+== ${post_edited_translations.segment}
+
+${post_edited_translations.segment}
+
+* ${post_edited_translations.segment}
+* ${post_edited_translations.segment}
+
+
+.步骤
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
++
+
+NOTE: 标记为"私有"的 StorageGRID API 端点如有更改，恕不另行通知。StorageGRID 私有端点也会忽略请求的 API 版本。
+
+. 在 *cross-grid-replication-advanced* 部分，选择以下端点：
++
+`POST /private/cross-grid-replication-retry-failed`
+
+. 选择*试用*。
+. ${post_edited_translations.segment}
++
+${post_edited_translations.segment}
+
+. ${post_edited_translations.segment}
+. ${post_edited_translations.segment}
++
+
+NOTE: 挂起表示已将跨网格复制请求添加到内部队列中进行处理。
+
+
+
+
+
+[[monitor-replication-retries]]
+== 监控复制重试
+
+应监视复制重试操作，以确保它们已完成。
+
+
+TIP: 将对象或删除标记复制到另一个网格可能需要几个小时或更长时间。
+
+可以通过以下两种方式之一监视重试操作：
+
+* 使用 S3 link:../s3/head-object.html["HeadObject"] 或 link:../s3/get-object.html["获取对象"] 请求。响应包括 StorageGRID 特定的 `x-ntap-sg-cgr-replication-status`响应标头，该标头将具有以下其中一个值：
++
+[cols="1a,2a"]
+|===
+| Grid | 复制状态 
+
+
+ a| 
+源
+ a| 
+** *COMPLETED*：复制成功。
+** *PENDING*：对象尚未复制。
+** *FAILURE*：复制失败，出现永久性故障。用户必须解决此错误。
+
+
+
+
+ a| 
+目标
+ a| 
+*REPLICA*：该对象已从源网格复制。
+
+|===
+* ${post_edited_translations.segment}
+
+
+.步骤
+. 在私有 API 文档的 *cross-grid-replication-advanced* 部分中，选择以下端点：
++
+`GET /private/cross-grid-replication-object-status/{id}`
+
+. 选择*试用*。
+. 在"参数"部分中，输入您在 `cross-grid-replication-retry-failed`请求中使用的版本 ID。
+. ${post_edited_translations.segment}
+. 确认服务器响应代码为 *200*。
+. 查看复制状态，复制状态将为以下选项之一：
++
+** *PENDING*：对象尚未复制。
+** *COMPLETED*：复制成功。
+** *FAILED*：复制失败，出现永久性故障。用户必须解决此错误。
+
+
+

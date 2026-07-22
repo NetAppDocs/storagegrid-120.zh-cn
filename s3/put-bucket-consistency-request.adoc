@@ -1,0 +1,82 @@
+---
+permalink: s3/put-bucket-consistency-request.html 
+sidebar: sidebar 
+keywords: S3 REST API, S3 operations, PUT bucket consistency request 
+summary: 通过PUT Bucket一致性请求，可以指定要应用于对存储桶执行的操作的一致性。 
+---
+= 使用 PUT Bucket 一致性请求在 StorageGRID 中指定一致性级别
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过PUT Bucket一致性请求，可以指定要应用于对存储桶执行的操作的一致性。
+
+默认一致性设置为保证新创建对象的写后读一致性。
+
+.开始之前
+您必须具有 s3:PutBucketConsistency 权限或帐户根用户权限，才能完成此操作。
+
+
+
+[[request]]
+== 请求
+
+The `x-ntap-sg-consistency` 参数必须包含以下其中一个值：
+
+[cols="1a,2a"]
+|===
+| 一致性 | 问题描述 
+
+
+ a| 
+all
+ a| 
+所有节点立即接收数据，否则请求将失败。
+
+
+
+ a| 
+strong-global
+ a| 
+保证所有站点上所有客户端请求的写后读一致性。
+
+
+
+ a| 
+strong-site
+ a| 
+保证站点内所有客户端请求的写后读一致性。
+
+
+
+ a| 
+新写入后立即读取
+ a| 
+（默认值）为新对象提供写后读取一致性，并为对象更新提供最终一致性。提供高可用性和数据保护保证。建议在大多数情况下使用。
+
+
+
+ a| 
+可用
+ a| 
+为新对象和对象更新提供最终一致性。对于 S3 存储桶，仅根据需要使用（例如，对于包含很少读取的日志值的存储桶，或者对于不存在的键的 HEAD 或 GET 操作）。不支持 S3 FabricPool 存储桶。
+
+|===
+*注意：* 一般来说，您应该使用"新写后读"的一致性。如果请求无法正常工作，请尽可能更改应用程序客户端行为。或者，配置客户端以指定每个 API 请求的一致性。仅作为最后手段，在存储桶级别设置一致性。
+
+
+
+[[request-example]]
+== 请求示例
+
+[listing, subs="specialcharacters,quotes"]
+----
+PUT /bucket?x-ntap-sg-consistency=strong-global HTTP/1.1
+Date: _date_
+Authorization: _authorization string_
+Host: _host_
+----
+.相关信息
+link:consistency.html["一致性"]

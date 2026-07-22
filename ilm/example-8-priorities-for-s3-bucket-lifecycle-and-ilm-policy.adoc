@@ -1,0 +1,121 @@
+---
+permalink: ilm/example-8-priorities-for-s3-bucket-lifecycle-and-ilm-policy.html 
+sidebar: sidebar 
+keywords: retention priority, example S3 bucket lifecycle, example ILM policy 
+summary: 根据您的生命周期配置，对象遵循 S3 存储桶生命周期或 ILM 策略的保留设置。 
+---
+= S3 存储桶生命周期和 ILM 策略在 StorageGRID 中如何交互
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+根据您的生命周期配置，对象遵循 S3 存储桶生命周期或 ILM 策略的保留设置。
+
+
+
+[[example-of-bucket-lifecycle-taking-priority-over-ilm-policy]]
+== 存储桶生命周期优先于 ILM 策略的示例
+
+ILM 策略::
++
+--
+* 基于非当前时间参考的规则：第 0 天，保留 X 份副本 20 天
+* 基于摄取时间参考的规则（默认）：在第 0 天，将 X 个副本保留 50 天
+
+
+--
+Bucket生命周期:: `"Filter": {"Prefix": "docs/"}, "Expiration": {"Days": 100}, "NoncurrentVersionExpiration": {"NoncurrentDays": 5}`
+结果::
++
+--
+* 已导入名为"docs/text"的对象。它匹配"docs/"前缀的存储桶生命周期过滤器。
++
+** 100 天后，将创建删除标记，"docs/text"将变为非当前状态。
+** 5 天后，自摄入起共 105 天，"docs/text"将被删除。
+** 95 天后，自摄入起共 200 天，自创建删除标记起共 100 天，过期的删除标记将被删除。
+
+
+* 已导入名为"video/movie"的对象。它与筛选器不匹配，并使用 ILM 保留策略。
++
+** 50 天后，将创建删除标记，"video/movie"将变为非当前状态。
+** 20 天后，自摄入起共 70 天，"video/movie"将被删除。
+** 在引入后 30 天（即引入后共 100 天，删除标记创建后 50 天），过期的删除标记将被删除。
+
+
+
+
+--
+
+
+
+
+[[example-of-bucket-lifecycle-implicitly-keeping-forever]]
+== 存储区生命周期隐式保持永久的示例
+
+ILM 策略::
++
+--
+* 基于非当前时间参考的规则：第 0 天，保留 X 份副本 20 天
+* 基于摄取时间参考的规则（默认）：在第 0 天，将 X 个副本保留 50 天
+
+
+--
+Bucket生命周期:: `"Filter": {"Prefix": "docs/"}, "Expiration": {"ExpiredObjectDeleteMarker": true}`
+结果::
++
+--
+* 已导入名为"docs/text"的对象。它匹配"docs/"前缀的存储桶生命周期过滤器。
++
+The `Expiration` 此操作仅适用于过期的删除标记，这意味着永久保留其他所有内容（从"docs/"开始）。
+
++
+以"docs/"开头的删除标记在过期时会被移除。
+
+* 已导入名为"video/movie"的对象。它与筛选器不匹配，并使用 ILM 保留策略。
++
+** 50 天后，将创建删除标记，"video/movie"将变为非当前状态。
+** 20 天后，自摄入起共 70 天，"video/movie"将被删除。
+** 在引入后 30 天（即引入后共 100 天，删除标记创建后 50 天），过期的删除标记将被删除。
+
+
+
+
+--
+
+
+
+
+[[example-of-using-bucket-lifecycle-to-duplicate-ilm-and-clean-up-expired-delete-markers]]
+== 使用存储桶生命周期复制 ILM 和清理过期删除标记的示例
+
+ILM 策略::
++
+--
+* 基于非当前时间参考的规则：第 0 天，保留 X 份副本 20 天
+* 基于摄取时间参考的规则（默认）：在第 0 天，永久保留 X 个副本
+
+
+--
+Bucket生命周期:: `"Filter": {}, "Expiration": {"ExpiredObjectDeleteMarker": true}, "NoncurrentVersionExpiration": {"NoncurrentDays": 20}`
+结果::
++
+--
+* ILM 策略在存储桶生命周期中重复。
++
+** ILM 策略的永久规则旨在手动删除对象并在 20 天后清理非当前版本。因此，载入时间规则将永久保留过期的删除标记。
+** 存储桶生命周期复制 ILM 策略的行为，同时添加 `"ExpiredObjectDeleteMarker": true`，该功能会在删除标记过期后将其移除
+
+
+* 对象已被摄取。无筛选器意味着存储桶生命周期适用于所有对象并覆盖 ILM 保留设置。
++
+** 当租户发出对象删除请求时，将创建删除标记，对象将变为非当前状态。
+** 20 天后，非当前对象将被删除，删除标记将过期。
+** 不久之后，已过期的删除标记将被删除。
+
+
+
+
+--
+

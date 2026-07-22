@@ -1,0 +1,38 @@
+= 
+:allow-uri-read: 
+
+
+以下网格管理员和租户用户列表包含使用 S3 对象锁定功能的高级任务。
+
+${post_edited_translations.segment}::
++
+--
+* ${post_edited_translations.segment}
+* 确保信息生命周期管理 (ILM) 策略是_合规_的；也就是说，它们符合 link:../ilm/managing-objects-with-s3-object-lock.html["${post_edited_translations.segment}"]。
+* 根据需要，允许租户将 Compliance 用作保留模式。否则，仅允许使用 Governance 模式。
+* 根据需要，为租户设置最长保留期限。
+
+
+--
+租户用户::
++
+--
+* ${post_edited_translations.segment}
+* 根据需要，联系网格管理员以启用全局 S3 Object Lock 设置并设置权限。
+* 创建启用了 S3 Object Lock 的存储桶。
+* 可选地，为存储桶配置默认保留设置：
++
+** ${post_edited_translations.segment}
+** ${post_edited_translations.segment}
+
+
+* 使用 S3 客户端应用程序添加对象，并可选择设置对象特定的保留：
++
+** 保留模式。治理或合规性（如果网格管理员允许）。
+** 保留截止日期：必须小于或等于网格管理员设置的最大保留期限所允许的值。
+
+
+
+
+--
+

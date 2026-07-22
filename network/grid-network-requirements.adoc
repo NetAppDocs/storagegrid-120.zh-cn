@@ -1,0 +1,23 @@
+---
+permalink: network/grid-network-requirements.html 
+sidebar: sidebar 
+keywords: grid network requirements 
+summary: 请遵循网格网络的这些要求和准则。 
+---
+= StorageGRID 的网格网络要求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+请遵循网格网络的这些要求和准则。
+
+* 在部署时，每个网格节点必须连接到网格网络，并且必须能够使用您在部署节点时指定的网络配置与主管理节点通信。
+* 在正常网格操作期间，每个网格节点必须能够通过网格网络与所有其他网格节点进行通信。
++
+
+NOTE: 网格网络必须在每个节点之间直接路由。不支持节点之间的网络地址转换（NAT）。
+
+* 如果网格网络由多个子网组成，请将其添加到网格网络子网列表 (GNSL)。系统会为 GNSL 中每个子网的所有节点创建静态路由。
+

@@ -1,0 +1,119 @@
+---
+permalink: release-notes/whats-new.html 
+sidebar: sidebar 
+keywords: what is new in StorageGRID 12.0 
+summary: StorageGRID 12.0 扩展了对象存储容量，改进了 AI/ML 工作负载支持，加强了网格联合，简化了系统管理，并增强了整个平台的安全性。 
+---
+= StorageGRID 12.0 中的新增功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+StorageGRID 12.0 扩展了对象存储容量，改进了 AI/ML 工作负载支持，加强了网格联合，简化了系统管理，并增强了整个平台的安全性。
+
+有关最新 StorageGRID 12.0 版本中的修复问题和已知问题的详细信息，请参见 https://library.netapp.com/ecm/ecm_download_file/ECMLP3351267["StorageGRID 12.0 发行说明"^]。您必须使用您的 NetApp 帐户登录或创建帐户才能访问发行说明。
+
+
+
+[[appliances]]
+== 设备
+
+* 存储容量和成本效率显著提高。
+* 自动驱动器固件升级可提高系统可靠性并降低维护开销。
+
+
+
+
+[[artificial-intelligence-ai-and-machine-learning-ml]]
+== 人工智能（AI）和机器学习（ML）
+
+* link:../tenant/what-is-branch-bucket.html["分支桶"] 允许存储桶的时间点版本，以便加快勒索软件恢复速度，并为测试和实验提供隔离的数据集。
+* S3 缓存层可增强 AI/ML 训练的性能。
+
+
+
+
+[[capacity]]
+== 容量
+
+StorageGRID 现在支持一万亿个对象，是之前限制的两倍多。请参阅 https://fusion.netapp.com/["NetApp Fusion 工具"^]以调整 StorageGRID 的规模和设计。
+
+
+
+[[cassandra-updates]]
+== Cassandra 更新
+
+StorageGRID 现在使用较新版本的 Cassandra 进行元数据存储。此版本的 Cassandra 能更高效地利用磁盘空间来存储更多元数据。
+
+在您link:../upgrade/index.html["从 StorageGRID 11.9 升级到 12.0"]之后，元数据格式更新将在后台进行一到三天。在此期间，某些涉及元数据流的维护过程（例如扩展）将被禁用。
+
+请参阅 link:../upgrade/performing-upgrade.html#upgrade-other-nodes["升级其他节点"]。
+
+
+
+[[federation]]
+== 联邦
+
+* 您现在可以link:../admin/managing-users.html#import-federated-users["导入最多 100 个联合用户"]到 StorageGRID 中。
+* 现在，您可以link:../ilm/configuring-regions-optional-and-s3-only.html["修改默认区域"]用于 S3 存储桶。此功能为管理数据区域设置和合规性提供了更大的灵活性。
+* 您可以在启用 S3 Object Lock 的情况下配置存储桶之间的跨网格复制。请参阅link:../admin/grid-federation-what-is-cross-grid-replication.html#cgr-with-ol["使用 S3 Object Lock 的跨网格复制"]。
++
+NetApp 建议仅在 StorageGRID 12.0 源存储桶和目标存储桶之间使用此功能。但是，在禁用了 S3 对象锁定的 StorageGRID 11.9 源存储桶和启用了 S3 对象锁定的 StorageGRID 12.0 目标存储桶之间支持此功能。
+
+
+
+
+
+[[manageability]]
+== 易管理性
+
+* 改进的 link:../maintain/decommission-procedure.html["停用过程"] 降低了时间和复杂性，从而提高了运营效率。
+* 当网格具有三个或更多站点时，改进的强全局一致性行为为客户端请求提供了站点容错能力。
++
+** 新安装的 StorageGRID 12.0 及更高版本在设置 link:../s3/consistency.html["强全局一致性"] 时将默认使用仲裁语义。
+** 如果从 StorageGRID 11.9 升级到 StorageGRID 12.0，升级后的网格将保留先前的强全局一致性行为。
+
+
+
+
+
+NOTE: 如果需要恢复到先前的行为以实现强全局一致性，请参阅 https://kb.netapp.com/hybrid/StorageGRID/Object_Mgmt/Configuring_StorageGRID_quorum_semantics_for_strong-global_consistency["为强全局一致性配置 StorageGRID 仲裁语义"^]以获取说明。
+
+* 启动日志上传到 link:../admin/configure-autosupport-grid-manager.html["AutoSupport"] 的功能有助于增强支持响应能力。
+* 减少 https://docs.netapp.com/us-en/storagegrid-appliances/index.html["appliance"^]重启时间，最大限度地减少停机时间，从而提高整体系统可用性。
+* link:../maintain/move-adc-service.html["移动 ADC 服务的功能"] 到另一个存储节点，可以提高管理托管 ADC 服务的存储节点的灵活性和弹性。您可以在停用存储节点或将存储节点转换为仅数据节点之前移动 ADC 服务。
+* 为了最大限度地提高数据存储容量，您可以 link:../maintain/convert-to-data-only-node.html["将存储节点转换为仅数据节点"]，这会将该节点上的元数据迁移到组合存储节点或仅元数据存储节点。
+* 任何管理节点link:../maintain/selecting-node-recovery-procedure.html["恢复任何其他节点"]（主管理节点除外）的功能增强了系统恢复和容错，提高了整体可靠性。
+* 用户现在可以使用 S3 存储桶 link:../monitor/configure-log-management.html#use-a-bucket["长时间存储审核日志"]。
+
+
+
+
+[[security]]
+== 安全性
+
+* 更强大的数据加密和完整性保护可提高安全性和性能。
+* 提高存储密码的安全性，降低未经授权访问的风险。
+* link:../admin/manage-external-ssh-access.html["默认情况下，SSH 会被阻止"] 以增强安全性，同时允许受控访问。
+
+
+
+
+[[tenant-groups]]
+== 租户组
+
+* 您现在可以link:../tenant/manage-groups.html["配置新的 S3 信任策略"]以支持 AssumeRole API。AssumeRole 功能提供短期凭证，以增强安全性和灵活的访问控制。
+* 每个存储桶对象计数配额允许更好地控制和管理存储资源。
+
+
+
+
+[[user-interface]]
+== 用户接口
+
+* 深色主题和系统主题设置可在 Grid Manager 和 Tenant Manager 的用户菜单中找到。
+* 审核和 syslog 服务器页面已重命名为 link:../monitor/configure-log-management.html["日志管理"]，并已重构，新增了将日志存储在系统存储桶中以进行备份的功能。
+* 已删除旧版网格拓扑页面。在过去的几个 StorageGRID 版本中，该页面提供的操作和指标已迁移到网格管理器中的其他页面，特别是迁移到 link:../monitor/viewing-nodes-page.html["节点页面"]。
+

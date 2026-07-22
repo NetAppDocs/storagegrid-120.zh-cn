@@ -1,0 +1,33 @@
+---
+permalink: swnodes/specifying-grid-network-subnets.html 
+sidebar: sidebar 
+keywords: how to specify Grid Network subnets 
+summary: 必须指定网格网络上使用的子网。 
+---
+= 为 StorageGRID 指定网格网络子网
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+必须指定网格网络上使用的子网。
+
+.关于此任务
+子网条目包括 StorageGRID 系统中每个站点的网格网络的子网，以及需要通过网格网络访问的任何子网。
+
+如果您有多个网格子网，则需要网格网络网关。指定的所有网格子网必须可通过此网关访问。
+
+.步骤
+. 在 *Subnet 1* 文本框中为至少一个网格网络指定 CIDR 网络地址。
+. 单击最后一个条目旁边的加号以添加其他网络条目。您必须为网格网络中的所有站点指定所有子网。
++
+** 如果您已经部署了至少一个节点，请单击 *Discover Grid Networks Subnets* 以自动使用已向 Grid Manager 注册的网格节点报告的子网填充网格网络子网列表。
+** 您必须手动添加通过网格网络网关访问的 NTP、DNS、LDAP 或其他外部服务器的任何子网。
++
+image:4_gmi_installer_grid_network_page.gif["指定子网"]
+
+
+
+. 单击*下一步*。
+

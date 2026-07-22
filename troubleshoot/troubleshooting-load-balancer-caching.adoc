@@ -1,0 +1,52 @@
+---
+permalink: troubleshoot/troubleshooting-load-balancer-caching.html 
+sidebar: sidebar 
+keywords: how to troubleshoot load balancer caching 
+summary: 了解负载平衡器缓存可能存在的问题以及如何对其进行故障排除。 
+---
+= 了解 StorageGRID 中的负载均衡器缓存问题
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+了解负载平衡器缓存可能存在的问题以及如何对其进行故障排除。
+
+
+
+[[determine-if-a-request-was-a-cache-hit]]
+== 确定请求是否为缓存命中
+
+* X-Cache 标头在对缓存服务处理的请求的响应中设置。可能的代码：
++
+** `HIT`：对象从缓存提供
+** `PARTIAL-HIT`：存储桶/密钥在缓存中有记录，但并非所有请求的范围都能够从缓存提供
+** `STALE`：存储桶/密钥在缓存中有记录，但该对象自上次从缓存中提供以来已更新。
+** `MISS`：对象未在缓存中
+
+
+* 请求的 `nginx-gw/endpoint-access.log.gz`记录包含由缓存处理的请求的"unix:/run/cache-svc/cache-svc.sock"。
+*  `cache-svc/cache-svc.log` 报告诸如"Request 320390：已成功完成（缓存命中）"或"Request 320375：已成功完成（缓存未命中）"之类的消息。通过搜索具有相同"Request _<number>_"字符串的其他记录来查找请求的路径。
+
+
+
+
+[[low-cache-hit-rate]]
+== 缓存命中率低
+
+* 当添加新的工作负载或工作负载访问的工作集发生变化时，缓存命中率可能会较低。在这些情况下，命中率预计会随着时间的推移而增加。
+* 如果多个工作负载正在使用缓存，请考虑添加流量分类策略，以隔离由缓存提供服务的部分工作负载。缓存命中率指标可按流量分类策略查看。如果某些工作负载的缓存命中率不高，请考虑将这些工作负载移动到未启用缓存的其他端点。
+* 评估缓存逐出率。如果缓存太小，无法容纳工作集，则会出现较高的逐出率，并可能导致较低的命中率。
+* FPVR 下可能提供提高某些工作负载命中率的选项。
+
+
+
+
+[[low-performance]]
+== 性能低下
+
+* 评估缓存命中率。缓存命中率低可能导致整体性能低下。
+* 评估缓存逐出率。在逐出期间，一些存储资源用于从磁盘中删除现有对象。如果逐出过程跟不上新对象的访问，系统可能会达到硬水印阈值并开始绕过缓存。
+* 使用"Network interfaces receive usage"和"Network interfaces transmit usage"诊断检查网络限制。
+

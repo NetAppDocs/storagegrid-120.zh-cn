@@ -1,0 +1,58 @@
+---
+permalink: tenant/deleting-s3-bucket.html 
+sidebar: sidebar 
+keywords: how to delete S3 bucket 
+summary: 您可以使用 Tenant Manager 删除空的 S3 存储桶。 
+---
+= 删除 StorageGRID S3 存储桶
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 Tenant Manager 删除一个或多个空的 S3 存储桶。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到租户管理器。
+* 您属于具有 link:tenant-management-permissions.html["管理所有存储桶或根访问权限"] 的用户组。这些权限将覆盖组或存储桶策略中的权限设置。
+* 要删除的存储桶为空。如果要删除的存储桶不为空，link:../tenant/deleting-s3-bucket-objects.html["从存储桶中删除对象"]。
+
+
+.关于此任务
+这些说明介绍了如何使用租户管理器删除 S3 存储桶。您还可以使用 link:understanding-tenant-management-api.html["租户管理 API"] 或 link:../s3/operations-on-buckets.html["S3 REST API"] 删除 S3 存储桶。
+
+如果 S3 存储桶包含对象、非当前对象版本或删除标记，则无法删除该存储桶。有关如何删除 S3 版本化对象的信息，请参见link:../ilm/how-objects-are-deleted.html["如何删除对象"]。
+
+.步骤
+. 从控制面板中选择*查看存储桶*，或选择*存储（S3）* > *存储桶*。
++
+此时将显示存储桶页面，并显示所有现有的 S3 存储桶。
+
+. 使用*操作*菜单或特定存储桶的详细信息页面。
++
+[role="tabbed-block"]
+====
+.${post_edited_translations.segment}
+--
+.. 选中要删除的每个存储桶的复选框。
+.. 选择*操作* > *删除存储桶*。
+
+
+--
+.详细信息页面
+--
+.. 选择存储桶名称以显示其详细信息。
+.. 选择*删除存储桶*。
+
+
+--
+====
+. 当确认对话框出现时，选择*Yes*。
++
+StorageGRID 确认每个存储桶为空，然后删除每个存储桶。此操作可能需要几分钟时间。
+
++
+如果存储桶不为空，则会显示错误消息。您必须link:../tenant/deleting-s3-bucket-objects.html["删除存储桶中的所有对象和任何删除标记"]才能删除存储桶。
+
+

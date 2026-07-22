@@ -1,0 +1,153 @@
+---
+permalink: swnodes/configuring-host-network.html 
+sidebar: sidebar 
+keywords: how to configure the host network 
+summary: 在主机上完成 Linux 安装后，您可能需要执行一些额外的配置，以便在每台主机上准备一组网络接口，这些接口适合映射到稍后将部署的 StorageGRID 节点。 
+---
+= 为 Linux 部署配置 StorageGRID 主机网络
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在主机上完成 Linux 安装后，您可能需要执行一些额外的配置，以便在每台主机上准备一组网络接口，这些接口适合映射到稍后将部署的 StorageGRID 节点。
+
+
+NOTE: "Linux"是指 RHEL、Ubuntu 或 Debian 部署。有关受支持版本的列表，请参见 https://imt.netapp.com/matrix/#welcome["NetApp 互操作性矩阵工具 (IMT)"^]。
+
+.开始之前
+* 您已审阅 link:../network/index.html["StorageGRID 网络准则"]。
+* 您已查看有关 link:node-container-migration-requirements.html["节点容器迁移要求"] 的信息。
+* 如果您使用的是虚拟主机，请在配置主机网络之前阅读<<mac_address_cloning,MAC 地址克隆的注意事项和建议>>。
+
+
+
+NOTE: 如果使用 VM 作为主机，则应选择 VMXNET 3 作为虚拟网络适配器。VMware E1000 网络适配器导致某些 Linux 发行版上部署的 StorageGRID 容器出现连接问题。
+
+.关于此任务
+网格节点必须能够访问网格网络，以及可选的管理和客户端网络。您可以通过创建将主机的物理接口与每个网格节点的虚拟接口相关联的映射来提供此访问。创建主机接口时，请使用友好名称以方便跨所有主机的部署，并启用迁移。
+
+主机和一个或多个节点之间可以共享相同的接口。例如，您可能对主机访问和节点管理网络访问使用相同的接口，以方便主机和节点的维护。虽然主机和单个节点之间可以共享相同的接口，但所有节点必须具有不同的 IP 地址。IP 地址不能在节点之间或主机与任何节点之间共享。
+
+您可以使用相同的主机网络接口为主机上的所有 StorageGRID 节点提供网格网络接口；您可以为每个节点使用不同的主机网络接口；或者您也可以采用介于两者之间的方式。但是，您通常不会为单个节点同时提供网格网络接口和管理网络接口使用相同的主机网络接口，也不会将某一主机网络接口同时用作一个节点的网格网络接口和另一个节点的客户端网络接口。
+
+您可以通过多种方式完成此任务。例如，如果您的主机是虚拟机，并且您要为每个主机部署一个或两个 StorageGRID 节点，则可以在虚拟机监控程序中创建正确数量的网络接口，并使用 1 对 1 映射。如果要在裸机主机上部署多个节点以供生产使用，则可以利用 Linux 网络堆栈对 VLAN 和 LACP 的支持来实现容错和带宽共享。以下部分提供了这两个示例的详细方法。您无需使用这些示例中的任何一个；您可以使用任何符合您需求的方法。
+
+
+NOTE: 请勿直接使用绑定或桥接设备作为容器网络接口。这样做可能会导致在容器命名空间中将 MACVLAN 与绑定和桥接设备结合使用时，因内核问题而无法启动节点。请改用非绑定设备，例如 VLAN 或虚拟以太网 (veth) 对。在节点配置文件中将此设备指定为网络接口。
+
+
+
+[[considerations-and-recommendations-for-mac-address-cloning]]
+== MAC 地址克隆的注意事项和建议
+
+.[[mac_address_cloning]]
+MAC 地址克隆会导致容器使用主机的 MAC 地址，而主机使用您指定的地址或随机生成的地址的 MAC 地址。您应该使用 MAC 地址克隆，以避免使用混杂模式网络配置。
+
+
+
+[[enabling-mac-cloning]]
+=== 启用MAC克隆
+
+在某些环境中，可以通过 MAC 地址克隆来增强安全性，因为它使您能够为管理网络、网格网络和客户端网络使用专用的虚拟 NIC。通过让容器使用主机上专用 NIC 的 MAC 地址，您可以避免使用混杂模式网络配置。
+
+
+NOTE: MAC 地址克隆旨在与虚拟服务器安装配合使用，可能无法在所有物理设备配置中正常运行。
+
+
+NOTE: 如果由于 MAC 克隆目标接口繁忙而无法启动节点，则可能需要在启动节点之前将链路设置为"down"。此外，当链路处于启动状态时，虚拟环境可能会阻止网络接口上的 MAC 克隆。如果节点由于接口繁忙而无法设置 MAC 地址并启动，则在启动节点之前将链路设置为"down"可能会解决此问题。
+
+默认情况下，MAC 地址克隆处于禁用状态，必须通过节点配置密钥进行设置。您应在安装 StorageGRID 时启用此功能。
+
+每个网络都有一个密钥：
+
+* `ADMIN_NETWORK_TARGET_TYPE_INTERFACE_CLONE_MAC`
+* `GRID_NETWORK_TARGET_TYPE_INTERFACE_CLONE_MAC`
+* `CLIENT_NETWORK_TARGET_TYPE_INTERFACE_CLONE_MAC`
+
+
+将密钥设置为"true"将导致容器使用主机 NIC 的 MAC 地址。此外，主机将使用指定容器网络的 MAC 地址。默认情况下，容器地址是随机生成的地址，但如果使用 `_NETWORK_MAC`节点配置密钥设置了地址，则将使用该地址。主机和容器将始终具有不同的 MAC 地址。
+
+
+NOTE: 在虚拟主机上启用 MAC 克隆而不同时在虚拟机监控程序上启用混杂模式，可能会导致使用主机接口的 Linux 主机网络停止工作。
+
+
+
+[[mac-cloning-use-cases]]
+=== MAC克隆使用案例
+
+使用MAC克隆时需要考虑两种用例：
+
+* 未启用 MAC 克隆：当节点配置文件中的 `_CLONE_MAC`密钥未设置或设置为 "false" 时，主机将使用主机 NIC MAC，除非在 `_NETWORK_MAC`密钥中指定了 MAC，否则容器将使用 StorageGRID 生成的 MAC。如果在 `_NETWORK_MAC`密钥中设置了地址，则容器将使用 `_NETWORK_MAC`密钥中指定的地址。这种密钥配置需要使用混杂模式。
+* 启用 MAC 克隆：当节点配置文件中的 `_CLONE_MAC`密钥设置为"true"时，容器使用主机 NIC MAC，主机使用 StorageGRID 生成的 MAC，除非在 `_NETWORK_MAC`密钥中指定了 MAC。如果在 `_NETWORK_MAC`密钥中设置了地址，则主机使用指定的地址而不是生成的地址。在此密钥配置中，不应使用混杂模式。
+
+
+
+NOTE: 如果您不想使用 MAC 地址克隆，而是希望允许所有接口接收和传输虚拟机管理程序所分配地址以外的 MAC 地址数据，请确保虚拟交换机和端口组级别的安全属性针对混杂模式、MAC 地址更改和伪造传输均设置为 *Accept*。虚拟交换机上设置的值可被端口组级别的值覆盖，因此请确保两处的设置相同。
+
+要启用 MAC 克隆，请参见 link:creating-node-configuration-files.html["节点配置文件创建说明"]。
+
+
+
+[[mac-cloning-example]]
+=== MAC克隆示例
+
+以下示例展示了主机 MAC 地址为 11:22:33:44:55:66 的接口 ens256 启用 MAC 克隆，以及节点配置文件中的相关密钥：
+
+* `ADMIN_NETWORK_TARGET = ens256`
+* `ADMIN_NETWORK_MAC = b2:9c:02:c2:27:10`
+* `ADMIN_NETWORK_TARGET_TYPE_INTERFACE_CLONE_MAC = true`
+
+
+*结果*：ens256 的主机 MAC 为 b2:9c:02:c2:27:10，Admin Network MAC 为 11:22:33:44:55:66
+
+
+
+[[example-1-1-to-1-mapping-to-physical-or-virtual-nics]]
+== 示例 1：1 对 1 映射到物理或虚拟 NIC
+
+示例 1 描述了一个简单的物理接口映射，只需极少或无需主机端配置。
+
+image:rhel_install_vlan_diag_1.gif["安装 VLAN 图"]
+
+Linux 操作系统在安装或引导期间 `ensXYZ`，或在热添加接口时自动创建接口。除了确保将接口设置为在启动后自动启动外，无需进行任何配置。您必须确定哪个 ensXYZ 对应于哪个 StorageGRID 网络（网格、管理员或客户端），以便稍后在配置过程中提供正确的映射。
+
+请注意，图中显示了多个 StorageGRID 节点；但是，通常会对单节点虚拟机使用此配置。
+
+如果交换机 1 是物理交换机，则应将连接到接口 10G1 至 10G3 的端口配置为接入模式，并将其放置在相应的 VLAN 上。
+
+
+
+[[example-2-lacp-bond-carrying-vlans]]
+== 示例 2：承载 VLAN 的 LACP 绑定
+
+示例 2 假设您熟悉绑定网络接口以及在使用的 Linux 发行版上创建 VLAN 接口。
+
+.关于此任务
+示例 2 描述了一种通用的、灵活的、基于 VLAN 的方案，该方案便于在单个主机上的所有节点之间共享所有可用的网络带宽。此示例尤其适用于裸机主机。
+
+要理解此示例，假设每个数据中心的网格、管理和客户端网络有三个独立的子网。这些子网位于单独的 VLAN（1001、1002 和 1003）上，并通过 LACP 绑定中继端口（bond0）呈现给主机。您需要在该绑定上配置三个 VLAN 接口：bond0.1001、bond0.1002 和 bond0.1003。
+
+如果您需要在同一主机上为节点网络提供单独的 VLAN 和子网，您可以在绑定上添加 VLAN 接口并将其映射到主机（在图中显示为 bond0.1004）。
+
+image:rhel_install_vlan_diag_2.gif["VLAN 接口"]
+
+.步骤
+. 将用于 StorageGRID 网络连接的所有物理网络接口聚合到一个 LACP 绑定中。
++
+在每台主机上使用相同的绑定名称，例如 `bond0`。
+
+. 使用标准 VLAN 接口命名约定，创建使用此绑定作为其关联"物理设备"的 VLAN 接口 `physdev-name.VLAN ID`。
++
+请注意，步骤 1 和 2 需要在端接网络链路另一端的边缘交换机上进行适当的配置。边缘交换机端口还必须聚合到 LACP 端口通道中，配置为中继，并允许通过所有必需的 VLAN。
+
++
+提供了此每主机网络配置方案的示例接口配置文件。
+
+
+
+.相关信息
+* link:example-etc-network-interfaces.html["Ubuntu 和 Debian 的 /etc/network/interfaces 示例"]
+* link:example-etc-sysconfig-network-scripts.html["RHEL 的 /etc/sysconfig/network-scripts 示例"]
+

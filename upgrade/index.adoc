@@ -1,0 +1,33 @@
+---
+permalink: upgrade/index.html 
+sidebar: sidebar 
+keywords: storagegrid software upgrade 
+summary: 使用以下说明将 StorageGRID 系统升级到新版本。 
+---
+= 升级 StorageGRID 软件
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用以下说明将 StorageGRID 系统升级到新版本。
+
+执行升级时，StorageGRID 系统中的所有节点都会升级。
+
+
+CAUTION: 如果迫切需要扩展存储空间以增加容量（如果存储空间几乎已满），请勿开始升级。及时完成升级程序。如果需要恢复，请联系技术支持。
+
+
+
+[[before-you-upgrade]]
+== 升级之前
+
+查看这些主题以了解 StorageGRID 12.0 中的新功能和增强功能，确定是否已弃用或删除任何功能，并了解 StorageGRID API 的更改。
+
+* link:how-your-system-is-affected-during-upgrade.html["升级期间系统如何受到影响"]
+* link:../release-notes/whats-new.html["StorageGRID 12.0 中的新增功能"]
+* link:../release-notes/removed-or-deprecated-features.html["已删除或已弃用的功能"]
+* link:../release-notes/changes-to-grid-management-api.html["对网格管理 API 的更改"]
+* link:../release-notes/changes-to-tenant-management-api.html["对租户管理 API 的更改"]
+

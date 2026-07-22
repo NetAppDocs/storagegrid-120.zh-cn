@@ -1,0 +1,74 @@
+---
+permalink: harden/other-hardening-guidelines.html 
+sidebar: sidebar 
+keywords: StorageGRID, hardening guidelines, security 
+summary: 除了遵循 StorageGRID 网络和节点的加固准则外，您还应遵循 StorageGRID 系统其他区域的加固准则。 
+---
+= StorageGRID 中日志、密码和审核消息的加固准则
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+除了遵循 StorageGRID 网络和节点的加固准则外，您还应遵循 StorageGRID 系统其他区域的加固准则。
+
+
+
+[[temporary-installation-password]]
+== 临时安装密码
+
+要在安装期间保护 StorageGRID 系统，请在 StorageGRID 安装 UI 的临时安装程序密码页面或安装 API 中设置密码。设置后，此密码适用于安装 StorageGRID 的所有方法，包括用户界面、安装 API 和 `configure-storagegrid.py`脚本。
+
+有关更多信息，请参阅：
+
+* link:../swnodes/index.html["在基于软件的节点上安装 StorageGRID"]
+* https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/index.html["安装 StorageGRID 设备"^]
+
+
+
+
+[[logs-and-audit-messages]]
+== 日志和审计消息
+
+始终以安全的方式保护 StorageGRID 日志和审核消息输出。从支持和系统可用性的角度来看，StorageGRID 日志和审核消息提供了宝贵的信息。此外，StorageGRID 日志和审核消息输出中包含的信息和详细信息通常具有敏感性。
+
+将 StorageGRID 配置为将安全事件发送到外部 syslog 服务器。如果使用 syslog 导出，请为传输协议选择 TLS 和 RELP/TLS。
+
+有关 StorageGRID 日志的详细信息，请参见 link:../monitor/logs-files-reference.html["日志文件引用"]。有关 StorageGRID 审计消息的详细信息，请参见 link:../audit/audit-messages-main.html["审核消息"]。
+
+
+
+[[netapp-autosupport]]
+== NetApp AutoSupport
+
+StorageGRID 的 AutoSupport 功能允许您主动监控系统的运行状况，并自动将数据包发送到 NetApp 支持站点、您组织的内部支持团队或支持合作伙伴。默认情况下，在首次配置 StorageGRID 时，系统会启用向 NetApp 发送 AutoSupport 数据包的功能。
+
+AutoSupport 功能可以禁用。但是，NetApp 建议启用此功能，因为如果 StorageGRID 系统出现问题，AutoSupport 可帮助加快问题识别和解决速度。
+
+AutoSupport 支持将 HTTPS、HTTP 和 SMTP 作为传输协议。由于 AutoSupport 包的敏感性质，NetApp 强烈建议使用 HTTPS 作为默认传输协议，以便向 NetApp 发送 AutoSupport 包。
+
+
+
+[[cross-origin-resource-sharing-cors]]
+== 跨源资源共享(CORS)
+
+如果您希望其他域中的 Web 应用程序可以访问 S3 存储桶中的存储桶和对象，则可以为该存储桶配置跨源资源共享 (CORS)。一般来说，除非需要，否则不要启用 CORS。如果需要 CORS，请将其限制为受信任的来源。
+
+请参见 link:../tenant/configuring-cross-origin-resource-sharing-for-buckets-and-objects.html["配置存储桶和对象的 CORS"] 的步骤。
+
+
+
+[[external-security-devices]]
+== 外部安全设备
+
+完整的加固解决方案必须解决 StorageGRID 之外的安全机制。使用额外的基础设施设备来过滤和限制对 StorageGRID 的访问，是建立和维护严格安全态势的有效方法。这些外部安全设备包括防火墙、入侵防御系统 (IPS) 和其他安全设备。
+
+对于不受信任的客户端流量，建议使用第三方负载平衡器。第三方负载平衡可提供更多控制和额外的防御层。
+
+
+
+[[ransomware-mitigation]]
+== 勒索软件缓解
+
+按照 https://www.netapp.com/media/69498-tr-4921.pdf["使用 StorageGRID 防御勒索软件"^]中的建议，帮助保护您的对象数据免受勒索软件攻击。

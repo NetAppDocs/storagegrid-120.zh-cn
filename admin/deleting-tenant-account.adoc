@@ -1,0 +1,37 @@
+---
+permalink: admin/deleting-tenant-account.html 
+sidebar: sidebar 
+keywords: tenant, delete, remove tenant 
+summary: 如果要永久删除租户对系统的访问权限，则可以删除租户帐户。 
+---
+= 删除 StorageGRID 租户帐户
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要永久删除租户对系统的访问权限，则可以删除租户帐户。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:admin-group-permissions.html["特定访问权限"]。
+* 已删除与租户帐户关联的所有 S3 存储区和对象。
+* 如果允许租户使用网格联合连接，您已查看 link:grid-federation-manage-tenants.html["删除具有使用网格联合连接权限的租户"] 的注意事项。
+
+
+.步骤
+. ${post_edited_translations.segment}
+. 找到要删除的一个或多个租户帐户。
++
+使用搜索框按名称或租户 ID 搜索租户。
+
+. 要删除多个租户，请选中复选框，然后选择*操作* > *删除*。
+. 要删除单个租户，请执行以下操作之一：
++
+** 选中复选框，然后选择*操作* > *删除*。
+** 选择租户名称以显示详细信息页面，然后选择*操作* > *删除*。
+
+
+. ${post_edited_translations.segment}
+

@@ -1,0 +1,77 @@
+---
+permalink: maintain/configuring-ntp-servers.html 
+sidebar: sidebar 
+keywords: storagegrid, ntp, ntp server, configure ntp, configuring ntp 
+summary: '您可以添加、更新或删除网络时间协议 (NTP) 服务器，以确保在 StorageGRID 系统中的网格节点之间准确同步数据。' 
+---
+= 管理 StorageGRID 中的 NTP 服务器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以添加、更新或删除网络时间协议 (NTP) 服务器，以确保在 StorageGRID 系统中的网格节点之间准确同步数据。
+
+.开始之前
+* 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
+* 您有 link:../admin/admin-group-permissions.html["维护或 root 访问权限"]。
+* 您有配置密码短语。
+* 您有要配置的 NTP 服务器的 IPv4 地址。
+
+
+
+
+[[how-storagegrid-uses-ntp]]
+== StorageGRID 如何使用 NTP
+
+StorageGRID 系统使用网络时间协议 (NTP) 在网格中的所有网格节点之间同步时间。
+
+在每个站点，StorageGRID 系统中至少有两个节点被分配了主 NTP 角色。它们同步到建议的最少四个、最多六个外部时间源，并彼此同步。StorageGRID 系统中不是主 NTP 节点的每个节点都充当 NTP 客户端，并与这些主 NTP 节点同步。
+
+外部 NTP 服务器连接到您之前分配了主 NTP 角色的节点。因此，建议至少指定两个具有主 NTP 角色的节点。
+
+
+
+[[ntp-server-guidelines]]
+== NTP 服务器指南
+
+请遵守以下准则，以防出现计时问题：
+
+* 外部 NTP 服务器连接到您之前分配了主 NTP 角色的节点。因此，建议至少指定两个具有主 NTP 角色的节点。
+* 确保每个站点至少有两个节点可以访问至少四个外部 NTP 源。如果站点上只有一个节点可以访问 NTP 源，则该节点出现故障时会出现计时问题。此外，将每个站点的两个节点指定为主要 NTP 源，可确保在站点与其余网格隔离时保持准确计时。
+* 指定的外部 NTP 服务器必须使用 NTP 协议。您必须指定 Stratum 3 或更高级别的 NTP 服务器引用，以防止时间漂移问题。
+
+
+
+NOTE: 为生产级 StorageGRID 安装指定外部 NTP 源时，请勿在 Windows Server 2016 之前的 Windows 版本上使用 Windows Time (W32Time) 服务。早期版本的 Windows 上的时间服务不够准确，Microsoft 不支持在高精度环境中使用，包括 StorageGRID。有关详细信息，请参见 https://support.microsoft.com/en-us/help/939322/support-boundary-to-configure-the-windows-time-service-for-high-accura["支持为高精度环境配置 Windows 时间服务的边界"^]。
+
+
+
+[[configure-ntp-servers]]
+== 配置 NTP 服务器
+
+按照下面的步骤添加、更新或删除 NTP 服务器。
+
+.步骤
+. 选择*维护* > *网络* > *NTP 服务器*。
+. 在"服务器"部分，根据需要添加、更新或删除 NTP 服务器条目。
++
+您应该至少包含四个 NTP 服务器，最多可以指定六个服务器。
+
+. 输入 StorageGRID 系统的配置密码，然后选择 *Save*。
++
+在配置更新完成之前，该页面将被禁用。
+
++
+
+NOTE: 如果您的所有 NTP 服务器在保存新 NTP 服务器后都未通过连接测试，请不要继续。请联系技术支持。
+
+
+
+
+
+[[resolve-ntp-server-issues]]
+== 解决 NTP 服务器问题
+
+如果您遇到安装期间最初指定的 NTP 服务器的稳定性或可用性问题，可以通过添加其他服务器或更新或删除现有服务器来更新 StorageGRID 系统使用的外部 NTP 源列表。
