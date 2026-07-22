@@ -81,9 +81,9 @@ link:../monitor/viewing-nodes-page.html["节点页面"] 显示有关整个网格
 
 
 [[tenants-page]]
-== ${post_edited_translations.segment}
+== 租户页面
 
-The link:../admin/managing-tenants.html["${post_edited_translations.segment}"] 允许您为您的 StorageGRID 系统 link:../tenant/index.html["创建和监控存储租户帐户"]。您必须至少创建一个租户帐户，以指定可以存储和检索对象的人员及其可用的功能。
+The link:../admin/managing-tenants.html["租户页面"] 允许您为您的 StorageGRID 系统 link:../tenant/index.html["创建和监控存储租户帐户"]。您必须至少创建一个租户帐户，以指定可以存储和检索对象的人员及其可用的功能。
 
 租户页面还提供每个租户的使用情况详细信息，包括使用的存储空间量和对象数。如果在创建租户时设置了配额，则可以看到该配额的使用量。
 
@@ -122,9 +122,9 @@ link:using-information-lifecycle-management.html["ILM 菜单"] 允许您 link:..
 * link:../admin/managing-high-availability-groups.html["管理高可用性组"]
 * link:../admin/managing-load-balancing.html["管理负载平衡器端点"]
 * link:../admin/configuring-s3-api-endpoint-domain-names.html["配置 S3 端点域名"]
-* link:../admin/managing-traffic-classification-policies.html["${post_edited_translations.segment}"]
+* link:../admin/managing-traffic-classification-policies.html["管理流量分类策略"]
 * link:../admin/configure-vlan-interfaces.html["配置 VLAN 接口"]
-* link:../admin/enable-cross-origin-resource-sharing-for-management-interface.html["${post_edited_translations.segment}"]
+* link:../admin/enable-cross-origin-resource-sharing-for-management-interface.html["为管理界面启用 StorageGRID CORS"]
 
 
 
@@ -177,7 +177,7 @@ link:using-information-lifecycle-management.html["ILM 菜单"] 允许您 link:..
 * link:../admin/managing-admin-groups.html["管理管理员组"]
 * link:../admin/managing-users.html["管理管理员用户"]
 * 更改 link:../admin/changing-provisioning-passphrase.html["配置密码短语"] 或 link:../admin/change-node-console-password.html["节点控制台密码"]
-* link:../admin/using-identity-federation.html["${post_edited_translations.segment}"]
+* link:../admin/using-identity-federation.html["使用身份联合"]
 * link:../admin/how-sso-works.html["配置 SSO"]
 
 

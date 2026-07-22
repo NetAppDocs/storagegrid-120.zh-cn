@@ -21,7 +21,7 @@ NOTE: 您的网格管理员必须授予您使用 S3 Object Lock 特定功能的�
 [[what-is-s3-object-lock]]
 == 什么是 S3 Object Lock？
 
-${post_edited_translations.segment}
+StorageGRID S3 对象锁定功能是一种对象保护解决方案，相当于 Amazon Simple Storage Service (Amazon S3) 中的 S3 Object Lock。
 
 当为 StorageGRID 系统启用全局 S3 对象锁定设置时，S3 租户帐户可以创建启用或未启用 S3 对象锁定的存储桶。如果存储桶已启用 S3 对象锁定，则需要存储桶版本控制，并会自动启用。
 
@@ -40,14 +40,14 @@ ${post_edited_translations.segment}
 
 StorageGRID S3 Object Lock 功能支持两种保留模式，以对对象应用不同级别的保护。这些模式与 Amazon S3 保留模式等效。
 
-* ${post_edited_translations.segment}
+* 在合规模式下：
 +
 ** 在达到其保留截止日期之前，无法删除此对象。
 ** 对象的保留截止日期可以延长，但不能缩短。
 ** 在达到该日期之前，无法删除对象的 retain-until-date。
 
 
-* ${post_edited_translations.segment}
+* 在治理模式下：
 +
 ** 具有特殊权限的用户可以在请求中使用旁路标头来修改某些保留设置。
 ** 这些用户可以在达到保留截止日期之前删除对象版本。
@@ -59,11 +59,11 @@ StorageGRID S3 Object Lock 功能支持两种保留模式，以对对象应用�
 
 
 [[retention-settings-for-object-versions]]
-=== ${post_edited_translations.segment}
+=== 对象版本的保留设置
 
-${post_edited_translations.segment}
+如果在启用 S3 Object Lock 的情况下创建了存储桶，则用户可以使用 S3 客户端应用程序为添加到存储桶的每个对象选择性地指定以下保留设置：
 
-* ${post_edited_translations.segment}
+* *保留模式*：合规或治理。
 * *Retain-until-date*：如果对象版本的 retain-until-date 在将来，则可以检索该对象，但不能将其删除。
 * *诉讼保留*：对对象版本应用诉讼保留会立即锁定该对象。例如，您可能需要对与调查或法律纠纷相关的对象进行诉讼保留。诉讼保留没有过期日期，而是会一直保持有效，直到被显式删除。诉讼保留独立于保留截止日期。
 +
@@ -78,17 +78,17 @@ NOTE: 如果对象处于合法冻结状态，则无论其保留模式如何，�
 
 
 [[default-retention-setting-for-buckets]]
-=== ${post_edited_translations.segment}
+=== 存储桶的默认保留设置
 
 如果在启用 S3 对象锁定的情况下创建了存储桶，则用户可以选择为存储桶指定以下默认设置：
 
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
+* *默认保留模式*：合规或治理。
+* *默认保留期*：从添加之日起，添加到此存储桶的新对象版本应保留多长时间。
 
 
 默认存储桶设置仅适用于没有自己的保留设置的新对象。添加或更改这些默认设置时，现有存储桶对象不受影响。
 
-请参见 link:../tenant/creating-s3-bucket.html["${post_edited_translations.segment}"] 和 link:../tenant/update-default-retention-settings.html["更新 S3 对象锁定默认保留"]。
+请参见 link:../tenant/creating-s3-bucket.html["创建 S3 存储桶"] 和 link:../tenant/update-default-retention-settings.html["更新 S3 对象锁定默认保留"]。
 
 
 
@@ -97,11 +97,11 @@ NOTE: 如果对象处于合法冻结状态，则无论其保留模式如何，�
 
 以下网格管理员和租户用户列表包含使用 S3 对象锁定功能的高级任务。
 
-${post_edited_translations.segment}::
+网格管理员::
 +
 --
-* ${post_edited_translations.segment}
-* 确保信息生命周期管理 (ILM) 策略是_合规_的；也就是说，它们符合 link:../ilm/managing-objects-with-s3-object-lock.html["${post_edited_translations.segment}"]。
+* 为整个 StorageGRID 系统启用全局 S3 Object Lock 设置。
+* 确保信息生命周期管理 (ILM) 策略是_合规_的；也就是说，它们符合 link:../ilm/managing-objects-with-s3-object-lock.html["启用了 S3 Object Lock 的存储桶的要求"]。
 * 根据需要，允许租户将 Compliance 用作保留模式。否则，仅允许使用 Governance 模式。
 * 根据需要，为租户设置最长保留期限。
 
@@ -110,13 +110,13 @@ ${post_edited_translations.segment}::
 租户用户::
 +
 --
-* ${post_edited_translations.segment}
+* 查看使用 S3 Object Lock 的存储桶和对象的注意事项。
 * 根据需要，联系网格管理员以启用全局 S3 Object Lock 设置并设置权限。
 * 创建启用了 S3 Object Lock 的存储桶。
 * 可选地，为存储桶配置默认保留设置：
 +
-** ${post_edited_translations.segment}
-** ${post_edited_translations.segment}
+** 默认保留模式：Governance 或 Compliance（如果网格管理员允许）。
+** 默认保留期：必须小于或等于网格管理员设置的最大保留期。
 
 
 * 使用 S3 客户端应用程序添加对象，并可选择设置对象特定的保留：
@@ -133,9 +133,9 @@ ${post_edited_translations.segment}::
 
 
 [[requirements-for-buckets-with-s3-object-lock-enabled]]
-== ${post_edited_translations.segment}
+== 启用 S3 对象锁定的存储桶的要求
 
-* ${post_edited_translations.segment}
+* 如果为 StorageGRID 系统启用了全局 S3 对象锁定设置，则可以使用 Tenant Manager、租户管理 API 或 S3 REST API 创建启用了 S3 对象锁定的存储桶。
 * 如果您计划使用 S3 Object Lock，则必须在创建存储桶时启用 S3 Object Lock。您无法为现有存储桶启用 S3 Object Lock。
 * 为存储桶启用 S3 Object Lock 时，StorageGRID 会自动为该存储桶启用版本控制。您无法禁用 S3 Object Lock，也无法暂停该存储桶的版本控制。
 * （可选）您可以使用 Tenant Manager、Tenant Management API 或 S3 REST API 为每个存储桶指定默认保留模式和保留期。存储桶的默认保留设置仅适用于添加到该存储桶且自身没有保留设置的新对象。您可以通过在上传每个对象版本时为其指定保留模式和保留截止日期来覆盖这些默认设置。
@@ -146,7 +146,7 @@ ${post_edited_translations.segment}::
 
 
 [[requirements-for-objects-in-buckets-with-s3-object-lock-enabled]]
-== ${post_edited_translations.segment}
+== 启用了 S3 Object Lock 的存储桶中的对象的要求
 
 * 要保护对象版本，您可以为存储桶指定默认保留设置，也可以为每个对象版本指定保留设置。可以使用 S3 客户端应用程序或 S3 REST API 指定对象级保留设置。
 * 保留设置适用于单个对象版本。一个对象版本可以同时具有保留截止日期和法定保留设置，也可以仅具有其中之一，或者两者都不具有。为对象指定保留截止日期或法定保留设置仅会保护请求中指定的版本。您可以创建该对象的新版本，而该对象的上一个版本仍保持锁定状态。
@@ -155,18 +155,18 @@ ${post_edited_translations.segment}::
 
 
 [[lifecycle-of-objects-in-buckets-with-s3-object-lock-enabled]]
-== ${post_edited_translations.segment}
+== 启用 S3 Object Lock 的存储桶中对象的生命周期
 
 在启用了 S3 Object Lock 的存储桶中保存的每个对象都会经历以下阶段：
 
 . *对象载入*
 +
-${post_edited_translations.segment}
+将对象版本添加到启用了 S3 Object Lock 的存储桶时，将按如下方式应用保留设置：
 
 +
 ** 如果为对象指定了保留设置，则应用对象级别设置。任何默认存储桶设置都将被忽略。
-** ${post_edited_translations.segment}
-** ${post_edited_translations.segment}
+** 如果没有为此对象指定保留设置，则应用默认存储桶设置（如果存在）。
+** 如果没有为此对象或存储桶指定保留设置，则该对象不受 S3 Object Lock 的保护。
 
 
 +

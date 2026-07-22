@@ -34,7 +34,7 @@ summary: 如果租户尝试执行超过 S3 大小限制（5 GiB）的非多部�
 .. 更改为审核日志所在的目录。
 +
 --
-${post_edited_translations.segment}
+审核日志目录和适用节点取决于您的审核目标设置。
 
 [cols="1a,2a"]
 |===
@@ -42,7 +42,7 @@ ${post_edited_translations.segment}
 
 
  a| 
-${post_edited_translations.segment}
+本地节点（默认）
  a| 
 `/var/local/log/localaudit.log`
 

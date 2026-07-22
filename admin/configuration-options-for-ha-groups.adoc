@@ -53,8 +53,8 @@ DNS 轮询
  a| 
 主动-主动 HA
  a| 
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
+* 流量分布在多个 HA 组中。
+* 高聚合吞吐量，随 HA 组的数量而扩展。
 * 快速故障转移。
 
  a| 

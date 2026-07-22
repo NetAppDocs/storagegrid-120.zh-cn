@@ -42,13 +42,13 @@ NOTE: 如果仅对网格网络子网列表进行更改，请使用网格管理�
 
 * 192.168.130.0/24，因为此子网范围包含 IP 地址 192.168.130.101 和 192.168.130.102
 * 192.168.131.0/24，因为此子网范围包含 IP 地址 192.168.131.101 和 192.168.131.102
-* ${post_edited_translations.segment}
+* 198.51.100.0/24，因为此子网范围包含 IP 地址 198.51.100.2 和 198.51.100.4
 
 
 ====
 .步骤
 . 默认情况下会阻止外部 SSH 访问。如有需要，link:../admin/manage-external-ssh-access.html["暂时允许访问"]。
-. ${post_edited_translations.segment}
+. 登录到主管理节点：
 +
 .. 输入以下命令： `ssh admin@_primary_Admin_Node_IP_`
 .. 输入 `Passwords.txt`文件中列出的密码。

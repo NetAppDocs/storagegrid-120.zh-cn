@@ -103,7 +103,7 @@ image:used_space_after_ec_rebalance.png["已用空间 aAfter EC 再平衡"]
 NetApp 如果以下_所有_条件均成立，则需要进行 EC 重新平衡：
 
 * 您对对象数据使用纠删码。
-* ${post_edited_translations.segment}
+* 已为站点上的一个或多个存储节点触发 *Low Object Storage* 警报，表明节点已达到 80% 或更高的容量。
 * 您无法为正在使用的擦除编码方案添加足够的新存储节点。请参见 link:adding-storage-capacity-for-erasure-coded-objects.html["为纠删码对象添加存储容量"]。
 * 在 EC 重新平衡过程运行时，您的 S3 客户端可以容忍其写入和读取操作的性能较低。
 
@@ -185,12 +185,12 @@ EC 数据修复作业
  a| 
 目标卷
 
-${post_edited_translations.segment}
+在运行其他维护程序之前，您必须终止 EC 再平衡程序。
 
 |===
 
 
 [[how-ec-rebalance-procedure-interacts-with-ilm]]
-== ${post_edited_translations.segment}
+== EC 重新平衡过程如何与 ILM 交互
 
 在EC重新平衡过程运行时，请避免进行可能会更改现有纠删码对象位置的ILM更改。例如，不要开始使用具有不同纠删码配置文件的ILM规则。如果您需要进行此类ILM更改，则应终止EC重新平衡程序。

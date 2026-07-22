@@ -24,7 +24,7 @@ NOTE: 可以通过 link:../s3/use-access-policies.html["存储区策略或组策
 * 如果每个租户有 5,000 个存储桶，则网格中的每个 Storage Node 至少有 64 GB 的 RAM。
 +
 
-NOTE: 每个网格最多可包含 100,000 个存储桶，包括 link:../tenant/what-is-branch-bucket.html["${post_edited_translations.segment}"]。
+NOTE: 每个网格最多可包含 100,000 个存储桶，包括 link:../tenant/what-is-branch-bucket.html["分支桶"]。
 
 
 

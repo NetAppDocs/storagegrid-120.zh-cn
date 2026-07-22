@@ -19,7 +19,7 @@ summary: 默认情况下，首次安装 StorageGRID 时会启用 StorageGRID Aut
 * 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
 * 您有 link:admin-group-permissions.html["root 访问权限"]。
 * 如果您将使用 HTTPS 发送 AutoSupport 软件包，则您已直接或link:configuring-admin-proxy-settings.html["使用代理服务器"]向主管理节点提供出站互联网访问权限（不需要入站连接）。
-* 如果在 StorageGRID AutoSupport 页面上选择了 HTTP，您需要 link:configuring-admin-proxy-settings.html["${post_edited_translations.segment}"] 将 AutoSupport 包作为 HTTPS 转发。NetApp 的 AutoSupport 服务器将拒绝使用 HTTP 发送的包。
+* 如果在 StorageGRID AutoSupport 页面上选择了 HTTP，您需要 link:configuring-admin-proxy-settings.html["已配置代理服务器"] 将 AutoSupport 包作为 HTTPS 转发。NetApp 的 AutoSupport 服务器将拒绝使用 HTTP 发送的包。
 * 如果您要将 SMTP 用作 AutoSupport 包的协议，则您已配置了 SMTP 邮件服务器。
 
 

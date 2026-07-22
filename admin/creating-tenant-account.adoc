@@ -23,7 +23,7 @@ summary: 必须至少创建一个租户帐户才能控制对 StorageGRID 系统�
 +
 ** 您有 link:grid-federation-create-connection.html["已配置网格联盟连接"]。
 ** 连接状态为*已连接*。
-** ${post_edited_translations.segment}
+** 您拥有 Root 访问权限。
 ** 您已查看 link:grid-federation-manage-tenants.html["管理网格联合的允许租户"] 的注意事项。
 ** 如果租户帐户将使用为 Grid Manager 配置的身份源，则已将同一联合组导入两个网格上的 Grid Manager。
 +
@@ -43,7 +43,7 @@ TIP: 如果在创建租户之前两个网格上都不存在此管理组，则租
 == 访问此向导
 
 .步骤
-. ${post_edited_translations.segment}
+. 选择*租户*。
 . 选择 *Create*。
 
 
@@ -68,9 +68,9 @@ TIP: 如果在创建租户之前两个网格上都不存在此管理组，则租
 
 
  a| 
-${post_edited_translations.segment}
+描述（选填）
  a| 
-${post_edited_translations.segment}
+用于帮助识别租户的说明。
 
 如果您正在创建将使用网格联盟连接的租户，则可以根据需要使用此字段来帮助识别哪个是源租户，哪个是目标租户。例如，在网格 1 上创建的租户的以下描述也将显示在复制到网格 2 的租户中：“此租户是在网格 1 上创建的。”
 
@@ -84,7 +84,7 @@ ${post_edited_translations.segment}
 
 
  a| 
-${post_edited_translations.segment}
+存储配额（可选）
  a| 
 如果希望此租户具有存储配额，则为配额和单位的数值。
 
@@ -95,10 +95,10 @@ ${post_edited_translations.segment}
 
 
 [[admin-tenant-select-permissionsselect-permissions]]
-== ${post_edited_translations.segment}
+== [[admin-tenant-select-permissions]]选择权限
 
 .步骤
-. ${post_edited_translations.segment}
+. （可选）选择希望此租户具有的基本权限。
 +
 
 NOTE: 其中部分权限具有其他要求。有关详细信息，请选择每个权限的帮助图标。
@@ -131,7 +131,7 @@ NOTE: 其中部分权限具有其他要求。有关详细信息，请选择每�
 *重要提示*：SelectObjectContent 请求可能会降低所有 S3 客户端和所有租户的负载均衡器性能。仅在需要时且仅对受信任的租户启用此功能。
 
 |===
-. ${post_edited_translations.segment}
+. （可选）选择希望此租户具有的高级权限。
 +
 [cols="1a,3a"]
 |===
@@ -205,7 +205,7 @@ S3 对象锁定
 
 +
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 根据网络连接、节点状态和 Cassandra 操作，跨网格应用租户设置可能需要 15 分钟或更长时间。
 
 . 如果为租户选择了*使用网格联合连接*权限：
 +
@@ -217,7 +217,7 @@ NOTE: 如果您看到错误消息"Tenant created without a clone"，请参阅 li
 .. 如果在定义 root 访问权限时提供了本地 root 用户密码，link:changing-password-for-tenant-local-root-user.html["更改本地 root 用户的密码"] 用于复制的租户。
 +
 
-TIP: ${post_edited_translations.segment}
+TIP: 在更改密码之前，本地 root 用户无法登录到目标网格上的租户管理器。
 
 
 

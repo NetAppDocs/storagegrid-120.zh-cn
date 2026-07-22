@@ -44,32 +44,32 @@ CAUTION: 某些扩展步骤和阶段在大型网格上运行可能需要大量�
 +
 image:grid_expansion_page.png["显示网格扩展页面的屏幕截图"]
 
-. ${post_edited_translations.segment}
+. 选择*Configure Expansion*。
 +
-${post_edited_translations.segment}
+此时将显示站点选择对话框。
 
-. ${post_edited_translations.segment}
+. 选择要开始的扩展类型：
 +
-** ${post_edited_translations.segment}
+** 如果要添加新站点，请选择*New*，然后输入新站点的名称。
 ** 如果要将一个或多个节点添加到现有站点，请选择*Existing*。
 
 
 . 选择 *Save*。
-. ${post_edited_translations.segment}
+. 查看*待处理节点*列表，并确认它显示了您部署的所有网格节点。
 +
-${post_edited_translations.segment}
+根据需要，您可以将光标放在节点的 *Grid Network MAC Address* 上，以查看该节点的详细信息。
 
 +
-image:grid_node_details.png["${post_edited_translations.segment}"]
+image:grid_node_details.png["网格节点详细信息的屏幕截图"]
 
 +
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 如果缺少节点，请确认该节点已成功部署。
 
-. ${post_edited_translations.segment}
+. 从挂起的节点列表中，批准要在此扩展中添加的节点。
 +
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
+.. 选择要批准的第一个挂起网格节点旁边的单选按钮。
+.. 选择*批准*。
 +
 此时将显示网格节点配置表单。
 
@@ -95,11 +95,11 @@ NOTE: ${post_edited_translations.segment}
 
 
  a| 
-${post_edited_translations.segment}
+存储类型（仅存储节点）
  a| 
 *** *数据和元数据*（"组合"）：对象数据和元数据存储节点
-*** ${post_edited_translations.segment}
-*** ${post_edited_translations.segment}
+*** *Data-only*：仅包含对象数据（无元数据）的存储节点
+*** *仅元数据*：仅包含元数据的存储节点（无对象数据）
 
 
 
@@ -111,34 +111,34 @@ NTP 角色
 
 *** 选择 *Automatic*（默认）以自动将 NTP 角色分配给该节点。主角色将分配给管理节点、具有 ADC 服务的存储节点、网关节点以及具有非静态 IP 地址的任何网格节点。客户端角色将分配给所有其他网格节点。
 *** 选择 *Primary* 以手动向节点分配主 NTP 角色。每个站点应至少有两个节点具有主角色，以便为外部时间源提供冗余系统访问。
-*** ${post_edited_translations.segment}
+*** 选择 *Client* 将 Client NTP 角色手动分配给该节点。
 
 
 
 
  a| 
-${post_edited_translations.segment}
+ADC 服务（组合或仅元数据存储节点）
  a| 
 此存储节点是否将运行管理域控制器 (ADC) 服务。ADC 服务用于跟踪网格服务的位置和可用性。每个站点上至少有三个存储节点必须包含 ADC 服务。
 
 *** 如果您要替换的存储节点包含 ADC 服务，请选择 *Yes*。因为如果保留的 ADC 服务过少，您将无法退役存储节点，所以此设置可确保在删除旧服务之前，新的 ADC 服务已可用。
-*** 您可以 link:../maintain/move-adc-service.html["${post_edited_translations.segment}"] 以确保满足 ADC 服务仲裁。
+*** 您可以 link:../maintain/move-adc-service.html["将 ADC 服务移动到同一站点上的另一个存储节点"] 以确保满足 ADC 服务仲裁。
 *** 选择*自动*，让系统确定此节点是否需要 ADC 服务。
 
 
-了解有关 link:../maintain/understanding-adc-service-quorum.html["${post_edited_translations.segment}"] 的信息。
+了解有关 link:../maintain/understanding-adc-service-quorum.html["ADC 仲裁"] 的信息。
 
 
 
  a| 
-${post_edited_translations.segment}
+存储等级（组合或仅数据存储节点）
  a| 
-${post_edited_translations.segment}
+使用*默认*存储等级，或选择要分配给此新节点的自定义存储等级。
 
-${post_edited_translations.segment}
+存储等级由 ILM 存储池使用，因此您的选择可能会影响哪些对象将被放置在存储节点上。
 
 |===
-.. ${post_edited_translations.segment}
+.. 根据需要，修改网格网络、管理网络和客户端网络的设置。
 +
 *** *IPv4 地址 (CIDR)*：网络接口的 CIDR 网络地址。例如：172.16.10.100/24
 +
@@ -183,8 +183,8 @@ NOTE: 站点扩展包括为新站点配置 Cassandra 的额外任务。
 在对 StorageGRID 系统进行网格拓扑更改后，您必须尽快下载恢复包文件的更新副本。恢复包文件允许您在发生故障时恢复系统。
 
 +
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
+.. 选择下载链接。
+.. 输入配置密码，然后选择*Start Download*。
 .. 下载完成后，打开  `.zip` 文件并确认您可以访问其中的内容，包括  `Passwords.txt` 文件。
 .. 将下载的恢复包文件 (`.zip`) 复制到两个安全、可靠且独立的位置。
 +
@@ -208,7 +208,7 @@ CAUTION: 在"扩展 Cassandra 集群"或"启动 Cassandra 和流数据"阶段期
 此百分比根据可用的 Cassandra 数据总量和已写入新节点的数据量来估计 Cassandra 流式传输操作的完成程度。
 
 --
-.${post_edited_translations.segment}
+.添加站点
 --
 如果您要添加新站点，请使用  `nodetool status` 监控 Cassandra 流式传输的进度，并查看在“正在扩展 Cassandra 集群”阶段已将多少元数据复制到新站点。新站点上的总数据负载应在当前站点总负载的 20% 左右。
 

@@ -34,9 +34,9 @@ CBID
 
 
  a| 
-${post_edited_translations.segment}
+CMPA
  a| 
-${post_edited_translations.segment}
+合规性：自动删除
  a| 
 仅适用于合规 S3 存储桶中的对象。0（false）或 1（true），表示合规对象的保留期结束时是否应自动删除，除非存储桶处于合法冻结状态。
 

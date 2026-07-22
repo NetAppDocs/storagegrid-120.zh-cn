@@ -16,7 +16,7 @@ summary: 使用这些指南了解 StorageGRID 体系结构和网络拓扑，并�
 
 
 [[about-these-instructions]]
-== ${post_edited_translations.segment}
+== 关于这些说明
 
 这些指南提供了在部署和配置 StorageGRID 节点之前可用于创建 StorageGRID 网络基础架构的信息。使用这些指南可帮助确保网格中的所有节点之间以及网格与外部客户端和服务之间能够进行通信。
 

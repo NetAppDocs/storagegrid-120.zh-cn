@@ -17,7 +17,7 @@ indexpage:
       url: "../monitor/monitoring-storage-capacity.html"
   - title: 管理提醒和通知
     links:
-    - title: "${post_edited_translations.segment}"
+    - title: 管理提醒
       url: "../monitor/managing-alerts.html"
     - title: 创建自定义提醒
       url: "../monitor/creating-custom-alert-rules.html"

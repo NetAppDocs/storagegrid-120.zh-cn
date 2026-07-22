@@ -51,7 +51,7 @@ TIP: 此版本的文档网站中已删除 Swift 详细信息。请参阅 https:/
 
 [role="tabbed-block"]
 ====
-.${post_edited_translations.segment}
+.使用 S3 设置向导
 --
 按照 S3 设置向导中的步骤操作。
 
@@ -86,7 +86,7 @@ TIP: 此版本的文档网站中已删除 Swift 详细信息。请参阅 https:/
 [[what-values-do-i-need]]
 === 我需要哪些值？
 
-${post_edited_translations.segment}
+下表显示了必须在 StorageGRID 中配置的值，以及 S3 应用程序和 DNS 服务器使用这些值的位置。
 
 [cols="1a,1a,1a"]
 |===
@@ -132,18 +132,18 @@ StorageGRID > 负载平衡器端点
 
 
  a| 
-${post_edited_translations.segment}
+S3 访问密钥 ID 和秘密访问密钥
  a| 
-${post_edited_translations.segment}
+StorageGRID > 租户和存储桶
  a| 
 客户端应用程序
 
 
 
  a| 
-${post_edited_translations.segment}
+存储桶/容器名称
  a| 
-${post_edited_translations.segment}
+StorageGRID > 租户和存储桶
  a| 
 客户端应用程序
 
@@ -170,7 +170,7 @@ NOTE: 如果您计划将 StorageGRID 用作 FabricPool 云分层的对象存储�
 .. 配置要用于 S3 应用程序的高可用性 (HA) 组。请参阅 link:configure-high-availability-group.html["配置高可用性组"]。
 .. 创建 S3 应用程序将使用的负载平衡器端点。请参阅 link:configuring-load-balancer-endpoints.html["配置负载平衡器端点"]。
 .. 创建 S3 应用程序将使用的租户账户。参见 link:creating-tenant-account.html["创建租户帐户"]。
-.. 对于 S3 租户，请登录该租户账户，并为每个将访问该应用程序的用户生成一个访问密钥 ID 和机密访问密钥。请参见 link:../tenant/creating-your-own-s3-access-keys.html["${post_edited_translations.segment}"]。
+.. 对于 S3 租户，请登录该租户账户，并为每个将访问该应用程序的用户生成一个访问密钥 ID 和机密访问密钥。请参见 link:../tenant/creating-your-own-s3-access-keys.html["创建自己的访问密钥"]。
 .. 在租户帐户中创建一个或多个 S3 存储桶。有关 S3，请参见link:../tenant/creating-s3-bucket.html["创建 S3 存储桶"]。
 .. 要为属于新租户或存储区/容器的对象添加特定放置说明，请创建新的 ILM 规则并激活新的 ILM 策略以使用该规则。请参阅 link:../ilm/access-create-ilm-rule-wizard.html["创建 ILM 规则"] 和 link:../ilm/creating-ilm-policy.html["创建 ILM 策略"]。
 

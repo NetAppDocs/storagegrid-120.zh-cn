@@ -37,14 +37,14 @@ image:health_status_card.png["健康状态卡 - 控制面板"]
  a| 
 当前警报（严重、重大、轻微）
  a| 
-警报是 <<${post_edited_translations.segment},当前活动>>。
+警报是 <<查看当前和已解决的警报,当前活动>>。
 
 
 
  a| 
 最近已解决的提醒
  a| 
-过去一周内触发的警报 <<${post_edited_translations.segment},现已解决>>。
+过去一周内触发的警报 <<查看当前和已解决的警报,现已解决>>。
 
 
 
@@ -75,7 +75,7 @@ image:icon_alarm_blue_unknown.png["蓝色问号图标"]
 
 *无法与节点通信*警报也可能被触发。其他警报也可能处于活动状态。
  a| 
-需要立即注意。<<${post_edited_translations.segment},选择每个警报>>并遵循建议的操作。
+需要立即注意。<<查看当前和已解决的警报,选择每个警报>>并遵循建议的操作。
 
 例如，您可能需要重新启动已停止的服务或重新启动节点的主机。
 
@@ -96,7 +96,7 @@ image:icon_alarm_gray_administratively_down.png["灰色问号图标"]
  a| 
 确定是否有任何警报影响此节点。
 
-如果一个或多个警报处于活动状态，<<${post_edited_translations.segment},选择每个警报>>请按照建议的操作执行。
+如果一个或多个警报处于活动状态，<<查看当前和已解决的警报,选择每个警报>>请按照建议的操作执行。
 
 
 
@@ -113,7 +113,7 @@ image:icon_alert_green_checkmark.png["图标警报绿色复选标记"]
 
 
 [[view-current-and-resolved-alerts]]
-== ${post_edited_translations.segment}
+== 查看当前和已解决的警报
 
 *当前警报*：触发警报时，仪表板上会显示警报图标。节点页面上还会显示该节点的警报图标。如果link:email-alert-notifications.html["警报电子邮件通知已配置"]，则还会发送电子邮件通知，除非警报已被静音。
 

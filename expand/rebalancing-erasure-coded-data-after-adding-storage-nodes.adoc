@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: erasure coding, EC, rebalancing, site rebalance procedure, StorageGRID 
 summary: 添加存储节点后，您可以使用纠删码重新平衡过程在现有和新的存储节点之间重新分配纠删码片段。 
 ---
-= ${post_edited_translations.segment}
+= 将节点添加到 StorageGRID 系统后重新平衡纠删码数据
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -15,19 +15,19 @@ summary: 添加存储节点后，您可以使用纠删码重新平衡过程在�
 
 .开始之前
 * 您已完成添加新存储节点的扩展步骤。
-* 您已审阅 link:considerations-for-rebalancing-erasure-coded-data.html["${post_edited_translations.segment}"]。
+* 您已审阅 link:considerations-for-rebalancing-erasure-coded-data.html["重新平衡纠删码数据的注意事项"]。
 * 您已了解，此过程不会移动复制的对象数据，且 EC 重新平衡过程也不会移动复制的数据。但是，在确定将 EC 数据移动到何处时，会考虑复制的数据。
 * 您拥有  `Passwords.txt` 文件。
 
 
-.${post_edited_translations.segment}
+.此过程运行时会发生什么
 在开始此程序之前，请注意以下事项：
 
-* ${post_edited_translations.segment}
+* 如果一个或多个卷处于离线（未挂载）状态，或处于在线（已挂载）但处于错误状态，则 EC 重新平衡过程将不会启动。
 * EC 再平衡程序会暂时保留大量存储空间。可能会触发存储警报，但在重新平衡完成后将自动解除。如果没有足够的存储空间用于预留，EC 再平衡程序将失败。EC 再平衡程序完成后，无论该程序是否失败或成功，存储预留都将被释放。
 * 如果卷在 EC 重新平衡过程中转为脱机状态，则重新平衡过程将终止。已移动的任何数据片段都将保留在其新位置，并且不会丢失任何数据。
 +
-${post_edited_translations.segment}
+所有卷恢复联机后，您可以重新运行该程序。
 
 * 当 EC 重新平衡过程运行时，ILM 操作和 S3 客户端操作的性能可能会受到影响。
 +
@@ -53,7 +53,7 @@ NOTE: 如果 S3 API 上传对象（或对象部分）的操作需要超过 24 �
 .. 请重复这些步骤以查看站点上的其他存储节点。
 
 
-. ${post_edited_translations.segment}
+. 登录到主管理节点：
 +
 .. 输入以下命令： `ssh admin@_primary_Admin_Node_IP_`
 .. 输入 `Passwords.txt`文件中列出的密码。
@@ -66,18 +66,18 @@ NOTE: 如果 S3 API 上传对象（或对象部分）的操作需要超过 24 �
 
 . 开始此过程：
 +
-${post_edited_translations.segment}
+`rebalance-data start --site "_site-name_"
 
 +
 对于 "_site-name_"，指定您添加了新 Storage Node 的第一个站点。将  `site-name` 括在引号中。
 
 +
-${post_edited_translations.segment}
+EC重新平衡过程开始，并返回作业ID。
 
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 复制作业 ID。
+. [[view-status]]监控EC再平衡程序的状态。
 +
-** ${post_edited_translations.segment}
+** 要查看单个EC再平衡程序的状态：
 +
 `rebalance-data status --job-id _job-id_`
 
@@ -98,18 +98,18 @@ ${post_edited_translations.segment}
 ====
 
 
-. ${post_edited_translations.segment}
+. 根据返回的状态执行其他步骤：
 +
 ** 如果 `State`为 `In progress`，则 EC 重新平衡操作仍处于运行状态。您应定期监控该过程，直至其完成。
 +
 转到"节点"页面，评估站点中各 Storage Node 的数据分布情况。
 
 +
-${post_edited_translations.segment}
+当所有节点中的数据与目标数据分区的偏差在 5% 以内时，EC 重新平衡作业将被视为完成并停止。
 
-** 如果 `State`是 `Success`，可选择<<review_object_storage,${post_edited_translations.segment}>>以查看站点的更新详细信息。
+** 如果 `State`是 `Success`，可选择<<review_object_storage,审阅对象存储>>以查看站点的更新详细信息。
 +
-${post_edited_translations.segment}
+擦除编码的数据现在应该在站点的存储节点之间更加平衡。
 
 ** 如果 `State`是 `Failure`：
 +
@@ -128,7 +128,7 @@ ${post_edited_translations.segment}
 +
 `rebalance-data pause --job-id _job-id_`
 
-. ${post_edited_translations.segment}
+. 如果需要终止 EC 再平衡过程（例如，以便执行 StorageGRID 软件升级），请输入以下内容：
 +
 `rebalance-data terminate --job-id _job-id_`
 

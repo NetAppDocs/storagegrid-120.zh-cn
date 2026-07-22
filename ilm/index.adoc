@@ -16,11 +16,11 @@ summary: '信息生命周期管理 (ILM) 策略中的信息生命周期管理 (I
 
 
 [[about-these-instructions]]
-== ${post_edited_translations.segment}
+== 关于这些说明
 
 设计和实施 ILM 规则和策略需要仔细规划。您必须了解您的操作要求、StorageGRID 系统的拓扑结构、对象保护需求以及可用的存储类型。然后，您必须确定要如何复制、分发和存储不同类型的对象。
 
-${post_edited_translations.segment}
+请按照以下说明操作：
 
 * 了解 StorageGRID ILM，包括 link:how-ilm-operates-throughout-objects-life.html["ILM 在对象的整个生命周期中如何运作"]。
 * 了解如何配置 link:what-storage-pool-is.html["存储池"]、link:what-cloud-storage-pool-is.html["云存储池"] 和 link:what-ilm-rule-is.html["ILM规则"]。

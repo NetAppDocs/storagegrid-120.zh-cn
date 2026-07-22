@@ -17,10 +17,10 @@ summary: '您使用 PingFederate 为系统中的每个管理节点创建服务�
 * 您已为 StorageGRID 配置单点登录，并选择 *Ping Federate* 作为 SSO 类型。
 * 您在 Grid Manager 中拥有 link:../admin/configure-sso.html#enter-sandbox-mode["已进入沙盒模式"]。
 * 您拥有系统内每个管理节点的 *SP 连接 ID*。您可以在“配置 SSO”页面上的管理节点详细信息表中找到这些值。
-* ${post_edited_translations.segment}
+* 您已下载系统中每个管理节点的 *SAML 元数据*。
 * 您有在 PingFederate 服务器中创建 SP 连接的经验。
-* 您有 https://docs.pingidentity.com/pingfederate/latest/administrators_reference_guide/pf_administrators_reference_guide.html["${post_edited_translations.segment}"^] for PingFederate Server。PingFederate 文档提供了详细的分步说明和解释。
-* 您有 link:../admin/admin-group-permissions.html["${post_edited_translations.segment}"] for PingFederate Server。
+* 您有 https://docs.pingidentity.com/pingfederate/latest/administrators_reference_guide/pf_administrators_reference_guide.html["管理员参考指南"^] for PingFederate Server。PingFederate 文档提供了详细的分步说明和解释。
+* 您有 link:../admin/admin-group-permissions.html["管理员权限"] for PingFederate Server。
 
 
 .关于此任务
@@ -36,13 +36,13 @@ summary: '您使用 PingFederate 为系统中的每个管理节点创建服务�
 
 
 [[create-data-storedata-store]]
-=== ${post_edited_translations.segment}
+=== 创建数据存储区[[data-store]]
 
-如果尚未创建，请创建一个数据存储以将 PingFederate 连接到 AD FS LDAP 服务器。使用您在 StorageGRID 中 link:../admin/using-identity-federation.html["${post_edited_translations.segment}"] 时使用的值。
+如果尚未创建，请创建一个数据存储以将 PingFederate 连接到 AD FS LDAP 服务器。使用您在 StorageGRID 中 link:../admin/using-identity-federation.html["正在配置身份联合"] 时使用的值。
 
 * *类型*：目录 (LDAP)
 * *LDAP Type*：Active Directory
-* ${post_edited_translations.segment}
+* *Binary Attribute Name*：如图所示，在 LDAP Binary Attributes 选项卡上输入 *objectGUID*。
 
 
 
@@ -54,25 +54,25 @@ summary: '您使用 PingFederate 为系统中的每个管理节点创建服务�
 
 * *类型*：LDAP 用户名密码凭据验证器
 * *数据存储*：选择您创建的数据存储。
-* ${post_edited_translations.segment}
+* *搜索库*：输入来自 LDAP 的信息（例如，DC=saml，DC=sgws）。
 * *搜索过滤器*: sAMAccountName=${username}
-* ${post_edited_translations.segment}
+* *Scope*：Subtree
 
 
 
 
 [[create-idp-adapter-instanceadapter-instance]]
-=== ${post_edited_translations.segment}
+=== 创建IdP适配器实例[[adapter-instance]]
 
 如果尚未创建，请创建一个 IdP 适配器实例。
 
 .步骤
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 转到*身份验证* > *集成* > *IdP Adapters*。
+. 选择*创建新实例*。
+. 在类型选项卡上，选择 *HTML Form IdP Adapter*。
+. 在 IdP Adapter 选项卡上，选择 *Add a new row to 'Credential Validators'*。
 . 选择您创建的 <<password-validator,密码凭据验证器>>。
-. ${post_edited_translations.segment}
+. 在适配器属性选项卡上，为*假名*选择*用户名*属性。
 . 选择 *Save*。
 
 
@@ -96,7 +96,7 @@ summary: '您使用 PingFederate 为系统中的每个管理节点创建服务�
 在 PingFederate 中创建 SP 连接时，您需要导入从 StorageGRID 为管理节点下载的 SAML 元数据。元数据文件包含许多您需要的特定值。
 
 
-TIP: 必须为 StorageGRID 系统中的每个管理节点创建 SP 连接，以便用户可以安全地登录和退出任何节点。使用以下说明创建第一个 SP 连接。然后，转到<<${post_edited_translations.segment}>>以创建您需要的任何其他连接。
+TIP: 必须为 StorageGRID 系统中的每个管理节点创建 SP 连接，以便用户可以安全地登录和退出任何节点。使用以下说明创建第一个 SP 连接。然后，转到<<创建其他 SP 连接>>以创建您需要的任何其他连接。
 
 
 
@@ -150,7 +150,7 @@ TIP: 必须为 StorageGRID 系统中的每个管理节点创建 SP 连接，以�
 === 映射适配器实例
 
 .步骤
-. ${post_edited_translations.segment}
+. 在身份验证源映射选项卡上，选择*Map New Adapter Instance*。
 . 在适配器实例选项卡上，选择您创建的 <<adapter-instance,适配器实例>>。
 . 在"映射方法"选项卡上，选择*从数据存储中检索其他属性*。
 . 在"属性源和用户查找"选项卡上，选择*添加属性源*。
@@ -199,29 +199,29 @@ TIP: 必须为 StorageGRID 系统中的每个管理节点创建 SP 连接，以�
 . 选择*下一步*转到*管理签名验证设置*。
 +
 .. 在信任模型选项卡上，选择*Unanchored*。
-.. ${post_edited_translations.segment}
+.. 在"签名验证证书"选项卡上，查看从 StorageGRID SAML 元数据导入的签名证书信息。
 
 
-. ${post_edited_translations.segment}
+. 查看摘要屏幕，然后选择 *Save* 保存 SP 连接。
 
 
 
 
 [[create-additional-sp-connections]]
-=== ${post_edited_translations.segment}
+=== 创建其他 SP 连接
 
 您可以复制第一个 SP 连接，以为网格中的每个管理节点创建所需的 SP 连接。您需要为每个副本上传新的元数据。
 
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 不同管理节点的 SP 连接使用相同的设置，但合作伙伴的实体 ID、基本 URL、连接 ID、连接名称、签名验证和 SLO 响应 URL 除外。
 
 .步骤
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 选择 *Action* > *Copy* 为每个其他管理节点创建初始 SP 连接的副本。
+. 输入副本的连接 ID 和连接名称，然后选择*保存*。
 . 选择与管理节点对应的元数据文件：
 +
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
+.. 选择*操作* > *使用元数据更新*。
+.. 选择*Choose File*并上传元数据。
 .. 选择 *Next*。
 .. 选择 *Save*。
 

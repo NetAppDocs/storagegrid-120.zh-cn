@@ -109,7 +109,7 @@ sidebar:
           entries:
           - title: 一般注意事项
             url: "/maintain/considerations-for-decommissioning-storage-nodes.html"
-          - title: "${post_edited_translations.segment}"
+          - title: ADC 仲裁
             url: "/maintain/understanding-adc-service-quorum.html"
           - title: 查看ILM策略和存储配置
             url: "/maintain/reviewing-ilm-policy-and-storage-configuration.html"

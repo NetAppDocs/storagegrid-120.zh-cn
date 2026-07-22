@@ -2,16 +2,16 @@
 permalink: expand/contacting-technical-support.html 
 sidebar: sidebar 
 keywords: troubleshoot expansion, contact technical support, StorageGRID 
-summary: ${post_edited_translations.segment} 
+summary: 如果在网格扩展过程中遇到无法解决的错误，或者网格任务失败，请收集日志文件并联系技术支持。 
 ---
-= ${post_edited_translations.segment}
+= 排查 StorageGRID 中的扩展错误
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-${post_edited_translations.segment}
+如果在网格扩展过程中遇到无法解决的错误，或者网格任务失败，请收集日志文件并联系技术支持。
 
 在联系技术支持之前，请收集所需的日志文件以帮助进行故障排除。
 

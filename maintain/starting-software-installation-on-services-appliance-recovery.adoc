@@ -35,7 +35,7 @@ NOTE: 在制造过程中，最新版本的 StorageGRID 软件预装到服务设�
 
 * 对于主管理节点，指定节点的名称，然后上传相应的软件包（如果需要）。
 * 对于非主管理节点或网关节点，可以指定或确认主管理节点的 IP 地址以及节点的名称。
-* ${post_edited_translations.segment}
+* 您开始安装，等待卷配置完成并安装软件。
 * 在此过程中，安装暂停。要恢复安装，您必须登录到 Grid Manager，并将待处理节点配置为故障节点的替换节点。
 * 配置节点后，设备安装过程完成，设备将重新启动。
 
@@ -46,7 +46,7 @@ NOTE: 在制造过程中，最新版本的 StorageGRID 软件预装到服务设�
 `https://_Controller_IP_:8443`
 
 +
-${post_edited_translations.segment}
+此时将显示 StorageGRID 设备安装程序主页。
 
 . 要安装主管理节点：
 +

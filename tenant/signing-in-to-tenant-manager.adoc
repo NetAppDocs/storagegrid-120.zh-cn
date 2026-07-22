@@ -67,7 +67,7 @@ URL 始终包括完全限定的域名 (FQDN)、管理节点的 IP 地址或管�
 
 
 --
-.${post_edited_translations.segment}
+.使用 SSO
 --
 如果 StorageGRID 正在使用 SSO，则会出现以下屏幕之一：
 
@@ -79,7 +79,7 @@ URL 始终包括完全限定的域名 (FQDN)、管理节点的 IP 地址或管�
 +
 ... 如果未显示租户的 20 位帐户 ID，请选择租户帐户的名称（如果它显示在最近的帐户列表中），或输入帐户 ID。
 ... 选择*登录*。
-... ${post_edited_translations.segment}
+... 在组织的 SSO 登录页面上使用标准 SSO 凭据登录。
 +
 此时将显示租户管理器控制面板。
 

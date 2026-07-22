@@ -94,7 +94,7 @@ HA 组的虚拟 IP
  a| 
 节点接口
  a| 
-${post_edited_translations.segment}
+客户端必须使用所选节点接口的 IP 地址（或相应的 FQDN）来访问此端点。
 
 
 

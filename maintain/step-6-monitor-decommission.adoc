@@ -43,7 +43,7 @@ NOTE: 尽快下载恢复包，以确保在停用过程中出现问题时可以�
 .. 选择消息中的链接，或选择*维护* > *系统* > *恢复包*。
 .. 下载 `.zip`文件。
 +
-请参见 link:downloading-recovery-package.html["${post_edited_translations.segment}"] 的说明。
+请参见 link:downloading-recovery-package.html["正在下载恢复软件包"] 的说明。
 
 
 

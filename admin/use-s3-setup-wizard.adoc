@@ -35,7 +35,7 @@ S3 设置向导将指导您完成配置 StorageGRID 以用于 S3 应用程序的
 如果您计划使用虚拟 LAN 来隔离来自 S3 应用程序的流量，则表示您已经配置了 VLAN 接口。请参阅 link:../admin/configure-vlan-interfaces.html["配置 VLAN 接口"]。
 
 --
-配置身份联合和 SSO:: 如果您计划对 StorageGRID 系统使用身份联合或单点登录 (SSO)，则已启用这些功能。您还知道哪个联合组应具有 S3 应用程序将使用的租户帐户的根访问权限。请参阅 link:../admin/using-identity-federation.html["${post_edited_translations.segment}"] 和 link:../admin/how-sso-works.html["${post_edited_translations.segment}"]。
+配置身份联合和 SSO:: 如果您计划对 StorageGRID 系统使用身份联合或单点登录 (SSO)，则已启用这些功能。您还知道哪个联合组应具有 S3 应用程序将使用的租户帐户的根访问权限。请参阅 link:../admin/using-identity-federation.html["使用身份联合"] 和 link:../admin/how-sso-works.html["配置单点登录"]。
 获取并配置域名:: 您知道要用于 StorageGRID 的完全限定域名 (FQDN)。域名服务器 (DNS) 条目会将此 FQDN 映射到使用向导创建的 HA 组的虚拟 IP (VIP) 地址。
 +
 --
@@ -53,7 +53,7 @@ S3 设置向导将指导您完成配置 StorageGRID 以用于 S3 应用程序的
 --
 * 您有 link:grid-federation-manage-connection.html["已配置网格联盟连接"]。
 * 连接状态为*已连接*。
-* ${post_edited_translations.segment}
+* 您拥有 Root 访问权限。
 
 
 --

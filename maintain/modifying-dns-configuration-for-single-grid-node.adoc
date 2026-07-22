@@ -17,7 +17,7 @@ summary: 您可以运行脚本为每个网格节点配置不同的 DNS，而不�
 
 .步骤
 . 默认情况下会阻止外部 SSH 访问。如有需要，link:../admin/manage-external-ssh-access.html["暂时允许访问"]。
-. ${post_edited_translations.segment}
+. 登录到主管理节点：
 +
 .. 输入以下命令： `ssh admin@_primary_Admin_Node_IP_`
 .. 输入 `Passwords.txt`文件中列出的密码。

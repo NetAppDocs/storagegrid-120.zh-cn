@@ -18,7 +18,7 @@ summary: 作为网格管理员，您可以为 StorageGRID 系统启用 S3 对象
 [[what-is-s3-object-lock]]
 == 什么是 S3 Object Lock？
 
-${post_edited_translations.segment}
+StorageGRID S3 对象锁定功能是一种对象保护解决方案，相当于 Amazon Simple Storage Service (Amazon S3) 中的 S3 Object Lock。
 
 当为 StorageGRID 系统启用全局 S3 对象锁定设置时，S3 租户帐户可以创建启用或未启用 S3 对象锁定的存储桶。如果存储桶已启用 S3 对象锁定，则需要存储桶版本控制，并会自动启用。
 
@@ -37,14 +37,14 @@ ${post_edited_translations.segment}
 
 StorageGRID S3 Object Lock 功能支持两种保留模式，以对对象应用不同级别的保护。这些模式与 Amazon S3 保留模式等效。
 
-* ${post_edited_translations.segment}
+* 在合规模式下：
 +
 ** 在达到其保留截止日期之前，无法删除此对象。
 ** 对象的保留截止日期可以延长，但不能缩短。
 ** 在达到该日期之前，无法删除对象的 retain-until-date。
 
 
-* ${post_edited_translations.segment}
+* 在治理模式下：
 +
 ** 具有特殊权限的用户可以在请求中使用旁路标头来修改某些保留设置。
 ** 这些用户可以在达到保留截止日期之前删除对象版本。
@@ -56,11 +56,11 @@ StorageGRID S3 Object Lock 功能支持两种保留模式，以对对象应用�
 
 
 [[retention-settings-for-object-versions]]
-=== ${post_edited_translations.segment}
+=== 对象版本的保留设置
 
-${post_edited_translations.segment}
+如果在启用 S3 Object Lock 的情况下创建了存储桶，则用户可以使用 S3 客户端应用程序为添加到存储桶的每个对象选择性地指定以下保留设置：
 
-* ${post_edited_translations.segment}
+* *保留模式*：合规或治理。
 * *Retain-until-date*：如果对象版本的 retain-until-date 在将来，则可以检索该对象，但不能将其删除。
 * *诉讼保留*：对对象版本应用诉讼保留会立即锁定该对象。例如，您可能需要对与调查或法律纠纷相关的对象进行诉讼保留。诉讼保留没有过期日期，而是会一直保持有效，直到被显式删除。诉讼保留独立于保留截止日期。
 +
@@ -75,17 +75,17 @@ NOTE: 如果对象处于合法冻结状态，则无论其保留模式如何，�
 
 
 [[default-retention-setting-for-buckets]]
-=== ${post_edited_translations.segment}
+=== 存储桶的默认保留设置
 
 如果在启用 S3 对象锁定的情况下创建了存储桶，则用户可以选择为存储桶指定以下默认设置：
 
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
+* *默认保留模式*：合规或治理。
+* *默认保留期*：从添加之日起，添加到此存储桶的新对象版本应保留多长时间。
 
 
 默认存储桶设置仅适用于没有自己的保留设置的新对象。添加或更改这些默认设置时，现有存储桶对象不受影响。
 
-请参见 link:../tenant/creating-s3-bucket.html["${post_edited_translations.segment}"] 和 link:../tenant/update-default-retention-settings.html["更新 S3 对象锁定默认保留"]。
+请参见 link:../tenant/creating-s3-bucket.html["创建 S3 存储桶"] 和 link:../tenant/update-default-retention-settings.html["更新 S3 对象锁定默认保留"]。
 
 
 

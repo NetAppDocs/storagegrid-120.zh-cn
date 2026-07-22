@@ -21,31 +21,31 @@ summary: 您可以编辑流量分类策略以更改其名称或描述，或者�
 .步骤
 . 选择*配置* > *网络* > *流量分类*。
 +
-${post_edited_translations.segment}
+此时将显示"流量分类策略"页面，并在表格中列出现有策略。
 
-. 使用“操作”菜单或详情页面编辑策略。有关要输入的内容，请参见 link:../admin/creating-traffic-classification-policies.html["${post_edited_translations.segment}"]。
+. 使用“操作”菜单或详情页面编辑策略。有关要输入的内容，请参见 link:../admin/creating-traffic-classification-policies.html["创建流量分类策略"]。
 +
 [role="tabbed-block"]
 ====
-.${post_edited_translations.segment}
+.操作菜单
 --
 .. 选中此策略的复选框。
-.. ${post_edited_translations.segment}
+.. 选择*操作* > *编辑*。
 
 
 --
 .详细信息页面
 --
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
+.. 选择策略名称。
+.. 选择策略名称旁边的*编辑*按钮。
 
 
 --
 ====
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 对于 Enter policy name （输入策略名称）步骤，可选择编辑策略名称或描述，然后选择 *Continue* （继续）。
+. 对于添加匹配规则步骤，可选择添加规则或编辑现有规则的 *Type* 和 *Match value*，然后选择 *Continue*。
+. 对于 Set limits（设置限制）步骤，可选择添加、编辑或删除限制，然后选择 *Continue*（继续）。
+. 查看更新后的策略，然后选择*Save and continue*。
 +
 您对策略所做的更改已保存，现在将根据流量分类策略处理网络流量。您可以查看流量图表，并验证策略是否正在执行您预期的流量限制。
 

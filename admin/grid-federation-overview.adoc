@@ -2,7 +2,7 @@
 permalink: admin/grid-federation-overview.html 
 sidebar: sidebar 
 keywords: grid federation, cross-grid replication, account clone, cgr, disaster recovery 
-summary: ${post_edited_translations.segment} 
+summary: 您可以使用网格联合来克隆租户并在两个 StorageGRID 系统之间复制其对象以进行灾难恢复。 
 ---
 = 了解 StorageGRID 网格联合
 :allow-uri-read: 
@@ -11,19 +11,19 @@ summary: ${post_edited_translations.segment}
 
 
 [role="lead"]
-${post_edited_translations.segment}
+您可以使用网格联合来克隆租户并在两个 StorageGRID 系统之间复制其对象以进行灾难恢复。
 
 
 
 [[what-is-a-grid-federation-connection]]
 == 什么是网格联盟连接？
 
-${post_edited_translations.segment}
+网格联合连接是两个 StorageGRID 系统中管理节点和网关节点之间的双向、受信任和安全连接。
 
 
 
 [[workflow-for-grid-federation]]
-== ${post_edited_translations.segment}
+== 网格联合的工作流程
 
 工作流程图总结了在两个网格之间配置网格联合连接的步骤。
 
@@ -50,7 +50,7 @@ image:grid-federation-workflow.png["网格联盟连接工作流"]
 
 * 网格联合连接可以发生在网格网络、管理网络或客户端网络上。
 * 网格联盟连接可将一个网格连接到另一个网格。每个网格的配置都指定了另一个网格上的网格联盟端点，该端点由管理节点、网关节点或两者组成。
-* 最佳实践是连接每个网格上网关和 Admin Node 的 link:managing-high-availability-groups.html["${post_edited_translations.segment}"]。使用 HA 组有助于确保在节点不可用时，网格联合连接仍将保持在线状态。如果任一 HA 组中的活动接口发生故障，则连接可以使用备份接口。
+* 最佳实践是连接每个网格上网关和 Admin Node 的 link:managing-high-availability-groups.html["高可用性(HA)组"]。使用 HA 组有助于确保在节点不可用时，网格联合连接仍将保持在线状态。如果任一 HA 组中的活动接口发生故障，则连接可以使用备份接口。
 * 不建议创建使用单个管理节点或网关节点的 IP 地址的网格联合连接。如果节点不可用，网格联合连接也将不可用。
 * link:grid-federation-what-is-cross-grid-replication.html["跨网格复制"] 对象要求每个网格上的存储节点能够访问另一个网格上配置的管理节点和网关节点。对于每个网格，确认所有存储节点都具有通往用于连接的管理节点或网关节点的高带宽路由。
 
@@ -62,14 +62,14 @@ image:grid-federation-workflow.png["网格联盟连接工作流"]
 
 对于生产环境，使用完全限定域名 (FQDN) 来标识连接中的每个网格。然后，按如下所示创建相应的 DNS 条目：
 
-* ${post_edited_translations.segment}
+* 网格 1 的 FQDN 映射到网格 1 中 HA 组的一个或多个虚拟 IP (VIP) 地址，或网格 1 中的一个或多个管理节点或网关节点的 IP 地址。
 * 网格 2 的 FQDN 映射到网格 2 的一个或多个 VIP 地址，或网格 2 中的一个或多个管理节点或网关节点的 IP 地址。
 
 
 当您使用多个 DNS 条目时，使用连接的请求将进行负载平衡，如下所示：
 
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
+* 映射到多个 HA 组的 VIP 地址的 DNS 条目在 HA 组中的活动节点之间进行负载均衡。
+* 映射到多个管理节点或网关节点的 IP 地址的 DNS 条目在映射的节点之间进行负载均衡。
 
 
 
@@ -79,20 +79,20 @@ image:grid-federation-workflow.png["网格联盟连接工作流"]
 
 创建网格联合连接时，可以指定 23000 到 23999 之间的任何未使用的端口号。此连接中的两个网格将使用相同的端口。
 
-${post_edited_translations.segment}
+您必须确保两个网格中都没有节点将此端口用于其他连接。
 
 
 
 [[certificate-requirements]]
 === 证书要求
 
-${post_edited_translations.segment}
+配置网格联合连接时，StorageGRID 会自动生成四个 SSL 证书：
 
-* ${post_edited_translations.segment}
+* 用于对从网格 1 发送到网格 2 的信息进行身份验证和加密的服务器和客户端证书
 * 用于对从网格 2 发送到网格 1 的信息进行身份验证和加密的服务器和客户端证书
 
 
-image:grid-federation-certificates.png["${post_edited_translations.segment}"]
+image:grid-federation-certificates.png["网格联盟证书"]
 
 默认情况下，证书的有效期为 730 天（2 年）。当这些证书接近其过期日期时，*网格联合证书过期*警报将提醒您轮换证书，您可以使用 Grid Manager 执行此操作。
 

@@ -16,7 +16,7 @@ summary: 使用租户管理器后，必须注销以确保未经授权的用户�
 .步骤
 . 在用户界面的右上角找到用户名下拉菜单。
 +
-image:tenant_user_sign_out.png["${post_edited_translations.segment}"]
+image:tenant_user_sign_out.png["注销链接"]
 
 . 选择用户名，然后选择*Sign out*。
 +

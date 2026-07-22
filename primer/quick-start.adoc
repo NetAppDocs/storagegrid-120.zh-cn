@@ -72,7 +72,7 @@ StorageGRID 系统由单独的基于硬件和基于软件的节点组成。首�
 
 [role="quick-margin-list"]
 * link:../admin/controlling-storagegrid-access.html["控制 StorageGRID 访问"]
-* link:../admin/use-s3-setup-wizard.html["${post_edited_translations.segment}"]
+* link:../admin/use-s3-setup-wizard.html["使用 S3 设置向导"]
 * link:../fabricpool/use-fabricpool-setup-wizard.html["使用 FabricPool 设置向导"]
 * link:../admin/manage-security.html["管理安全"]
 * link:../harden/index.html["系统加固"]

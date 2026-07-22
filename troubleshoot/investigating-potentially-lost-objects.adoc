@@ -36,7 +36,7 @@ CAUTION: 如果报告丢失的对象超过 10 个，请联系技术支持。请�
 
 . 从管理节点，link:../audit/accessing-audit-log-file.html["访问审核日志"]确定触发*可能丢失的对象*警报的对象的唯一标识符 (UUID)：
 +
-.. ${post_edited_translations.segment}
+.. 登录到网格节点：
 +
 ... 输入以下命令： `ssh admin@grid_node_IP`
 ... 输入 `Passwords.txt`文件中列出的密码。
@@ -47,7 +47,7 @@ CAUTION: 如果报告丢失的对象超过 10 个，请联系技术支持。请�
 .. 更改为审核日志所在的目录。
 +
 --
-${post_edited_translations.segment}
+审核日志目录和适用节点取决于您的审核目标设置。
 
 [cols="1a,2a"]
 |===
@@ -55,7 +55,7 @@ ${post_edited_translations.segment}
 
 
  a| 
-${post_edited_translations.segment}
+本地节点（默认）
  a| 
 `/var/local/log/localaudit.log`
 

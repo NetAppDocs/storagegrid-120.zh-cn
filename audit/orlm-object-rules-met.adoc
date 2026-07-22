@@ -2,7 +2,7 @@
 permalink: audit/orlm-object-rules-met.html 
 sidebar: sidebar 
 keywords: audit message, ORLM, Object Rules Met, ilm rule 
-summary: ${post_edited_translations.segment} 
+summary: 当按照 ILM 规则指定成功存储和复制对象时，将生成此消息。 
 ---
 = StorageGRID 中满足 ILM 规则的 ORLM 审核消息
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: ${post_edited_translations.segment}
 
 
 [role="lead"]
-${post_edited_translations.segment}
+当按照 ILM 规则指定成功存储和复制对象时，将生成此消息。
 
 
 NOTE: 如果策略中的其他规则使用"对象大小"高级筛选器，则根据默认的"生成 2 个副本"规则成功存储对象时，不会生成 ORLM 消息。
@@ -24,7 +24,7 @@ NOTE: 如果策略中的其他规则使用"对象大小"高级筛选器，则根
  a| 
 BUID
  a| 
-${post_edited_translations.segment}
+存储桶标头
  a| 
 Bucket ID 字段。用于内部操作。仅在 STAT 为 PRGD 时出现。
 
@@ -88,7 +88,7 @@ SUCS：ILM 操作成功。
  a| 
 规则标签
  a| 
-${post_edited_translations.segment}
+应用于此对象的 ILM 规则的可读标签。
 
 
 
@@ -102,7 +102,7 @@ SEGC
 
 
  a| 
-${post_edited_translations.segment}
+SGCB
  a| 
 容器 CBID
  a| 

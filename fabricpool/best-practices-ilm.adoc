@@ -14,7 +14,7 @@ summary: '如果使用 FabricPool 将数据分层到 StorageGRID，则必须了�
 如果使用 FabricPool 将数据分层到 StorageGRID，则必须了解对 FabricPool 数据使用 StorageGRID 信息生命周期管理 (ILM) 的要求。
 
 
-CAUTION: FabricPool 不了解 StorageGRID ILM 规则或策略。如果 StorageGRID ILM 策略配置错误，可能会发生数据丢失。有关详细信息，请参见 link:../ilm/what-ilm-rule-is.html["${post_edited_translations.segment}"] 和 link:../ilm/creating-ilm-policy.html["创建 ILM 策略"]。
+CAUTION: FabricPool 不了解 StorageGRID ILM 规则或策略。如果 StorageGRID ILM 策略配置错误，可能会发生数据丢失。有关详细信息，请参见 link:../ilm/what-ilm-rule-is.html["使用 ILM 规则管理对象"] 和 link:../ilm/creating-ilm-policy.html["创建 ILM 策略"]。
 
 
 

@@ -17,7 +17,7 @@ summary: '每个密钥管理服务器(KMS)或 KMS 集群为单个站点或一组
 
 例如：
 
-. ${post_edited_translations.segment}
+. 您最初配置的默认 KMS 适用于所有没有专用 KMS 的站点。
 . 保存 KMS 时，所有启用了 *节点加密* 设置的设备节点都会连接到 KMS 并请求加密密钥。此密钥用于加密所有站点上的设备节点。必须使用同一密钥对这些设备进行解密。
 +
 image:kms_default_key.png["KMS 默认密钥"]
@@ -45,7 +45,7 @@ image:kms_copied_key.png["KMS 复制的密钥"]
 
 
  a| 
-${post_edited_translations.segment}
+您有一个或多个站点特定的 KMS 条目，并且要将其中一个条目用作默认 KMS。
  a| 
 编辑站点特定的 KMS。在 *Manages keys for* 字段中，选择 *Sites not managed by another KMS (default KMS)*。站点特定的 KMS 现在将用作默认 KMS。它将适用于任何没有专用 KMS 的站点。
 
@@ -56,8 +56,8 @@ link:kms-editing.html["编辑密钥管理服务器（KMS）"]
  a| 
 您拥有默认 KMS，并在扩容中添加了新站点。您不想对新站点使用默认 KMS。
  a| 
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 如果新站点上的设备节点已由默认KMS加密，请使用KMS软件将当前版本的加密密钥从默认KMS复制到新KMS。
+. 使用 Grid Manager，添加新的 KMS 并选择站点。
 
 
 link:kms-adding.html["添加密钥管理服务器 (KMS)"]

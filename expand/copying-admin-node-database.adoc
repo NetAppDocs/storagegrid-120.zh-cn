@@ -52,7 +52,7 @@ NOTE: 将数据库从主管理节点（__source Admin Node__）复制到扩展�
 
 . 在扩展管理节点上完成以下步骤：
 +
-.. ${post_edited_translations.segment}
+.. 登录到扩展管理节点：
 +
 ... 输入以下命令： `ssh admin@_grid_node_IP_`
 ... 输入 `Passwords.txt`文件中列出的密码。
@@ -65,7 +65,7 @@ NOTE: 将数据库从主管理节点（__source Admin Node__）复制到扩展�
 .. 将 SSH 私钥添加到 SSH 代理。输入：``ssh-add``
 .. 输入 `Passwords.txt`文件中列出的 SSH 访问密码。
 .. 将数据库从源管理节点复制到扩展管理节点： `/usr/local/mi/bin/mi-clone-db.sh _Source_Admin_Node_IP_`
-.. ${post_edited_translations.segment}
+.. 出现提示时，确认要覆盖扩展管理节点上的 MI 数据库。
 +
 数据库及其历史数据将复制到扩展管理节点。复制操作完成后，脚本将启动扩展管理节点。
 

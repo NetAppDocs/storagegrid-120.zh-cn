@@ -39,7 +39,7 @@ DNS条目
  a| 
 StorageGRID > 负载平衡器端点
  a| 
-${post_edited_translations.segment}
+ONTAP System Manager > 添加云层
 
 
 
@@ -48,7 +48,7 @@ SSL 证书
  a| 
 StorageGRID > 负载平衡器端点
  a| 
-${post_edited_translations.segment}
+ONTAP System Manager > 添加云层
 
 
 
@@ -64,18 +64,18 @@ DNS条目
  a| 
 访问密钥 ID 和秘密访问密钥
  a| 
-${post_edited_translations.segment}
+StorageGRID > 租户和存储桶
  a| 
-${post_edited_translations.segment}
+ONTAP System Manager > 添加云层
 
 
 
  a| 
-${post_edited_translations.segment}
+存储桶/容器名称
  a| 
-${post_edited_translations.segment}
+StorageGRID > 租户和存储桶
  a| 
-${post_edited_translations.segment}
+ONTAP System Manager > 添加云层
 
 |===
 

@@ -94,6 +94,6 @@ UUID
  a| 
 通用唯一ID
  a| 
-${post_edited_translations.segment}
+StorageGRID 系统中受影响对象的标识符。
 
 |===

@@ -17,7 +17,7 @@ summary: 您可以使用 FabricPool 安装向导将 StorageGRID 配置为 Fabric
 * 您已查阅link:../fabricpool/use-fabricpool-setup-wizard.html["注意事项和要求"]，了解如何使用 FabricPool 设置向导。
 +
 
-NOTE: 如果要将 StorageGRID 配置为与任何其他 S3 客户端应用程序一起使用，请转到 link:../admin/use-s3-setup-wizard.html["${post_edited_translations.segment}"]。
+NOTE: 如果要将 StorageGRID 配置为与任何其他 S3 客户端应用程序一起使用，请转到 link:../admin/use-s3-setup-wizard.html["使用 S3 设置向导"]。
 
 * 您有 link:../admin/admin-group-permissions.html["root 访问权限"]。
 
@@ -76,14 +76,14 @@ HA 组名称
 
 
  a| 
-${post_edited_translations.segment}
+描述（选填）
  a| 
 此 HA 组的描述。
 
 |===
 .. 对于*添加接口*步骤，请选择要在此 HA 组中使用的节点接口。
 +
-${post_edited_translations.segment}
+请使用列标题对行进行排序，或输入搜索词以更快地查找接口。
 
 +
 您可以选择一个或多个节点，但每个节点只能选择一个接口。
@@ -229,7 +229,7 @@ HA 组的虚拟 IP
  a| 
 节点接口
  a| 
-${post_edited_translations.segment}
+客户端必须使用所选节点接口的 IP 地址（或相应的 FQDN）来访问此端点。
 
 
 

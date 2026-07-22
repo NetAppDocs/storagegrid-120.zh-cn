@@ -23,7 +23,7 @@ summary: 您必须在 Grid Manager 中创建租户账户，以供 FabricPool 使
 
 
 .步骤
-. ${post_edited_translations.segment}
+. 选择*租户*。
 . 选择 *Create*。
 . 对于 Enter details 步骤，输入以下信息。
 +
@@ -40,9 +40,9 @@ summary: 您必须在 Grid Manager 中创建租户账户，以供 FabricPool 使
 
 
  a| 
-${post_edited_translations.segment}
+描述（选填）
  a| 
-${post_edited_translations.segment}
+用于帮助识别租户的说明。
 
 
 
@@ -54,23 +54,23 @@ ${post_edited_translations.segment}
 
 
  a| 
-${post_edited_translations.segment}
+存储配额（可选）
  a| 
 对于 FabricPool，请将此字段留空。
 
 |===
 . 对于"选择权限"步骤：
 +
-.. ${post_edited_translations.segment}
+.. 请勿选择*允许平台服务*。
 +
 FabricPool 租户通常不需要使用平台服务，例如 CloudMirror 复制。
 
-.. ${post_edited_translations.segment}
+.. （可选）选择*Use own identity source*。
 .. 请勿选择 *Allow S3 Select*。
 +
 FabricPool 租户通常不需要使用 S3 Select。
 
-.. （可选）选择 *Use grid federation connection* 以允许租户使用link:../admin/grid-federation-overview.html["${post_edited_translations.segment}"]进行帐户克隆和跨网格复制。然后，选择要使用的网格联合连接。
+.. （可选）选择 *Use grid federation connection* 以允许租户使用link:../admin/grid-federation-overview.html["网格联合连接"]进行帐户克隆和跨网格复制。然后，选择要使用的网格联合连接。
 
 
 . 对于“定义 root 访问权限”步骤，请根据您的 StorageGRID 系统使用的是 link:../admin/using-identity-federation.html["身份联合"]、link:../admin/how-sso-works.html["单点登录 (SSO)"] 还是两者都使用，指定哪个用户将拥有该租户帐户的初始 root 访问权限。

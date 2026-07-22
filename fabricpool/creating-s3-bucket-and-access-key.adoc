@@ -59,7 +59,7 @@ NOTE: 不要为 FabricPool 存储桶选择*启用对象版本控制*。同样，
 .. 选择 *STORAGE (S3)* > *My access keys*。
 .. 选择*创建密钥*。
 .. 选择*创建访问密钥*。
-.. ${post_edited_translations.segment}
+.. 将访问密钥 ID 和秘密访问密钥复制到安全位置，或选择 *Download .csv* 以保存包含访问密钥 ID 和秘密访问密钥的电子表格文件。
 +
 在将 StorageGRID 配置为 FabricPool 云分层时，您将在 ONTAP 中输入这些值。
 

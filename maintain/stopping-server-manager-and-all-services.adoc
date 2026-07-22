@@ -17,7 +17,7 @@ summary: 服务器管理器旨在始终运行，但可能需要停止服务器�
 您拥有  `Passwords.txt` 文件。
 
 .步骤
-. ${post_edited_translations.segment}
+. 登录到网格节点：
 +
 .. 输入以下命令： `ssh admin@_grid_node_IP_`
 .. 输入 `Passwords.txt`文件中列出的密码。

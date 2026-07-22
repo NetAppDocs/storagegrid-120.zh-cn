@@ -27,7 +27,7 @@ summary: '您可以通过在受支持的 Web 浏览器的地址栏中输入管�
 [[use-sso]]
 === 使用 SSO
 
-如果 link:how-sso-works.html["${post_edited_translations.segment}"]，登录步骤会略有不同。
+如果 link:how-sso-works.html["已配置单点登录 (SSO)"]，登录步骤会略有不同。
 
 
 
@@ -38,7 +38,7 @@ summary: '您可以通过在受支持的 Web 浏览器的地址栏中输入管�
 * 您拥有登录凭据。
 * 您正在使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"]。
 * Cookie 已在您的 Web 浏览器中启用。
-* ${post_edited_translations.segment}
+* 您属于至少具有一个权限的用户组。
 * 您有 Grid Manager 的 URL：
 +
 `https://_FQDN_or_Admin_Node_IP_/`
@@ -47,7 +47,7 @@ summary: '您可以通过在受支持的 Web 浏览器的地址栏中输入管�
 您可以使用完全限定域名、管理节点的 IP 地址或管理节点 HA 组的虚拟 IP 地址。
 
 +
-${post_edited_translations.segment}
+要在 HTTPS 的默认端口（443）以外的端口上访问 Grid Manager，请在 URL 中包含端口号：
 
 +
 `https://_FQDN_or_Admin_Node_IP:port_/`
@@ -60,9 +60,9 @@ NOTE: SSO 在受限 Grid Manager 端口上不可用。必须使用端口 443。
 
 .步骤
 . 启动受支持的 Web 浏览器。
-. ${post_edited_translations.segment}
+. 在浏览器的地址栏中，输入 Grid Manager 的 URL。
 . 如果系统提示您收到安全警报，请使用浏览器的安装向导安装证书。请参阅 link:using-storagegrid-security-certificates.html["管理安全证书"]。
-. ${post_edited_translations.segment}
+. 登录到 Grid Manager。
 +
 显示的登录屏幕取决于是否已为 StorageGRID 配置单点登录 (SSO)。
 
@@ -71,14 +71,14 @@ NOTE: SSO 在受限 Grid Manager 端口上不可用。必须使用端口 443。
 ====
 .未使用SSO
 --
-.. ${post_edited_translations.segment}
+.. 输入 Grid Manager 的用户名和密码。
 .. 选择*登录*。
 
 
 --
-.${post_edited_translations.segment}
+.使用 SSO
 --
-** ${post_edited_translations.segment}
+** 如果 StorageGRID 正在使用 SSO，并且这是您首次在此浏览器上访问 URL：
 +
 ... 选择*登录*。您可以在"帐户"字段中保留 0。
 ... 在组织的 SSO 登录页面上输入标准 SSO 凭据。
@@ -88,7 +88,7 @@ NOTE: SSO 在受限 Grid Manager 端口上不可用。必须使用端口 443。
 +
 .... 输入 *0*（Grid Manager 的帐户 ID），如果 *Grid Manager* 显示在最近帐户列表中，则选择 *Grid Manager*。
 .... 选择*登录*。
-.... ${post_edited_translations.segment}
+.... 在组织的 SSO 登录页面上使用标准 SSO 凭据登录。
 
 
 
@@ -99,14 +99,14 @@ NOTE: SSO 在受限 Grid Manager 端口上不可用。必须使用端口 443。
 ====
 
 
-登录后，系统将显示 Grid Manager 的主页，其中包含仪表板。要了解提供了哪些信息，请参见 link:../monitor/viewing-dashboard.html["${post_edited_translations.segment}"]。
+登录后，系统将显示 Grid Manager 的主页，其中包含仪表板。要了解提供了哪些信息，请参见 link:../monitor/viewing-dashboard.html["查看并管理控制面板"]。
 
 
 
 [[sign-into-another-admin-node]]
-== ${post_edited_translations.segment}
+== 登录到另一个管理节点
 
-${post_edited_translations.segment}
+按照下面的步骤登录到另一个管理节点。
 
 [role="tabbed-block"]
 ====
@@ -114,17 +114,17 @@ ${post_edited_translations.segment}
 --
 .步骤
 . 在浏览器的地址栏中，输入其他管理节点的完全限定域名或 IP 地址。根据需要包括端口号。
-. ${post_edited_translations.segment}
+. 输入 Grid Manager 的用户名和密码。
 . 选择*登录*。
 
 
 --
-.${post_edited_translations.segment}
+.使用 SSO
 --
-${post_edited_translations.segment}
+如果 StorageGRID 正在使用 SSO，并且您已登录到一个管理节点，则无需重新登录即可访问其他管理节点。
 
 .步骤
-. ${post_edited_translations.segment}
+. 在浏览器的地址栏中输入其他管理节点的完全限定域名或 IP 地址。
 . 如果您的SSO会话已过期，请重新输入您的凭据。
 
 

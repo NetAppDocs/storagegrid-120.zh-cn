@@ -79,10 +79,10 @@ CAUTION: 在生产部署中，不要在单个物理或虚拟主机上运行多�
 
 
 .关于此任务
-${post_edited_translations.segment}
+在设备节点上安装 StorageGRID 的过程包含以下阶段：
 
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
+* 您可以指定或确认主管理节点的 IP 地址以及设备节点的名称。
+* 您开始安装，等待卷配置完成并安装软件。
 +
 在应用装置安装任务进行到一半时，安装会暂停。要恢复安装，您需要登录 Grid Manager，批准所有网格节点，然后完成 StorageGRID 安装过程。
 
@@ -98,7 +98,7 @@ NOTE: 如果需要同时部署多个设备节点，可以通过使用 `configure
 `https://_Controller_IP_:8443`
 
 +
-${post_edited_translations.segment}
+此时将显示 StorageGRID 设备安装程序主页。
 
 . 在 *Primary Admin Node* 连接部分中，确定是否需要指定主管理节点的 IP 地址。
 +

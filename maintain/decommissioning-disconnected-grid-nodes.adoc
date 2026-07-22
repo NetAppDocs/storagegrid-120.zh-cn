@@ -68,7 +68,7 @@ CAUTION: 在选择一次停用多个断开连接的网格节点时要小心，�
 
 . 新的恢复包可用后，单击链接或选择*维护* > *系统* > *恢复包*以访问恢复包页面。然后，下载 `.zip`文件。
 +
-请参见 link:downloading-recovery-package.html["${post_edited_translations.segment}"] 的说明。
+请参见 link:downloading-recovery-package.html["正在下载恢复软件包"] 的说明。
 
 +
 

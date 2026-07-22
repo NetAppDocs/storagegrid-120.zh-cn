@@ -15,7 +15,7 @@ summary: 按照以下步骤将网格节点添加到现有站点或添加新站�
 
 .开始之前
 * 您拥有 link:../admin/admin-group-permissions.html["Root 访问权限或维护权限"]。
-* ${post_edited_translations.segment}
+* 网格中的所有现有节点都已启动并在所有站点上运行。
 * 任何以前的扩展、升级、退役或恢复程序均已完成。
 +
 

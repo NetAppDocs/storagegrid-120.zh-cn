@@ -28,10 +28,10 @@ summary: 您可能需要排除与网格联合连接、帐户克隆和跨网格�
 === 网格联合连接失败警报
 
 .问题描述
-${post_edited_translations.segment}
+已触发*网格联合连接失败*警报。
 
 .详细信息
-${post_edited_translations.segment}
+此警报表示网格之间的网格联合连接不起作用。
 
 .建议的操作
 . 检查两个网格的“网格联盟”页面上的设置。确认所有值均正确。参见 link:grid-federation-manage-connection.html["管理网格联盟连接"]。
@@ -43,7 +43,7 @@ ${post_edited_translations.segment}
 
 
 [[expiration-of-grid-federation-certificate-alert]]
-=== ${post_edited_translations.segment}
+=== 网格联盟证书过期警报
 
 .问题描述
 已触发*网格联合证书到期*警报。
@@ -106,27 +106,27 @@ ${post_edited_translations.segment}
 .建议的操作
 . 查看错误消息中列出的原因，并解决可能导致连接无法工作的任何网络或其他问题。请参阅 <<grid-federation-errors,网格联合连接警报和错误>>。
 . 按照link:grid-federation-manage-connection.html["管理网格联盟连接"]中的说明测试网格联合连接，以确认此问题已修复。
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 从租户的源网格中，选择*租户*。
+. 找到无法克隆的租户帐户。
+. 选择租户名称以显示详细信息页面。
 . 选择*重试帐户克隆*。
 +
-image:grid-federation-retry-account-clone.png["${post_edited_translations.segment}"] 如果已解决此错误，租户帐户现在将克隆到另一个网格。
+image:grid-federation-retry-account-clone.png["显示错误消息和\"重试帐户克隆\"按钮的屏幕截图"] 如果已解决此错误，租户帐户现在将克隆到另一个网格。
 
 
 
 
 
 [[cross-grid-replication-alerts-and-errors]]
-== ${post_edited_translations.segment}
+== 跨网格复制警报和错误
 
 
 
 [[last-error-shown-for-connection-or-tenant]]
-=== ${post_edited_translations.segment}
+=== 连接或租户显示的最后一个错误
 
 .问题描述
-当 link:../monitor/grid-federation-monitor-connections.html["查看网格联合连接"]（或当 link:grid-federation-manage-tenants.html["${post_edited_translations.segment}"] 进行连接时），您会在连接详细信息页面的*上一个错误*列中发现错误。例如：
+当 link:../monitor/grid-federation-monitor-connections.html["查看网格联合连接"]（或当 link:grid-federation-manage-tenants.html["管理允许的租户"] 进行连接时），您会在连接详细信息页面的*上一个错误*列中发现错误。例如：
 
 image:grid-federation-last-error.png["显示网格联合连接的\"最后一个错误\"列中消息的屏幕截图"]
 
@@ -134,23 +134,23 @@ image:grid-federation-last-error.png["显示网格联合连接的\"最后一个�
 对于每个网格联盟连接，“*上一次错误*”列会显示在将租户数据复制到另一个网格时发生的最新的错误（如果有）。此列仅显示上一次发生的跨网格复制错误；可能发生的先前错误不会显示。此列中出现错误可能是由于以下原因之一：
 
 * 未找到源对象版本。
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
+* 未找到源存储桶。
+* 目标存储桶已删除。
+* 目标存储桶已由其他帐户重新创建。
+* 目标存储桶的版本控制已挂起。
+* 目标存储桶已由同一帐户重新创建，但现在未启用版本控制。
+* 源对象的 S3 Object Lock 设置不符合目标网格的租户级别保留设置。
+* 源对象具有 S3 Object Lock 设置，且目标存储桶上已禁用 S3 Object Lock。
 
 
 .建议的操作
-${post_edited_translations.segment}
+如果*上一个错误*列中显示错误消息，请执行以下步骤：
 
-. ${post_edited_translations.segment}
+. 请查看消息文本。
 . 执行任何推荐的操作。例如，如果针对跨网格复制暂停了目标存储桶的版本控制，请重新启用该存储桶的版本控制。
-. ${post_edited_translations.segment}
+. 从表中选择连接或租户帐户。
 . 选择*清除错误*。
-. ${post_edited_translations.segment}
+. 选择*是*以清除消息并更新系统状态。
 . 等待 5-6 分钟，然后向存储桶中摄入一个新对象。确认未再次出现该错误消息。
 +
 
@@ -158,9 +158,9 @@ NOTE: 为确保清除错误消息，请在消息中的时间戳后至少等待 5
 
 +
 
-TIP: ${post_edited_translations.segment}
+TIP: 清除错误后，如果对象被摄入到另一个也存在错误的存储桶中，可能会出现新的*最后一个错误*。
 
-. 要确定是否因存储区错误而无法复制任何对象，请参阅 link:../admin/grid-federation-retry-failed-replication.html["${post_edited_translations.segment}"]。
+. 要确定是否因存储区错误而无法复制任何对象，请参阅 link:../admin/grid-federation-retry-failed-replication.html["识别并重试失败的复制操作"]。
 
 
 
@@ -169,35 +169,35 @@ TIP: ${post_edited_translations.segment}
 === 跨网格复制永久故障警报
 
 .问题描述
-${post_edited_translations.segment}
+已触发*跨网格复制永久失败*警报。
 
 .详细信息
 此警报表示，由于需要用户干预才能解决的原因，无法在两个网格的存储桶之间复制租户对象。此警报通常是由于源存储桶或目标存储桶发生更改而引起的。
 
 .建议的操作
-. ${post_edited_translations.segment}
+. 登录到触发警报的网格。
 . 转到*配置* > *系统* > *网格联合*，然后找到警报中列出的连接名称。
 . 在允许的租户选项卡上，查看*上一个错误*列，以确定哪些租户帐户出错。
-. 要了解有关故障的详细信息，请参见 link:../monitor/grid-federation-monitor-connections.html["${post_edited_translations.segment}"] 中的说明，以查看跨网格复制指标。
-. ${post_edited_translations.segment}
+. 要了解有关故障的详细信息，请参见 link:../monitor/grid-federation-monitor-connections.html["监控网格联盟连接"] 中的说明，以查看跨网格复制指标。
+. 对于每个受影响的租户帐户：
 +
 .. 请参见 link:../monitor/monitoring-tenant-activity.html["监控租户活动"] 中的说明，以确认租户在目标网格上未超出其跨网格复制配额。
 .. 根据需要，增加租户在目标网格上的配额，以允许保存新对象。
 
 
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 对于每个受影响的租户，请在两个网格上登录到 Tenant Manager，以便比较存储桶列表。
+. 对于启用了跨网格复制的每个存储桶，请确认以下内容：
 +
 ** 另一个网格上有相同租户的相应存储桶（必须使用确切的名称）。
 ** 两个存储桶都启用了对象版本控制（不能在任何网格上暂停版本控制）。
-** ${post_edited_translations.segment}
+** 两个存储桶都不处于*删除对象：只读*状态。
 
 
-. 要确认问题已解决，请参见 link:../monitor/grid-federation-monitor-connections.html["${post_edited_translations.segment}"] 中的说明以查看跨网格复制指标，或执行以下步骤：
+. 要确认问题已解决，请参见 link:../monitor/grid-federation-monitor-connections.html["监控网格联盟连接"] 中的说明以查看跨网格复制指标，或执行以下步骤：
 +
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
+.. 返回网格联盟页面。
+.. 选择受影响的租户，然后在*Last error*列中选择*Clear Error*。
+.. 选择*是*以清除消息并更新系统状态。
 .. 等待 5-6 分钟，然后向存储桶中摄入一个新对象。确认未再次出现该错误消息。
 +
 
@@ -205,9 +205,9 @@ NOTE: 为确保清除错误消息，请在消息中的时间戳后至少等待 5
 
 +
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 警报解决后，可能需要长达一天时间才能清除。
 
-.. 转到 link:grid-federation-retry-failed-replication.html["${post_edited_translations.segment}"] 以识别任何未能复制到另一个网格的对象或删除标记，并根据需要重试复制。
+.. 转到 link:grid-federation-retry-failed-replication.html["识别并重试失败的复制操作"] 以识别任何未能复制到另一个网格的对象或删除标记，并根据需要重试复制。
 
 
 
@@ -226,8 +226,8 @@ NOTE: ${post_edited_translations.segment}
 .建议的操作
 . 监控警报，查看问题是否自行解决。
 . 如果问题仍然存在，请确定任一网格是否针对同一连接显示 *Grid federation connection failure*（网格联合连接失败）警报，或者针对某个节点显示 *Unable to communicate with node*（无法与节点通信）警报。当您解决这些警报时，此警报可能会随之解决。
-. 要了解有关故障的详细信息，请参见 link:../monitor/grid-federation-monitor-connections.html["${post_edited_translations.segment}"] 中的说明，以查看跨网格复制指标。
-. ${post_edited_translations.segment}
+. 要了解有关故障的详细信息，请参见 link:../monitor/grid-federation-monitor-connections.html["监控网格联盟连接"] 中的说明，以查看跨网格复制指标。
+. 如果您无法解决此警报，请联系技术支持。
 
 
-${post_edited_translations.segment}
+解决此问题后，将正常进行跨网格复制。

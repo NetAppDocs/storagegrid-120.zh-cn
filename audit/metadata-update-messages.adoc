@@ -2,7 +2,7 @@
 permalink: audit/metadata-update-messages.html 
 sidebar: sidebar 
 keywords: storagegrid, audit, message, Metadata update, S3 metadata update, SUPD 
-summary: ${post_edited_translations.segment} 
+summary: 当 S3 客户端更新对象的元数据时，系统会生成审核消息。 
 ---
 = StorageGRID 中 S3 对象元数据更新的审核消息
 :allow-uri-read: 

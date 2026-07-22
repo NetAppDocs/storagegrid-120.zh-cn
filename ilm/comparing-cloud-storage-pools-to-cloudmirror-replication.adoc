@@ -19,7 +19,7 @@ summary: 在开始使用云存储池时，了解云存储池和 StorageGRID Clou
 
 
  a| 
-${post_edited_translations.segment}
+主要目的是什么？
  a| 
 充当存档目标。云存储池中的对象副本可以是对象的唯一副本，也可以是附加副本。也就是说，您可以在 StorageGRID 中保留一个副本，并将一个副本发送到云存储池，而不是在现场保留两个副本。
  a| 
@@ -37,7 +37,7 @@ ${post_edited_translations.segment}
 
 
  a| 
-${post_edited_translations.segment}
+谁负责设置？
  a| 
 通常，网格管理员
  a| 
@@ -46,7 +46,7 @@ ${post_edited_translations.segment}
 
 
  a| 
-${post_edited_translations.segment}
+目标是什么？
  a| 
 * 任何兼容的 S3 基础架构（包括 Amazon S3）
 * Azure Blob 存档层

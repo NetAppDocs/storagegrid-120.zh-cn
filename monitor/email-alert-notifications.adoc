@@ -101,7 +101,7 @@ SMTP 服务器的完全限定域名 (FQDN) 或 IP 地址。
 
 +
 
-NOTE: 如果需要编辑电子邮件设置，请选择铅笔图标image:icon_edit_tm.png["${post_edited_translations.segment}"]以更新此字段。
+NOTE: 如果需要编辑电子邮件设置，请选择铅笔图标image:icon_edit_tm.png["编辑图标"]以更新此字段。
 
 
 

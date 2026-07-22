@@ -94,7 +94,7 @@ entries:
       url: "/audit/gnur-gnds-unregistration.html"
     - title: GTED：网格任务已结束
       url: "/audit/gted-grid-task-ended.html"
-    - title: "${post_edited_translations.segment}"
+    - title: GTST：网格任务已开始
       url: "/audit/gtst-grid-task-started.html"
     - title: GTSU：网格任务已提交
       url: "/audit/gtsu-grid-task-submitted.html"
@@ -106,7 +106,7 @@ entries:
       url: "/audit/lkdm-leaked-object-cleanup.html"
     - title: LLST：位置丢失
       url: "/audit/llst-location-lost.html"
-    - title: "${post_edited_translations.segment}"
+    - title: MGAU：管理审计消息
       url: "/audit/mgau-management-audit-message.html"
     - title: OLST：系统检测到丢失对象
       url: "/audit/olst-system-detected-lost-object.html"

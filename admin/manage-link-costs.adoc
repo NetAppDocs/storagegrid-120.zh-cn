@@ -83,7 +83,7 @@ image:configuring_link_costs.png["链路成本"]
 如果来源与目的地相同，则无法更改链接成本。
 
 +
-要取消更改，请选择image:nms_revert.gif["${post_edited_translations.segment}"]*Revert*。
+要取消更改，请选择image:nms_revert.gif["撤消图标"]*Revert*。
 
 . 选择*应用更改*。
 

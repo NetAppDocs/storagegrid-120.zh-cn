@@ -16,6 +16,6 @@ summary: 在添加新存储节点的扩容操作完成后，StorageGRID 系统�
 .步骤
 . 使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
 . 选择*节点* > *_扩展存储节点_* > *存储*。
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 将光标放在*已使用的存储-对象数据*图形上，以查看*已使用*的值，即已用于对象数据的总可用空间量。
+. 验证当您将光标移到图形右侧时，*Used* 的值是否正在增加。
 

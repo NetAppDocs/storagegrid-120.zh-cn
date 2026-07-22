@@ -17,7 +17,7 @@ summary: 如果需要更密切地监视重新启动操作，或者无法访问 G
 您拥有  `Passwords.txt` 文件。
 
 .步骤
-. ${post_edited_translations.segment}
+. 登录到网格节点：
 +
 .. 输入以下命令： `ssh admin@_grid_node_IP_`
 .. 输入 `Passwords.txt`文件中列出的密码。

@@ -16,7 +16,7 @@ summary: 平台服务中使用的端点由租户管理器中的租户用户创�
 
 
 [[issues-with-new-endpoints]]
-== ${post_edited_translations.segment}
+== 新端点的问题
 
 租户必须先使用租户管理器创建一个或多个端点，然后才能使用平台服务。每个端点代表一个平台服务的外部目标，例如 StorageGRID S3 存储桶、Amazon Web Services 存储桶、Amazon Simple Notification Service 主题、Kafka 主题或在本地或 AWS 上托管的 Elasticsearch 集群。每个端点都包含外部资源的位置以及访问该资源所需的凭据。
 
@@ -25,20 +25,20 @@ summary: 平台服务中使用的端点由租户管理器中的租户用户创�
 如果端点验证失败，则会显示一条错误消息，说明端点验证失败的原因。租户用户应解决此问题，然后尝试重新创建端点。
 
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 如果未为租户帐户启用平台服务，则端点创建将失败。
 
 
 
 [[issues-with-existing-endpoints]]
-== ${post_edited_translations.segment}
+== 现有端点的问题
 
 如果 StorageGRID 尝试访问现有端点时发生错误，租户管理器中的仪表板上将显示一条消息。
 
-image:tenant_dashboard_endpoint_error.png["${post_edited_translations.segment}"]
+image:tenant_dashboard_endpoint_error.png["仪表板上的端点错误消息"]
 
-租户用户可以转到"端点"页面，查看每个端点的最新错误消息，并确定发生错误的时间。*上一个错误*列显示每个端点的最新错误消息，并指示错误发生的时间。包含 image:icon_alert_red_critical.png["${post_edited_translations.segment}"] 图标的错误发生在过去 7 天内。
+租户用户可以转到"端点"页面，查看每个端点的最新错误消息，并确定发生错误的时间。*上一个错误*列显示每个端点的最新错误消息，并指示错误发生的时间。包含 image:icon_alert_red_critical.png["红色X图标"] 图标的错误发生在过去 7 天内。
 
-image:endpoints_last_error.png["${post_edited_translations.segment}"]
+image:endpoints_last_error.png["Endpoints 页面的屏幕截图，显示 Last Error 列"]
 
 
 NOTE: “*Last error*”（上一个错误）列中的某些错误消息可能会在括号中包含 logID。Grid 管理员或技术支持人员可以使用此 ID 在 bycast.log 中查找有关该错误的更详细信息。
@@ -46,28 +46,28 @@ NOTE: “*Last error*”（上一个错误）列中的某些错误消息可能�
 
 
 [[issues-related-to-proxy-servers]]
-== ${post_edited_translations.segment}
+== 与代理服务器相关的问题
 
 如果您在存储节点和平台服务端点之间配置了 link:configuring-storage-proxy-settings.html["存储代理"]，则当您的代理服务不允许来自 StorageGRID 的消息时，可能会发生错误。要解决这些问题，请检查代理服务器的设置，以确保不会阻止与平台服务相关的消息。
 
 
 
 [[determine-if-an-error-has-occurred]]
-== ${post_edited_translations.segment}
+== 确定是否发生错误
 
 如果过去 7 天内发生过任何端点错误，Tenant Manager 中的仪表板将显示一条警报消息。您可以转到 Endpoints 页面查看有关该错误的更多详细信息。
 
 
 
 [[client-operations-fail]]
-== ${post_edited_translations.segment}
+== 客户端操作失败
 
 某些平台服务问题可能会导致 S3 存储桶上的客户端操作失败。例如，如果内部复制状态机 (RSM) 服务停止，或者有太多平台服务消息排队等待传送，则 S3 客户端操作将失败。
 
 要检查服务的状态：
 
 . 选择*节点* > *_站点_* > *_存储节点_* > *概述*。
-. ${post_edited_translations.segment}
+. 检查警报表中的活动警报。
 . 解决所有活动警报。根据需要，联系技术支持。
 
 
@@ -78,12 +78,12 @@ NOTE: “*Last error*”（上一个错误）列中的某些错误消息可能�
 
 创建端点后，可能会由于各种原因导致平台服务请求错误。某些错误可以通过用户干预进行恢复。例如，由于以下原因，可能会发生可恢复的错误：
 
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
+* 此用户的凭据已被删除或已过期。
+* 目标存储桶不存在。
 * 无法发送通知。
 
 
-${post_edited_translations.segment}
+如果 StorageGRID 遇到可恢复错误，则将重试平台服务请求，直到成功。
 
 其他错误无法恢复。例如，可能出现不可恢复的错误，原因如下：
 
@@ -91,21 +91,21 @@ ${post_edited_translations.segment}
 * Webhook 端点目标响应通知请求时出现 `400 Bad Request`错误。
 
 
-${post_edited_translations.segment}
+如果 StorageGRID 遇到不可恢复的端点错误：
 
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
+* 在网格管理器中，转到 *支持* > *工具* > *指标* > *Grafana* > *平台服务概述*以查看错误详细信息。
+* 在租户管理器中，转到 *STORAGE (S3)* > *Platform Services Endpoints* 以查看错误详细信息。
 * 检查  `/var/local/log/bycast-err.log` 以获取相关错误。运行 ADC 服务的存储节点包含此日志文件。
 
 
 
 
 [[platform-services-messages-cant-be-delivered]]
-== ${post_edited_translations.segment}
+== 无法传递平台服务消息
 
 如果目标遇到阻止其接受平台服务消息的问题，则存储桶上的客户端操作将成功，但平台服务消息不会送达。例如，如果目标上的凭据已更新，导致 StorageGRID 无法再向目标服务进行身份验证，则可能会发生此错误。
 
-${post_edited_translations.segment}
+检查相关警报。
 
 
 
@@ -121,13 +121,13 @@ CloudMirror 请求更有可能受到目标端点性能的影响，因为这些�
 
 
 [[platform-service-requests-fail]]
-== ${post_edited_translations.segment}
+== 平台服务请求失败
 
 要查看平台服务的请求失败率：
 
 . 选择 *Nodes*。
 . 选择 *_site_* > *Platform Services*。
-. ${post_edited_translations.segment}
+. 查看请求错误率图表。
 +
 image:nodes_page_site_level_platform_services.gif["节点页面站点级平台服务"]
 
@@ -138,14 +138,14 @@ image:nodes_page_site_level_platform_services.gif["节点页面站点级平台�
 [[platform-services-unavailable-alert]]
 == 平台服务不可用警报
 
-${post_edited_translations.segment}
+*平台服务不可用*警报表示无法在站点上执行任何平台服务操作，因为运行或可用的带有 RSM 服务的 Storage Node 太少。
 
-${post_edited_translations.segment}
+RSM 服务确保将平台服务请求发送到各自的端点。
 
 要解决此警报，请确定该站点上的哪些 Storage Node 包含 RSM 服务。（RSM 服务存在于同样包含 ADC 服务的 Storage Node 上。）然后，确保这些 Storage Node 中的绝大多数正在运行且可用。
 
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 如果站点上包含 RSM 服务的多个存储节点发生故障，您将丢失该站点所有待处理的平台服务请求。
 
 
 

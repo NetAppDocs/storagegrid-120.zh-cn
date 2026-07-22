@@ -19,10 +19,10 @@ summary: '"管理"类别将用户请求记录到管理 API。'
 
 
  a| 
-${post_edited_translations.segment}
+MGAU
  a| 
 Management API 审核消息：用户请求的日志。
  a| 
-link:mgau-management-audit-message.html["${post_edited_translations.segment}"]
+link:mgau-management-audit-message.html["MGAU：管理审计消息"]
 
 |===

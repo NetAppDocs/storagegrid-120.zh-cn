@@ -29,7 +29,7 @@ CAUTION: 正在进行网格升级时，请勿对域名配置进行任何更改�
 .关于此任务
 要使客户端能够使用 S3 端点域名，必须执行以下所有操作：
 
-* ${post_edited_translations.segment}
+* 使用 Grid Manager 将 S3 端点域名添加到 StorageGRID 系统。
 * 确保已针对客户端所需的所有域名对 link:../admin/configuring-administrator-client-certificates.html["客户端用于与 StorageGRID 建立 HTTPS 连接的证书"] 进行了签名。
 +
 例如，如果端点为  `s3.company.com`，则必须确保用于 HTTPS 连接的证书包含  `s3.company.com` 端点以及该端点的通配符主题备用名称 (SAN)： `*.s3.company.com`。
@@ -41,19 +41,19 @@ NOTE: 客户端可以使用网关节点、管理节点或存储节点的 IP 地�
 
 
 
-${post_edited_translations.segment}
+使用 HTTPS 连接（推荐）到网格的客户端可以使用以下任一证书：
 
 * 连接到负载均衡器端点的客户端可以使用该端点的自定义证书。每个负载均衡器端点都可以配置为识别不同的 S3 端点域名。
-* ${post_edited_translations.segment}
+* 连接到负载平衡器端点或直接连接到存储节点的客户端可以自定义全局 S3 API 证书，以包括所有所需的 S3 端点域名。
 
 
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 如果不添加 S3 端点域名且列表为空，则禁用对 S3 虚拟托管样式请求的支持。
 
 
 
 [[add-an-s3-endpoint-domain-name]]
-== ${post_edited_translations.segment}
+== 添加 S3 端点域名
 
 .步骤
 . 选择*配置* > *网络* > *S3 端点域名*。

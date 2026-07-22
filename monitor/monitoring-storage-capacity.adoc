@@ -131,7 +131,7 @@ NOTE: 如果您的 ILM 策略使用纠删码，您可能希望在现有存储节
 
 
 [[monitor-object-metadata-capacity-for-each-storage-node]]
-== ${post_edited_translations.segment}
+== 监控每个存储节点的对象元数据容量
 
 监控每个存储节点的元数据使用情况，以确保有足够的空间可用于基本数据库操作。在对象元数据超过允许的元数据空间的 100% 之前，必须在每个站点添加新的存储节点。
 

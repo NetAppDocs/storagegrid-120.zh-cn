@@ -11,7 +11,7 @@ summary: 跨网格复制是在网格联合连接中连接的两个 StorageGRID �
 
 
 [role="lead"]
-跨网格复制是在通过link:grid-federation-overview.html["${post_edited_translations.segment}"]连接的两个 StorageGRID 系统中所选 S3 存储桶之间自动复制对象的功能。link:grid-federation-what-is-account-clone.html["帐户克隆"]是跨网格复制所必需的。
+跨网格复制是在通过link:grid-federation-overview.html["网格联合连接"]连接的两个 StorageGRID 系统中所选 S3 存储桶之间自动复制对象的功能。link:grid-federation-what-is-account-clone.html["帐户克隆"]是跨网格复制所必需的。
 
 
 
@@ -50,7 +50,7 @@ link:../tenant/grid-federation-manage-cross-grid-replication.html["管理跨网�
 
 
 [[replication-in-one-direction]]
-=== ${post_edited_translations.segment}
+=== 单向复制
 
 如果仅在一个网格上为存储桶启用跨网格复制，则添加到该存储桶（源存储桶）的对象将复制到另一个网格（目标存储桶）上的相应存储桶。但是，添加到目标存储桶的对象不会复制回源存储桶。在图中，已为 `my-bucket`启用从 Grid 1 到 Grid 2 的跨网格复制，但未在另一个方向启用。
 
@@ -68,7 +68,7 @@ image:grid-federation-cross-grid-replication.png["显示单向复制与双向复
 
 
 [[what-happens-when-objects-are-ingested]]
-=== ${post_edited_translations.segment}
+=== 载入对象时会发生什么？
 
 当 S3 客户端将对象添加到启用了跨网格复制的存储桶时，将出现以下情况：
 
@@ -131,7 +131,7 @@ NOTE: StorageGRID 不支持 `x-amz-replication-status`标头。
 
 
 
-${post_edited_translations.segment}
+当 S3 客户端从启用了跨网格复制的存储桶中删除对象时，StorageGRID 确定是否将删除请求复制到目标，如下所示：
 
 * 如果删除请求包含版本 ID，则该对象版本将从源网格中永久删除。但是，StorageGRID 不会复制包含版本 ID 的删除请求，因此不会从目标中删除相同的对象版本。
 * 如果删除请求不包括版本 ID，StorageGRID 可以根据存储桶的跨网格复制配置方式，选择性地复制删除标记：
@@ -142,12 +142,12 @@ ${post_edited_translations.segment}
 
 
 
-在图中，*Replicate delete markers* 被设置为 *Yes*（当 link:../tenant/grid-federation-manage-cross-grid-replication.html["${post_edited_translations.segment}"] 时）。包含版本 ID 的源存储桶删除请求不会从目标存储桶中删除对象。不包含版本 ID 的源存储桶删除请求将显示为删除目标存储桶中的对象。
+在图中，*Replicate delete markers* 被设置为 *Yes*（当 link:../tenant/grid-federation-manage-cross-grid-replication.html["已启用跨网格复制"] 时）。包含版本 ID 的源存储桶删除请求不会从目标存储桶中删除对象。不包含版本 ID 的源存储桶删除请求将显示为删除目标存储桶中的对象。
 
-image:grid-federation-cross-grid-replication-delete.png["${post_edited_translations.segment}"]
+image:grid-federation-cross-grid-replication-delete.png["显示在两个网格上复制客户端删除的图像"]
 
 
-NOTE: 如果要使对象删除在网格之间保持同步，请为两个网格上的存储桶创建对应的link:../s3/create-s3-lifecycle-configuration.html["${post_edited_translations.segment}"]。
+NOTE: 如果要使对象删除在网格之间保持同步，请为两个网格上的存储桶创建对应的link:../s3/create-s3-lifecycle-configuration.html["S3 生命周期配置"]。
 
 
 
@@ -156,12 +156,12 @@ NOTE: 如果要使对象删除在网格之间保持同步，请为两个网格�
 
 当您使用跨网格复制在网格之间复制对象时，您可以对单个对象进行加密、使用默认存储桶加密或配置网格范围加密。您可以在为存储桶启用跨网格复制之前或之后，添加、修改或删除默认存储桶或网格范围加密设置。
 
-要对单个对象进行加密，您可以在将对象添加到源存储桶时使用 SSE（使用 StorageGRID 托管密钥的服务器端加密）。使用  `x-amz-server-side-encryption` 请求标头并指定  `AES256`。请参见 link:../s3/using-server-side-encryption.html["${post_edited_translations.segment}"]。
+要对单个对象进行加密，您可以在将对象添加到源存储桶时使用 SSE（使用 StorageGRID 托管密钥的服务器端加密）。使用  `x-amz-server-side-encryption` 请求标头并指定  `AES256`。请参见 link:../s3/using-server-side-encryption.html["使用服务器端加密"]。
 
 
 NOTE: 跨网格复制不支持使用 SSE-C（使用客户提供密钥的服务器端加密）。引入操作将失败。
 
-要对存储桶使用默认加密，请使用 PutBucketEncryption 请求并将 `SSEAlgorithm`参数设置为 `AES256`。存储桶级别加密适用于任何不含 `x-amz-server-side-encryption`请求标头的接收对象。请参阅link:../s3/operations-on-buckets.html["${post_edited_translations.segment}"]。
+要对存储桶使用默认加密，请使用 PutBucketEncryption 请求并将 `SSEAlgorithm`参数设置为 `AES256`。存储桶级别加密适用于任何不含 `x-amz-server-side-encryption`请求标头的接收对象。请参阅link:../s3/operations-on-buckets.html["对存储桶的操作"]。
 
 要使用网格级加密，请将*存储对象加密*选项设置为 *AES-256*。网格级加密适用于未在存储桶级别加密或在没有 `x-amz-server-side-encryption`请求标头的情况下接收的任何对象。请参阅 link:../admin/changing-network-options-object-encryption.html["配置网络和对象选项"]。
 

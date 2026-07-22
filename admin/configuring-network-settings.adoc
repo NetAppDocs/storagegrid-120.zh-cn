@@ -18,11 +18,11 @@ summary: 您可以从 Grid Manager 配置各种网络设置，以微调 StorageG
 [[configure-vlan-interfaces]]
 == 配置 VLAN 接口
 
-您可以link:configure-vlan-interfaces.html["${post_edited_translations.segment}"]隔离和分区流量，以实现安全性、灵活性和性能。每个 VLAN 接口都与管理节点和网关节点上的一个或多个父接口关联。您可以在 HA 组和负载平衡器端点中使用 VLAN 接口，以按应用程序或租户隔离客户端或管理员流量。
+您可以link:configure-vlan-interfaces.html["创建虚拟 LAN (VLAN) 接口"]隔离和分区流量，以实现安全性、灵活性和性能。每个 VLAN 接口都与管理节点和网关节点上的一个或多个父接口关联。您可以在 HA 组和负载平衡器端点中使用 VLAN 接口，以按应用程序或租户隔离客户端或管理员流量。
 
 
 
 [[traffic-classification-policies]]
-== ${post_edited_translations.segment}
+== 流量分类策略
 
-您可以使用link:managing-traffic-classification-policies.html["${post_edited_translations.segment}"]来识别和处理不同类型的网络流量，包括与特定存储桶、租户、客户端子网或负载均衡器端点相关的流量。这些策略可以帮助限制和监控流量。
+您可以使用link:managing-traffic-classification-policies.html["流量分类策略"]来识别和处理不同类型的网络流量，包括与特定存储桶、租户、客户端子网或负载均衡器端点相关的流量。这些策略可以帮助限制和监控流量。

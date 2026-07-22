@@ -2,7 +2,7 @@
 permalink: admin/editing-tenant-account.html 
 sidebar: sidebar 
 keywords: edit tenant account, change tenant name, allow platform services, tenant quota 
-summary: ${post_edited_translations.segment} 
+summary: 您可以编辑租户帐户以更改显示名称、存储配额或租户权限。 
 ---
 = 编辑 StorageGRID 租户帐户
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: ${post_edited_translations.segment}
 
 
 [role="lead"]
-${post_edited_translations.segment}
+您可以编辑租户帐户以更改显示名称、存储配额或租户权限。
 
 
 TIP: 如果租户具有*使用网格联合连接*权限，则可以从连接中的任一网格编辑租户详细信息。但是，您在连接中的一个网格上所做的任何更改都不会复制到另一个网格。如果要使租户详细信息在网格之间完全同步，请在两个网格上进行相同的编辑。请参阅 link:grid-federation-manage-tenants.html["管理网格联合连接的允许租户"]。
@@ -22,12 +22,12 @@ TIP: 如果租户具有*使用网格联合连接*权限，则可以从连接中�
 
 
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 根据网络连接、节点状态和 Cassandra 操作，跨网格应用租户设置可能需要 15 分钟或更长时间。
 
 .步骤
-. ${post_edited_translations.segment}
+. 选择*租户*。
 +
-image:tenant_accounts_page.png["${post_edited_translations.segment}"]
+image:tenant_accounts_page.png["租户帐户页面"]
 
 . 找到要编辑的租户帐户。
 +
@@ -35,11 +35,11 @@ image:tenant_accounts_page.png["${post_edited_translations.segment}"]
 
 . 选择租户。您可以执行以下操作之一：
 +
-** ${post_edited_translations.segment}
+** 选中租户的复选框，然后选择*操作* > *编辑*。
 ** 选择租户名称以显示详细信息页面，然后选择*编辑*。
 
 
-. ${post_edited_translations.segment}
+. （可选）更改以下字段的值：
 +
 ** *名称*
 ** *说明*
@@ -47,7 +47,7 @@ image:tenant_accounts_page.png["${post_edited_translations.segment}"]
 
 
 . 选择 *Continue*。
-. ${post_edited_translations.segment}
+. 选择或清除租户帐户的权限。
 +
 ** 如果您为已在使用平台服务的租户禁用 *平台服务*，则他们为其 S3 存储桶配置的服务将停止工作。系统不会向该租户发送任何错误消息。例如，如果租户为 S3 存储桶配置了 CloudMirror 复制，他们仍可以在该存储桶中存储对象，但这些对象的副本将不再创建在他们配置为端点的外部 S3 存储桶中。请参见 link:manage-platform-services-for-tenants.html["管理 S3 租户帐户的平台服务"]。
 ** 更改*使用自己的身份源*的设置，以确定租户帐户是使用自己的身份源还是为 Grid Manager 配置的身份源。
@@ -60,16 +60,16 @@ image:tenant_accounts_page.png["${post_edited_translations.segment}"]
 
 
 ** 根据需要选择或清除 *Allow S3 Select* 权限。请参阅 link:manage-s3-select-for-tenant-accounts.html["管理租户帐户的 S3 Select"]。
-** ${post_edited_translations.segment}
+** 要删除*使用网格联合连接*权限：
 +
 ... 选择 *Grid federation* 选项卡。
-... ${post_edited_translations.segment}
+... 选择*删除权限*。
 
 
-** ${post_edited_translations.segment}
+** 要添加*使用网格联合连接*权限：
 +
 ... 选择 *Grid federation* 选项卡。
-... ${post_edited_translations.segment}
+... 选中*使用网格联合连接*复选框。
 ... （可选）选择*克隆现有本地用户和组*以将其克隆到远程网格。如果需要，可以停止正在进行的克隆，或者在上次克隆操作完成后无法克隆某些本地用户或组时重试克隆。
 
 
@@ -79,8 +79,8 @@ image:tenant_accounts_page.png["${post_edited_translations.segment}"]
 NOTE: 在使用这些设置之前，必须先在网格上启用 S3 Object Lock。
 
 +
-... ${post_edited_translations.segment}
-... ${post_edited_translations.segment}
+... 选择 *S3 Object Lock* 选项卡。
+... 对于*设置最大保留期限*，请输入一个值，然后从下拉列表中选择时间段。
 ... 对于*允许合规模式*，请选中复选框。
 
 

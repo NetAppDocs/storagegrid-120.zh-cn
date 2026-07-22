@@ -149,7 +149,7 @@ StorageGRID 系统可以摄取内容吗？
 
 查看过去触发的提醒，获取更多见解。
  a| 
-* link:../monitor/monitoring-system-health.html#view-current-and-resolved-alerts["${post_edited_translations.segment}"]
+* link:../monitor/monitoring-system-health.html#view-current-and-resolved-alerts["查看当前和已解决的警报"]
 
 
 

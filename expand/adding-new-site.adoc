@@ -18,7 +18,7 @@ summary: 您可以通过添加新站点来扩展 StorageGRID 系统。
 [[guidelines-for-adding-a-site]]
 == 添加站点的准则
 
-${post_edited_translations.segment}
+在添加站点之前，请查看以下要求和限制：
 
 * 每个扩展操作只能添加一个站点。
 * 不能在同一扩展中将网格节点添加到现有站点。
@@ -33,7 +33,7 @@ StorageGRID 保留每个站点上所有对象元数据的副本。添加新站�
 
 +
 ** link:../admin/managing-object-metadata-storage.html["管理对象元数据存储"]
-** link:../monitor/monitoring-storage-capacity.html#monitor-object-metadata-capacity-for-each-storage-node["${post_edited_translations.segment}"]
+** link:../monitor/monitoring-storage-capacity.html#monitor-object-metadata-capacity-for-each-storage-node["监控每个存储节点的对象元数据容量"]
 
 
 * 您必须考虑站点之间的可用网络带宽和网络延迟级别。即使所有对象仅存储在接收它们的站点上，元数据更新也会在站点之间持续复制。

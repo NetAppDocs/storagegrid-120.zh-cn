@@ -24,10 +24,10 @@ summary: '如果您不再需要使用单点登录 (SSO) 功能，可以将其禁
 此时将显示单一登录页面。
 
 . 选择*禁用 SSO*。
-. ${post_edited_translations.segment}
+. 选择*是*。
 +
-${post_edited_translations.segment}
+此时会显示一条警告消息，指示本地用户现在可以登录。
 
 
 
-${post_edited_translations.segment}
+下次登录 StorageGRID 时，将显示 StorageGRID 登录页面，您必须输入本地或联合 StorageGRID 用户的用户名和密码。

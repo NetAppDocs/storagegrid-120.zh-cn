@@ -49,7 +49,7 @@ Entra ID
 * 来自 Entra ID 的响应包括用户主体名称 (UPN)。
 
 
-${post_edited_translations.segment}
+要允许 StorageGRID （服务提供商）和 SSO 身份提供商安全地就用户身份验证请求进行通信，您将完成以下任务：
 
 . 在 StorageGRID 中配置设置。
 . 使用 SSO 身份提供程序的软件为每个管理节点创建信赖方信任 (AD FS)、企业应用程序 (Entra ID) 或服务提供商 (PingFederate)。
@@ -265,8 +265,8 @@ URL 派生自您在 *Federation service name* 字段中输入的值。
 --
 .步骤
 . 转到 Azure 门户中的"单一登录"页面。
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 选择*测试此应用程序*。
+. 输入联合用户的凭据。
 +
 ** 如果 SSO 登录和注销操作成功，则会显示一条成功消息。
 ** 如果 SSO 操作不成功，系统将显示一条错误消息。请修复该问题，清除浏览器的 Cookie，然后重试。
@@ -279,19 +279,19 @@ URL 派生自您在 *Federation service name* 字段中输入的值。
 .PingFederate
 --
 .步骤
-. ${post_edited_translations.segment}
+. 在配置 SSO 页面中，选择沙盒模式消息中的第一个链接。
 +
 一次选择并测试一个链接。
 
-. ${post_edited_translations.segment}
+. 输入联合用户的凭据。
 +
 ** 如果 SSO 登录和注销操作成功，则会显示一条成功消息。
 ** 如果 SSO 操作不成功，系统将显示一条错误消息。请修复该问题，清除浏览器的 Cookie，然后重试。
 
 
-. ${post_edited_translations.segment}
+. 选择下一个链接以验证网格中每个管理节点的 SSO 连接。
 +
-${post_edited_translations.segment}
+如果您看到"页面已过期"消息，请选择浏览器中的*后退*按钮，然后重新提交您的凭据。
 
 
 

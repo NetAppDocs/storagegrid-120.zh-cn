@@ -16,15 +16,15 @@ summary: 使用以下说明配置和管理 StorageGRID 系统。
 
 
 [[about-these-instructions]]
-== ${post_edited_translations.segment}
+== 关于这些说明
 
-${post_edited_translations.segment}
+配置和管理 StorageGRID 的主要任务允许您：
 
-* ${post_edited_translations.segment}
+* 使用 Grid Manager 设置组和用户
 * 创建租户帐户以允许 S3 客户端应用程序存储和检索对象
-* ${post_edited_translations.segment}
+* 配置并管理StorageGRID网络
 * 配置 AutoSupport
-* ${post_edited_translations.segment}
+* 管理节点设置
 
 
 

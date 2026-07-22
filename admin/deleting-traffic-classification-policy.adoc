@@ -2,7 +2,7 @@
 permalink: admin/deleting-traffic-classification-policy.html 
 sidebar: sidebar 
 keywords: delete traffic classification policy 
-summary: ${post_edited_translations.segment} 
+summary: 如果您不再需要流量分类策略，可以将其删除。 
 ---
 = 删除 StorageGRID 流量分类策略
 :allow-uri-read: 
@@ -21,13 +21,13 @@ summary: ${post_edited_translations.segment}
 .步骤
 . 选择*配置* > *网络* > *流量分类*。
 +
-${post_edited_translations.segment}
+此时将显示流量分类策略页面，表格中列出了现有策略。
 
-. ${post_edited_translations.segment}
+. 使用"操作"菜单或详细信息页面删除策略。
 +
 [role="tabbed-block"]
 ====
-.${post_edited_translations.segment}
+.操作菜单
 --
 .. 选中此策略的复选框。
 .. 选择*操作* > *删除*。
@@ -36,14 +36,14 @@ ${post_edited_translations.segment}
 --
 .策略详情页面
 --
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
+.. 选择策略名称。
+.. 选择策略名称旁边的*删除*按钮。
 
 
 --
 ====
-. ${post_edited_translations.segment}
+. 选择*是*以确认要删除此策略。
 +
-${post_edited_translations.segment}
+策略已删除。
 
 

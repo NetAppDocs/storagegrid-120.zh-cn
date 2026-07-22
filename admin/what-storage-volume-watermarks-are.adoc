@@ -96,7 +96,7 @@ NOTE: 存储卷水印仅适用于用于复制和纠删编码对象数据的空�
 
 StorageGRID 使用两个 Prometheus 指标来显示它为存储卷软只读水印计算的优化值。您可以查看网格中每个存储节点的最小和最大优化值。
 
-. ${post_edited_translations.segment}
+. 选择*支持* > *工具* > *指标*。
 . 在 Prometheus 部分，选择链接以访问 Prometheus 用户界面。
 . 要查看推荐的最小软只读水印，请输入以下 Prometheus 指标，然后选择 *Execute*：
 +

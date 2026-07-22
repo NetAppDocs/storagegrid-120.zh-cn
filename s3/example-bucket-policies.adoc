@@ -16,7 +16,7 @@ summary: 使用本节中的示例为存储桶构建 StorageGRID 访问策略。
 存储区策略指定策略附加到的存储区的访问权限。您可以通过以下工具之一使用 S3 PutBucketPolicy API 配置存储区策略：
 
 * link:../tenant/manage-bucket-policy.html["租户管理器"]。
-* 使用此命令的 AWS CLI（请参阅link:operations-on-buckets.html["${post_edited_translations.segment}"]）：
+* 使用此命令的 AWS CLI（请参阅link:operations-on-buckets.html["对存储桶的操作"]）：
 +
 [listing, subs="specialcharacters,quotes"]
 ----

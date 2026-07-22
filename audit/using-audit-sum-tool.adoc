@@ -40,7 +40,7 @@ NOTE: 该 `audit-sum`工具主要供技术支持人员在故障排除操作期�
 该 `audit-sum`工具在审核日志中提供以下 S3 和 ILM 审核消息的计数和时间。
 
 
-NOTE: 审核代码将随功能弃用而从产品和文档中删除。如果遇到此处未列出的审核代码，请查看本主题的早期版本以了解较旧的 StorageGRID 版本。例如， https://docs.netapp.com/us-en/storagegrid-118/audit/using-audit-sum-tool.html["${post_edited_translations.segment}"^]。
+NOTE: 审核代码将随功能弃用而从产品和文档中删除。如果遇到此处未列出的审核代码，请查看本主题的早期版本以了解较旧的 StorageGRID 版本。例如， https://docs.netapp.com/us-en/storagegrid-118/audit/using-audit-sum-tool.html["StorageGRID 11.8 使用审计总和工具"^]。
 
 [cols="14,43,43"]
 |===
@@ -105,7 +105,7 @@ NOTE: 审核代码将随功能弃用而从产品和文档中删除。如果遇�
 `$ audit-sum -h`
 
 .步骤
-. ${post_edited_translations.segment}
+. 登录到主管理节点：
 +
 .. 输入以下命令： `ssh admin@_primary_Admin_Node_IP_`
 .. 输入 `Passwords.txt`文件中列出的密码。
@@ -144,7 +144,7 @@ NOTE: 审核代码将随功能弃用而从产品和文档中删除。如果遇�
 `grep SGET audit.log | audit-sum -l`
 
 +
-${post_edited_translations.segment}
+结果包括类型（对象或存储桶）和路径，您可以通过 grep 审核日志来查找与这些特定对象相关的其他消息。
 
 +
 [listing]
@@ -262,7 +262,7 @@ Total:          201906 operations
   SPUT.object                12        0.025           1.019           0.236
 ----
 +
-${post_edited_translations.segment}
+结果表明，桶的 SPUT 操作与对象的 SPUT 操作具有不同的性能特征。
 
 .. 要确定哪些存储桶的 SPUT 操作最慢，请使用 `-gb`选项，该选项按存储桶对消息进行分组：
 +

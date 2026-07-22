@@ -26,7 +26,7 @@ StorageGRID 系统通过应用活动 ILM 策略来管理对象。ILM 策略和�
 .步骤
 使用网格管理器仪表板上的 ILM 选项卡来监控 ILM 操作：
 
-. ${post_edited_translations.segment}
+. 登录到 Grid Manager。
 . 从仪表板中，选择 ILM 选项卡，并记录 ILM 队列（对象）卡和 ILM 评估率卡上的值。
 +
 仪表板上 ILM 队列（对象）卡中出现临时峰值是正常现象。但是，如果队列持续增加且从不下降，则网格需要更多资源才能高效运行：要么增加更多 Storage Nodes，要么在 ILM 策略将对象放置在远程位置时增加更多网络带宽。

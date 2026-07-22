@@ -49,37 +49,37 @@ NOTE: 一般来说，最好使用较高的值，而不是较低的值。如果"�
 .. 在卷部分，找到 */var/local/rangedb/0* 条目。
 .. 确认可用值等于或大于要使用的新值与当前元数据保留空间值之间的差值。
 +
-${post_edited_translations.segment}
+例如，如果元数据保留空间设置当前为 4 TB，并且要将其增加到 6 TB，则可用值必须为 2 TB 或更高。
 
-.. ${post_edited_translations.segment}
+.. 对所有存储节点重复这些步骤。
 +
 *** 如果一个或多个 Storage Node 没有足够的可用空间，则无法增加 Metadata Reserved Space 值。请勿继续执行此步骤。
-*** ${post_edited_translations.segment}
+*** 如果每个存储节点在卷 0 上都有足够的可用空间，请转至下一步。
 
 
 
 
-. ${post_edited_translations.segment}
+. 请确保每个存储节点上至少有 128 GB 的 RAM。
 +
 .. 选择 *Nodes*。
 .. 选择网格中的第一个存储节点。
-.. ${post_edited_translations.segment}
+.. 选择*Hardware*选项卡。
 .. 将光标悬停在内存使用情况图表上。确保 *总内存* 至少为 128 GB。
-.. ${post_edited_translations.segment}
+.. 对所有存储节点重复这些步骤。
 +
 *** 如果一个或多个存储节点没有足够的可用总内存，则无法增加元数据保留空间值。请勿继续此过程。
-*** ${post_edited_translations.segment}
+*** 如果每个存储节点的总内存至少为 128 GB，请转至下一步。
 
 
 
 
-. ${post_edited_translations.segment}
+. 更新元数据保留空间设置。
 +
 .. 选择*配置* > *系统* > *存储设置*。
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
+.. 选择*元数据保留空间*。
+.. 输入新值。
 +
-${post_edited_translations.segment}
+例如，要输入 8 TB（这是支持的最大值），请输入 *8000000000000*（8，后跟 12 个零）
 
 .. 选择 *Save*。
 

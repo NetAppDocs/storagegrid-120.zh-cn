@@ -58,7 +58,7 @@ summary: 您可以配置网络和对象安全性，以加密存储的对象，�
 
 .开始之前
 * 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
-* ${post_edited_translations.segment}
+* 您拥有 Root 访问权限。
 
 
 .步骤
@@ -73,7 +73,7 @@ NOTE: 如果更改此设置，应用新设置大约需要一分钟。配置的�
 . 如果客户端直接连接到存储节点并且要使用 HTTP 连接，则可选择*为存储节点连接启用 HTTP*。
 +
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 为生产网格启用 HTTP 时要小心，因为请求将以未加密的方式发送。
 
 . 选择 *Save*。
 

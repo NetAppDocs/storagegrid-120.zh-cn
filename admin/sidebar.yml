@@ -51,7 +51,7 @@ entries:
     url: "/admin/change-node-console-password.html"
   - title: 更改 SSH 访问密码
     url: "/admin/change-ssh-access-passwords.html"
-  - title: "${post_edited_translations.segment}"
+  - title: 使用身份联合
     url: "/admin/using-identity-federation.html"
   - title: 管理管理员组
     url: "/admin/managing-admin-groups.html"
@@ -98,7 +98,7 @@ entries:
     url: "/admin/grid-federation-manage-tenants.html"
   - title: 对网格联合错误进行故障排除
     url: "/admin/grid-federation-troubleshoot.html"
-  - title: "${post_edited_translations.segment}"
+  - title: 识别并重试失败的复制操作
     url: "/admin/grid-federation-retry-failed-replication.html"
 - title: 管理安全
   entries:
@@ -145,7 +145,7 @@ entries:
       url: "/admin/kms-considerations-and-requirements.html"
     - title: 更改站点 KMS 的注意事项
       url: "/admin/kms-considerations-for-changing-for-site.html"
-    - title: "${post_edited_translations.segment}"
+    - title: 在 KMS 中将 StorageGRID 配置为客户端
       url: "/admin/kms-configuring-storagegrid-as-client.html"
     - title: 添加密钥管理服务器 (KMS)
       url: "/admin/kms-adding.html"
@@ -198,7 +198,7 @@ entries:
     url: "/admin/configuring-client-connections.html"
   - title: S3 客户端的安全性
     url: "/admin/security-for-clients.html"
-  - title: "${post_edited_translations.segment}"
+  - title: 使用 S3 设置向导
     entries:
     - title: S3 设置向导注意事项和要求
       url: "/admin/use-s3-setup-wizard.html"
@@ -238,10 +238,10 @@ entries:
     url: "/admin/configure-vlan-interfaces.html"
   - title: 为管理界面启用 CORS
     url: "/admin/enable-cross-origin-resource-sharing-for-management-interface.html"
-  - title: "${post_edited_translations.segment}"
+  - title: 管理流量分类策略
     entries:
     - title: 什么是流量分类策略
-      pdf-filename: "${post_edited_translations.segment}"
+      pdf-filename: 管理流量分类策略
       url: "/admin/managing-traffic-classification-policies.html"
     - title: 创建流量分类策略
       url: "/admin/creating-traffic-classification-policies.html"

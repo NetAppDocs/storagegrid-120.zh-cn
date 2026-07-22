@@ -33,7 +33,7 @@ summary: 您可以使用 Tenant Manager 删除空的 S3 存储桶。
 +
 [role="tabbed-block"]
 ====
-.${post_edited_translations.segment}
+.操作菜单
 --
 .. 选中要删除的每个存储桶的复选框。
 .. 选择*操作* > *删除存储桶*。

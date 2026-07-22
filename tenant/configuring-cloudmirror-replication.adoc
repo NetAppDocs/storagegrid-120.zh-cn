@@ -23,7 +23,7 @@ summary: 通过创建存储桶 CloudMirror 复制配置 XML 并使用 Tenant Man
 .关于此任务
 CloudMirror 复制将对象从源存储桶复制到终结点中指定的目标存储桶。
 
-有关存储区复制及其配置方法的一般信息，请参见 https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html["Amazon Simple Storage Service (S3) 文档：复制对象"^]。有关 StorageGRID 实现 GetBucketReplication、DeleteBucketReplication 和 PutBucketReplication 的信息，请参见 link:../s3/operations-on-buckets.html["${post_edited_translations.segment}"]。
+有关存储区复制及其配置方法的一般信息，请参见 https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html["Amazon Simple Storage Service (S3) 文档：复制对象"^]。有关 StorageGRID 实现 GetBucketReplication、DeleteBucketReplication 和 PutBucketReplication 的信息，请参见 link:../s3/operations-on-buckets.html["对存储桶的操作"]。
 
 
 NOTE: CloudMirror 复制与跨网格复制功能具有重要的异同。要了解更多信息，请参见 link:../admin/grid-federation-compare-cgr-to-cloudmirror.html["比较跨网格复制和 CloudMirror 复制"]。

@@ -26,11 +26,11 @@ summary: 在安装 StorageGRID 软件之前，请验证并配置硬件，以便�
 
 基于软件的仅元数据节点资源必须与现有存储节点资源匹配。例如：
 
-* ${post_edited_translations.segment}
+* 如果现有 StorageGRID 站点使用 SG6000 或 SG6100 设备，则基于软件的仅元数据节点必须满足下列最低要求：
 +
 ** 128 GB 内存
-** ${post_edited_translations.segment}
-** ${post_edited_translations.segment}
+** 8 核 CPU
+** 8 TB SSD 或用于 Cassandra 数据库的等效存储（rangedb/0）
 
 
 * 如果现有的 StorageGRID 站点使用具有 24 GB RAM、8 核 CPU 和 3 TB 或 4 TB 元数据存储的虚拟存储节点，则基于软件的仅元数据节点应使用类似的资源（24 GB RAM、8 核 CPU 和 4 TB 元数据存储（rangedb/0））。

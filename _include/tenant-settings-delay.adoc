@@ -3,4 +3,4 @@
 
 
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 根据网络连接、节点状态和 Cassandra 操作，跨网格应用租户设置可能需要 15 分钟或更长时间。

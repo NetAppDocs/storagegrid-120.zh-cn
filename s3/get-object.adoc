@@ -72,7 +72,7 @@ StorageGRID 不解析或解释用户定义元数据中转义的 UTF-8 字符。�
 
 
 
-CAUTION: 您提供的加密密钥绝不会被存储。如果丢失加密密钥，则会丢失相应的对象。在使用客户提供的密钥保护对象数据之前，请查看 link:using-server-side-encryption.html["${post_edited_translations.segment}"] 中的注意事项。
+CAUTION: 您提供的加密密钥绝不会被存储。如果丢失加密密钥，则会丢失相应的对象。在使用客户提供的密钥保护对象数据之前，请查看 link:using-server-side-encryption.html["使用服务器端加密"] 中的注意事项。
 
 
 

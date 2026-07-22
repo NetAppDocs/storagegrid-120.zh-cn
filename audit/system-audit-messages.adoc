@@ -48,7 +48,7 @@ link:etaf-security-authentication-failed.html["ETAF：安全身份验证失败"]
  a| 
 GNRG
  a| 
-${post_edited_translations.segment}
+GNDS注册：服务在StorageGRID系统中更新或注册有关自身的信息。
  a| 
 link:gnrg-gnds-registration.html["GNRG: GNDS注册"]
 
@@ -77,7 +77,7 @@ GTST
  a| 
 网格任务已启动：CMN 服务已开始处理网格任务。
  a| 
-link:gtst-grid-task-started.html["${post_edited_translations.segment}"]
+link:gtst-grid-task-started.html["GTST：网格任务已开始"]
 
 
 
@@ -93,7 +93,7 @@ link:gtsu-grid-task-submitted.html["GTSU：网格任务已提交"]
  a| 
 LLST
  a| 
-${post_edited_translations.segment}
+位置丢失：此审核消息在位置丢失时生成。
  a| 
 link:llst-location-lost.html["LLST：位置丢失"]
 
@@ -118,7 +118,7 @@ link:sadd-security-audit-disable.html["SADD：安全审核禁用"]
 
 
  a| 
-${post_edited_translations.segment}
+SADE
  a| 
 安全审核启用：已还原审核消息日志记录。
  a| 
@@ -147,7 +147,7 @@ link:svru-object-store-verify-unknown.html["SVRU：对象存储验证未知"]
  a| 
 SYSD
  a| 
-${post_edited_translations.segment}
+节点停止：已请求关闭。
  a| 
 link:sysd-node-stop.html["SYSD：节点停止"]
 

@@ -33,7 +33,7 @@ entries:
     url: "/tenant/grid-federation-view-connections-tenant.html"
 - title: 管理组和用户
   entries:
-  - title: "${post_edited_translations.segment}"
+  - title: 使用身份联合
     url: "/tenant/using-identity-federation.html"
   - title: 管理租户组
     entries:
@@ -105,7 +105,7 @@ entries:
       url: "/tenant/understanding-cloudmirror-replication-service.html"
     - title: 存储桶的通知
       url: "/tenant/understanding-notifications-for-buckets.html"
-    - title: "${post_edited_translations.segment}"
+    - title: 搜索集成服务
       url: "/tenant/understanding-search-integration-service.html"
   - title: 管理平台服务端点
     entries:

@@ -14,13 +14,13 @@ summary: '您可以配置高可用性(HA)组，以提供对管理节点或网关
 您可以配置高可用性(HA)组，以提供对管理节点或网关节点上服务的高可用性访问。
 
 
-NOTE: ${post_edited_translations.segment}
+NOTE: StorageGRID 系统最多可包含 255 个 HA 组。
 
 .开始之前
 * 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
 * 您有 link:admin-group-permissions.html["root 访问权限"]。
 * 如果您计划在 HA 组中使用 VLAN 接口，则已创建 VLAN 接口。请参阅 link:../admin/configure-vlan-interfaces.html["配置 VLAN 接口"]。
-* ${post_edited_translations.segment}
+* 如果您计划为 HA 组中的节点使用访问接口，则已创建接口：
 +
 ** *Linux（安装节点之前）*：link:../swnodes/creating-node-configuration-files.html["创建节点配置文件"]
 ** *Linux（安装节点后）*：link:../maintain/linux-adding-trunk-or-access-interfaces-to-node.html["将中继或接入接口添加到节点"]
@@ -68,23 +68,23 @@ NOTE: "Linux"是指 RHEL、Ubuntu 或 Debian 部署。有关受支持版本的�
 === 向 HA 组添加接口
 
 .步骤
-. ${post_edited_translations.segment}
+. 选择要添加到此HA组的一个或多个接口。
 +
-${post_edited_translations.segment}
+请使用列标题对行进行排序，或输入搜索词以更快地查找接口。
 
 +
 image:ha_group_add_interfaces.png["HA 组添加接口"]
 
 +
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 创建 VLAN 接口后，最多等待 5 分钟，直到新接口出现在表中。
 
 +
 .接口选择指南
-** ${post_edited_translations.segment}
+** 必须至少选择一个接口。
 ** 您只能为节点选择一个接口。
 ** 如果 HA 组用于管理节点服务（包括 Grid Manager 和 Tenant Manager）的 HA 保护，请仅选择管理节点上的接口。
-** ${post_edited_translations.segment}
+** 如果 HA 组用于 S3 客户端流量的 HA 保护，请选择管理节点、网关节点或两者上的接口。
 ** 如果选择不同类型的节点上的接口，则会显示信息说明。系统会提醒您，如果发生故障转移，以前活动节点提供的服务可能在新活动节点上不可用。例如，备份网关节点无法为管理节点服务提供 HA 保护。同样，备份管理节点无法执行主管理节点可以提供的所有维护过程。
 ** 如果无法选择接口，其复选框将被禁用。工具提示提供了更多信息。
 +
@@ -131,7 +131,7 @@ TIP: 如果 HA 组提供对 Grid Manager 的访问权限，则必须在主管理
 
 +
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 如果使用 32 位前缀，则 VIP 网络地址也用作网关地址和 VIP 地址。
 
 +
 image:ha_group_select_virtual_ips.png["HA 组进入 VIP"]
@@ -216,10 +216,10 @@ TIP: 如果高可用性 (HA) 组已绑定到负载均衡器端点，则无法将
 . 选择*配置* > *网络* > *高可用性组*。
 . 查看要删除的每个 HA 组的*负载平衡器端点*列。如果列出了任何负载平衡器端点：
 +
-.. ${post_edited_translations.segment}
+.. 转到 *Configuration* > *Network* > *Load balancer endpoints*。
 .. 选中端点的复选框。
 .. 选择*操作* > *编辑端点绑定模式*。
-.. ${post_edited_translations.segment}
+.. 更新绑定模式以删除 HA 组。
 .. 选择 *Save changes*。
 
 

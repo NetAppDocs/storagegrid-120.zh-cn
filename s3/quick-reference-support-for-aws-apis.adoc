@@ -140,7 +140,7 @@ StorageGRID 支持此请求的所有 <<common-params,通用参数和标头>>，�
 StorageGRID 支持实施时 Amazon S3 REST API 定义的所有请求正文参数。
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -183,7 +183,7 @@ link:initiate-multipart-upload.html["CreateMultipartUpload"]
 StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内容。
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -197,7 +197,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -211,7 +211,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -225,7 +225,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-* link:operations-on-buckets.html["${post_edited_translations.segment}"]
+* link:operations-on-buckets.html["对存储桶的操作"]
 * link:create-s3-lifecycle-configuration.html["创建 S3 生命周期配置"]
 
 
@@ -241,7 +241,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -255,7 +255,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -269,7 +269,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -330,7 +330,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -344,7 +344,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -358,7 +358,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -372,7 +372,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-* link:operations-on-buckets.html["${post_edited_translations.segment}"]
+* link:operations-on-buckets.html["对存储桶的操作"]
 * link:create-s3-lifecycle-configuration.html["创建 S3 生命周期配置"]
 
 
@@ -388,7 +388,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -402,7 +402,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -416,7 +416,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -430,7 +430,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -444,7 +444,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -458,7 +458,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -578,7 +578,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -659,7 +659,7 @@ StorageGRID 支持此请求的所有 <<common-params,通用参数和标头>> 参
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -682,7 +682,7 @@ StorageGRID 支持此请求的所有 <<common-params,通用参数和标头>> 参
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -704,7 +704,7 @@ StorageGRID 支持此请求的所有 <<common-params,通用参数和标头>> 参
 无
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -737,7 +737,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 StorageGRID 支持实施时 Amazon S3 REST API 定义的所有请求正文参数。
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -757,7 +757,7 @@ StorageGRID 支持这些请求正文 XML 标记：
 
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -789,7 +789,7 @@ StorageGRID 支持这些请求正文 XML 标记：
 
 
 .StorageGRID 文档
-* link:operations-on-buckets.html["${post_edited_translations.segment}"]
+* link:operations-on-buckets.html["对存储桶的操作"]
 * link:create-s3-lifecycle-configuration.html["创建 S3 生命周期配置"]
 
 
@@ -819,7 +819,7 @@ StorageGRID 支持这些请求正文 XML 标记：
 
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -851,7 +851,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -865,7 +865,7 @@ StorageGRID 支持此请求的所有<<common-params,通用参数和标头>>内�
 StorageGRID 支持实施时 Amazon S3 REST API 定义的所有请求正文参数。
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -883,7 +883,7 @@ StorageGRID 支持以下请求正文参数：
 
 
 .StorageGRID 文档
-link:operations-on-buckets.html["${post_edited_translations.segment}"]
+link:operations-on-buckets.html["对存储桶的操作"]
 
 
 

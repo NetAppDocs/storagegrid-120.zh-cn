@@ -25,7 +25,7 @@ S3 Object Lock 是一个永久设置，只能在创建存储桶时启用。创�
 要为存储桶启用 S3 Object Lock，请使用以下任一方法：
 
 * 使用租户管理器创建存储桶。请参阅link:../tenant/creating-s3-bucket.html["创建 S3 存储桶"]。
-* 使用带有 `x-amz-bucket-object-lock-enabled`请求标头的 CreateBucket 请求创建存储桶。请参阅link:operations-on-buckets.html["${post_edited_translations.segment}"]。
+* 使用带有 `x-amz-bucket-object-lock-enabled`请求标头的 CreateBucket 请求创建存储桶。请参阅link:operations-on-buckets.html["对存储桶的操作"]。
 
 
 S3 Object Lock 需要存储桶版本控制，在创建存储桶时自动启用。您不能暂停存储桶的版本控制。请参阅 link:object-versioning.html["对象版本控制"]。
@@ -72,7 +72,7 @@ S3 Object Lock 需要存储桶版本控制，在创建存储桶时自动启用�
 
 要设置存储区的默认保留，请使用以下任一方法：
 
-* 从租户管理器管理存储桶设置。请参阅 link:../tenant/creating-s3-bucket.html["${post_edited_translations.segment}"] 和 link:../tenant/update-default-retention-settings.html["更新 S3 对象锁定默认保留"]。
+* 从租户管理器管理存储桶设置。请参阅 link:../tenant/creating-s3-bucket.html["创建 S3 存储桶"] 和 link:../tenant/update-default-retention-settings.html["更新 S3 对象锁定默认保留"]。
 * 向存储桶发出 PutObjectLockConfiguration 请求，以指定默认模式和默认天数或年数。
 
 

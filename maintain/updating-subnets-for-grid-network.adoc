@@ -17,7 +17,7 @@ StorageGRID 维护用于网格网络 (eth0) 上的网格节点之间通信的网
 * 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
 * 您有 link:../admin/admin-group-permissions.html["维护或 root 访问权限"]。
 * 您有配置密码短语。
-* ${post_edited_translations.segment}
+* 您已获得要配置的子网的网络地址（以 CIDR 表示法表示）。
 
 
 .关于此任务
@@ -43,7 +43,7 @@ StorageGRID 维护用于网格网络 (eth0) 上的网格节点之间通信的网
 
 * 192.168.130.0/24，因为此子网范围包含 IP 地址 192.168.130.101 和 192.168.130.102
 * 192.168.131.0/24，因为此子网范围包含 IP 地址 192.168.131.101 和 192.168.131.102
-* ${post_edited_translations.segment}
+* 198.51.100.0/24，因为此子网范围包含 IP 地址 198.51.100.2 和 198.51.100.4
 
 
 ====
@@ -53,13 +53,13 @@ StorageGRID 维护用于网格网络 (eth0) 上的网格节点之间通信的网
 == 添加子网
 
 .步骤
-. ${post_edited_translations.segment}
+. 选择*维护* > *网络* > *网格网络*。
 . 选择 *Add another subnet* 以 CIDR 表示法添加新的子网。
 +
 例如，请输入 `10.96.104.0/22`。
 
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 输入配置密码，然后选择*Save*。
+. 请等待更改应用完毕，然后下载新的恢复包。
 +
 .. 选择*维护* > *系统* > *恢复包*。
 .. 输入 *Provisioning Passphrase*。
@@ -79,11 +79,11 @@ CAUTION: 必须保护恢复包文件，因为它包含可用于从 StorageGRID �
 == 编辑子网
 
 .步骤
-. ${post_edited_translations.segment}
+. 选择*维护* > *网络* > *网格网络*。
 . 选择要编辑的子网并进行必要的更改。
 . 输入配置密码，然后选择*保存*。
 . 在确认对话框中选择*是*。
-. ${post_edited_translations.segment}
+. 请等待更改应用完毕，然后下载新的恢复包。
 +
 .. 选择*维护* > *系统* > *恢复包*。
 .. 输入 *Provisioning Passphrase*。
@@ -97,11 +97,11 @@ CAUTION: 必须保护恢复包文件，因为它包含可用于从 StorageGRID �
 == 删除子网
 
 .步骤
-. ${post_edited_translations.segment}
+. 选择*维护* > *网络* > *网格网络*。
 . 选择子网旁边的删除图标 image:icon-x-to-remove.png["删除图标"]。
 . 输入配置密码，然后选择*保存*。
 . 在确认对话框中选择*是*。
-. ${post_edited_translations.segment}
+. 请等待更改应用完毕，然后下载新的恢复包。
 +
 .. 选择*维护* > *系统* > *恢复包*。
 .. 输入 *Provisioning Passphrase*。

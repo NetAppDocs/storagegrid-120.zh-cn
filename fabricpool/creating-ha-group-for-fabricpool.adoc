@@ -42,14 +42,14 @@ HA 组名称
 
 
  a| 
-${post_edited_translations.segment}
+描述（选填）
  a| 
 此 HA 组的描述。
 
 |===
 . 对于*添加接口*步骤，请选择要在此 HA 组中使用的节点接口。
 +
-${post_edited_translations.segment}
+请使用列标题对行进行排序，或输入搜索词以更快地查找接口。
 
 +
 您可以选择一个或多个节点，但每个节点只能选择一个接口。

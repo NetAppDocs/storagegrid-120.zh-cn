@@ -109,7 +109,7 @@ image:nodes_page_object_data_used_with_alert.png["显示用于 3 个 SN 的对�
 StorageGRID 使用两个 Prometheus 指标来显示它为存储卷软只读水印计算的优化值。您可以查看网格中每个存储节点的最小和最大优化值。
 
 .步骤
-. ${post_edited_translations.segment}
+. 选择*支持* > *工具* > *指标*。
 . 在 Prometheus 部分，选择链接以访问 Prometheus 用户界面。
 . 要查看推荐的最小软只读水印，请输入以下 Prometheus 指标，然后选择 *Execute*：
 +

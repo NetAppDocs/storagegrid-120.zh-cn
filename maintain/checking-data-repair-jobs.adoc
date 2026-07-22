@@ -21,7 +21,7 @@ summary: 在停用网格节点之前，您必须确认没有数据修复作业�
 这些步骤仅适用于具有擦除编码对象的系统。
 
 .步骤
-. ${post_edited_translations.segment}
+. 登录到主管理节点：
 +
 .. 输入以下命令： `ssh admin@_grid_node_IP_`
 .. 输入 `Passwords.txt`文件中列出的密码。

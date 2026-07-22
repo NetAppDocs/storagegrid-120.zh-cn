@@ -24,7 +24,7 @@ NOTE: 要更改网格管理器中显示的存储值的单位，请选择网格�
 .关于此任务
 这些说明介绍了如何：
 
-* link:viewing-dashboard.html["${post_edited_translations.segment}"]
+* link:viewing-dashboard.html["查看并管理控制面板"]
 * link:viewing-nodes-page.html["查看节点页面"]
 * link:information-you-should-monitor-regularly.html["定期监控系统的以下方面："]
 +
@@ -37,7 +37,7 @@ NOTE: 要更改网格管理器中显示的存储值的单位，请选择网格�
 ** link:grid-federation-monitor-connections.html["网格联盟连接"]
 
 
-* link:managing-alerts.html["${post_edited_translations.segment}"]
+* link:managing-alerts.html["管理提醒"]
 * link:logs-files-reference.html["查看日志文件"]
 * link:configure-log-management.html["配置日志管理和外部 syslog 服务器"]
 * link:considerations-for-external-syslog-server.html["使用外部 syslog 服务器"] 收集审计信息

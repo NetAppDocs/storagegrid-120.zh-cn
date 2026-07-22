@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: how to configure cross-origin resource sharing, cors, management, api, domain 
 summary: '如果您希望使用管理 API 从其他域访问 StorageGRID 中的数据，可以为 StorageGRID 的管理 API 请求启用跨源资源共享 (CORS)。' 
 ---
-= ${post_edited_translations.segment}
+= 为管理界面启用 StorageGRID CORS
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -28,7 +28,7 @@ CORS 是一种安全机制，允许一个域中的客户端 Web 应用程序访�
 . 选择 *Grid Manager*、*Tenant Manager* 或这两个选项。
 +
 ** *Grid Manager*：为跨域 Grid Management API 请求启用 CORS。
-** ${post_edited_translations.segment}
+** *Tenant Manager*：为跨域租户管理 API 请求启用 CORS。
 
 
 . 在 *Domains* 字段中输入其他域的 URL。
@@ -39,4 +39,4 @@ CORS 是一种安全机制，允许一个域中的客户端 Web 应用程序访�
 
 
 .相关信息
-link:../tenant/configuring-cross-origin-resource-sharing-for-buckets-and-objects.html["${post_edited_translations.segment}"]
+link:../tenant/configuring-cross-origin-resource-sharing-for-buckets-and-objects.html["配置存储桶和对象的 StorageGRID CORS"]

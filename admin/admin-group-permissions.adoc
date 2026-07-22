@@ -20,7 +20,7 @@ summary: 在创建管理员用户组时，您可以选择一个或多个权限�
 * 登录到网格管理器
 * 查看控制面板
 * 查看节点页面
-* ${post_edited_translations.segment}
+* 查看当前和已解决的警报
 * 更改自己的密码（仅限本地用户）
 * 查看配置和维护页面上提供的某些信息
 
@@ -28,7 +28,7 @@ summary: 在创建管理员用户组时，您可以选择一个或多个权限�
 
 
 [[interaction-between-permissions-and-access-mode]]
-== ${post_edited_translations.segment}
+== 权限和访问模式之间的交互
 
 对于所有权限，组的“*访问模式*”设置决定了用户是可以更改设置并执行操作，还是只能查看相关设置和功能。如果一个用户属于多个组，且其中任何一个组被设置为“*只读*”，则该用户对所有选定的设置和功能将具有只读访问权限。
 
@@ -108,7 +108,7 @@ NOTE: 用户必须具有*其他网格配置*权限才能管理存储等级。
 
 
 
-${post_edited_translations.segment}
+没有维护权限的用户可以查看但不能编辑以下页面：
 
 * *维护* > *网络*：
 +
@@ -142,7 +142,7 @@ ${post_edited_translations.segment}
 
 
 [[manage-alerts]]
-== ${post_edited_translations.segment}
+== 管理提醒
 
 此权限允许访问用于管理警报的选项。用户必须具有此权限才能管理静默、警报通知和警报规则。
 
@@ -153,7 +153,7 @@ ${post_edited_translations.segment}
 
 此权限提供对以下内容的访问权限：
 
-* ${post_edited_translations.segment}
+* *支持* > *工具* > *指标* 页面
 * 使用网格管理 API 的 *Metrics* 部分自定义 Prometheus 指标查询
 * 包含指标的 Grid Manager 仪表板卡片
 

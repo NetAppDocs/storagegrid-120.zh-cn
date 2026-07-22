@@ -37,7 +37,7 @@ TIP: 请使用 FabricPool 设置向导，除非您知道自己有特殊要求或
 [[review-best-practices]]
 === 查看最佳实践
 
-* 您对 link:information-needed-to-attach-storagegrid-as-cloud-tier.html["${post_edited_translations.segment}"] 有一个大致的了解。
+* 您对 link:information-needed-to-attach-storagegrid-as-cloud-tier.html["将 StorageGRID 附加为云层所需的信息"] 有一个大致的了解。
 * 您已查看了以下方面的 FabricPool 最佳实践：
 +
 ** link:best-practices-for-high-availability-groups.html["高可用性 (HA) 组"]
@@ -61,7 +61,7 @@ TIP: 请使用 FabricPool 设置向导，除非您知道自己有特殊要求或
 [[configure-identity-federation-and-sso]]
 === 配置身份联合和 SSO
 
-如果您计划对 StorageGRID 系统使用身份联合或单点登录 (SSO)，则已启用这些功能。您还知道哪个联合组应对 ONTAP 将使用的租户帐户具有 root 访问权限。请参阅 link:../admin/using-identity-federation.html["${post_edited_translations.segment}"] 和 link:../admin/how-sso-works.html["${post_edited_translations.segment}"]。
+如果您计划对 StorageGRID 系统使用身份联合或单点登录 (SSO)，则已启用这些功能。您还知道哪个联合组应对 ONTAP 将使用的租户帐户具有 root 访问权限。请参阅 link:../admin/using-identity-federation.html["使用身份联合"] 和 link:../admin/how-sso-works.html["配置单点登录"]。
 
 
 

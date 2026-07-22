@@ -52,9 +52,9 @@ entries:
     url: "/monitor/monitoring-object-ingest-and-retrieval-rates.html"
   - title: 监控负载平衡操作
     url: "/monitor/monitoring-load-balancing-operations.html"
-  - title: "${post_edited_translations.segment}"
+  - title: 监控网格联盟连接
     url: "/monitor/grid-federation-monitor-connections.html"
-- title: "${post_edited_translations.segment}"
+- title: 管理提醒
   entries:
   - title: 警报系统
     url: "/monitor/managing-alerts.html"

@@ -123,7 +123,7 @@ NOTE: 如果用户属于多个组，且任何组设置为*只读*，则该用户
 +
 [cols="1a, 2a,2a"]
 |===
-| 任务 | ${post_edited_translations.segment} | 详细信息页面 
+| 任务 | 操作菜单 | 详细信息页面 
 
 
  a| 
@@ -147,7 +147,7 @@ NOTE: 如果用户属于多个组，且任何组设置为*只读*，则该用户
 
  a| 
 .. 选择组名称以显示详细信息。
-.. 选择编辑图标 image:icon_edit_tm.png["${post_edited_translations.segment}"]。
+.. 选择编辑图标 image:icon_edit_tm.png["编辑图标"]。
 .. 输入新名称。
 .. 选择 *Save changes*。
 

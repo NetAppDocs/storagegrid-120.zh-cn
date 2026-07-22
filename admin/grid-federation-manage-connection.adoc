@@ -45,10 +45,10 @@ NOTE: 当您编辑网格联合连接时，StorageGRID 尝试在第一个网格�
 +
 [role="tabbed-block"]
 ====
-.${post_edited_translations.segment}
+.操作菜单
 --
 .. 选择连接的单选按钮。
-.. ${post_edited_translations.segment}
+.. 选择*操作* > *编辑*。
 .. 输入新信息。
 
 
@@ -120,7 +120,7 @@ NOTE: 如果您开始编辑连接时，连接状态不是*已连接*，则不会
 +
 [role="tabbed-block"]
 ====
-.${post_edited_translations.segment}
+.操作菜单
 --
 .. 选择连接的单选按钮。
 .. 选择*操作* > *测试*。

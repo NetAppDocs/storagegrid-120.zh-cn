@@ -119,5 +119,5 @@ NOTE: "指标"页面上提供的工具仅供技术支持人员使用。这些工
 +
 有关详细说明，请参见link:../monitor/reviewing-support-metrics.html["查看支持指标"]。
 
-. 要重试无法复制的对象的复制，请参见 link:../admin/grid-federation-retry-failed-replication.html["${post_edited_translations.segment}"]。
+. 要重试无法复制的对象的复制，请参见 link:../admin/grid-federation-retry-failed-replication.html["识别并重试失败的复制操作"]。
 

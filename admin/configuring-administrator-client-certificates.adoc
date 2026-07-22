@@ -24,7 +24,7 @@ NOTE: 为了确保操作不会因服务器证书失效而中断，当此服务�
 NOTE: 如果使用密钥管理服务器 (KMS) 保护特殊配置的设备节点上的数据，请参阅有关 link:kms-adding.html["上传 KMS 客户端证书"] 的具体信息。
 
 .开始之前
-* ${post_edited_translations.segment}
+* 您拥有 Root 访问权限。
 * 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
 * 要配置客户端证书：
 +
@@ -134,19 +134,19 @@ NOTE: 如果使用密钥管理服务器 (KMS) 保护特殊配置的设备节点�
 . 指定证书信息：
 +
 ** *主题*（可选）：证书所有者的 X.509 主题或标识名（DN）。
-** ${post_edited_translations.segment}
-** ${post_edited_translations.segment}
+** *Days valid*：生成的证书从生成时开始的有效天数。
+** *添加密钥使用扩展*：如果选中（默认和推荐），密钥使用和扩展密钥使用扩展将添加到生成的证书中。
 +
-${post_edited_translations.segment}
+这些扩展定义了证书中包含的密钥的用途。
 
 +
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 除非在证书包含这些扩展时遇到与较旧客户端的连接问题，否则请保持选中此复选框。
 
 
 
 . 选择 *Generate*。
-. ${post_edited_translations.segment}
+. [[client_cert_details]] 选择*Client certificate details*以显示证书元数据和证书 PEM。
 +
 
 TIP: 关闭对话框后，您将无法查看证书私钥。请将密钥复制或下载到安全位置。
@@ -163,7 +163,7 @@ TIP: 关闭对话框后，您将无法查看证书私钥。请将密钥复制或
 ** 选择*复制私钥*以复制证书私钥，以便粘贴到其他位置。
 ** 选择*下载专用密钥*将专用密钥另存为文件。
 +
-${post_edited_translations.segment}
+指定私钥文件名和下载位置。
 
 
 
@@ -171,12 +171,12 @@ ${post_edited_translations.segment}
 +
 新证书将显示在"客户端"选项卡上。
 
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
-. 从 <<client_cert_details,${post_edited_translations.segment}>> 步骤中上传 certificate.pem 和 private_key.pem 文件。无需上传 CA 捆绑包。
+. 在 Grid Manager 中，选择 *Configuration* > *Security* > *Certificates*，然后选择 *Global* 选项卡。
+. 选择 *Management Interface certificate*。
+. 选择*使用自定义证书*。
+. 从 <<client_cert_details,客户端证书详细信息>> 步骤中上传 certificate.pem 和 private_key.pem 文件。无需上传 CA 捆绑包。
 +
-.. ${post_edited_translations.segment}
+.. 选择*上传证书*，然后选择*继续*。
 .. 上传每个证书文件 (`.pem`)。
 .. 选择*保存*将证书保存到 Grid Manager 中。
 +
@@ -193,7 +193,7 @@ ${post_edited_translations.segment}
 === [[configure-external-monitoring-tool]]配置外部监控工具
 
 .步骤
-. ${post_edited_translations.segment}
+. 在外部监控工具（例如 Grafana）上配置以下设置。
 +
 .. *名称*：输入连接的名称。
 +
@@ -203,12 +203,12 @@ StorageGRID 不需要此信息，但您必须提供一个名称来测试连接�
 +
 例如： `+https://admin-node.example.com:9091+`
 
-.. ${post_edited_translations.segment}
+.. 启用 *TLS Client Auth* 和 *With CA Cert*。
 .. 在 TLS/SSL 身份验证详细信息下，复制并粘贴： +
 +
 *** 管理接口 CA 证书至 **CA Cert**
-*** ${post_edited_translations.segment}
-*** ${post_edited_translations.segment}
+*** **Client Cert** 的客户端证书
+*** **Client Key** 的私钥
 
 
 .. *ServerName*：输入管理节点的域名。
@@ -229,7 +229,7 @@ ServerName 必须与管理接口证书中显示的域名匹配。
 
 
 [[edit-client-certificates]]
-== ${post_edited_translations.segment}
+== 编辑客户端证书
 
 您可以编辑管理员客户端证书以更改其名称，启用或禁用 Prometheus 访问权限，或者在当前证书过期时上传新证书。
 
@@ -238,13 +238,13 @@ ServerName 必须与管理接口证书中显示的域名匹配。
 +
 证书过期日期和 Prometheus 访问权限列在表中。如果证书即将过期或已过期，表中会显示一条消息，并触发警报。
 
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 选择要编辑的证书。
+. 选择 *Edit*，然后选择 *Edit name and permission*
 . 请输入证书名称。
 . 要使用外部监控工具访问 Prometheus 指标，请选择 *Allow prometheus*。
-. ${post_edited_translations.segment}
+. 选择*继续*将证书保存到 Grid Manager 中。
 +
-${post_edited_translations.segment}
+更新后的证书将显示在"客户端"选项卡上。
 
 
 
@@ -260,8 +260,8 @@ ${post_edited_translations.segment}
 +
 证书过期日期和 Prometheus 访问权限列在表中。如果证书即将过期或已过期，表中会显示一条消息，并触发警报。
 
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 选择要编辑的证书。
+. 选择 *Edit* ，然后选择编辑选项。
 +
 [role="tabbed-block"]
 ====
@@ -269,7 +269,7 @@ ${post_edited_translations.segment}
 --
 复制证书文本以粘贴到其他位置。
 
-.. ${post_edited_translations.segment}
+.. 选择*上传证书*，然后选择*继续*。
 .. 上传客户端证书名称(`.pem`）。
 +
 选择*客户端证书详细信息*以显示证书元数据和证书 PEM。
@@ -287,7 +287,7 @@ ${post_edited_translations.segment}
 
 .. 选择 *Create* 将证书保存到 Grid Manager 中。
 +
-${post_edited_translations.segment}
+更新后的证书将显示在"客户端"选项卡上。
 
 
 
@@ -300,14 +300,14 @@ ${post_edited_translations.segment}
 .. 指定证书信息：
 +
 *** *主题*（可选）：证书所有者的 X.509 主题或标识名（DN）。
-*** ${post_edited_translations.segment}
-*** ${post_edited_translations.segment}
+*** *Days valid*：生成的证书从生成时开始的有效天数。
+*** *添加密钥使用扩展*：如果选中（默认和推荐），密钥使用和扩展密钥使用扩展将添加到生成的证书中。
 +
-${post_edited_translations.segment}
+这些扩展定义了证书中包含的密钥的用途。
 
 +
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 除非在证书包含这些扩展时遇到与较旧客户端的连接问题，否则请保持选中此复选框。
 
 
 
@@ -329,7 +329,7 @@ TIP: 关闭对话框后，您将无法查看证书私钥。请将密钥复制或
 *** 选择*复制私钥*以复制证书私钥，以便粘贴到其他位置。
 *** 选择*下载专用密钥*将专用密钥另存为文件。
 +
-${post_edited_translations.segment}
+指定私钥文件名和下载位置。
 
 
 
@@ -394,8 +394,8 @@ ${post_edited_translations.segment}
 
 .步骤
 . 选择 *Configuration* > *Security* > *Certificates*，然后选择 *Client* 选项卡。
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 选择要删除的证书。
+. 选择*删除*，然后确认。
 
 
 

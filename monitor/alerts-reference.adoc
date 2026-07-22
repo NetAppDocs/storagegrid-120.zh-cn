@@ -893,7 +893,7 @@ KMS 客户端证书过期
 
 
  a| 
-${post_edited_translations.segment}
+KMS配置加载失败
  a| 
 密钥管理服务器的配置已存在，但无法加载。
 
@@ -921,14 +921,14 @@ KMS加密密钥轮换失败
 
 
  a| 
-${post_edited_translations.segment}
+未配置 KMS
  a| 
 此站点不存在密钥管理服务器。
 
 
 
  a| 
-${post_edited_translations.segment}
+KMS密钥无法对设备卷解密
  a| 
 无法使用当前 KMS 密钥解密启用了节点加密的设备上的一个或多个卷。
 

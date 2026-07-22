@@ -174,7 +174,7 @@ NOTE: 在重新启动 Storage Nodes 之前，您将无法登录到 Admin Nodes�
 您可以按任何顺序打开这些节点。
 
 . 打开所有网关节点的主机电源。
-. ${post_edited_translations.segment}
+. 登录到 Grid Manager。
 . 选择*节点*并监控网格节点的状态。验证节点名称旁边没有警报图标。
 
 

@@ -31,7 +31,7 @@ summary: 在将 StorageGRID 附加为 FabricPool 云层之前，请查看将负�
 
 在大多数情况下，ONTAP 与 StorageGRID 之间的连接应使用传输层安全 (TLS) 加密。支持在不使用 TLS 加密的情况下使用 FabricPool，但不建议这样做。为 StorageGRID 负载均衡器端点选择网络协议时，请选择 *HTTPS*。然后提供安全证书，以允许 ONTAP 向 StorageGRID 进行身份验证。
 
-${post_edited_translations.segment}
+要了解有关负载均衡端点的服务器证书的详细信息：
 
 * link:../admin/using-storagegrid-security-certificates.html["管理安全证书"]
 * link:../admin/managing-load-balancing.html["负载平衡注意事项"]
@@ -48,7 +48,7 @@ ${post_edited_translations.segment}
 
 
 [[manage-certificate-expiration]]
-=== ${post_edited_translations.segment}
+=== 管理证书过期时间
 
 
 CAUTION: 如果用于保护 ONTAP 和 StorageGRID 之间连接的证书过期，FabricPool 将暂时停止工作，ONTAP 将暂时失去对分层到 StorageGRID 的数据的访问权限。

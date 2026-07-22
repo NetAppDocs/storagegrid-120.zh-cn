@@ -19,6 +19,6 @@ image:notification_multiple_sites.gif["显示对站点 1 的对象的操作触�
 
 如果客户端随后从数据中心站点 2 对同一对象执行 S3 API 删除操作，则会触发有关删除操作的通知，并从数据中心站点 2 发送。
 
-image:notifications_site_2.gif["${post_edited_translations.segment}"]
+image:notifications_site_2.gif["显示对来自站点 2 的对象的操作会触发来自站点 2 的通知的图表"]
 
 确保每个站点的网络配置正确，以便平台服务消息可以传递到其目标位置。

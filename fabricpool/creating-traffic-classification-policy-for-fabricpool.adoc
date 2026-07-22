@@ -13,7 +13,7 @@ summary: 您可以选择设计 StorageGRID 流量分类策略，以优化 Fabric
 [role="lead"]
 您可以选择设计 StorageGRID 流量分类策略，以优化 FabricPool 工作负载的服务质量。
 
-有关此任务的详细信息，请参见link:../admin/managing-traffic-classification-policies.html["${post_edited_translations.segment}"]。要使用 FabricPool 设置向导完成此任务，请转到link:use-fabricpool-setup-wizard-steps.html["访问并完成 FabricPool 设置向导"]。
+有关此任务的详细信息，请参见link:../admin/managing-traffic-classification-policies.html["管理流量分类策略"]。要使用 FabricPool 设置向导完成此任务，请转到link:use-fabricpool-setup-wizard-steps.html["访问并完成 FabricPool 设置向导"]。
 
 .开始之前
 * 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
@@ -41,7 +41,7 @@ NOTE: 一般来说，FabricPool 读取操作的优先级比写入操作更重要
 . 输入策略的名称和说明（可选），然后选择*继续*。
 . 对于添加匹配规则步骤，请至少添加一个规则。
 +
-.. ${post_edited_translations.segment}
+.. 选择*添加规则*
 .. 对于类型，选择*负载平衡器端点*，然后选择您为 FabricPool 创建的负载平衡器端点。
 +
 您还可以选择 FabricPool 租户帐户或存储桶。
@@ -55,7 +55,7 @@ NOTE: 一般来说，FabricPool 读取操作的优先级比写入操作更重要
 NOTE: 即使您未添加任何限制，StorageGRID 也会收集指标，以便了解流量趋势。
 
 +
-.. ${post_edited_translations.segment}
+.. 选择*添加限额*。
 .. 选择要限制的流量类型和要应用的限制。
 
 
@@ -63,5 +63,5 @@ NOTE: 即使您未添加任何限制，StorageGRID 也会收集指标，以便�
 . 阅读并查看流量分类策略。使用*上一步*按钮返回并根据需要进行更改。对该策略感到满意后，选择*保存并继续*。
 
 
-.${post_edited_translations.segment}
+.完成后
 link:../admin/viewing-network-traffic-metrics.html["查看网络流量指标"] 以验证这些策略是否正在执行您预期的流量限制。

@@ -26,7 +26,7 @@ summary: 所有 S3 客户端活动都与 StorageGRID 租户帐户相关联。您
 租户页面显示所有当前租户帐户的基本信息。
 
 .步骤
-. ${post_edited_translations.segment}
+. 选择*租户*。
 . 查看租户页面上显示的信息。
 +
 列出了每个租户的已用逻辑空间、配额使用情况、配额和对象计数。如果未为租户设置配额，则配额使用量和配额字段包含破折号（&#8212;）。
@@ -36,7 +36,7 @@ summary: 所有 S3 客户端活动都与 StorageGRID 租户帐户相关联。您
 NOTE: 属于此租户的所有对象的逻辑大小包括不完整和正在进行的多部分上传。此大小不包括用于 ILM 策略的额外物理空间。空间使用值为估算值。这些估算值受摄取时间、网络连接和节点状态的影响。
 
 +
-image:tenant_accounts_page.png["${post_edited_translations.segment}"]
+image:tenant_accounts_page.png["租户帐户页面"]
 
 . （可选）通过选择*登录/复制 URL* 列中的登录链接 image:icon_tenant_sign_in.png["租户登录图标"] 登录到租户帐户。
 . 或者，通过选择*登录/复制 URL* 列中的复制 URL 链接 image:icon_tenant_copy_url.png["租户副本 URL 图标"]，复制租户登录页面的 URL。
@@ -145,7 +145,7 @@ image:tenant_bucket_details_csv.png["租户存储桶详细信息 CSV 示例"]
 . 分析图形以确定策略限制流量的频率以及是否需要调整策略。
 
 
-有关详细信息，请参见 link:../admin/managing-traffic-classification-policies.html["${post_edited_translations.segment}"]。
+有关详细信息，请参见 link:../admin/managing-traffic-classification-policies.html["管理流量分类策略"]。
 
 
 

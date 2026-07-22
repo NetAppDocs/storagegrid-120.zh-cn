@@ -16,7 +16,7 @@ summary: 使用这些故障排除步骤来帮助解决创建、编辑或删除�
 
 
 [[determine-if-an-error-has-occurred]]
-== ${post_edited_translations.segment}
+== 确定是否发生错误
 
 StorageGRID 通过读取已知对象 `x-ntap-sgws-cloud-pool-uuid`对每个云存储池执行简单的运行状况检查，以确保可以访问云存储池并正常运行。当 StorageGRID 在端点上遇到错误时，它每分钟从每个存储节点执行一次运行状况检查。错误解决后，运行状况检查停止。如果运行状况检查检测到问题，则会在"存储池"页面上的"云存储池"表的"上一个错误"列中显示一条消息。
 

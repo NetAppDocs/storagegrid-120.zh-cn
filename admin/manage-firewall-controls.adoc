@@ -39,12 +39,12 @@ NOTE: 您在一个选项卡上进行的设置可能会影响您在另一个选�
 
 
 [[privileged-address-list-and-manage-external-access-tabs]]
-== ${post_edited_translations.segment}
+== 特权地址列表和管理外部访问选项卡
 
 “特权地址列表”选项卡使您能够注册一个或多个被授予访问已关闭网格端口权限的 IP 地址。“管理外部访问”选项卡使您能够关闭对选定外部端口或所有打开的外部端口的外部访问（外部端口是默认情况下非网格节点可访问的端口）。这两个选项卡通常可以结合使用，以自定义允许网格访问的精确网络访问权限。
 
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 默认情况下，特权 IP 地址没有内部网格端口访问权限。
 
 
 
@@ -53,7 +53,7 @@ NOTE: ${post_edited_translations.segment}
 
 假设您要使用跳板机（经过安全加固的主机）进行网络管理。您可以使用以下常规步骤：
 
-. ${post_edited_translations.segment}
+. 使用 Privileged address list（特权地址列表）选项卡可添加跳转主机的 IP 地址。
 . 使用"管理外部访问"选项卡可阻止所有端口。
 
 

@@ -37,7 +37,7 @@ MDNA
 
 
  a| 
-${post_edited_translations.segment}
+MPAT
  a| 
 请求路径
  a| 
@@ -72,11 +72,11 @@ MRBD
 
 
  a| 
-${post_edited_translations.segment}
+MRMD
  a| 
 请求方法
  a| 
-${post_edited_translations.segment}
+HTTP 请求方法：
 
 * POST
 * PUT
@@ -91,7 +91,7 @@ MRSC
  a| 
 响应代码
  a| 
-${post_edited_translations.segment}
+响应代码。
 
 
 
@@ -109,7 +109,7 @@ MRSP
  a| 
 MSIP
  a| 
-${post_edited_translations.segment}
+源IP地址
  a| 
 客户端（源） IP 地址。
 

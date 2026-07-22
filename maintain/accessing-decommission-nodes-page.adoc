@@ -110,7 +110,7 @@ image:decommission_nodes_page_all_connected.png["停用节点页面"]
  a| 
 *仅存储节点*（组合或仅元数据存储节点）。如果站点上没有足够的节点来支持 ADC 仲裁要求，则无法停用存储节点。但是，您可以将 ADC 服务移动到另一个存储节点。
  a| 
-link:../maintain/move-adc-service.html["将 ADC 服务移动到同一站点上的其他存储节点"]，或通过向站点添加新存储节点并指定其应具有 ADC 服务来执行扩展。请参阅 link:understanding-adc-service-quorum.html["${post_edited_translations.segment}"]。
+link:../maintain/move-adc-service.html["将 ADC 服务移动到同一站点上的其他存储节点"]，或通过向站点添加新存储节点并指定其应具有 ADC 服务来执行扩展。请参阅 link:understanding-adc-service-quorum.html["ADC 仲裁"]。
 
 
 

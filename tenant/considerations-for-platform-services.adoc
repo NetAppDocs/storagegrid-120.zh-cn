@@ -60,7 +60,7 @@ CloudMirror 复制
 
  a| 
 * link:configuring-cloudmirror-replication.html["CloudMirror 复制"]
-* link:../s3/operations-on-buckets.html["${post_edited_translations.segment}"]
+* link:../s3/operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -73,7 +73,7 @@ CloudMirror 复制
 
  a| 
 * link:configuring-event-notifications.html["通知"]
-* link:../s3/operations-on-buckets.html["${post_edited_translations.segment}"]
+* link:../s3/operations-on-buckets.html["对存储桶的操作"]
 
 
 

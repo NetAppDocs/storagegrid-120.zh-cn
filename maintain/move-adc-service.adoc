@@ -38,8 +38,8 @@ summary: 您可以将 ADC 服务移动到同一站点上的另一个存储节点
 +
 在网格管理 API 中，源节点 ID 称为 `sourceNodeId`。目标节点 ID 称为 `targetNodeId`。
 
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 从 Grid Manager 顶部，选择帮助图标并选择 *API documentation*。
+. 选择 *Go to private API documentation*。
 . 选择 `POST /private/move-adc/start`操作。有关详细信息，请参见link:../admin/using-grid-management-api.html#issue-api-requests["发出 API 请求"]。
 +
 在此过程中，两个节点将按顺序重新启动。源节点首先重新启动，然后是目标节点。

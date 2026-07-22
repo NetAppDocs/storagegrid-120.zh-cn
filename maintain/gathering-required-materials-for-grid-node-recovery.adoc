@@ -324,7 +324,7 @@ StorageGRID 的 API 架构。
 
 
 
-| ${post_edited_translations.segment}  a| 
+| ./vsphere/vsphere-gateway.ovf ./vsphere/vsphere-gateway.mf  a| 
 用于部署网关节点的模板文件(`.ovf`）和清单文件(`.mf`）。
 
 

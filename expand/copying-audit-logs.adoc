@@ -4,7 +4,7 @@ permalink: expand/copying-audit-logs.html
 keywords: copy audit log, Admin Node expansion, StorageGRID 
 summary: 通过扩展过程添加新管理节点时，其 AMS 服务仅记录其加入系统后发生的事件和操作。根据需要，您可以将审核日志从以前安装的管理节点复制到新的扩展管理节点，以便它与 StorageGRID 系统的其他部分保持同步。 
 ---
-= ${post_edited_translations.segment}
+= 将审核日志复制到 StorageGRID 中的新管理节点
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -33,7 +33,7 @@ summary: 通过扩展过程添加新管理节点时，其 AMS 服务仅记录其
 
 ====
 .步骤
-. ${post_edited_translations.segment}
+. 登录到主管理节点：
 +
 .. 输入以下命令： `ssh _admin@_primary_Admin_Node_IP_`
 .. 输入 `Passwords.txt`文件中列出的密码。
@@ -73,7 +73,7 @@ mv audit.log _new_name_.txt
 +
 `exit`
 
-. ${post_edited_translations.segment}
+. 登录到扩展管理节点：
 +
 .. 输入以下命令： `ssh admin@_expansion_Admin_Node_IP_`
 .. 输入 `Passwords.txt`文件中列出的密码。

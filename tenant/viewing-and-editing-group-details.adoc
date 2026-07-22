@@ -36,7 +36,7 @@ image:tenant_group_details.png["查看组详细信息"]
 TIP: 为确保保存更改，请在每个部分进行更改后选择 *Save changes*。保存更改后，页面右上角会显示一条确认消息。
 
 +
-.. （可选）选择显示名称或编辑图标image:icon_edit_tm.png["${post_edited_translations.segment}"]以更新显示名称。
+.. （可选）选择显示名称或编辑图标image:icon_edit_tm.png["编辑图标"]以更新显示名称。
 +
 您不能更改群组的唯一名称。您无法编辑联合组的显示名称。
 

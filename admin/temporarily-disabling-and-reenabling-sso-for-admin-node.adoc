@@ -16,7 +16,7 @@ summary: '如果单点登录 (SSO) 系统出现故障，您可能无法登录到
 .开始之前
 * 您有 link:admin-group-permissions.html["特定访问权限"]。
 * 您拥有  `Passwords.txt` 文件。
-* ${post_edited_translations.segment}
+* 您知道本地 root 用户的密码。
 
 
 .关于此任务
@@ -39,15 +39,15 @@ TIP: 为一个管理节点禁用 SSO 不会影响网格中任何其他管理节�
 
 . 运行以下命令：``disable-saml``
 +
-${post_edited_translations.segment}
+此消息指示此命令仅适用于此管理节点。
 
 . 确认您要禁用 SSO。
 +
-${post_edited_translations.segment}
+消息指示在节点上禁用了单一登录。
 
 . 在 Web 浏览器中，访问同一管理节点上的 Grid Manager。
 +
-${post_edited_translations.segment}
+现在显示 Grid Manager 登录页面，因为 SSO 已被禁用。
 
 . 使用用户名 root 和本地 root 用户的密码登录。
 . 如果因需要更正 SSO 配置而暂时禁用 SSO：
@@ -56,31 +56,31 @@ ${post_edited_translations.segment}
 .. 更改不正确或过期的 SSO 设置。
 .. 选择 *Save*。
 +
-${post_edited_translations.segment}
+从单一登录页面选择*保存*会自动为整个网格重新启用 SSO。
 
 
 
 . 如果由于其他原因需要访问 Grid Manager 而暂时禁用了 SSO：
 +
-.. ${post_edited_translations.segment}
+.. 执行您需要执行的任何任务。
 .. 选择*注销*，然后关闭 Grid Manager。
 .. 在管理节点上重新启用 SSO。您可以执行以下步骤之一：
 +
 *** 运行以下命令： `enable-saml`
 +
-${post_edited_translations.segment}
+此消息指示此命令仅适用于此管理节点。
 
 +
-${post_edited_translations.segment}
+确认您要启用 SSO。
 
 +
-${post_edited_translations.segment}
+一条消息，指示已在节点上启用单一登录。
 
 *** 重新启动网格节点： `reboot`
 
 
 
 
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 从 Web 浏览器中，从同一管理节点访问 Grid Manager。
+. 确认显示 StorageGRID 登录页面，并且必须输入 SSO 凭据才能访问网格管理器。
 

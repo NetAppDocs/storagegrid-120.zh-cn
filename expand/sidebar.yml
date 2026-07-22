@@ -16,7 +16,7 @@ entries:
     url: "/expand/considerations-for-rebalancing-erasure-coded-data.html"
 - title: 扩展准则
   entries:
-  - title: "${post_edited_translations.segment}"
+  - title: 添加对象容量的指南
     url: "/expand/guidelines-for-adding-object-capacity.html"
   - title: 添加元数据容量的指南
     url: "/expand/adding-metadata-capacity.html"

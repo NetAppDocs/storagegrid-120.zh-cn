@@ -43,7 +43,7 @@ summary: '管理密钥管理服务器 (KMS) 涉及查看或编辑详细信息、
 
 
  a| 
-${post_edited_translations.segment}
+管理密钥，用于
  a| 
 与 KMS 关联的 StorageGRID 站点。
 
@@ -152,7 +152,7 @@ CAUTION: 您必须尽快解决任何证书问题，以保持数据访问权限�
 . 选择*配置* > *安全* > *密钥管理服务器*。
 . 在表中，查看每个 KMS 的证书过期值。
 . 如果任何 KMS 的证书过期时间为未知，请等待最多 30 分钟，然后刷新您的 Web 浏览器。
-. ${post_edited_translations.segment}
+. 如果"证书过期"列指示证书已过期或即将过期，请选择 KMS 以转到 KMS 详细信息页面。
 +
 .. 选择 *Server certificate* 并验证"Expires on"字段的值。
 .. 要替换证书，请选择*编辑证书*以上传新证书。
@@ -166,7 +166,7 @@ StorageGRID 可能需要长达 30 分钟才能获取证书过期的更新。刷�
 
 
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 如果您的状态为*服务器证书状态未知*，请确保您的 KMS 允许在不需要客户端证书的情况下获取服务器证书。
 
 
 
@@ -180,7 +180,7 @@ NOTE: ${post_edited_translations.segment}
 +
 此时将显示密钥管理服务器页面。"配置详细信息"选项卡显示已配置的任何密钥管理服务器。
 
-. ${post_edited_translations.segment}
+. 在页面顶端，选择*加密节点*选项卡。
 +
 加密节点选项卡列出了 StorageGRID 系统中已启用*节点加密*设置的设备节点。
 
@@ -194,7 +194,7 @@ NOTE: ${post_edited_translations.segment}
  a| 
 节点名称
  a| 
-${post_edited_translations.segment}
+设备节点的名称。
 
 
 
@@ -240,7 +240,7 @@ KMS 与设备节点之间的连接状态。如果节点已连接，则时间戳�
 *注意：*刷新您的网络浏览器以查看新值。
 
 |===
-. ${post_edited_translations.segment}
+. 如果状态列显示 KMS 问题，请立即解决问题。
 +
 在正常的 KMS 操作期间，状态将为 *Connected to KMS*。如果节点与网格断开连接，则会显示节点连接状态（Administratively Down 或 Unknown）。
 
@@ -248,16 +248,16 @@ KMS 与设备节点之间的连接状态。如果节点已连接，则时间戳�
 其他状态消息对应于同名的 StorageGRID 警报：
 
 +
-** ${post_edited_translations.segment}
+** KMS配置加载失败
 ** KMS 连接错误
 ** 未找到 KMS 加密密钥名称
 ** KMS加密密钥轮换失败
-** ${post_edited_translations.segment}
-** ${post_edited_translations.segment}
+** KMS密钥无法对设备卷解密
+** 未配置 KMS
 
 
 +
-${post_edited_translations.segment}
+对这些警报执行建议的操作。
 
 
 
@@ -272,7 +272,7 @@ CAUTION: 您必须立即解决任何问题，以确保您的数据得到充分�
 您可能需要编辑密钥管理服务器的配置，例如，如果证书即将过期。
 
 .开始之前
-* 如果您计划更新为 KMS 选择的站点，则表示您已阅读 link:kms-considerations-for-changing-for-site.html["${post_edited_translations.segment}"]。
+* 如果您计划更新为 KMS 选择的站点，则表示您已阅读 link:kms-considerations-for-changing-for-site.html["更改站点 KMS 的注意事项"]。
 * 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
 * 您有 link:admin-group-permissions.html["root 访问权限"]。
 
@@ -282,7 +282,7 @@ CAUTION: 您必须立即解决任何问题，以确保您的数据得到充分�
 +
 此时将显示密钥管理服务器页面，并显示已配置的所有密钥管理服务器。
 
-. ${post_edited_translations.segment}
+. 选择要编辑的 KMS，然后选择*操作* > *编辑*。
 +
 您还可以通过在表中选择KMS名称并在KMS详细信息页面上选择*编辑*来编辑KMS。
 
@@ -310,7 +310,7 @@ KMS 中 StorageGRID 客户端的确切密钥别名。必须介于 1 到 255 个�
 
 
  a| 
-${post_edited_translations.segment}
+管理密钥，用于
  a| 
 如果您正在编辑特定于站点的 KMS，并且尚无默认 KMS，则可以选择 *未由其他 KMS 管理的站点（默认 KMS）*。此选择会将特定于站点的 KMS 转换为默认 KMS，该 KMS 将适用于所有没有专用 KMS 的站点以及在扩容中添加的任何站点。
 
@@ -328,7 +328,7 @@ KMS 服务器用于密钥管理互操作性协议 (KMIP) 通信的端口。默�
  a| 
 主机名称
  a| 
-${post_edited_translations.segment}
+KMS 的完全限定域名或 IP 地址。
 
 *注意：* 服务器证书的“主题备用名称 (SAN)”字段必须包含您在此处输入的 FQDN 或 IP 地址。否则，StorageGRID 将无法连接到 KMS 或 KMS 集群中的所有服务器。
 
@@ -343,14 +343,14 @@ ${post_edited_translations.segment}
 +
 此时将显示"编辑密钥管理服务器"向导的第 3 步（上传客户端证书）。
 
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 如果需要替换客户端证书和客户端证书私钥，请选择*浏览*并上传新文件。
+. 选择*测试并保存*。
 +
 对受影响站点的密钥管理服务器和所有节点加密设备节点之间的连接进行了测试。如果所有节点连接都有效，并且在 KMS 上找到了正确的密钥，则会将密钥管理服务器添加到"密钥管理服务器"页面上的表中。
 
 . 如果出现错误消息，请查看消息详情，然后选择*OK*。
 +
-${post_edited_translations.segment}
+例如，如果为此 KMS 选择的站点已经由其他 KMS 管理，或者连接测试失败，您可能会收到 422: Unprocessable Entity 错误。
 
 . 如果需要在解决连接错误之前保存当前配置，请选择*强制保存*。
 +
@@ -369,7 +369,7 @@ KMS 配置已保存。
 
 
 [[remove-a-key-management-server-kms]]
-== ${post_edited_translations.segment}
+== 删除密钥管理服务器 (KMS)
 
 在某些情况下，您可能需要删除密钥管理服务器。例如，如果您已停用站点，则可能需要删除特定于站点的 KMS。
 
@@ -383,7 +383,7 @@ KMS 配置已保存。
 在以下情况下，您可以删除 KMS：
 
 * 如果站点已停用或站点不包括启用了节点加密的设备节点，则可以删除站点特定的KMS。
-* ${post_edited_translations.segment}
+* 如果每个启用了节点加密的设备节点的站点都已存在特定于站点的 KMS，则可以删除默认 KMS。
 
 
 .步骤
@@ -393,15 +393,15 @@ KMS 配置已保存。
 
 . 选择要删除的 KMS，然后选择*操作* > *删除*。
 +
-${post_edited_translations.segment}
+您还可以通过在表中选择 KMS 名称并从 KMS 详细信息页面中选择*删除*来删除 KMS。
 
 . 确认是否满足以下条件：
 +
-** ${post_edited_translations.segment}
+** 您正在删除一个站点特定 KMS，该站点没有启用节点加密的设备节点。
 ** 您正在删除默认的 KMS，但每个具有节点加密的站点已经存在特定于站点的 KMS。
 
 
-. ${post_edited_translations.segment}
+. 选择*是*。
 +
 已删除 KMS 配置。
 

@@ -101,7 +101,7 @@ CAUTION: 在停用过程启动后，不要使存储节点脱机。更改状态�
 
 . 一旦新的恢复包可用，请在横幅中选择恢复包链接，或选择 *Maintenance* > *System* > *Recovery package* 以访问恢复包页面。然后，下载 `.zip`文件。
 +
-请参阅 link:downloading-recovery-package.html["${post_edited_translations.segment}"]。
+请参阅 link:downloading-recovery-package.html["正在下载恢复软件包"]。
 
 +
 

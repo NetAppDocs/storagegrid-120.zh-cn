@@ -151,7 +151,7 @@ storagegrid_tenant_usage_quota_bytes:: 可用于租户对象的最大逻辑空�
 [[obtain-all-metrics]]要获取完整的指标列表，请使用 Grid Management API。
 
 .步骤
-. ${post_edited_translations.segment}
+. 从 Grid Manager 顶部，选择帮助图标并选择 *API documentation*。
 . 找到*指标*操作。
 . 执行 `GET /grid/metric-names`操作。
 . 下载结果。

@@ -25,13 +25,13 @@ summary: 在解决跨网格复制永久故障警报后，您应确定是否有�
 您可以使用 link:../audit/using-audit-explain-tool.html["audit-explain 工具"] 将结果转换为更易于阅读的格式。
 
 .开始之前
-* ${post_edited_translations.segment}
+* 您拥有 Root 访问权限。
 * 您拥有  `Passwords.txt` 文件。
 * 您知道主管理节点的 IP 地址。
 
 
 .步骤
-. ${post_edited_translations.segment}
+. 登录到主管理节点：
 +
 .. 输入以下命令： `ssh admin@_primary_Admin_Node_IP_`
 .. 输入 `Passwords.txt`文件中列出的密码。
@@ -42,7 +42,7 @@ summary: 在解决跨网格复制永久故障警报后，您应确定是否有�
 
 
 
-. ${post_edited_translations.segment}
+. 在 audit.log 中搜索 CGRR 消息，然后使用 audit-explain 工具来格式化结果。
 +
 例如，此命令对过去 30 分钟内的所有 CGRR 消息执行 grep 操作，并使用 audit-explain 工具。
 
@@ -100,12 +100,12 @@ CGRR Cross-Grid Replication Request tenant:50736445269627437748 connection:44789
 
 
 | 对象  a| 
-${post_edited_translations.segment}
+对象名称
 
 
 
 | version  a| 
-${post_edited_translations.segment}
+对象的版本 ID
 
 
 
@@ -118,17 +118,17 @@ ${post_edited_translations.segment}
 
 
 [[retry-failed-replications]]
-== ${post_edited_translations.segment}
+== 重试失败的复制
 
-${post_edited_translations.segment}
+生成未复制到目标存储桶的对象列表和删除标记并解决潜在问题后，可以通过以下两种方式重试复制：
 
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
+* 将每个对象重新导入源存储桶。
+* 使用网格管理专用 API，如所述。
 
 
 .步骤
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 从 Grid Manager 顶部，选择帮助图标并选择 *API documentation*。
+. 选择 *Go to private API documentation*。
 +
 
 NOTE: 标记为"私有"的 StorageGRID API 端点如有更改，恕不另行通知。StorageGRID 私有端点也会忽略请求的 API 版本。
@@ -138,12 +138,12 @@ NOTE: 标记为"私有"的 StorageGRID API 端点如有更改，恕不另行通�
 `POST /private/cross-grid-replication-retry-failed`
 
 . 选择*试用*。
-. ${post_edited_translations.segment}
+. 在*正文*文本框中，将*versionID* 的示例条目替换为 audit.log 中与失败的跨网格复制请求相对应的版本 ID。
 +
-${post_edited_translations.segment}
+请务必保留字符串周围的双引号。
 
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 选择*执行*。
+. 确认服务器响应代码为 *204*，表示对象或删除标记已标记为待处理，以便跨网格复制到另一个网格。
 +
 
 NOTE: 挂起表示已将跨网格复制请求添加到内部队列中进行处理。
@@ -185,7 +185,7 @@ TIP: 将对象或删除标记复制到另一个网格可能需要几个小时或
 *REPLICA*：该对象已从源网格复制。
 
 |===
-* ${post_edited_translations.segment}
+* 使用网格管理专用 API，如所述。
 
 
 .步骤
@@ -195,7 +195,7 @@ TIP: 将对象或删除标记复制到另一个网格可能需要几个小时或
 
 . 选择*试用*。
 . 在"参数"部分中，输入您在 `cross-grid-replication-retry-failed`请求中使用的版本 ID。
-. ${post_edited_translations.segment}
+. 选择*执行*。
 . 确认服务器响应代码为 *200*。
 . 查看复制状态，复制状态将为以下选项之一：
 +

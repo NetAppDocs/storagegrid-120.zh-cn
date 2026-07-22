@@ -45,10 +45,10 @@ NOTE: 如果启用了单一登录 (SSO)，则本地用户无法登录到 Storage
 
 
 [[enter-user-credentials]]
-=== ${post_edited_translations.segment}
+=== 输入用户凭据
 
 .步骤
-. ${post_edited_translations.segment}
+. 输入用户的全名、唯一的用户名和密码。
 . （可选）如果此用户无权访问 Grid Manager 或 Grid Management API，请选择 *Yes*。
 . 选择 *Continue*。
 
@@ -59,7 +59,7 @@ NOTE: 如果启用了单一登录 (SSO)，则本地用户无法登录到 Storage
 === 分配到组
 
 .步骤
-. ${post_edited_translations.segment}
+. 可选操作：将用户分配给一个或多个组，以确定用户的权限。
 +
 如果您尚未创建组，则可以在不选择组的情况下保存该用户。您可以在“组”页面上将此用户添加到组中。
 
@@ -72,32 +72,32 @@ NOTE: 如果启用了单一登录 (SSO)，则本地用户无法登录到 Storage
 
 
 [[view-and-edit-local-users]]
-== ${post_edited_translations.segment}
+== 查看和编辑本地用户
 
 您可以查看现有本地用户和联合用户的详细信息。您可以修改本地用户，以更改该用户的全名、密码或组群成员身份。您还可以临时阻止用户访问 Grid Manager 和 Grid Management API。
 
 您只能编辑本地用户。请使用外部身份源来管理联合用户。
 
 * 若要查看所有本地和联合用户的基本信息，请查看"用户"页面上的表。
-* ${post_edited_translations.segment}
+* 要查看特定用户的所有详细信息、编辑本地用户或更改本地用户的密码，请使用*操作*菜单或详细信息页面。
 +
-${post_edited_translations.segment}
+下次用户注销并重新登录到 Grid Manager 时，将应用所做的任何编辑。
 
 +
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 本地用户可以使用网格管理器横幅中的*更改密码*选项更改自己的密码。
 
 +
 [cols="1a,2a,2a"]
 |===
-| 任务 | ${post_edited_translations.segment} | 详细信息页面 
+| 任务 | 操作菜单 | 详细信息页面 
 
 
  a| 
-${post_edited_translations.segment}
+查看用户详细信息
  a| 
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
+.. 选中该用户的复选框。
+.. 选择*操作* > *查看用户详细信息*。
 
  a| 
 在表中选择用户的名称。
@@ -107,14 +107,14 @@ ${post_edited_translations.segment}
  a| 
 编辑全名（仅限本地用户）
  a| 
-.. ${post_edited_translations.segment}
+.. 选中该用户的复选框。
 .. 选择*操作* > *编辑全名*。
 .. 输入新名称。
 .. 选择 *Save changes*。
 
  a| 
 .. 选择用户名以显示详细信息。
-.. 选择编辑图标 image:icon_edit_tm.png["${post_edited_translations.segment}"]。
+.. 选择编辑图标 image:icon_edit_tm.png["编辑图标"]。
 .. 输入新名称。
 .. 选择 *Save changes*。
 
@@ -124,53 +124,53 @@ ${post_edited_translations.segment}
  a| 
 拒绝或允许 StorageGRID 访问
  a| 
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
+.. 选中该用户的复选框。
+.. 选择*操作* > *查看用户详细信息*。
 .. 选择 Access 选项卡。
-.. ${post_edited_translations.segment}
+.. 选择*是*以阻止用户登录到 Grid Manager 或 Grid Management API，或选择*否*以允许用户登录。
 .. 选择 *Save changes*。
 
  a| 
 .. 选择用户名以显示详细信息。
 .. 选择 Access 选项卡。
-.. ${post_edited_translations.segment}
+.. 选择*是*以阻止用户登录到 Grid Manager 或 Grid Management API，或选择*否*以允许用户登录。
 .. 选择 *Save changes*。
 
 
 
 
  a| 
-${post_edited_translations.segment}
+更改密码（仅限本地用户）
  a| 
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
+.. 选中该用户的复选框。
+.. 选择*操作* > *查看用户详细信息*。
 .. 选择"密码"选项卡。
-.. ${post_edited_translations.segment}
+.. 输入新密码。
 .. 选择*更改密码*。
 
  a| 
 .. 选择用户名以显示详细信息。
 .. 选择"密码"选项卡。
-.. ${post_edited_translations.segment}
+.. 输入新密码。
 .. 选择*更改密码*。
 
 
 
 
  a| 
-${post_edited_translations.segment}
+更改组（仅限本地用户）
  a| 
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
+.. 选中该用户的复选框。
+.. 选择*操作* > *查看用户详细信息*。
+.. 选择"组"选项卡。
+.. 可选择在组名后选择链接，以便在新浏览器选项卡中查看组的详细信息。
 .. 选择*Edit groups*以选择不同的群组。
 .. 选择 *Save changes*。
 
  a| 
 .. 选择用户名以显示详细信息。
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
+.. 选择"组"选项卡。
+.. 可选择在组名后选择链接，以便在新浏览器选项卡中查看组的详细信息。
 .. 选择*Edit groups*以选择不同的群组。
 .. 选择 *Save changes*。
 
@@ -183,11 +183,11 @@ ${post_edited_translations.segment}
 [[import-federated-users]]
 == 导入联合用户
 
-${post_edited_translations.segment}
+您可以将一个或多个联合用户（最多 100 个用户）直接导入到"用户"页面。
 
 .步骤
 . 选择*配置* > *访问控制* > *管理员用户*。
-. ${post_edited_translations.segment}
+. 选择*导入联合用户*。
 . 输入一个或多个联合用户的 UUID 或用户名。
 +
 对于多个条目，请在新行中添加每个 UUID 或用户名。
@@ -197,25 +197,25 @@ ${post_edited_translations.segment}
 如果一个或多个用户的"用户"字段导入失败，请执行以下步骤：
 
 +
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
+.. 展开*未导入的用户*并选择*复制用户*。
+.. 通过选择*上一步*并将复制的用户粘贴到*导入联合用户*对话框中，重试导入。
 
 
 +
-${post_edited_translations.segment}
+关闭*导入联合用户*对话框后，成功导入的用户的联合用户信息将显示在用户页面上。
 
 
 
 
 
 [[duplicate-a-user]]
-== ${post_edited_translations.segment}
+== 复制用户
 
-${post_edited_translations.segment}
+您可以复制现有用户以创建具有相同权限的新用户。
 
 .步骤
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 选中该用户的复选框。
+. 选择*操作* > *复制用户*。
 . 完成复制用户向导。
 
 
@@ -224,13 +224,13 @@ ${post_edited_translations.segment}
 [[delete-a-user]]
 == 删除用户
 
-${post_edited_translations.segment}
+您可以删除本地用户以从系统中永久删除该用户。
 
 
 NOTE: 您无法删除 root 用户。
 
 .步骤
-. ${post_edited_translations.segment}
+. 从"用户"页中，选中要删除的每个用户的复选框。
 . 选择*操作* > *删除用户*。
-. ${post_edited_translations.segment}
+. 选择*删除用户*。
 

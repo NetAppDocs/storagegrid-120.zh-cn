@@ -18,7 +18,7 @@ summary: 您可以将默认 StorageGRID 服务器证书替换为单个自定义�
 
 由于所有管理节点都使用单个自定义管理接口证书，因此如果客户端在连接到 Grid Manager 和 Tenant Manager 时需要验证主机名，则必须将证书指定为通配符或多域证书。定义自定义证书，使其与网格中的所有管理节点匹配。
 
-${post_edited_translations.segment}
+您需要在服务器上完成配置，并且根据您使用的根证书颁发机构 (CA)，用户可能还需要在他们将用于访问 Grid Manager 和 Tenant Manager 的 Web 浏览器中安装 Grid CA 证书。
 
 
 NOTE: 为确保操作不会因服务器证书失效而中断，当此服务器证书即将过期时会触发*管理接口的服务器证书过期*警报。根据需要，您可以通过选择*配置* > *安全* > *证书*并在 Global 选项卡上查看管理接口证书的到期日期来查看当前证书的到期时间。
@@ -42,7 +42,7 @@ NOTE: 为确保操作不会因服务器证书失效而中断，当此服务器�
 .步骤
 . 选择*配置* > *安全* > *证书*。
 . 在*全局*选项卡上，选择*管理界面证书*。
-. ${post_edited_translations.segment}
+. 选择*使用自定义证书*。
 . 上传或生成证书。
 +
 [role="tabbed-block"]
@@ -54,7 +54,7 @@ NOTE: 为确保操作不会因服务器证书失效而中断，当此服务器�
 .. 选择*上传证书*。
 .. 上传所需的服务器证书文件：
 +
-*** ${post_edited_translations.segment}
+*** *Server certificate*：自定义服务器证书文件（PEM 编码）。
 *** *证书私钥*：自定义服务器证书私钥文件 (`.key`）。
 +
 
@@ -72,7 +72,7 @@ NOTE: EC 私钥必须为 224 位或更大。RSA 私钥必须为 2048 位或更�
 +
 例如： `storagegrid_certificate.pem`
 
-*** ${post_edited_translations.segment}
+*** 选择*复制证书 PEM* 或*复制 CA 捆绑包 PEM* 以复制证书内容并粘贴到其他位置。
 
 
 .. 选择 * 保存 *。+ 自定义管理接口证书将用于随后与 Grid Manager、Tenant Manager、Grid Manager API 或 Tenant Manager API 的所有新连接。
@@ -81,7 +81,7 @@ NOTE: EC 私钥必须为 224 位或更大。RSA 私钥必须为 2048 位或更�
 --
 .生成证书
 --
-${post_edited_translations.segment}
+生成服务器证书文件。
 
 
 NOTE: 生产环境的最佳实践是使用由外部证书颁发机构签名的自定义管理接口证书。
@@ -127,11 +127,11 @@ IP
  a| 
 添加密钥使用扩展
  a| 
-${post_edited_translations.segment}
+如果选中（默认和推荐），密钥用法和扩展密钥用法扩展将添加到生成的证书中。
 
-${post_edited_translations.segment}
+这些扩展定义了证书中包含的密钥的用途。
 
-${post_edited_translations.segment}
+*注意*：除非在证书包含这些扩展时遇到与旧客户端的连接问题，否则请保持选中此复选框。
 
 |===
 .. 选择 *Generate*。
@@ -152,10 +152,10 @@ ${post_edited_translations.segment}
 
 --
 ====
-. ${post_edited_translations.segment}
+. 刷新此页面以确保 Web 浏览器已更新。
 +
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 上传或生成新证书后，请最多留出一天时间来清除任何相关的证书过期警报。
 
 . 添加自定义管理接口证书后，"管理接口证书"页面将显示正在使用的证书的详细证书信息。+ 您可以根据需要下载或复制证书 PEM。
 
@@ -165,7 +165,7 @@ NOTE: ${post_edited_translations.segment}
 [[restore-the-default-management-interface-certificate]]
 == 还原默认管理接口证书
 
-${post_edited_translations.segment}
+您可以恢复使用 Grid Manager 和 Tenant Manager 连接的默认管理界面证书。
 
 .步骤
 . 选择*配置* > *安全* > *证书*。
@@ -174,13 +174,13 @@ ${post_edited_translations.segment}
 +
 还原默认管理接口证书时，您配置的自定义服务器证书文件将被删除，无法从系统中恢复。默认管理接口证书用于所有后续新客户端连接。
 
-. ${post_edited_translations.segment}
+. 刷新此页面以确保 Web 浏览器已更新。
 
 
 
 
 [[use-a-script-to-generate-a-new-self-signed-management-interface-certificate]]
-== ${post_edited_translations.segment}
+== 使用脚本生成新的自签名管理接口证书
 
 如果需要严格的主机名验证，您可以使用脚本生成管理接口证书。
 
@@ -193,8 +193,8 @@ ${post_edited_translations.segment}
 生产环境的最佳实践是使用由外部证书颁发机构签名的证书。
 
 .步骤
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 获取每个管理节点的完全限定域名(FQDN)。
+. 登录到主管理节点：
 +
 .. 输入以下命令： `ssh admin@primary_Admin_Node_IP`
 .. 输入 `Passwords.txt`文件中列出的密码。
@@ -220,7 +220,7 @@ NOTE: 证书的有效期从运行 `make-certificate`时开始。您必须确保�
 +
  $ sudo make-certificate --domains *.ui.storagegrid.example.com --type management --days 720
 +
-${post_edited_translations.segment}
+结果输出包含管理 API 客户端所需的公共证书。
 
 
 
@@ -253,7 +253,7 @@ ${post_edited_translations.segment}
 +
 [role="tabbed-block"]
 ====
-.${post_edited_translations.segment}
+.下载证书文件或 CA 捆绑包
 --
 下载证书或 CA 捆绑包 `.pem`文件。如果您使用的是可选的 CA 捆绑包，则该捆绑包中的每个证书都会显示在各自的子选项卡上。
 

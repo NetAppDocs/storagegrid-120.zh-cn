@@ -576,7 +576,7 @@ DHCP、STATIC 或 DISABLED
 |===
 
 
-==== ${post_edited_translations.segment}
+==== CLIENT_NETWORK_MTU
 
 [cols="4a,2a"]
 |===
@@ -601,7 +601,7 @@ DHCP、STATIC 或 DISABLED
 |===
 
 
-==== ${post_edited_translations.segment}
+==== CLIENT_NETWORK_TARGET
 
 [cols="4a,2a"]
 |===
@@ -732,7 +732,7 @@ StorageGRID 节点用于客户端网络访问的主机设备名称。仅支持�
 
 
  a| 
-${post_edited_translations.segment}
+容器中 Grid Network 接口的 MAC 地址。
 
 必须是由冒号分隔的6对十六进制数字。
 

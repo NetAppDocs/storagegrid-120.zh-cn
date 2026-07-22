@@ -40,7 +40,7 @@ summary: 在停用存储节点之前，请考虑是否可以克隆该节点。�
 查看停用连接的存储节点的注意事项。
 
 * 在一个停用节点过程中，不应停用超过 10 个存储节点。
-* 系统必须始终包含足够的存储节点以满足操作要求，包括link:understanding-adc-service-quorum.html["${post_edited_translations.segment}"]和活动的link:reviewing-ilm-policy-and-storage-configuration.html["ILM 策略"]。要满足此限制，您可能需要在扩展操作中添加新的存储节点，然后才能停用现有存储节点。
+* 系统必须始终包含足够的存储节点以满足操作要求，包括link:understanding-adc-service-quorum.html["ADC 仲裁"]和活动的link:reviewing-ilm-policy-and-storage-configuration.html["ILM 策略"]。要满足此限制，您可能需要在扩展操作中添加新的存储节点，然后才能停用现有存储节点。
 +
 在包含基于软件的仅元数据节点的网格中停用存储节点时，请谨慎操作。如果取消配置为同时存储对象和元数据的所有节点，则存储对象的功能将从网格中删除。有关仅元数据存储节点的详细信息，请参见 link:../primer/what-storage-node-is.html#types-of-storage-nodes["存储节点类型"]。
 

@@ -22,7 +22,7 @@ NOTE: 您不能在通过跨网格复制所复制的存储桶上使用 CloudMirro
 
 
  a| 
-${post_edited_translations.segment}
+主要目的是什么？
  a| 
 一个 StorageGRID 系统充当灾难恢复系统。存储桶中的对象可以在网格之间进行单向或双向复制。
  a| 
@@ -35,10 +35,10 @@ CloudMirror 复制会在独立的 S3 基础设施中创建对象的独立副本�
  a| 
 它是如何设置的？
  a| 
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 配置两个网格之间的网格联合连接。
+. 添加新租户帐户，这些帐户将自动克隆到其他网格。
+. 添加新的租户组和用户，这些组和用户也会被克隆。
+. 在每个网格上创建相应的存储桶，并允许跨网格复制在一个方向或两个方向上进行。
 
  a| 
 . 租户用户通过使用租户管理器或 S3 API 定义 CloudMirror 端点（IP 地址、凭据等）来配置 CloudMirror 复制。
@@ -48,9 +48,9 @@ CloudMirror 复制会在独立的 S3 基础设施中创建对象的独立副本�
 
 
  a| 
-${post_edited_translations.segment}
+谁负责设置？
  a| 
-* ${post_edited_translations.segment}
+* 网格管理员配置连接和租户。
 * 租户用户配置组、用户、密钥和存储区。
 
  a| 
@@ -59,11 +59,11 @@ ${post_edited_translations.segment}
 
 
  a| 
-${post_edited_translations.segment}
+目标是什么？
  a| 
-${post_edited_translations.segment}
+网格联合连接中的另一个 StorageGRID 系统上的对应且相同的 S3 存储桶。
  a| 
-* ${post_edited_translations.segment}
+* 任何兼容的 S3 基础架构（包括 Amazon S3）。
 * Google Cloud Platform (GCP)
 
 

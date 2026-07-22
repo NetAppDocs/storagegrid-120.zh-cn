@@ -2,7 +2,7 @@
 permalink: audit/using-audit-explain-tool.html 
 sidebar: sidebar 
 keywords: storagegrid, audit, tool, audit-explain, audit explain, translate audit messages, translate messages, translate audit message, translate message 
-summary: ${post_edited_translations.segment} 
+summary: 您可以使用 audit-explain 工具将审核日志中的审核消息转换为易于阅读的格式。 
 ---
 = 使用 audit-explain 工具翻译 StorageGRID 审核消息
 :allow-uri-read: 
@@ -16,7 +16,7 @@ summary: ${post_edited_translations.segment}
 .开始之前
 * 您有 link:../admin/admin-group-permissions.html["特定访问权限"]。
 * 您必须具有该 `Passwords.txt`文件。
-* ${post_edited_translations.segment}
+* 您必须知道主管理节点的IP地址。
 
 
 .关于此任务
@@ -73,7 +73,7 @@ SPUT S3 PUT object bucket1/part3.txt tenant:92484777680322627870  cbid:5373D7383
 `$ audit-explain -h`
 
 .步骤
-. ${post_edited_translations.segment}
+. 登录到主管理节点：
 +
 .. 输入以下命令： `ssh admin@_primary_Admin_Node_IP_`
 .. 输入 `Passwords.txt`文件中列出的密码。

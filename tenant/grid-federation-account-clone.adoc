@@ -34,7 +34,7 @@ image:grid-federation-account-clone-workflow-tm.png["租户的帐户克隆工作
 
 .image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["两个"] （可选）配置身份联合
 [role="quick-margin-para"]
-如果您的租户帐户具有使用联合组和用户的 *Use own identity source* 权限，请为源和目标租户帐户配置相同的身份源（使用相同的设置）。除非两个网格使用相同的身份源，否则无法克隆联合组和用户。有关说明，请参见 link:using-identity-federation.html["${post_edited_translations.segment}"]。
+如果您的租户帐户具有使用联合组和用户的 *Use own identity source* 权限，请为源和目标租户帐户配置相同的身份源（使用相同的设置）。除非两个网格使用相同的身份源，否则无法克隆联合组和用户。有关说明，请参见 link:using-identity-federation.html["使用身份联合"]。
 
 .image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["三"] 创建组和用户
 [role="quick-margin-para"]

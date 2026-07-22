@@ -31,7 +31,7 @@ entries:
     url: "/s3/authenticating-requests.html"
   - title: 对服务的操作
     url: "/s3/operations-on-the-service.html"
-  - title: "${post_edited_translations.segment}"
+  - title: 对存储桶的操作
     url: "/s3/operations-on-buckets.html"
   - title: 对象上的操作
     entries:
@@ -39,7 +39,7 @@ entries:
       url: "/s3/operations-on-objects.html"
     - title: 使用 S3 Select
       url: "/s3/use-s3-select.html"
-    - title: "${post_edited_translations.segment}"
+    - title: 使用服务器端加密
       url: "/s3/using-server-side-encryption.html"
     - title: CopyObject
       url: "/s3/put-object-copy.html"

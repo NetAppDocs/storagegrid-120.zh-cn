@@ -19,13 +19,13 @@ indexpage:
       url: "../admin/using-grid-management-api.html"
   - title: 管理管理员组和用户
     links:
-    - title: "${post_edited_translations.segment}"
+    - title: 使用身份联合
       url: "../admin/using-identity-federation.html"
     - title: 管理管理员组
       url: "../admin/managing-admin-groups.html"
     - title: 管理员组权限
       url: "../admin/admin-group-permissions.html"
-    - title: "${post_edited_translations.segment}"
+    - title: 配置单点登录
       url: "../admin/how-sso-works.html"
   - title: 使用网格联盟
     links:
@@ -41,7 +41,7 @@ indexpage:
     links:
     - title: 配置 S3 端点域名
       url: "../admin/configuring-s3-api-endpoint-domain-names.html"
-    - title: "${post_edited_translations.segment}"
+    - title: 使用 S3 设置向导
       url: "../admin/use-s3-setup-wizard.html"
     - title: 使用 FabricPool 设置向导
       url: "../fabricpool/use-fabricpool-setup-wizard.html"

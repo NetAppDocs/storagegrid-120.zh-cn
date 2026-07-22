@@ -202,7 +202,7 @@ HA 组的虚拟 IP
  a| 
 节点接口
  a| 
-${post_edited_translations.segment}
+客户端必须使用所选节点接口的 IP 地址（或相应的 FQDN）来访问此端点。
 
 
 
@@ -277,10 +277,10 @@ NOTE: 只有当终结点具有 <<enter-endpoint-details,Tenant Manager 的接口
 
 
 [[attach-certificate]]
-=== ${post_edited_translations.segment}
+=== 附加证书
 
 .步骤
-. ${post_edited_translations.segment}
+. 如果要创建 *HTTPS* 端点，请选择要连接到端点的安全证书类型。
 +
 该证书保护 S3 客户端与管理节点或网关节点上的负载平衡器服务之间的连接。
 
@@ -294,7 +294,7 @@ NOTE: 只有当终结点具有 <<enter-endpoint-details,Tenant Manager 的接口
 ** *使用管理接口证书*。如果您要使用全局管理接口证书，请选择此选项，该证书也可用于直接连接到 Admin Nodes。
 
 
-. ${post_edited_translations.segment}
+. 如果您不使用 StorageGRID S3 证书，请上传或生成证书。
 +
 [role="tabbed-block"]
 ====
@@ -303,7 +303,7 @@ NOTE: 只有当终结点具有 <<enter-endpoint-details,Tenant Manager 的接口
 .. 选择*上传证书*。
 .. 上传所需的服务器证书文件：
 +
-*** ${post_edited_translations.segment}
+*** *Server certificate*：PEM 编码的自定义服务器证书文件。
 *** *证书私钥*：自定义服务器证书私钥文件 (`.key`）。
 +
 
@@ -321,7 +321,7 @@ NOTE: EC 私钥必须为 224 位或更大。RSA 私钥必须为 2048 位或更�
 +
 例如： `storagegrid_certificate.pem`
 
-*** ${post_edited_translations.segment}
+*** 选择*复制证书 PEM* 或*复制 CA 捆绑包 PEM* 以复制证书内容并粘贴到其他位置。
 
 
 .. 选择 *Create*。+ 此时将创建负载均衡器端点。自定义证书将用于 S3 客户端或管理界面与该端点之间后续的所有新连接。
@@ -371,11 +371,11 @@ IP
  a| 
 添加密钥使用扩展
  a| 
-${post_edited_translations.segment}
+如果选中（默认和推荐），密钥用法和扩展密钥用法扩展将添加到生成的证书中。
 
-${post_edited_translations.segment}
+这些扩展定义了证书中包含的密钥的用途。
 
-${post_edited_translations.segment}
+*注意*：除非在证书包含这些扩展时遇到与旧客户端的连接问题，否则请保持选中此复选框。
 
 |===
 .. 选择 *Generate*。
@@ -407,23 +407,23 @@ ${post_edited_translations.segment}
 === 完成后
 
 .步骤
-. ${post_edited_translations.segment}
+. 如果使用 DNS，请确保 DNS 包括将 StorageGRID 完全限定域名 (FQDN) 关联到客户端用于建立连接的每个 IP 地址的记录。
 +
-${post_edited_translations.segment}
+您在 DNS 记录中输入的 IP 地址取决于您是否使用负载平衡节点的 HA 组：
 
 +
-** ${post_edited_translations.segment}
-** ${post_edited_translations.segment}
+** 如果已配置 HA 组，则客户端将连接到该 HA 组的虚拟 IP 地址。
+** 如果不使用HA组，客户端将使用网关节点或管理节点的IP地址连接到StorageGRID负载平衡器服务。
 +
-${post_edited_translations.segment}
+您还必须确保 DNS 记录引用所有必需的端点域名，包括任何通配符名称。
 
 
 
 . 请向 S3 客户端提供连接到端点所需的信息：
 +
-** ${post_edited_translations.segment}
+** 端口号
 ** 完全限定的域名或 IP 地址
-** ${post_edited_translations.segment}
+** 任何必需的证书详细信息
 
 
 
@@ -431,28 +431,28 @@ ${post_edited_translations.segment}
 
 
 [[view-and-edit-load-balancer-endpoints]]
-== ${post_edited_translations.segment}
+== 查看和编辑负载平衡器端点
 
 您可以查看现有负载均衡器端点的详细信息，包括安全端点的证书元数据。您可以更改端点的某些设置。
 
-* ${post_edited_translations.segment}
+* 要查看所有负载平衡器端点的基本信息，请查看负载平衡器端点页面上的表格。
 * 要查看有关特定端点的所有详细信息（包括证书元数据），请在表中选择该端点的名称。显示的信息因端点类型及其配置方式而异。
 +
-image:load_balancer_endpoint_details.png["${post_edited_translations.segment}"]
+image:load_balancer_endpoint_details.png["负载平衡器端点详细信息"]
 
-* ${post_edited_translations.segment}
+* 要编辑端点，请使用负载平衡器端点页面上的*操作*菜单。
 +
 
 NOTE: 如果在编辑管理接口端点端口时无法访问 Grid Manager，请更新 URL 和端口以重新获得访问权限。
 
 +
 
-TIP: ${post_edited_translations.segment}
+TIP: 编辑端点后，可能需要等待长达 15 分钟，更改才能应用于所有节点。
 
 +
 [cols="1a, 2a,2a"]
 |===
-| 任务 | ${post_edited_translations.segment} | 详细信息页面 
+| 任务 | 操作菜单 | 详细信息页面 
 
 
  a| 
@@ -464,8 +464,8 @@ TIP: ${post_edited_translations.segment}
 .. 选择 *Save*。
 
  a| 
-.. ${post_edited_translations.segment}
-.. 选择编辑图标 image:icon_edit_tm.png["${post_edited_translations.segment}"]。
+.. 选择端点名称以显示详细信息。
+.. 选择编辑图标 image:icon_edit_tm.png["编辑图标"]。
 .. 输入新名称。
 .. 选择 *Save*。
 
@@ -473,11 +473,11 @@ TIP: ${post_edited_translations.segment}
 
 
  a| 
-${post_edited_translations.segment}
+编辑端点端口
  a| 
 .. 选中端点的复选框。
 .. 选择*操作* > *编辑端点端口*
-.. ${post_edited_translations.segment}
+.. 输入有效的端口号。
 .. 选择 *Save*。
 
  a| 
@@ -490,13 +490,13 @@ _不适用_
  a| 
 .. 选中端点的复选框。
 .. 选择*操作* > *编辑端点绑定模式*。
-.. ${post_edited_translations.segment}
+.. 根据需要更新绑定模式。
 .. 选择 *Save changes*。
 
  a| 
-.. ${post_edited_translations.segment}
+.. 选择端点名称以显示详细信息。
 .. 选择*编辑绑定模式*。
-.. ${post_edited_translations.segment}
+.. 根据需要更新绑定模式。
 .. 选择 *Save changes*。
 
 
@@ -511,9 +511,9 @@ _不适用_
 .. 选择 *Save changes*。
 
  a| 
-.. ${post_edited_translations.segment}
+.. 选择端点名称以显示详细信息。
 .. 选择 *Certificate* 选项卡。
-.. ${post_edited_translations.segment}
+.. 选择*编辑证书*。
 .. 根据需要上传或生成新的自定义证书，或开始使用全局 S3 证书。
 .. 选择 *Save changes*。
 
@@ -521,16 +521,16 @@ _不适用_
 
 
  a| 
-${post_edited_translations.segment}
+编辑租户访问权限
  a| 
 .. 选中端点的复选框。
-.. ${post_edited_translations.segment}
+.. 选择*操作* > *编辑租户访问权限*。
 .. 选择其他访问选项，从列表中选择或删除租户，或同时执行这两项操作。
 .. 选择 *Save changes*。
 
  a| 
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
+.. 选择端点名称以显示详细信息。
+.. 选择*租户访问权限*选项卡。
 .. 选择*编辑租户访问权限*。
 .. 选择其他访问选项，从列表中选择或删除租户，或同时执行这两项操作。
 .. 选择 *Save changes*。
@@ -544,13 +544,13 @@ ${post_edited_translations.segment}
 [[remove-load-balancer-endpoints]]
 == 删除负载平衡器端点
 
-${post_edited_translations.segment}
+您可以使用*操作*菜单删除一个或多个端点，也可以从详细信息页面中删除单个端点。
 
 
 CAUTION: 为防止客户端中断，请在删除负载均衡器端点之前更新任何受影响的 S3 客户端应用程序。更新每个客户端，使其使用分配给另一个负载均衡器端点的端口进行连接。请务必同时更新任何所需的证书信息。
 
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 如果在删除管理接口端点时无法访问 Grid Manager，请更新 URL。
 
 * 要删除一个或多个端点：
 +

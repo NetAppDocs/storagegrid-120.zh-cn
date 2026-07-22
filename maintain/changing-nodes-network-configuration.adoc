@@ -43,7 +43,7 @@ NOTE: 使用更改 IP 工具对网络所做的任何更改都将传播到 Storag
 
 .步骤
 . 默认情况下会阻止外部 SSH 访问。如有需要，link:../admin/manage-external-ssh-access.html["暂时允许访问"]。
-. ${post_edited_translations.segment}
+. 登录到主管理节点：
 +
 .. 输入以下命令： `ssh admin@_primary_Admin_Node_IP_`
 .. 输入 `Passwords.txt`文件中列出的密码。
@@ -221,7 +221,7 @@ NOTE: 要永久更改 LACP PDU 速率，请参见 https://docs.netapp.com/us-en/
 
 
 .步骤
-. ${post_edited_translations.segment}
+. 登录到主管理节点：
 +
 .. 输入以下命令： `ssh admin@primary_Admin_Node_IP`
 .. 输入 `Passwords.txt`文件中列出的密码。

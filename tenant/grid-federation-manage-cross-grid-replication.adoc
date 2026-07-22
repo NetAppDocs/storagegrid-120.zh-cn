@@ -90,7 +90,7 @@ TIP: 根据需要，每个存储桶可以使用不同的区域。
 *** *是*（默认）：删除标记将添加到源存储桶，并复制到目标存储桶。
 *** *否*：删除标记已添加到源存储桶，但未复制到目标存储桶。
 +
-image:grid-federation-cross-grid-replication-client-deletes.png["${post_edited_translations.segment}"]
+image:grid-federation-cross-grid-replication-client-deletes.png["显示在两个网格上复制客户端删除的图像"]
 
 +
 

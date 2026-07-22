@@ -51,6 +51,6 @@ image:recovery_reset_warning.gif["显示重置恢复警告对话框的屏幕截�
 . 如果已为 StorageGRID 系统启用单一登录 (SSO)，并且已将恢复的管理节点的依赖方信任配置为使用默认管理接口证书，请更新（或删除并重新创建）Active Directory Federation Services (AD FS) 中该节点的依赖方信任。使用在管理节点恢复过程中生成的新默认服务器证书。
 +
 
-NOTE: 要配置依赖方信任，请参阅link:../admin/configure-sso.html["${post_edited_translations.segment}"]。要访问默认服务器证书，请登录到管理节点的命令 shell。转到 `/var/local/mgmt-api`目录，然后选择 `server.crt`文件。
+NOTE: 要配置依赖方信任，请参阅link:../admin/configure-sso.html["配置单点登录"]。要访问默认服务器证书，请登录到管理节点的命令 shell。转到 `/var/local/mgmt-api`目录，然后选择 `server.crt`文件。
 
 

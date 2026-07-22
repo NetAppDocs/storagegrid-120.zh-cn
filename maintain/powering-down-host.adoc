@@ -14,7 +14,7 @@ summary: 在关闭主机之前，您必须停止该主机上所有网格节点�
 在关闭主机之前，您必须停止该主机上所有网格节点上的服务。
 
 .步骤
-. ${post_edited_translations.segment}
+. 登录到网格节点：
 +
 .. 输入以下命令： `ssh admin@_grid_node_IP_`
 .. 输入 `Passwords.txt`文件中列出的密码。

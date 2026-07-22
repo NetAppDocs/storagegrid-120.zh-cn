@@ -132,7 +132,7 @@ image:grid-federation-tenant-user-banner.png["用户页面上的蓝色横幅图�
 
 . 如果希望更改用户的全名：
 +
-.. ${post_edited_translations.segment}
+.. 选中该用户的复选框。
 .. 选择*操作* > *编辑全名*。
 .. 输入新名称。
 .. 选择*保存更改。*
@@ -162,7 +162,7 @@ image:grid-federation-tenant-user-banner.png["用户页面上的蓝色横幅图�
 
 . 根据需要编辑用户设置。有关输入内容的详细信息，请参阅 <<create-user,创建本地用户>>。
 +
-.. 在概述部分，通过选择名称或编辑图标 image:icon_edit_tm.png["${post_edited_translations.segment}"] 更改全名。
+.. 在概述部分，通过选择名称或编辑图标 image:icon_edit_tm.png["编辑图标"] 更改全名。
 +
 您无法更改用户名。
 
@@ -180,11 +180,11 @@ image:grid-federation-tenant-user-banner.png["用户页面上的蓝色横幅图�
 [[import-federated-users]]
 == 导入联合用户
 
-${post_edited_translations.segment}
+您可以将一个或多个联合用户（最多 100 个用户）直接导入到"用户"页面。
 
 .步骤
 . 选择*访问管理* > *用户*。
-. ${post_edited_translations.segment}
+. 选择*导入联合用户*。
 . 输入一个或多个联合用户的 UUID 或用户名。
 +
 对于多个条目，请在新行中添加每个 UUID 或用户名。
@@ -194,12 +194,12 @@ ${post_edited_translations.segment}
 如果一个或多个用户的"用户"字段导入失败，请执行以下步骤：
 
 +
-.. ${post_edited_translations.segment}
-.. ${post_edited_translations.segment}
+.. 展开*未导入的用户*并选择*复制用户*。
+.. 通过选择*上一步*并将复制的用户粘贴到*导入联合用户*对话框中，重试导入。
 
 
 +
-${post_edited_translations.segment}
+关闭*导入联合用户*对话框后，成功导入的用户的联合用户信息将显示在用户页面上。
 
 
 

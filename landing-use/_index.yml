@@ -18,7 +18,7 @@ indexpage:
       url: "../tenant/understanding-tenant-management-api.html"
   - title: 管理租户组和用户
     links:
-    - title: "${post_edited_translations.segment}"
+    - title: 使用身份联合
       url: "../tenant/using-identity-federation.html"
     - title: 创建 S3 组
       url: "../tenant/creating-groups-for-s3-tenant.html"
@@ -50,7 +50,7 @@ indexpage:
     links:
     - title: 快速参考：支持的 S3 API 请求
       url: "../s3/quick-reference-support-for-aws-apis.html"
-    - title: "${post_edited_translations.segment}"
+    - title: 对存储桶的操作
       url: "../s3/operations-on-buckets.html"
     - title: 对象上的操作
       url: "../s3/operations-on-objects.html"

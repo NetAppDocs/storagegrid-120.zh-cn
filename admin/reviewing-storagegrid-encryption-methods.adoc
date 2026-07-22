@@ -57,22 +57,22 @@ SANtricity System Manager 中的驱动器安全性
  a| 
 您在 Grid Manager 中启用 link:changing-network-options-object-encryption.html["存储对象加密"] 选项。启用后，任何未在存储桶级别或对象级别进行加密的新对象都将在摄入期间进行加密。
  a| 
-${post_edited_translations.segment}
+新摄取的 S3 对象数据。
 
 现有的已存储对象不会被加密。对象元数据和其他敏感数据不会被加密。
 
 
 
  a| 
-${post_edited_translations.segment}
+S3 存储桶加密
  a| 
 您发出 PutBucketEncryption 请求以启用存储桶加密。任何未在对象级进行加密的新对象都会在摄入期间进行加密。
  a| 
-${post_edited_translations.segment}
+仅新摄取的 S3 对象数据。
 
 必须为存储桶指定加密。现有的存储桶对象不会被加密。对象元数据和其他敏感数据不会被加密。
 
-link:../s3/operations-on-buckets.html["${post_edited_translations.segment}"]
+link:../s3/operations-on-buckets.html["对存储桶的操作"]
 
 
 
@@ -81,42 +81,42 @@ S3 对象服务器端加密 (SSE)
  a| 
 您发出 S3 请求以存储对象并包含 `x-amz-server-side-encryption`请求标头。
  a| 
-${post_edited_translations.segment}
+仅新摄取的 S3 对象数据。
 
 必须为对象指定加密。对象元数据和其他敏感数据未加密。
 
 StorageGRID 管理密钥。
 
-link:../s3/using-server-side-encryption.html["${post_edited_translations.segment}"]
+link:../s3/using-server-side-encryption.html["使用服务器端加密"]
 
 
 
  a| 
 使用客户提供的密钥（SSE-C）对 S3 对象进行服务器端加密
  a| 
-${post_edited_translations.segment}
+您发出 S3 请求以存储对象，并包含三个请求标头。
 
 * `x-amz-server-side-encryption-customer-algorithm`
 * `x-amz-server-side-encryption-customer-key`
 * `x-amz-server-side-encryption-customer-key-MD5`
 
  a| 
-${post_edited_translations.segment}
+仅新摄取的 S3 对象数据。
 
 必须为对象指定加密。对象元数据和其他敏感数据未加密。
 
-${post_edited_translations.segment}
+密钥在 StorageGRID 外部管理。
 
-link:../s3/using-server-side-encryption.html["${post_edited_translations.segment}"]
+link:../s3/using-server-side-encryption.html["使用服务器端加密"]
 
 
 
  a| 
-${post_edited_translations.segment}
+外部卷或数据存储加密
  a| 
-${post_edited_translations.segment}
+如果您的部署平台支持，则使用 StorageGRID 外部的加密方法来加密整个卷或数据存储库。
  a| 
-${post_edited_translations.segment}
+所有对象数据、元数据和系统配置数据，假设每个卷或数据存储都已加密。
 
 外部加密方法可对加密算法和密钥进行更严格的控制。可以与列出的其他方法相结合。
 

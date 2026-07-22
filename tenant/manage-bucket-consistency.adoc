@@ -79,7 +79,7 @@ NOTE: 存储区版本控制、S3 Object Lock 和存储区加密的一致性值�
 以下存储区设置不使用强一致性，并且具有更高的更改可用性。对这些设置的更改可能需要一段时间才能生效。
 
 * link:considerations-for-platform-services.html["平台服务配置：通知、复制或搜索集成"]
-* link:configuring-cross-origin-resource-sharing-for-buckets-and-objects.html["${post_edited_translations.segment}"]
+* link:configuring-cross-origin-resource-sharing-for-buckets-and-objects.html["配置存储桶和对象的 StorageGRID CORS"]
 * <<change-bucket-consistency,更改分段一致性>>
 
 

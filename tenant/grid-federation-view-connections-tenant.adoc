@@ -62,10 +62,10 @@ summary: 如果您的租户帐户具有使用网格联合连接权限，则可�
 
 * 未找到源对象版本。
 * 未找到源存储桶。
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
-* ${post_edited_translations.segment}
+* 目标存储桶已删除。
+* 目标存储桶已由其他帐户重新创建。
+* 目标存储桶的版本控制已挂起。
+* 目标存储桶已由同一帐户重新创建，但现在未启用版本控制。
 
 
 
@@ -82,11 +82,11 @@ image:grid-federation-cgr-object-example-last-error.png["grid-federation-cgr-obj
 . 执行任何推荐的操作。例如，如果针对跨网格复制暂停了目标存储桶的版本控制，请重新启用该存储桶的版本控制。
 . 从表中选择连接。
 . 选择*清除错误*。
-. ${post_edited_translations.segment}
+. 选择*是*以清除消息并更新系统状态。
 . 等待 5-6 分钟，然后向存储桶中摄入一个新对象。确认未再次出现该错误消息。
 +
 
 NOTE: 为确保清除错误消息，请在消息中的时间戳后至少等待 5 分钟，然后再摄取新对象。
 
-. 要确定是否因存储区错误而无法复制任何对象，请参阅 link:../admin/grid-federation-retry-failed-replication.html["${post_edited_translations.segment}"]。
+. 要确定是否因存储区错误而无法复制任何对象，请参阅 link:../admin/grid-federation-retry-failed-replication.html["识别并重试失败的复制操作"]。
 

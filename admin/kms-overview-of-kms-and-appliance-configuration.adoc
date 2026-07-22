@@ -15,16 +15,16 @@ summary: '在使用密钥管理服务器 (KMS) 保护设备节点上的 StorageG
 
 流程图显示了使用 KMS 在设备节点上保护 StorageGRID 数据的高级步骤。
 
-image:kms_configuration_overview.png["${post_edited_translations.segment}"]
+image:kms_configuration_overview.png["KMS配置工作流程，将在以下文本中描述"]
 
 流程图显示并行进行的 KMS 设置和设备设置；但是，您可以根据需求在为新设备节点启用节点加密之前或之后设置密钥管理服务器。
 
 
 
 [[set-up-the-key-management-server-kms]]
-== ${post_edited_translations.segment}
+== 设置密钥管理服务器（KMS）
 
-${post_edited_translations.segment}
+设置密钥管理服务器包括以下高级步骤。
 
 [cols="1a,1a"]
 |===
@@ -32,16 +32,16 @@ ${post_edited_translations.segment}
 
 
  a| 
-${post_edited_translations.segment}
+访问 KMS 软件，并为每个 KMS 或 KMS 集群添加 StorageGRID 客户端。
  a| 
-link:kms-configuring-storagegrid-as-client.html["${post_edited_translations.segment}"]
+link:kms-configuring-storagegrid-as-client.html["在 KMS 中将 StorageGRID 配置为客户端"]
 
 
 
  a| 
 在 KMS 上获取 StorageGRID 客户端所需的信息。
  a| 
-link:kms-configuring-storagegrid-as-client.html["${post_edited_translations.segment}"]
+link:kms-configuring-storagegrid-as-client.html["在 KMS 中将 StorageGRID 配置为客户端"]
 
 
 
@@ -58,7 +58,7 @@ link:kms-adding.html["添加密钥管理服务器 (KMS)"]
 
 设置用于 KMS 的设备节点包括以下高级步骤。
 
-. ${post_edited_translations.segment}
+. 在设备安装的硬件配置阶段，使用 StorageGRID Appliance Installer 为设备启用*节点加密*设置。
 +
 
 NOTE: 将设备添加到网格后，无法启用*节点加密*设置，并且无法对未启用节点加密的设备使用外部密钥管理。
@@ -69,7 +69,7 @@ NOTE: 将设备添加到网格后，无法启用*节点加密*设置，并且无
 ** 每个 DEK 都由主密钥加密密钥（KEK）加密。初始 KEK 是一个临时密钥，用于加密 DEK，直到设备可以连接到 KMS。
 
 
-. ${post_edited_translations.segment}
+. 将设备节点添加到 StorageGRID。
 
 
 有关详细信息，请参见 https://docs.netapp.com/us-en/storagegrid-appliances/installconfig/optional-enabling-node-encryption.html["启用节点加密"^]。
@@ -77,13 +77,13 @@ NOTE: 将设备添加到网格后，无法启用*节点加密*设置，并且无
 
 
 [[key-management-encryption-process-occurs-automatically]]
-== ${post_edited_translations.segment}
+== 密钥管理加密流程（自动发生）
 
-${post_edited_translations.segment}
+密钥管理加密包括以下自动执行的高级步骤。
 
 . 当您将启用了节点加密的设备安装到网格中时，StorageGRID 会确定包含新节点的站点是否存在 KMS 配置。
 +
-** ${post_edited_translations.segment}
+** 如果已为站点配置了 KMS，则设备将接收 KMS 配置。
 ** 如果尚未为站点配置 KMS，则设备上的数据将继续由临时 KEK 加密，直到您为站点配置 KMS 并且设备收到 KMS 配置。
 
 

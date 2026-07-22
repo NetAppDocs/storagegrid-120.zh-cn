@@ -67,7 +67,7 @@ link:ebdl-empty-bucket-delete.html["EBDL：空桶删除"]
 
 
  a| 
-${post_edited_translations.segment}
+EBKR
  a| 
 空桶请求：用户发送了打开或关闭清空存储桶的请求（即删除存储桶对象或停止删除对象）。
  a| 
@@ -76,16 +76,16 @@ link:ebkr-empty-bucket-request.html["EBKR：空存储桶请求"]
 
 
  a| 
-${post_edited_translations.segment}
+SCMT
  a| 
-${post_edited_translations.segment}
+对象存储提交：内容块已完全存储和验证，现在可以请求。
  a| 
-link:scmt-object-store-commit.html["${post_edited_translations.segment}"]
+link:scmt-object-store-commit.html["SCMT：对象存储提交请求"]
 
 
 
  a| 
-${post_edited_translations.segment}
+SREM
  a| 
 对象存储删除：内容块已从网格节点中删除，无法再直接请求。
  a| 

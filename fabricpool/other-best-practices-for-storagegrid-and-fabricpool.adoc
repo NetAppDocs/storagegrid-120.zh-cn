@@ -16,7 +16,7 @@ summary: 在配置 StorageGRID 系统以与 FabricPool 配合使用时，您可�
 
 
 [[audit-message-and-log-destinations]]
-== ${post_edited_translations.segment}
+== 审核消息和日志目标
 
 FabricPool 工作负载通常具有较高的读取操作速率，这可能会生成大量的审核消息。
 
@@ -34,7 +34,7 @@ FabricPool 工作负载通常具有较高的读取操作速率，这可能会生
 
 
 [[object-compression]]
-== ${post_edited_translations.segment}
+== 对象压缩
 
 配置 StorageGRID 时，不要启用link:../admin/configuring-stored-object-compression.html["用于压缩存储对象的全局选项"]。从 FabricPool 分层到 StorageGRID 的数据已被压缩。使用 StorageGRID 选项不会进一步减小对象的大小。
 

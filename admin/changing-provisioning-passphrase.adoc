@@ -15,17 +15,17 @@ summary: 使用此过程更改 StorageGRID 配置密码。恢复、扩展和维�
 
 .开始之前
 * 您已使用 link:../admin/web-browser-requirements.html["支持的 Web 浏览器"] 登录到网格管理器。
-* ${post_edited_translations.segment}
+* 您拥有 Maintenance 或 Root 访问权限。
 * 您有当前的设置密码短语。
 
 
 .关于此任务
-许多安装和维护程序以及 link:../maintain/downloading-recovery-package.html["${post_edited_translations.segment}"] 都需要配置密码。配置密码未在  `Passwords.txt` 文件中列出。请务必记录配置密码并将其保存在安全的位置。
+许多安装和维护程序以及 link:../maintain/downloading-recovery-package.html["正在下载恢复软件包"] 都需要配置密码。配置密码未在  `Passwords.txt` 文件中列出。请务必记录配置密码并将其保存在安全的位置。
 
 .步骤
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
-. ${post_edited_translations.segment}
+. 选择*配置* > *访问控制* > *网格密码*。
+. 在 *Change provisioning passphrase* 下，选择 *Make a change*
+. 输入当前配置密码。
 . 输入新的密码短语。密码短语必须包含至少 8 个且不超过 32 个字符。密码短语区分大小写。
 +
 
@@ -33,12 +33,12 @@ CAUTION: 将配置密码短语存储在安全位置。这是安装、扩展和�
 
 . 重新输入新密码，然后选择*Save*。
 +
-${post_edited_translations.segment}
+配置密码更改完成后，系统将显示绿色成功横幅。
 
 +
 image:change_provisioning_passphrase_success.png["配置密码短语更改的成功消息"]
 
-. ${post_edited_translations.segment}
+. 选择*Recovery Package*。
 . 输入新的配置密码短语以下载新的恢复包。
 +
 

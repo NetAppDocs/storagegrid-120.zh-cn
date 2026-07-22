@@ -31,7 +31,7 @@ summary: 如果在使用 Server Manager 时出现问题，请检查其日志文�
 服务器管理器监视服务并重新启动任何意外停止的服务。如果服务失败，服务器管理器将尝试重新启动它。如果在五分钟内有三次尝试启动服务失败，则服务进入错误状态。服务器管理器不再尝试重新启动。
 
 .步骤
-. ${post_edited_translations.segment}
+. 登录到网格节点：
 +
 .. 输入以下命令： `ssh admin@_grid_node_IP_`
 .. 输入 `Passwords.txt`文件中列出的密码。

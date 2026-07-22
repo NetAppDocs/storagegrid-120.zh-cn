@@ -41,13 +41,13 @@ NOTE: 如果您配置了代理服务器以将 AutoSupport 包转发到 NetApp，
 如果用户触发或事件触发的 AutoSupport 包发送失败，StorageGRID 系统将采取以下操作：
 
 . 如果错误已知，则显示错误消息。例如，如果用户在未提供正确电子邮件配置设置的情况下选择了 SMTP 协议，则会显示以下错误： `AutoSupport packages cannot be sent using SMTP protocol due to incorrect settings on the E-mail Server page.`
-. ${post_edited_translations.segment}
+. 不再尝试重新发送软件包。
 . 将错误记录在  `nms.log` 中。
 
 
 如果发生故障且选择的协议是 SMTP，请验证 StorageGRID 系统的电子邮件服务器配置是否正确，并且您的电子邮件服务器正在运行（*支持* > *警报（旧版）* > *旧版电子邮件设置*）。以下错误消息可能会显示在 AutoSupport 页面上： `AutoSupport packages cannot be sent using SMTP protocol due to incorrect settings on the E-mail Server page.`
 
-了解如何 link:../monitor/email-alert-notifications.html["${post_edited_translations.segment}"]。
+了解如何 link:../monitor/email-alert-notifications.html["配置电子邮件服务器设置"]。
 
 
 

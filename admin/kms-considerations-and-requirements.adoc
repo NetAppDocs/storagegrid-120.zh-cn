@@ -2,7 +2,7 @@
 permalink: admin/kms-considerations-and-requirements.html 
 sidebar: sidebar 
 keywords: Key Management Interoperability Protocol, kmip version, kms requirements, use key management server 
-summary: ${post_edited_translations.segment} 
+summary: '在配置外部密钥管理服务器(KMS)之前，您必须了解注意事项和要求。' 
 ---
 = StorageGRID 密钥管理服务器要求和注意事项
 :allow-uri-read: 
@@ -11,12 +11,12 @@ summary: ${post_edited_translations.segment}
 
 
 [role="lead"]
-${post_edited_translations.segment}
+在配置外部密钥管理服务器(KMS)之前，您必须了解注意事项和要求。
 
 
 
 [[which-version-of-kmip-is-supported]]
-== ${post_edited_translations.segment}
+== 支持哪个版本的 KMIP？
 
 StorageGRID 支持 KMIP 版本 1.4。
 
@@ -101,7 +101,7 @@ image:kms_per_site.png["每个站点的 KMS"]
 
 
 [[can-i-reuse-an-appliance-node-after-it-has-been-encrypted]]
-== ${post_edited_translations.segment}
+== 设备节点加密后是否可以重复使用？
 
 如果需要将加密设备安装到另一个 StorageGRID 系统中，则必须首先停用网格节点以将对象数据移动到另一个节点。然后，您可以使用 StorageGRID Appliance Installer https://docs.netapp.com/us-en/storagegrid-appliances/commonhardware/monitoring-node-encryption-in-maintenance-mode.html["清除 KMS 配置"^]。清除 KMS 配置将禁用 *Node Encryption* 设置，并删除设备节点与 StorageGRID 站点的 KMS 配置之间的关联。
 

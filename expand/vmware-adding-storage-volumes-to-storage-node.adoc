@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: expand, expansion, storage node, add storage volumes, VMware, StorageGRID 
 summary: 如果存储节点包含的存储卷少于 16 个，则可以通过使用 VMware vSphere 添加卷来增加其容量。 
 ---
-= ${post_edited_translations.segment}
+= 将存储卷添加到 StorageGRID 中的 VMware 存储节点
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -14,7 +14,7 @@ summary: 如果存储节点包含的存储卷少于 16 个，则可以通过使�
 如果存储节点包含的存储卷少于 16 个，则可以通过使用 VMware vSphere 添加卷来增加其容量。
 
 .开始之前
-* 您可以访问 link:../swnodes/index.html["${post_edited_translations.segment}"]。
+* 您可以访问 link:../swnodes/index.html["适用于 VMware 部署的 StorageGRID 安装说明"]。
 * 您拥有  `Passwords.txt` 文件。
 * 您有 link:../admin/admin-group-permissions.html["特定访问权限"]。
 
@@ -39,11 +39,11 @@ CAUTION: 在软件升级、恢复过程或其他扩展过程处于活动状态�
 . 通过使用 VMware vSphere Client 中的 *Restart Guest OS* 选项，或在指向虚拟机的 ssh 会话中输入以下命令，重新启动虚拟机：``sudo reboot``
 +
 
-NOTE: ${post_edited_translations.segment}
+NOTE: 请勿使用*Power Off*或*Reset*来重新启动虚拟机。
 
 . 配置新存储以供存储节点使用：
 +
-.. ${post_edited_translations.segment}
+.. 登录到网格节点：
 +
 ... 输入以下命令： `ssh admin@_grid_node_IP_`
 ... 输入 `Passwords.txt`文件中列出的密码。

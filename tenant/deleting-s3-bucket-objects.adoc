@@ -55,7 +55,7 @@ TIP: 使用 S3 Object Lock 的存储桶将保持在*删除对象：只读*状态
 +
 [role="tabbed-block"]
 ====
-.${post_edited_translations.segment}
+.操作菜单
 --
 .. 选中要从中删除对象的每个存储桶的复选框。
 .. 选择*操作* > *删除存储桶中的对象*。
