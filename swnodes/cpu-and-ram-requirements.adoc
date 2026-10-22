@@ -19,7 +19,11 @@ summary: 在安装 StorageGRID 软件之前，请验证并配置硬件，以便�
 * RAM：取决于可用的总 RAM 以及系统上运行的非 StorageGRID 软件的数量
 +
 ** 通常，每个节点至少 24 GB，比总系统 RAM 少 2 到 16 GB
-** 每个拥有约 5,000 个存储桶的租户至少 64 GB
+** 如果多个租户每个都有多达 5,000 个存储桶，则每个节点至少 64 GB
++
+
+NOTE: StorageGRID 系统为每个 S3 租户帐户最多支持 5,000 个存储桶。
+
 
 
 
@@ -55,7 +59,7 @@ VMware 支持每个虚拟机一个节点。请确保 StorageGRID 节点不超过
 --
 ====
 
-CAUTION: 定期监控您的 CPU 和内存使用情况，以确保这些资源能够持续满足您的工作负载需求。例如，将虚拟存储节点的 RAM 和 CPU 分配加倍，将提供与 StorageGRID 设备节点相似的资源。此外，如果每个节点的元数据量超过 500 GB，请考虑将每个节点的 RAM 增加到 48 GB 或更多。有关管理对象元数据存储、增加元数据保留空间设置以及监控 CPU 和内存使用情况的信息，请参见link:../admin/index.html["管理"]、link:../monitor/index.html["监控"]和link:../upgrade/index.html["upgrading"] StorageGRID 的相关说明。
+CAUTION: 定期监控您的 CPU 和内存使用情况，以确保这些资源能够持续满足您的工作负载需求。例如，将虚拟存储节点的 RAM 和 CPU 分配加倍，将提供与 StorageGRID 设备节点相似的资源。此外，如果每个节点的元数据量超过 500 GB，请考虑将每个节点的 RAM 增加到 48 GB 或更多。有关管理对象元数据存储、增加元数据保留空间设置以及监控 CPU 和内存使用情况的信息，请参阅 link:../admin/index.html["管理"]、link:../monitor/index.html["监控"] 和 link:../upgrade/index.html["upgrading"] StorageGRID 的相关说明。
 
 如果在底层物理主机上启用了超线程，则可以为每个节点提供 8 个虚拟内核（4 个物理内核）。如果未在底层物理主机上启用超线程，则必须为每个节点提供 8 个物理内核。
 
@@ -63,4 +67,4 @@ CAUTION: 定期监控您的 CPU 和内存使用情况，以确保这些资源能
 
 （仅限 RHEL、Debian 和 Ubuntu）对于生产部署，不应在同一物理存储硬件或虚拟主机上运行多个存储节点。单个 StorageGRID 部署中的每个存储节点应位于其自己的隔离故障域中。如果确保单个硬件故障仅影响单个存储节点，则可以最大限度地提高对象数据的持久性和可用性。
 
-另请参见 link:storage-and-performance-requirements.html["存储和性能要求"]。
+请参阅 link:storage-and-performance-requirements.html["存储和性能要求"]。

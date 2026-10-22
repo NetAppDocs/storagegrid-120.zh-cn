@@ -15,7 +15,7 @@ StorageGRID 系统为每个 S3 租户帐户最多支持 5,000 个存储桶。
 
 每个网格最多可包含 100,000 个存储桶。
 
-要支持 5,000 个存储桶，网格中的每个存储节点必须至少有 64 GB RAM。
+如果多个租户每个都有多达 5,000 个存储桶，则网格中的每个存储节点必须至少有 64 GB 的 RAM。
 
 存储桶名称限制遵循 AWS US Standard 区域限制，但应进一步将其限制为 DNS 命名约定，以支持 S3 虚拟托管式请求。
 
@@ -55,7 +55,7 @@ CreateBucket
 +
 *注意*：如果您的 CreateBucket 请求使用了尚未在 StorageGRID 中定义的区域，则会发生错误。
 
-* 您可以包含 `x-amz-bucket-object-lock-enabled`请求标头以创建启用了 S3 Object Lock 的存储桶。请参阅link:../s3/use-s3-api-for-s3-object-lock.html["使用 S3 REST API 配置 S3 对象锁定"]。
+* 您可以包含 `x-amz-bucket-object-lock-enabled`请求标头以创建启用了 S3 Object Lock 的存储桶。请参阅 link:../s3/use-s3-api-for-s3-object-lock.html["使用 S3 REST API 配置 S3 对象锁定"]。
 +
 创建存储桶时必须启用 S3 Object Lock。创建存储桶后，无法添加或禁用 S3 Object Lock。S3 Object Lock 需要存储桶版本控制，在创建存储桶时会自动启用。
 
@@ -87,7 +87,7 @@ DeleteBucketEncryption
  a| 
 DeleteBucketLifecycle
  a| 
-从存储桶中删除生命周期配置。请参阅link:create-s3-lifecycle-configuration.html["创建 S3 生命周期配置"]。
+从存储桶中删除生命周期配置。请参阅 link:create-s3-lifecycle-configuration.html["创建 S3 生命周期配置"]。
 
 
 
@@ -110,7 +110,7 @@ DeleteBucketTagging
  a| 
 使用  `tagging` 子资源从存储桶中删除所有标记。
 
-*注意*：如果为此存储桶设置了非默认 ILM 策略标记，则将存在一个分配了值的  `NTAP-SG-ILM-BUCKET-TAG` 存储桶标记。如果存在  `NTAP-SG-ILM-BUCKET-TAG` 存储桶标记，请勿发出 DeleteBucketTagging 请求。相反，仅使用  `NTAP-SG-ILM-BUCKET-TAG` 标记及其分配的值发出 PutBucketTagging 请求，以从存储桶中删除所有其他标记。请勿修改或删除  `NTAP-SG-ILM-BUCKET-TAG` 存储桶标记。
+*注意*：如果为此存储桶设置了非默认 ILM 策略标记，则将存在一个 `NTAP-SG-ILM-BUCKET-TAG`存储桶标记，并为其分配了值。如果有 `NTAP-SG-ILM-BUCKET-TAG`存储桶标记，请勿发出 DeleteBucketTagging 请求。相反，仅使用  `NTAP-SG-ILM-BUCKET-TAG` 标记及其分配的值发出 PutBucketTagging 请求，以从存储桶中删除所有其他标记。请勿修改或删除 `NTAP-SG-ILM-BUCKET-TAG`存储桶标记。
 
 
 
@@ -179,7 +179,7 @@ GetBucketTagging
  a| 
 使用  `tagging` 子资源返回存储桶的所有标记。
 
-*注意*：如果为此存储桶设置了非默认 ILM 策略标记，则将存在一个 `NTAP-SG-ILM-BUCKET-TAG`存储桶标记，并为其分配了值。请勿修改或删除此标签。
+*注意*：如果为此存储桶设置了非默认 ILM 策略标记，则将存在一个 `NTAP-SG-ILM-BUCKET-TAG`存储桶标记，并为其分配了值。请勿修改或删除此标记。
 
 
 
@@ -285,7 +285,7 @@ StorageGRID 不支持以下操作：
 * 过渡
 
 
-请参见link:create-s3-lifecycle-configuration.html["创建 S3 生命周期配置"]。要了解存储桶生命周期中的过期操作如何与 ILM 放置说明交互，请参见link:../ilm/how-ilm-operates-throughout-objects-life.html["ILM在对象整个生命周期中的运作方式"]。
+请参阅 link:create-s3-lifecycle-configuration.html["创建 S3 生命周期配置"]。要了解存储桶生命周期中的到期操作如何与 ILM 放置说明交互，请参阅link:../ilm/how-ilm-operates-throughout-objects-life.html["ILM在对象整个生命周期中的运作方式"]。
 
 *注意*：存储桶生命周期配置可用于启用了 S3 Object Lock 的存储桶，但旧版合规存储桶不支持存储桶生命周期配置。
 

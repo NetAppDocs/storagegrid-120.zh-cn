@@ -315,6 +315,21 @@ AWS
 
 
  a| 
+636
+ a| 
+TCP/UDP
+ a| 
+LDAP
+ a| 
+带 ADC 的存储节点
+ a| 
+Active Directory/LDAP
+ a| 
+用于连接到 Active Directory 或 LDAP 服务器以进行 Identity Federation。
+
+
+
+ a| 
 5353
  a| 
 UDP

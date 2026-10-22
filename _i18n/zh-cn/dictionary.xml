@@ -10610,7 +10610,6 @@
   <block id="242fd5d3e3d0f23fb72421cb6681c574" category="paragraph">StorageGRID 网格现已关闭。</block>
   <block id="2a1affd93f20a53c951036edbf25dbcd" category="list-text">如果您已允许外部 SSH 访问，请在完成关闭节点后<block ref="cea5be726029476f08dd23ff706969c9" category="inline-link-macro-rx"></block>。</block>
   <block id="a14d43653ae3e8fd1a70a5e24979abf5" category="section-title">启动网格节点</block>
-  <block id="a02c2203cdb9b4fbfede8d5f7c6f0260" category="admonition">如果整个网格已关闭超过 15 天，则必须在启动任何网格节点之前联系技术支持。请勿尝试执行重建 Cassandra 数据的恢复过程。这样做可能会导致数据丢失。</block>
   <block id="ffe12ec7a5bf3d7374916aa9d83bc015" category="paragraph">如果可能，请按以下顺序打开网格节点：</block>
   <block id="8b986e045967a32444eb3c10822b65cf" category="list-text">首先将电源应用于管理节点。</block>
   <block id="d2eecd9251fc52187744ebe135762511" category="list-text">最后向网关节点通电。</block>
@@ -13010,7 +13009,6 @@
   <block id="dae13a2a792b7021ff6f581d7786b1ec" category="doc">在 StorageGRID 中配置日志管理</block>
   <block id="a9531673d181be6becdca88f3479b430" category="paragraph">所有 StorageGRID 节点都会生成审计消息和日志，以跟踪系统活动和事件。审计消息和日志是监控和故障排除的重要工具。</block>
   <block id="a97ac55076888ecbcd9a79c4da901b73" category="inline-link-macro">配置外部 syslog 服务器</block>
-  <block id="008683e590a89e9045e928ce8893c4e1" category="paragraph">或者，您可以<block ref="cce9bd0d3068773003ba615e61c64bfc" category="inline-link-macro-rx"></block>远程保存审核信息。使用外部服务器可最大限度地减少审核消息日志记录的性能影响，而不会降低审核数据的完整性。如果您拥有大型网格、使用多种类型的 S3 应用程序或希望保留所有审核数据，则外部 syslog 服务器特别有用。</block>
   <block id="153ea3ecc269df0ece8fc3054252c198" category="inline-link-macro">使用外部 syslog 服务器的注意事项</block>
   <block id="faa5e852b7952fb165d7bf3bc3566f5f" category="list-text">如果您计划配置外部 syslog 服务器，则已查看并遵循 <block ref="a923731f0649821fc25d6b3906f76f7b" category="inline-link-macro-rx"></block>。</block>
   <block id="2c2103b1718c2d1657f5280d91c5b91c" category="list-text">如果您计划使用 TLS 或 RELP/TLS 协议配置外部 syslog 服务器，则拥有所需的服务器 CA 和客户端证书以及客户端私钥。</block>
@@ -13055,11 +13053,9 @@
   <block id="a50781a8ab093930700459f92341604c" category="list-text">在*审核协议标头*部分中，定义要包含在客户端读取和写入审核消息中的 HTTP 请求标头。</block>
   <block id="a6235fcb1b5b47e8bcb62c26da9ab610" category="paragraph">使用星号 (\*) 作为通配符，以匹配零个或多个字符。使用转义序列 (\*) 匹配文字星号。</block>
   <block id="9d1e6a94bc0d0fabf655a4392b69b71b" category="list-text">如果需要，选择 *Add another header* 以创建其他标题。</block>
-  <block id="a93dfbe1ade38b97fd4fb3a000cd4ad3" category="paragraph">当在请求中找到 HTTP 标头时，它们将包含在 HTRH 字段下的审核消息中。</block>
   <block id="9b6623244c7ab8bd9eae7093b612876a" category="admonition">仅当*客户端读取*或*客户端写入*的审核级别不为*关闭*时，才会记录审核协议请求标头。</block>
   <block id="046dbf65afc322767458d67533c61122" category="section-title">配置日志位置</block>
   <block id="3e6dcdf7a0cb5dd99131b899cb928f83" category="inline-xref">使用外部 syslog 服务器</block>
-  <block id="67363dd27a766a549e49cd3bb3187aae" category="paragraph">默认情况下，审核消息和日志保存在生成它们的节点上。它们会定期轮换并最终删除，以防止占用过多的磁盘空间。如果要在外部保存审核消息和日志子集，请 <block ref="a5f9463152b8158166c8239e67a8692c" category="inline-xref-macro-rx"></block>。</block>
   <block id="aa05a5f5491cc05e47f997bf1b986d94" category="paragraph">如果要在内部保存日志文件，请选择用于日志存储的租户和存储区并启用日志存档。</block>
   <block id="60971ee036fc828a7f3f011d017e0050" category="section-title">[[use-external-syslog-server]]使用外部 syslog 服务器</block>
   <block id="6b0ec1175ef3fb75de2f76b033681e95" category="paragraph">您可以选择配置外部 syslog 服务器，以将审核日志、应用程序日志和安全事件日志保存到网格外部的位置。</block>
@@ -13098,7 +13094,6 @@
   <block id="1b99a875c4e363c4c0025de71eaa4d6f" category="list-text">使用下拉菜单为要发送的每个审核信息类别选择严重性和设施（消息类型）。</block>
   <block id="c1276a05f401f298270e5d6bf714790b" category="paragraph">设置严重程度和设施值可以帮助您以可自定义的方式聚合日志，以便更轻松地进行分析。</block>
   <block id="c42b40197a511c489886acd2205a0324" category="list-text">对于*严重程度*，选择*Passthrough*，或选择一个介于 0 到 7 之间的严重程度值。</block>
-  <block id="a553df609a474c1eddf19e9a11c154ab" category="paragraph">如果选择一个值，则所选值将应用于所有此类型的消息。如果使用固定值覆盖严重性，则有关不同严重性的信息将丢失。</block>
   <block id="f6124225f7555a9190621c9886890973" category="paragraph">Passthrough</block>
   <block id="f382a606f0f59bdd03f9c91eaff074f7" category="paragraph">发送到外部 syslog 的每条消息都具有与本地记录到节点上时相同的严重性值：</block>
   <block id="7b0409bc67a85efb7ec1c816584e78c9" category="list-text">对于审核日志，严重性为"info"。</block>
@@ -13162,7 +13157,6 @@
   <block id="37693cfc748049e45d87b8c7d8b9aacd" category="paragraph">23</block>
   <block id="1830d14f102923840362ae13e7f7f937" category="paragraph">local7</block>
   <block id="62a0989c99c0c6ddf96e43f532ce70d5" category="section-title">发送测试消息</block>
-  <block id="520fc9507aac3561e96dd9d964620270" category="paragraph">在开始使用外部 syslog 服务器之前，应请求网格中的所有节点将测试消息发送到外部 syslog 服务器。在确认将数据发送到外部 syslog 服务器之前，您应使用这些测试消息来帮助验证整个日志收集基础架构。</block>
   <block id="66267a397976d942cefe0473a7b473ec" category="admonition">请勿使用外部 syslog 服务器配置，直到您确认外部 syslog 服务器收到来自网格中每个节点的测试消息，并且该消息已按预期处理。</block>
   <block id="219ad61597b8d8b16ae77ee5eead52cb" category="list-text">如果您不想发送测试消息，因为您确定外部 syslog 服务器已正确配置并且可以从网格中的所有节点接收审核信息，请选择*跳过并完成*。</block>
   <block id="dab3ba0e522124ad8e9204bf6cc154fe" category="paragraph">绿色横幅指示配置已保存。</block>
@@ -16857,13 +16851,10 @@
   <block id="0ae08fe2e9e43e64570ed293e89de392" category="summary">StorageGRID 系统为每个 S3 租户帐户最多支持 5,000 个存储桶。</block>
   <block id="d14406c13fd2e0d80173680f92e9fc98" category="doc">StorageGRID 中的 S3 存储桶操作和实施详细信息</block>
   <block id="3b182a2bdfd785123519e4e31feaeed0" category="paragraph">每个网格最多可包含 100,000 个存储桶。</block>
-  <block id="f31335f680f76932b1c3c1a6b099824d" category="paragraph">要支持 5,000 个存储桶，网格中的每个存储节点必须至少有 64 GB RAM。</block>
   <block id="5b46a37d451753ad9b51249b162f5137" category="paragraph">存储桶名称限制遵循 AWS US Standard 区域限制，但应进一步将其限制为 DNS 命名约定，以支持 S3 虚拟托管式请求。</block>
-  <block id="fdcbe80776d50dca3083a6eb75899bdd" category="paragraph">有关详细信息，请参见以下内容：</block>
   <block id="089dd85c11aa3893945f45e88f134e15" category="inline-link">Amazon Simple Storage Service 用户指南：存储桶配额、限制和局限性</block>
   <block id="f00b5bc4d8d149e054687d090cdda367" category="list-text"><block ref="f00b5bc4d8d149e054687d090cdda367" category="inline-link-rx"></block></block>
   <block id="afd3aae038a6cc1a9aa7bab0b9add414" category="paragraph">ListObjects (GET Bucket) 和 ListObjectVersions (GET Bucket object versions) 操作支持 StorageGRID <block ref="2fac6fab6140bb69b5d83290782a5692" category="inline-link-macro-rx"></block>。</block>
-  <block id="a46f31210315a47a2c5f07c4d876ef5a" category="paragraph">您可以检查是否为单个存储桶启用或禁用了对上次访问时间的更新。请参阅 <block ref="dcc85cafd1adb4db5f3bf68d48f423d2" category="inline-link-macro-rx"></block>。</block>
   <block id="95912013f7f2096e0ed8fa7176719a67" category="paragraph">下表描述了 StorageGRID 如何实现 S3 REST API 存储桶操作。要执行任何这些操作，必须为帐户提供必要的访问凭据。</block>
   <block id="895c5eb40bfaf1d68b35892bc98c9ee4" category="paragraph">CreateBucket</block>
   <block id="6a72d80838e86f3a28494fa7a71d7be5" category="paragraph">创建一个新存储桶。通过创建存储桶，您将成为存储桶所有者。</block>
@@ -16876,21 +16867,18 @@
   <block id="54866248d1c9d3b909e7e8d595ccde2d" category="list-text">不应在虚拟托管样式请求中使用句点。句点将导致服务器通配符证书验证出现问题。</block>
   <block id="19c22519dbbf02db4cc7fb69f420db89" category="list-text">默认情况下，存储区在<block ref="c800b6d9163b0db7d28f86c1470a9542" prefix=" " category="inline-code"></block>区域中创建；但是，您可以使用请求正文中的<block ref="629c0730a42cc5a39f173be946b73847" prefix=" " category="inline-code"></block>请求元素指定不同的区域。使用<block ref="629c0730a42cc5a39f173be946b73847" prefix=" " category="inline-code"></block>元素时，必须指定使用 Grid Manager 或 Grid Management API 定义的区域的确切名称。如果您不知道应使用的区域名称，请联系您的系统管理员。</block>
   <block id="64530364bc7a24303ce8121e492420c3" category="paragraph">*注意*：如果您的 CreateBucket 请求使用了尚未在 StorageGRID 中定义的区域，则会发生错误。</block>
-  <block id="9f1a4fa131f398ce48eb3936843026f4" category="list-text">您可以包含<block ref="289c5faa6802e638231e7e6ff257d3a4" prefix=" " category="inline-code"></block>请求标头以创建启用了 S3 Object Lock 的存储桶。请参阅<block ref="68c667f0ce4a6f376dfff8a750bd7d7d" category="inline-link-macro-rx"></block>。</block>
   <block id="e145a6ea2ee73b80827aa3fb6a1c1a46" category="paragraph">创建存储桶时必须启用 S3 Object Lock。创建存储桶后，无法添加或禁用 S3 Object Lock。S3 Object Lock 需要存储桶版本控制，在创建存储桶时会自动启用。</block>
   <block id="71e5ab731ab5629ab300b352d1da42f2" category="paragraph">DeleteBucket</block>
   <block id="71c1ace3698313ad784d26ba0272e181" category="paragraph">删除存储桶。</block>
   <block id="b5ef044f36f2f270aafbe292662370d0" category="paragraph">DeleteBucketCors</block>
   <block id="1686f05337a73f0d14bd5015146d1bf3" category="paragraph">删除存储区的 CORS 配置。</block>
   <block id="474edf8ea8821ec1cba31c49f123ec20" category="paragraph">从存储桶中删除默认加密。现有的加密对象保持加密状态，但添加到存储桶的任何新对象都不会被加密。</block>
-  <block id="1705f09f559c9ea2d2f9b08fa4a80986" category="paragraph">从存储桶中删除生命周期配置。请参阅<block ref="899e48eb574f8c5912a7d048f8d748e8" category="inline-link-macro-rx"></block>。</block>
   <block id="bd1790f94d5a6095bc05f4fb3bbf2e93" category="paragraph">DeleteBucketPolicy</block>
   <block id="4c4f5aff111532846b63cc55bb0c4d99" category="paragraph">删除附加到存储区的策略。</block>
   <block id="fa4914b8e5836b53607e4c9d85ba4fb2" category="paragraph">DeleteBucketReplication</block>
   <block id="088408f3c0dcc9fa859c5a55991a5f50" category="paragraph">删除附加到存储区的复制配置。</block>
   <block id="2c46233cd08c14be3fb5c38312f379a6" category="paragraph">DeleteBucketTagging</block>
   <block id="84e929b005c83a02afd743cf624008f2" category="paragraph">使用 <block ref="7083a19806d3d0e94bb134eb9cec3403" prefix=" " category="inline-code"></block> 子资源从存储桶中删除所有标记。</block>
-  <block id="6764fc553c71fcb8641d4f24d3f35297" category="paragraph">*注意*：如果为此存储桶设置了非默认 ILM 策略标记，则将存在一个分配了值的 <block ref="2ce3f7d0855e7a7db3be4bffab58af5a" prefix=" " category="inline-code"></block> 存储桶标记。如果存在 <block ref="2ce3f7d0855e7a7db3be4bffab58af5a" prefix=" " category="inline-code"></block> 存储桶标记，请勿发出 DeleteBucketTagging 请求。相反，仅使用 <block ref="2ce3f7d0855e7a7db3be4bffab58af5a" prefix=" " category="inline-code"></block> 标记及其分配的值发出 PutBucketTagging 请求，以从存储桶中删除所有其他标记。请勿修改或删除 <block ref="2ce3f7d0855e7a7db3be4bffab58af5a" prefix=" " category="inline-code"></block> 存储桶标记。</block>
   <block id="03ef0cfea403cffb798388f8b02e35d5" category="paragraph">GetBucketAcl</block>
   <block id="4188d21d16199511e8458513bb9c491e" category="paragraph">返回肯定响应以及存储桶所有者的 ID、DisplayName 和权限，指示所有者对存储桶具有完全访问权限。</block>
   <block id="f6658c946f667d0dd03682a0b57cfb57" category="paragraph">GetBucketCors</block>
@@ -16898,7 +16886,6 @@
   <block id="7a4a25f489596f5f8ad44e8779ca39fd" category="paragraph">GetBucketEncryption</block>
   <block id="300fa264f90c3b5ef5d5c82eb064a68a" category="paragraph">返回存储区的默认加密配置。</block>
   <block id="96501f542f45104428243c88b0b2505a" category="paragraph">（先前命名为GET Bucket lifecycle）</block>
-  <block id="9c3ef3503c77608a13a22d71e2f7b0c4" category="paragraph">返回存储桶的生命周期配置。请参阅 <block ref="899e48eb574f8c5912a7d048f8d748e8" category="inline-link-macro-rx"></block>。</block>
   <block id="ea8ebab648466a1d6a6fd9b6a32542d7" category="paragraph">GetBucketLocation</block>
   <block id="0024d60037fdf7fce3e908478763cfd6" category="paragraph">返回使用 CreateBucket 请求中的<block ref="629c0730a42cc5a39f173be946b73847" prefix=" " category="inline-code"></block>元素设置的区域。如果存储桶的区域为<block ref="c800b6d9163b0db7d28f86c1470a9542" prefix=" " category="inline-code"></block>，则为该区域返回一个空字符串。</block>
   <block id="09a672e92705fe17edef60ba246d4b5a" category="paragraph">GetBucketNotificationConfiguration</block>
@@ -16910,7 +16897,6 @@
   <block id="a554ed6aa4f650c4d24e98f8bdccd5e1" category="paragraph">返回附加到存储区的复制配置。</block>
   <block id="15da661f558260bd8570b8f21b4e9641" category="paragraph">GetBucketTagging</block>
   <block id="e71052daa7342f7fe14b8bf0409a8401" category="paragraph">使用 <block ref="7083a19806d3d0e94bb134eb9cec3403" prefix=" " category="inline-code"></block> 子资源返回存储桶的所有标记。</block>
-  <block id="045025a75c437695d2714178dc6ff73e" category="paragraph">*注意*：如果为此存储桶设置了非默认 ILM 策略标记，则将存在一个<block ref="2ce3f7d0855e7a7db3be4bffab58af5a" prefix=" " category="inline-code"></block>存储桶标记，并为其分配了值。请勿修改或删除此标签。</block>
   <block id="f8dd93da878bd2ba8afb5e07eec7b751" category="paragraph">GetBucketVersioning</block>
   <block id="c688cf56243f664d2f2da06508f53a74" category="paragraph">此实现使用 <block ref="f775fa07e143b2e671946a48af8f42ca" prefix=" " category="inline-code"></block> 子资源返回存储桶的版本控制状态。</block>
   <block id="525ad44fa3fd04646bcd2cd028032e2f" category="list-text">_blank_：从未启用过版本控制（存储桶为"未版本控制"）</block>
@@ -16918,7 +16904,6 @@
   <block id="e001cd096fa7cdd4effa158ceef1a1f1" category="list-text">已挂起：版本控制之前已启用，现已挂起</block>
   <block id="b465c070848198971fade79c66a56509" category="paragraph">GetObjectLockConfiguration</block>
   <block id="41547bb5e8d1ecbf64157382c92ff5f3" category="paragraph">返回存储区默认保留模式和默认保留期限（如果已配置）。</block>
-  <block id="282c6dfc7e3671a8bee3a4ba60fa3562" category="paragraph">请参阅 <block ref="68c667f0ce4a6f376dfff8a750bd7d7d" category="inline-link-macro-rx"></block>。</block>
   <block id="7b5f92261dcdbdee8b8f2fd9d0e38eda" category="paragraph">HeadBucket</block>
   <block id="e82cd3ad0f3c4dabdcdf6744d49674fa" category="paragraph">确定存储桶是否存在，以及您是否有权访问它。</block>
   <block id="290b954e17b0254e25b7b3f385d9a9a9" category="paragraph">此操作将返回：</block>
@@ -16950,7 +16935,6 @@
   <block id="fce82da56cb8ca29658f445035073a3a" category="list-text">AbortIncompleteMultipartUpload</block>
   <block id="afedf9afee367f51f98d7cf030c976a6" category="list-text">过渡</block>
   <block id="6f02eeef8bac8a338b42a291f74f0ed8" category="inline-link-macro">ILM在对象整个生命周期中的运作方式</block>
-  <block id="7d002d46b560bb735be81511030dd55b" category="paragraph">请参见<block ref="899e48eb574f8c5912a7d048f8d748e8" category="inline-link-macro-rx"></block>。要了解存储桶生命周期中的过期操作如何与 ILM 放置说明交互，请参见<block ref="2eebcc299dfcfbe3c659686c56f8a9eb" category="inline-link-macro-rx"></block>。</block>
   <block id="8a5f42cbf53b3e83a9b0c88eb780e402" category="paragraph">*注意*：存储桶生命周期配置可用于启用了 S3 Object Lock 的存储桶，但旧版合规存储桶不支持存储桶生命周期配置。</block>
   <block id="dc57e5637c3b251754cf83e2c4c05583" category="paragraph">PutBucketNotificationConfiguration</block>
   <block id="34ac839a541d8fabef4176a79ddd4e54" category="paragraph">（先前命名的 PUT Bucket notification）</block>
@@ -16971,7 +16955,6 @@
   <block id="f01c733be2ffd54c1451d3677d20b121" category="paragraph"><block ref="6e986cf3126d349a3cece9a996dcac93" prefix="" category="inline-code"></block></block>
   <block id="0d32d2377aa31d77bde77b8185253c02" category="paragraph">PutBucketPolicy</block>
   <block id="e51107c5ae712513ca093879e12faa0b" category="inline-link-macro">使用存储区和组访问策略</block>
-  <block id="14e3911b99c1530e3b7f5a36c4c49610" category="paragraph">设置附加到存储桶的策略。请参阅 <block ref="df8686d57377200c27f81ca84f948011" category="inline-link-macro-rx"></block>。</block>
   <block id="9ba4979ce13ad4cb8f46026bd7b10d70" category="paragraph">PutBucketReplication</block>
   <block id="ccb4749182ee9901b8d03d43081bacb5" category="inline-link-macro">StorageGRID CloudMirror 复制</block>
   <block id="5f3734c4900296d26b18798d27caddc9" category="paragraph">使用请求正文中提供的复制配置 XML 为存储桶配置 <block ref="5e7e61f123c774c65945463c9958cd85" category="inline-link-macro-rx"></block>。对于 CloudMirror 复制，您应该了解以下实施详情：</block>
@@ -16980,7 +16963,6 @@
   <block id="e7b2c311ae6c2f201333bb704cde4024" category="list-text">可以在版本化或未版本化的存储桶上配置存储桶复制。</block>
   <block id="b8c9ab8690fa534b26e98df699f3b8ae" category="list-text">您可以在复制配置 XML 的每个规则中指定不同的目标存储桶。源存储桶可以复制到多个目标存储桶。</block>
   <block id="7e325b4129f19b6582a079197f4b0ac0" category="inline-link-macro">配置 CloudMirror 复制</block>
-  <block id="3f03252083053d9039285a57d4bc4ff1" category="list-text">目标存储桶必须指定为租户管理器或租户管理 API 中指定的 StorageGRID 终结点的 URN。请参阅 <block ref="78ca258c698c6e5ef6dba3f53379e735" category="inline-link-macro-rx"></block>。</block>
   <block id="d5c9b8b845b7255c3a3b2b97c2e543d9" category="paragraph">必须存在端点，复制配置才能成功。如果端点不存在，则请求将作为<block ref="6196dba52703776af2e6593f772ed7ce" prefix=" " category="inline-code"></block>失败。此错误消息指出：<block ref="3c5d9914e90ed77cef2b0bf6abe81deb" prefix=" " category="inline-code"></block></block>
   <block id="3e83b92885d95cc17b1d93c1e0e2377a" category="list-text">您无需在配置 XML 中指定 <block ref="bbbabdbe1b262f75d99d62880b953be1" prefix=" " category="inline-code"></block>。StorageGRID 不使用此值，如果提交将被忽略。</block>
   <block id="c97cdfe07b799050f540c51ba193aed4" category="list-text">如果在配置 XML 中省略存储类，StorageGRID 默认使用<block ref="94e94133f4bdc1794c6b647b8ea134d0" prefix=" " category="inline-code"></block>存储类。</block>
@@ -16993,7 +16975,6 @@
   <block id="7b82d7c03021df1db6c52454cee6e54c" category="list-text">与存储桶关联的标签必须具有唯一的标签键。标签键的长度最多为 128 个 Unicode 字符。</block>
   <block id="ab23af86227de7dcc931b4e8919c5ba7" category="list-text">标记值的长度不得超过256个Unicode字符。</block>
   <block id="a1a51b9ded79fb59e901c38b202a45de" category="list-text">键和值区分大小写。</block>
-  <block id="dc7a64e89b4b9c7c3f78c5284357cceb" category="paragraph">*注意*：如果为此存储桶设置了非默认 ILM 策略标记，则将存在一个<block ref="2ce3f7d0855e7a7db3be4bffab58af5a" prefix=" " category="inline-code"></block>存储桶标记，并为其分配了值。确保在所有 PutBucketTagging 请求中包含带有分配值的<block ref="2ce3f7d0855e7a7db3be4bffab58af5a" prefix=" " category="inline-code"></block>存储桶标记。请勿修改或删除此标记。</block>
   <block id="e37b4537af0ba019153bda1ad5413d7b" category="paragraph">*注意*：此操作将覆盖存储桶已有的任何当前标记。如果从集合中省略了任何现有标记，则这些标记将从存储桶中删除。</block>
   <block id="1110fc5a93153951bab9defba62634f7" category="paragraph">使用 <block ref="f775fa07e143b2e671946a48af8f42ca" prefix=" " category="inline-code"></block> 子资源设置现有存储桶的版本控制状态。可以使用以下值之一设置版本控制状态：</block>
   <block id="312b5950c02eecf927bce9b6cf0f3ca6" category="list-text">Enabled：为存储桶中的对象启用版本控制。添加到存储桶的所有对象都会收到唯一的版本 ID。</block>
@@ -18353,18 +18334,15 @@
   <block id="b86d659161b20616144f0039c1424b4e" category="list-text">CPU 内核：每个节点 8 个</block>
   <block id="45f4c38ce1a63d1d358cc2bec8789aa1" category="list-text">RAM：取决于可用的总 RAM 以及系统上运行的非 StorageGRID 软件的数量</block>
   <block id="df1f6ab1a0b09cb6d49788a9b9064924" category="list-text">通常，每个节点至少 24 GB，比总系统 RAM 少 2 到 16 GB</block>
-  <block id="e6964a3fc0e96b5235523f7e1dea30f4" category="list-text">每个拥有约 5,000 个存储桶的租户至少 64 GB</block>
   <block id="b99211e689eb30a0f585e81b64ad800d" category="paragraph">基于软件的仅元数据节点资源必须与现有存储节点资源匹配。例如：</block>
   <block id="d3ec908281cc94f5014ae8af540770e3" category="paragraph">确保计划在每个物理或虚拟主机上运行的 StorageGRID 节点数不超过可用的 CPU 内核数或物理 RAM 数。如果主机不专用于运行 StorageGRID（不推荐），请务必考虑其他应用程序的资源要求。</block>
   <block id="a1e58fa0194714dd0c7a86a457ff3114" category="paragraph">VMware 支持每个虚拟机一个节点。请确保 StorageGRID 节点不超过可用的物理 RAM。每个虚拟机必须专用于运行 StorageGRID。</block>
   <block id="5298a657a3477e152f5382255aade085" category="inline-link-macro">管理</block>
   <block id="89948c7f4890af5ff18524b4fc3f3611" category="inline-link-macro">监控</block>
   <block id="b1709369b19b51deac976f5fc9dce527" category="inline-link-macro">upgrading</block>
-  <block id="996d2c2fc1b957ecf27b24b85ee4db46" category="admonition">定期监控您的 CPU 和内存使用情况，以确保这些资源能够持续满足您的工作负载需求。例如，将虚拟存储节点的 RAM 和 CPU 分配加倍，将提供与 StorageGRID 设备节点相似的资源。此外，如果每个节点的元数据量超过 500 GB，请考虑将每个节点的 RAM 增加到 48 GB 或更多。有关管理对象元数据存储、增加元数据保留空间设置以及监控 CPU 和内存使用情况的信息，请参见<block ref="d7da925960d077caca67b7da05f604eb" category="inline-link-macro-rx"></block>、<block ref="1bf03777f1f1ec6e39142eee6de42f7d" category="inline-link-macro-rx"></block>和<block ref="0c791c7b79ff656d42eedaf87006f706" category="inline-link-macro-rx"></block> StorageGRID 的相关说明。</block>
   <block id="ce3a426c90a57d6cc6ab7028dafe7ea5" category="paragraph">如果在底层物理主机上启用了超线程，则可以为每个节点提供 8 个虚拟内核（4 个物理内核）。如果未在底层物理主机上启用超线程，则必须为每个节点提供 8 个物理内核。</block>
   <block id="ba418964735823a19541da35fff05ec7" category="paragraph">如果使用虚拟机作为主机并控制虚拟机的大小和数量，则应为每个 StorageGRID 节点使用单个虚拟机，并相应地调整虚拟机的大小。</block>
   <block id="15961b19cec95b8b15d7735f4bdddf54" category="paragraph">（仅限 RHEL、Debian 和 Ubuntu）对于生产部署，不应在同一物理存储硬件或虚拟主机上运行多个存储节点。单个 StorageGRID 部署中的每个存储节点应位于其自己的隔离故障域中。如果确保单个硬件故障仅影响单个存储节点，则可以最大限度地提高对象数据的持久性和可用性。</block>
-  <block id="5cfd6ff9bf8fe5f9c16cf16256aaddc4" category="paragraph">另请参见 <block ref="41a0318c71f0b54e9cd94d298967a056" category="inline-link-macro-rx"></block>。</block>
   <block id="e7199d6d21d0a283583e021d10d107a7" category="summary">节点配置文件是小型文本文件，提供 StorageGRID 主机服务启动节点并将其连接到相应的网络和块存储资源所需的信息。节点配置文件用于虚拟节点，而不用于设备节点。</block>
   <block id="a2467bb929f6e48e771a66fdeee1514f" category="doc">为 Linux 部署创建 StorageGRID 节点配置文件</block>
   <block id="b908401ad21f4d9a3afd6c30214c6393" category="paragraph">节点配置文件是小型文本文件，提供 StorageGRID 主机服务启动节点并将其连接到相应的网络和块存储资源所需的信息。节点配置文件用于虚拟节点，而不用于设备节点。</block>
@@ -19415,8 +19393,6 @@
   <block id="03f28cec004396bf5c903fe684a4095d" category="inline-link-macro">存储区策略或组策略</block>
   <block id="1b0bcddd47961172ab90ebef0e44489d" category="admonition">可以通过 <block ref="aa991bb9a3a046f1daa5142d523d0255" category="inline-link-macro-rx"></block> 授予设置或修改存储桶或对象的 S3 Object Lock 属性的权限。</block>
   <block id="599405eaa0379eb6e96ccb9eeb3b6852" category="list-text">如果您计划为存储区启用 S3 对象锁定，则网格管理员已为 StorageGRID 系统启用了全局 S3 对象锁定设置，并且您已查看了 S3 对象锁定存储区和对象的要求。</block>
-  <block id="060a506b94206fd8099f53c701a4dfa8" category="list-text">如果每个租户有 5,000 个存储桶，则网格中的每个 Storage Node 至少有 64 GB 的 RAM。</block>
-  <block id="3a82a753ff85d79148050551b49f5872" category="admonition">每个网格最多可包含 100,000 个存储桶，包括 <block ref="d3df59ff33f05ec9d734c238966d59f9" category="inline-link-macro-rx"></block>。</block>
   <block id="e1d3e2753b576399328d6d39cc680896" category="list-text">输入存储桶的详细信息。</block>
   <block id="83a9945f9788d7c276a31069ee1bb724" category="paragraph">符合这些规则的存储桶的名称：</block>
   <block id="e53c957114009561725fc45998abd90c" category="list-text">每个标签必须以小写字母或数字开头和结尾，并且只能使用小写字母、数字和连字符。</block>
@@ -22854,4 +22830,43 @@
   <block id="cf51a3b63309bf6b7619a259095ecaa9" category="paragraph">ONTAP System Manager &gt; 添加云层</block>
   <block id="6445caa09e61ad22d21a7281d37fbdae" category="section-title">审核消息和日志目标</block>
   <block id="7efe0297b212181f63e6d1aab7dfe577" category="section-title">对象压缩</block>
+  <block id="77dbe057e796211ceb2bfd8050130794" category="paragraph">根据需要，配置审核级别、协议标头、审核消息和日志的位置以及日志保留。</block>
+  <block id="04c545f098c1c4f6691c6fca831ed5db" category="paragraph">或者，您可以<block ref="cce9bd0d3068773003ba615e61c64bfc" category="inline-link-macro-rx"></block>远程保存审核信息。通过使用外部服务器，您可以最大限度地减少审核消息日志记录对性能的影响，同时不会降低审核数据的完整性。如果您有大型网格、使用多种类型的 S3 应用程序或希望保留所有审核数据，则外部 syslog 服务器特别有用。</block>
+  <block id="126039d47fa1abcec599acee7439e183" category="paragraph">当 StorageGRID 在请求中找到 HTTP 标头时，它会将其包含在 HTRH 字段下的审核消息中。</block>
+  <block id="c8a69bceb48692adb5a23abc286aac3b" category="paragraph">默认情况下，审核消息和日志保存在生成它们的节点上。StorageGRID 定期轮换并最终删除审核消息和日志，以防止它们占用过多的磁盘空间。要在外部保存审核消息和一部分日志， <block ref="a5f9463152b8158166c8239e67a8692c" category="inline-xref-macro-rx"></block>。</block>
+  <block id="ebd4e194b1dd9efd7978eca20766eb20" category="paragraph">如果选择一个值，StorageGRID 会将所选值应用于此类型的所有消息。如果使用固定值覆盖严重性，则会丢失有关不同严重性的详细信息。</block>
+  <block id="cb021814749fbee1709b7752a040823f" category="paragraph">在使用外部 syslog 服务器之前，请要求网格中的所有节点向外部 syslog 服务器发送测试消息。这些测试消息可帮助您在将数据发送到外部 syslog 服务器之前验证整个日志收集基础架构。</block>
+  <block id="ab4210f6537afcce8da7bca5960e27f6" category="section-title">管理日志保留</block>
+  <block id="f3e526d2153877449624a3e293794b34" category="paragraph">您可以通过创建 ILM 规则或配置 S3 存储桶生命周期策略来管理 StorageGRID 保留日志的时长。</block>
+  <block id="25c65ead7a6db6f0d9f4842086ee9431" category="paragraph">为存储桶创建 ILM 规则，并将此规则添加到活动 ILM 策略。</block>
+  <block id="356153229a08f1cf68e61ad58da78204" category="list-text">选择*创建*。<block ref="f9b57d441319b31b2e3ec25cc64a83f0" category="inline-link-macro-rx"></block> 此时将显示 Create an ILM rule wizard（创建 ILM 规则向导）：</block>
+  <block id="1548ef9af6f33f06754193b94be688e8" category="list-text">请输入规则的唯一名称。例如：归档日志的 ILM 规则。</block>
+  <block id="7d0c155836b712a2c98f4ff8d1a922e9" category="list-text">选择日志存档 S3 租户帐户。</block>
+  <block id="c00949c0410184e0e082ef1920dded43" category="list-text">指定日志存档 S3 存储桶。</block>
+  <block id="b89f1b3ed01a73e6b9b4fde643679bc7" category="list-text">继续<block ref="6e56ede41692ddead078b2f3951a1e02" category="inline-link-macro-rx"></block>并定义存档日志规则的放置位置。例如，ILM 规则在第一年内在站点 1 中存储一个复制副本，在站点 2 中存储一个复制副本。一年后，制作一个 2+1 纠删码副本并仅保存在一个站点。</block>
+  <block id="70af295dc254d1bfa2b2a3cb8aa5e1cd" category="list-text">创建规则后，将其添加到活动的 ILM 策略。</block>
+  <block id="ac9d605581b1583465008b3be2876127" category="open-title">S3 bucket 生命周期</block>
+  <block id="72a13c08a34877b30bdf521c3bbfa70e" category="paragraph">在日志存档 S3 存储桶上配置 S3 存储桶生命周期策略：</block>
+  <block id="a214d4bb971f11d8bd48b57da797b1b7" category="paragraph">在日志存档 S3 存储桶上配置 S3 存储桶生命周期策略时，生命周期到期操作将覆盖与存储桶生命周期筛选器匹配的对象的 ILM 策略。与存储桶生命周期筛选器不匹配的对象使用 ILM 策略的保留设置。如果对象与存储桶生命周期筛选器匹配，且未明确指定过期操作，则不会使用 ILM 策略的保留设置，这意味着对象版本将被永久保留。</block>
+  <block id="c5ab0bc60ac7929182aadd08703f1ec6" category="paragraph">636</block>
+  <block id="2f0dd37b661522a575ecc8de6795d039" category="paragraph">如果多个租户每个都有多达 5,000 个存储桶，则网格中的每个存储节点必须至少有 64 GB 的 RAM。</block>
+  <block id="4d1e88e0442bc4355dbcb9b4df61d6c7" category="paragraph">有关详细信息，请参见以下内容：</block>
+  <block id="3645f3bd0482b72744459cbe5741e4a8" category="paragraph">您可以检查是否为单个存储桶启用或禁用了对上次访问时间的更新。请参阅 <block ref="dcc85cafd1adb4db5f3bf68d48f423d2" category="inline-link-macro-rx"></block>。</block>
+  <block id="00b3b6be152329515868b69372f5b062" category="list-text">您可以包含<block ref="289c5faa6802e638231e7e6ff257d3a4" prefix=" " category="inline-code"></block>请求标头以创建启用了 S3 Object Lock 的存储桶。请参阅 <block ref="68c667f0ce4a6f376dfff8a750bd7d7d" category="inline-link-macro-rx"></block>。</block>
+  <block id="e2e8b48c3e737979e8d162d74b4028e2" category="paragraph">从存储桶中删除生命周期配置。请参阅 <block ref="899e48eb574f8c5912a7d048f8d748e8" category="inline-link-macro-rx"></block>。</block>
+  <block id="7a187ce0023a42cf205c67d1e80b2fa9" category="paragraph">*注意*：如果为此存储桶设置了非默认 ILM 策略标记，则将存在一个<block ref="2ce3f7d0855e7a7db3be4bffab58af5a" prefix=" " category="inline-code"></block>存储桶标记，并为其分配了值。如果有<block ref="2ce3f7d0855e7a7db3be4bffab58af5a" prefix=" " category="inline-code"></block>存储桶标记，请勿发出 DeleteBucketTagging 请求。相反，仅使用 <block ref="2ce3f7d0855e7a7db3be4bffab58af5a" prefix=" " category="inline-code"></block> 标记及其分配的值发出 PutBucketTagging 请求，以从存储桶中删除所有其他标记。请勿修改或删除<block ref="2ce3f7d0855e7a7db3be4bffab58af5a" prefix=" " category="inline-code"></block>存储桶标记。</block>
+  <block id="476bcbaebcac49e5bd9fce2d6ba84d3b" category="paragraph">返回存储桶的生命周期配置。请参阅 <block ref="899e48eb574f8c5912a7d048f8d748e8" category="inline-link-macro-rx"></block>。</block>
+  <block id="e6de078fb949dad4aeacc957f067270a" category="paragraph">*注意*：如果为此存储桶设置了非默认 ILM 策略标记，则将存在一个<block ref="2ce3f7d0855e7a7db3be4bffab58af5a" prefix=" " category="inline-code"></block>存储桶标记，并为其分配了值。请勿修改或删除此标记。</block>
+  <block id="1f95d56749d16d1e997cf8c891df6f75" category="paragraph">请参阅 <block ref="68c667f0ce4a6f376dfff8a750bd7d7d" category="inline-link-macro-rx"></block>。</block>
+  <block id="bbac00d2858f8df3b845189f4e6a1058" category="paragraph">请参阅 <block ref="899e48eb574f8c5912a7d048f8d748e8" category="inline-link-macro-rx"></block>。要了解存储桶生命周期中的到期操作如何与 ILM 放置说明交互，请参阅<block ref="2eebcc299dfcfbe3c659686c56f8a9eb" category="inline-link-macro-rx"></block>。</block>
+  <block id="bfebe611682c03a710c37bc9f41c7e51" category="paragraph">设置附加到存储桶的策略。请参阅 <block ref="df8686d57377200c27f81ca84f948011" category="inline-link-macro-rx"></block>。</block>
+  <block id="b39a5414c4819d4f48582454a17254a2" category="list-text">目标存储桶必须指定为租户管理器或租户管理 API 中指定的 StorageGRID 终结点的 URN。请参阅 <block ref="78ca258c698c6e5ef6dba3f53379e735" category="inline-link-macro-rx"></block>。</block>
+  <block id="0f48dacf070b3b0117444b481bbdb982" category="paragraph">*注意*：如果为此存储桶设置了非默认 ILM 策略标记，则将存在一个<block ref="2ce3f7d0855e7a7db3be4bffab58af5a" prefix=" " category="inline-code"></block>存储桶标记，并为其分配了值。确保在所有 PutBucketTagging 请求中包含带有分配值的<block ref="2ce3f7d0855e7a7db3be4bffab58af5a" prefix=" " category="inline-code"></block>存储桶标记。请勿修改或删除此标记。</block>
+  <block id="1cb3c9cf636ea55ccda3277942377191" category="list-text">如果多个租户每个都有多达 5,000 个存储桶，则每个节点至少 64 GB</block>
+  <block id="d969a1e03fcd8eeec67e80113b5eacf0" category="admonition">定期监控您的 CPU 和内存使用情况，以确保这些资源能够持续满足您的工作负载需求。例如，将虚拟存储节点的 RAM 和 CPU 分配加倍，将提供与 StorageGRID 设备节点相似的资源。此外，如果每个节点的元数据量超过 500 GB，请考虑将每个节点的 RAM 增加到 48 GB 或更多。有关管理对象元数据存储、增加元数据保留空间设置以及监控 CPU 和内存使用情况的信息，请参阅 <block ref="d7da925960d077caca67b7da05f604eb" category="inline-link-macro-rx"></block>、<block ref="1bf03777f1f1ec6e39142eee6de42f7d" category="inline-link-macro-rx"></block> 和 <block ref="0c791c7b79ff656d42eedaf87006f706" category="inline-link-macro-rx"></block> StorageGRID 的相关说明。</block>
+  <block id="995ddab54dccc10c916863003cd4b12a" category="paragraph">请参阅 <block ref="41a0318c71f0b54e9cd94d298967a056" category="inline-link-macro-rx"></block>。</block>
+  <block id="ba81233e9af267a8db7dc3230f6db6a6" category="list-text">如果多个租户每个都有多达 5,000 个存储桶，则网格中的每个存储节点至少有 64 GB 的 RAM。</block>
+  <block id="c3b4bb6f8dd3409ee70fe0263cf21429" category="inline-link-macro">分支铲斗深度</block>
+  <block id="345dde1cb2d56467b2738ee24b238a58" category="admonition">StorageGRID 系统为每个 S3 租户帐户最多支持 5,000 个存储桶。每个网格最多可包含 100,000 个存储桶，包括 <block ref="d3df59ff33f05ec9d734c238966d59f9" category="inline-link-macro-rx"></block>。还有一个限制<block ref="ce3c7022613649c3c66921047aafc7b1" category="inline-link-macro-rx"></block>。</block>
+  <block id="98e500c14e3477e6ac46010a64b95e67" category="paragraph">有关详细信息，请参见<block ref="c192042024a8f68be5a4c7bc34004895" category="inline-link-rx"></block>。</block>
 </blocks>
